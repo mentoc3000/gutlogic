@@ -19,9 +19,6 @@ class MainTabsState extends State<MainTabs> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Flutter App'),
-      ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex, // this will be set when a new tab is tapped
