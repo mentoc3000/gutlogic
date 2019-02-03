@@ -37,8 +37,8 @@ class MainTabsState extends State<MainTabs> {
             title: new Text('Diary'),
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('Home'),
+            icon: new Icon(Icons.web_asset),
+            title: new Text('Recipes'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
