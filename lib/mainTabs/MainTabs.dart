@@ -12,6 +12,7 @@ class MainTabsState extends State<MainTabs> {
     PlaceholderWidget(Colors.white),
     PlaceholderWidget(Colors.blue),
     PlaceholderWidget(Colors.red),
+    PlaceholderWidget(Colors.green),
   ];
 
   @override
@@ -26,13 +27,17 @@ class MainTabsState extends State<MainTabs> {
        onTap: tabWasTapped,
        items: [
          BottomNavigationBarItem(
-           icon: new Icon(Icons.home),
-           title: new Text('Home'),
+           icon: new Icon(Icons.search),
+           title: new Text('Search'),
          ),
          BottomNavigationBarItem(
-           icon: new Icon(Icons.mail),
-           title: new Text('Messages'),
+           icon: new Icon(Icons.subject),
+           title: new Text('Diary'),
          ),
+        //  BottomNavigationBarItem(
+        //    icon: new Icon(Icons.mail),
+        //    title: new Text('Recipes'),
+        //  ),
          BottomNavigationBarItem(
            icon: Icon(Icons.person),
            title: Text('Profile')
