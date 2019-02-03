@@ -19,14 +19,23 @@ class MainTabs extends StatefulWidget {
 }
 
 class MainTabsState extends State<MainTabs> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    PlaceholderWidget(Colors.white),
+    PlaceholderWidget(Colors.blue),
+    PlaceholderWidget(Colors.red),
+  ];
+
   @override
   Widget build(BuildContext context) {
    return Scaffold(
      appBar: AppBar(
        title: Text('My Flutter App'),
      ),
+     body: _children[_currentIndex],
      bottomNavigationBar: BottomNavigationBar(
        currentIndex: 0, // this will be set when a new tab is tapped
+       onTap: tabWasTapped,
        items: [
          BottomNavigationBarItem(
            icon: new Icon(Icons.home),
@@ -44,4 +53,23 @@ class MainTabsState extends State<MainTabs> {
      ),
    );
   }
+
+  void tabWasTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+}
+
+class PlaceholderWidget extends StatelessWidget {
+ final Color color;
+
+ PlaceholderWidget(this.color);
+
+ @override
+ Widget build(BuildContext context) {
+   return Container(
+     color: color,
+   );
+ }
 }
