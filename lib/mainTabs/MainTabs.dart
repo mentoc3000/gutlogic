@@ -17,34 +17,36 @@ class MainTabsState extends State<MainTabs> {
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-     appBar: AppBar(
-       title: Text('My Flutter App'),
-     ),
-     body: _children[_currentIndex],
-     bottomNavigationBar: BottomNavigationBar(
-       currentIndex: 0, // this will be set when a new tab is tapped
-       onTap: tabWasTapped,
-       items: [
-         BottomNavigationBarItem(
-           icon: new Icon(Icons.search),
-           title: new Text('Search'),
-         ),
-         BottomNavigationBarItem(
-           icon: new Icon(Icons.subject),
-           title: new Text('Diary'),
-         ),
-        //  BottomNavigationBarItem(
-        //    icon: new Icon(Icons.mail),
-        //    title: new Text('Recipes'),
-        //  ),
-         BottomNavigationBarItem(
-           icon: Icon(Icons.person),
-           title: Text('Profile')
-         )
-       ],
-     ),
-   );
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My Flutter App'),
+      ),
+      body: _children[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex, // this will be set when a new tab is tapped
+        type: BottomNavigationBarType.fixed,
+        onTap: tabWasTapped,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.search),
+            title: new Text('Search'),
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.subject),
+            title: new Text('Diary'),
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.home),
+            title: new Text('Home'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text('Profile')
+          )
+        ],
+      ),
+    );
   }
 
   void tabWasTapped(int index) {
