@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(TabBarDemo());
+void main() => runApp(GiBlissApp());
 
-class TabBarDemo extends StatelessWidget {
+class GiBlissApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
