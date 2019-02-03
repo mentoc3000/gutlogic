@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'helpers/PlaceholderWidget.dart';
 
 void main() => runApp(GiBlissApp());
-
-
 
 class GiBlissApp extends StatelessWidget {
   @override
@@ -59,17 +58,4 @@ class MainTabsState extends State<MainTabs> {
       _currentIndex = index;
     });
   }
-}
-
-class PlaceholderWidget extends StatelessWidget {
- final Color color;
-
- PlaceholderWidget(this.color);
-
- @override
- Widget build(BuildContext context) {
-   return Container(
-     color: color,
-   );
- }
 }
