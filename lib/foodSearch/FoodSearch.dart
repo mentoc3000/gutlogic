@@ -3,6 +3,7 @@ import 'package:gi_bliss/helpers/PlaceholderWidget.dart';
 import 'package:gi_bliss/model/Food.dart';
 import 'package:gi_bliss/model/FoodList.dart';
 import 'package:gi_bliss/helpers/DummyFoods.dart';
+import 'FoodCard.dart';
 
 class FoodSearch extends StatefulWidget {
   @override
@@ -43,7 +44,7 @@ class _FoodSearchState extends State<FoodSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.white,
       body: _buildList(context),
       resizeToAvoidBottomPadding: false,
     );
@@ -77,46 +78,6 @@ class _FoodSearchState extends State<FoodSearch> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, Food food) { 
-    return Card(
-      key: ValueKey(food.name),
-      elevation: 8.0,
-      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-      child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, 0.9)),
-        child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          title: Text(
-            food.name,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
-          ),
-          subtitle: Row(
-            children: <Widget>[
-              new Flexible(
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    RichText(
-                      text: TextSpan(
-                        text: food.irritants.join(', '),
-                        style: TextStyle(color: Colors.white)
-                      ),
-                      maxLines: 3,
-                      softWrap: true,
-                    )
-                  ]
-                )
-              )
-            ]
-          ),
-          trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
-          // onTap: () {
-          //   Navigator.push(context, MaterialPageRoute(builder: (context) => new DetailPage(food: food)));
-          // }
-        )
-      )
-    );
-  }
-
+  Widget _buildListItem(BuildContext context, Food food) => new FoodCard(food);
 
 }
