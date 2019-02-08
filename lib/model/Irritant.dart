@@ -3,11 +3,19 @@ class Irritant {
   List<String> serving;
   List<Sensitivity> sensitivity;
 
-  Irritant(
+  Irritant({
     this.name,
     this.serving,
     this.sensitivity
-  );
+  });
+
+  factory Irritant.fromJson(Map<String, dynamic> json) {
+    return new Irritant(
+      name: json['name'],
+      serving: json['serving'],
+      sensitivity: json['sensitivity']
+    );
+  }
 
 }
 
