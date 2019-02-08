@@ -13,8 +13,9 @@ class FoodSearch extends StatefulWidget {
 }
 
 class _FoodSearchState extends State<FoodSearch> {
-
-  Widget _appBarTitle = new Text("Food Search");
+  static String _title = "Food Search";
+  Widget _appBarTitle = new Text(_title);
+  final TextEditingController _filter = new TextEditingController();
   Icon _searchIcon = new Icon(Icons.search);
   String _searchText = "";
   FoodList _foods = new FoodList();
@@ -57,7 +58,7 @@ class _FoodSearchState extends State<FoodSearch> {
       title: _appBarTitle,
       leading: new IconButton(
         icon: _searchIcon,
-        // onPressed: _searchPressed,
+        onPressed: _searchPressed,
       ),
     );
   }
@@ -66,7 +67,9 @@ class _FoodSearchState extends State<FoodSearch> {
     if (!(_searchText.isEmpty)) {
       _filteredFoods.foods = new List();
       for (int i = 0; i < _foods.foods.length; i++) {
-        if (_foods.foods[i].name.toLowerCase().contains(_searchText.toLowerCase())) {
+        if (_foods.foods[i].name
+            .toLowerCase()
+            .contains(_searchText.toLowerCase())) {
           _filteredFoods.foods.add(_foods.foods[i]);
         }
       }
@@ -74,10 +77,57 @@ class _FoodSearchState extends State<FoodSearch> {
 
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
-      children: this._filteredFoods.foods.map((data) => _buildListItem(context, data)).toList(),
+      children: this
+          ._filteredFoods
+          .foods
+          .map((data) => _buildListItem(context, data))
+          .toList(),
     );
   }
 
   Widget _buildListItem(BuildContext context, Food food) => new FoodCard(food);
 
+  _FoodSearchState() {
+    _filter.addListener(() {
+      if (_filter.text.isEmpty) {
+        setState(() {
+          _searchText = "";
+          _resetFoods();
+        });
+      } else {
+        setState(() {
+          _searchText = _filter.text;
+        });
+      }
+    });
+  }
+
+  void _resetFoods() {
+    this._filteredFoods.foods = new List();
+    for (Food food in _foods.foods) {
+      this._filteredFoods.foods.add(food);
+    }
+  }
+
+  void _searchPressed() {
+    setState(() {
+      if (this._searchIcon.icon == Icons.search) {
+        this._searchIcon = new Icon(Icons.close);
+        this._appBarTitle = new TextField(
+          controller: _filter,
+          style: new TextStyle(color: Colors.white),
+          decoration: new InputDecoration(
+            prefixIcon: new Icon(Icons.search, color: Colors.white),
+            fillColor: Colors.white,
+            hintText: 'Search by name',
+            hintStyle: TextStyle(color: Colors.white),
+          ),
+        );
+      } else {
+        this._searchIcon = new Icon(Icons.search);
+        this._appBarTitle = new Text(_title);
+        _filter.clear();
+      }
+    });
+  }
 }
