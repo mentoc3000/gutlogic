@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'FoodSheet.dart';
 import 'package:gi_bliss/model/Food.dart';
 
 class FoodCard extends StatelessWidget {
@@ -40,9 +41,9 @@ class FoodCard extends StatelessWidget {
             ]
           ),
           trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
-          // onTap: () {
-          //   Navigator.push(context, MaterialPageRoute(builder: (context) => new DetailPage(food: food)));
-          // }
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => new FoodSheet(food: food)));
+          }
         )
       )
     );
