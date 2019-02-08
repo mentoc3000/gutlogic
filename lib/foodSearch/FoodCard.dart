@@ -13,12 +13,12 @@ class FoodCard extends StatelessWidget {
       elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, 0.9)),
+        // decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, 0.9)),
         child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          // contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           title: Text(
             food.name,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+            style: TextStyle(fontWeight: FontWeight.bold)
           ),
           subtitle: Row(
             children: <Widget>[
@@ -29,7 +29,7 @@ class FoodCard extends StatelessWidget {
                     RichText(
                       text: TextSpan(
                         text: food.irritants.join(', '),
-                        style: TextStyle(color: Colors.white)
+                        style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic)
                       ),
                       maxLines: 3,
                       softWrap: true,
@@ -39,7 +39,7 @@ class FoodCard extends StatelessWidget {
               )
             ]
           ),
-          trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
+          trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
           // onTap: () {
           //   Navigator.push(context, MaterialPageRoute(builder: (context) => new DetailPage(food: food)));
           // }
