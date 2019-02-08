@@ -1,6 +1,6 @@
 class Food {
   String name;
-  List<String> irritants;
+  Map<String, int> irritants;
 
   Food({
     this.name,
