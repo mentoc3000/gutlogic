@@ -16,7 +16,8 @@ class FoodSheet extends StatelessWidget {
       body: new ListView(
         children: <Widget>[
           _OverallAssessmentCard(),
-          _IrritantsAssessmentCard(irritants: food.irritants)
+          _IrritantsAssessmentCard(irritants: food.irritants),
+          _NutritionCard()
         ],
       )
     );
@@ -148,6 +149,31 @@ class _IrritantAssessmentWidget extends StatelessWidget {
           ))
         ],
       )
+    );
+  }
+}
+
+
+
+class _NutritionCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Card(
+      key: ValueKey("irritants"),
+      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Text(
+              "Nutrition",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+
     );
   }
 }
