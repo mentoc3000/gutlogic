@@ -15,7 +15,8 @@ class FoodSheet extends StatelessWidget {
       ),
       body: new ListView(
         children: <Widget>[
-          _OverallAssessmentCard(irritants: food.irritants)
+          _OverallAssessmentCard(irritants: food.irritants),
+          _IrritantsAssessmentCard(irritants: food.irritants)
         ],
       )
     );
@@ -32,7 +33,6 @@ class _OverallAssessmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Card(
       key: ValueKey("overall"),
-      elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
         // decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, 0.9)),
@@ -40,7 +40,7 @@ class _OverallAssessmentCard extends StatelessWidget {
           // contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           title: Text(
             "Overall",
-            style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)
           ),
           trailing: new Container(
             width: 30.0,
@@ -55,4 +55,89 @@ class _OverallAssessmentCard extends StatelessWidget {
     );
   }
   
+}
+
+class _IrritantsAssessmentCard extends StatelessWidget {
+  final Map<String, int> irritants;
+
+  _IrritantsAssessmentCard({this.irritants});
+
+  @override
+  Widget build(BuildContext context) {
+    return new Card(
+      key: ValueKey("irritants"),
+      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      child: Container(
+        child: new Column(
+          children: <Widget>[
+            new Text("Irritants"),
+            new _IrritantAssessmentWidget(name: irritants.keys.elementAt(0), sensitivity: irritants.values.elementAt(0))
+          ],
+        ),
+      ),
+
+    );
+  }
+}
+
+class _IrritantAssessmentWidget extends StatelessWidget {
+  final String name;
+  final int sensitivity;
+
+  _IrritantAssessmentWidget({this.name, this.sensitivity});
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      padding: const EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
+      child: new Column(
+        children: <Widget>[
+          new Text(name),
+          new Row(
+            children: <Widget>[
+              new Column(
+                children: <Widget>[
+                  new Container(
+                    width: 30.0,
+                    height: 30.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.grey,
+                      shape: BoxShape.circle
+                    ),
+                  ),
+                  new Text("1/4 Cup")
+                ],
+              ),
+              new Column(
+                children: <Widget>[
+                  new Container(
+                    width: 30.0,
+                    height: 30.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.yellow,
+                      shape: BoxShape.circle
+                    ),
+                  ),
+                  new Text("1/2 Cup")
+                ],
+              ),
+              new Column(
+                children: <Widget>[
+                  new Container(
+                    width: 30.0,
+                    height: 30.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle
+                    ),
+                  ),
+                  new Text("1 Cup")
+                ],
+              )
+            ],
+          )
+        ],
+      )
+    );
+  }
 }
