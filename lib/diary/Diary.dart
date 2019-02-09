@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar/flutter_calendar.dart';
 
 class Diary extends StatefulWidget {
   @override
@@ -13,12 +14,10 @@ class DiaryState extends State<Diary> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Thur., Feb. 7, 2019"),
+        title: Text("Diary"),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48.0),
-          child: Container(
-
-          ),
+          preferredSize: const Size.fromHeight(150.0),
+          child: Calendar()
         ),
       ),
       body: ListView(
