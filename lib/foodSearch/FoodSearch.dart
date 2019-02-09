@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gi_bliss/helpers/PlaceholderWidget.dart';
 import 'package:gi_bliss/model/Food.dart';
 import 'package:gi_bliss/model/FoodList.dart';
-import 'package:gi_bliss/helpers/DummyFoods.dart';
+import 'package:gi_bliss/helpers/Dummy.dart';
 import 'FoodCard.dart';
 
 class FoodSearch extends StatefulWidget {
@@ -32,7 +32,7 @@ class _FoodSearchState extends State<FoodSearch> {
   }
 
   void _getFoods() {
-    FoodList foods = DummyFoods.dummyFoods;
+    FoodList foods = Dummy.foodList;
     setState(() {
       for (Food food in foods.foods) {
         this._foods.foods.add(food);

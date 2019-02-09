@@ -1,7 +1,7 @@
 import 'package:gi_bliss/model/Food.dart';
 import 'package:gi_bliss/model/FoodList.dart';
 
-class DummyFoods {
+class Dummy {
   static final _artichoke = Food(
     name: 'Artichoke', 
     irritants: ['Fructans', 'Fructose']
@@ -17,5 +17,5 @@ class DummyFoods {
 
   static final _foods = [_artichoke, _creamCheese, _egg];
 
-  static final dummyFoods = FoodList(foods: _foods);
+  static final foodList = FoodList(foods: _foods);
 }
