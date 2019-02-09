@@ -17,7 +17,7 @@ class DiaryState extends State<Diary> {
         title: Text("Diary"),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(150.0),
-          child: Calendar()
+          child: Calendar(isExpandable: false,)
         ),
       ),
       body: ListView(
@@ -26,3 +26,4 @@ class DiaryState extends State<Diary> {
     );
   }
 }
+
