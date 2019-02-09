@@ -15,7 +15,7 @@ class FoodSheet extends StatelessWidget {
       ),
       body: new ListView(
         children: <Widget>[
-          _OverallAssessmentCard(irritants: food.irritants),
+          _OverallAssessmentCard(),
           _IrritantsAssessmentCard(irritants: food.irritants)
         ],
       )
@@ -24,10 +24,6 @@ class FoodSheet extends StatelessWidget {
 }
 
 class _OverallAssessmentCard extends StatelessWidget {
-  final int sensitivity;
-
-  _OverallAssessmentCard({Map<String,int> irritants}) : 
-    this.sensitivity = irritants.values.reduce(max);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +54,7 @@ class _OverallAssessmentCard extends StatelessWidget {
 }
 
 class _IrritantsAssessmentCard extends StatelessWidget {
-  final Map<String, int> irritants;
+  final List<String> irritants;
 
   _IrritantsAssessmentCard({this.irritants});
 
@@ -76,7 +72,9 @@ class _IrritantsAssessmentCard extends StatelessWidget {
               "Irritants",
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)
             ),
-            new _IrritantAssessmentWidget(name: irritants.keys.elementAt(0), sensitivity: irritants.values.elementAt(0))
+            new Column(
+              children: irritants.map((name) => new _IrritantAssessmentWidget(name: name, sensitivity: name.hashCode%2)).toList(),
+            )
           ],
         ),
       ),

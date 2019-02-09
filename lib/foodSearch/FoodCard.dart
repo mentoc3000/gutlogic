@@ -29,7 +29,7 @@ class FoodCard extends StatelessWidget {
                   children: <Widget>[
                     RichText(
                       text: TextSpan(
-                        text: food.irritants.keys.join(', '),
+                        text: food.irritants.join(', '),
                         style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic)
                       ),
                       maxLines: 3,
