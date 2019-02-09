@@ -53,7 +53,6 @@ class _FoodSearchState extends State<FoodSearch> {
 
   Widget _buildBar(BuildContext context) {
     return new AppBar(
-      elevation: 0.1,
       centerTitle: true,
       title: _appBarTitle,
       leading: new IconButton(

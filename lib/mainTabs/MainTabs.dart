@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gi_bliss/foodSearch/FoodSearch.dart';
+import 'package:gi_bliss/diary/Diary.dart';
 import 'package:gi_bliss/helpers/PlaceholderWidget.dart';
 
 class MainTabs extends StatefulWidget {
@@ -11,7 +12,7 @@ class MainTabsState extends State<MainTabs> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     FoodSearch(),
-    PlaceholderWidget(Colors.blue),
+    Diary(),
     PlaceholderWidget(Colors.red),
     PlaceholderWidget(Colors.green),
   ];
