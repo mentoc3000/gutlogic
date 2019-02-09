@@ -68,9 +68,14 @@ class _IrritantsAssessmentCard extends StatelessWidget {
       key: ValueKey("irritants"),
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text("Irritants"),
+            new Text(
+              "Irritants",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)
+            ),
             new _IrritantAssessmentWidget(name: irritants.keys.elementAt(0), sensitivity: irritants.values.elementAt(0))
           ],
         ),
@@ -89,15 +94,20 @@ class _IrritantAssessmentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      padding: const EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
+      padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
       child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Text(name),
-          new Row(
+          new Text(name, style: TextStyle(fontStyle: FontStyle.italic)),
+          new Container( 
+            // padding: const EdgeInsets.only(top: 10.0),
+            child: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               new Column(
                 children: <Widget>[
                   new Container(
+                    margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                     width: 30.0,
                     height: 30.0,
                     decoration: new BoxDecoration(
@@ -111,6 +121,7 @@ class _IrritantAssessmentWidget extends StatelessWidget {
               new Column(
                 children: <Widget>[
                   new Container(
+                    margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                     width: 30.0,
                     height: 30.0,
                     decoration: new BoxDecoration(
@@ -124,6 +135,7 @@ class _IrritantAssessmentWidget extends StatelessWidget {
               new Column(
                 children: <Widget>[
                   new Container(
+                    margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                     width: 30.0,
                     height: 30.0,
                     decoration: new BoxDecoration(
@@ -135,7 +147,7 @@ class _IrritantAssessmentWidget extends StatelessWidget {
                 ],
               )
             ],
-          )
+          ))
         ],
       )
     );
