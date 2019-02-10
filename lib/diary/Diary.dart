@@ -43,23 +43,23 @@ class EntryHeader extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            width: 100.0,
-            // margin: const EdgeInsets.all(15.0),
+            width: 80.0,
+            margin: const EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 15.0),
             padding: const EdgeInsets.all(3.0),
             decoration: new BoxDecoration(
               border: new Border.all(color: Colors.black)
             ),
             child: new Text("9:35 am"),
           ),
-          Container(
-            // margin: const EdgeInsets.all(15.0),
+          Expanded(child: Container(
+            margin: const EdgeInsets.fromLTRB(0.0, 15.0, 15.0, 15.0),
             padding: const EdgeInsets.all(3.0),
             decoration: new BoxDecoration(
               border: new Border.all(color: Colors.black),
               color: color
             ),
             child: new Text(title),
-          ),
+          )),
         ],
       ),
     );
