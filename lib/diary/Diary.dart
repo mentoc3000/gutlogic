@@ -24,7 +24,34 @@ class DiaryState extends State<Diary> {
       ),
       body: ListView(
         children: <Widget>[
-          EntryHeader(title: "Breakfast", color: Colors.green,)
+          EntryHeader(title: "Breakfast", color: Colors.blue),
+          ListTile(
+            title: Text("Banana"),
+            subtitle: Text("1 each"),
+            trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
+          ),
+          ListTile(
+            title: Text("Egg"),
+            subtitle: Text("2 each"),
+            trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
+          ),
+          EntryHeader(title: "Bowel Movement", color: Colors.red),
+          ListTile(
+            title: Text("Moderate Consistency"),
+            subtitle: Text("Moderate Volume"),
+            trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
+          ),
+          EntryHeader(title: "Medicine", color: Colors.green),
+          ListTile(
+            title: Text("Fiber"),
+            subtitle: Text("2 Tbsp"),
+            trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
+          ),
+          ListTile(
+            title: Text("Pro-8"),
+            subtitle: Text("1 each"),
+            trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
+          ),
         ],
       ),
     );
@@ -65,3 +92,4 @@ class EntryHeader extends StatelessWidget {
     );
   }
 }
+
