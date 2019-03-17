@@ -35,3 +35,32 @@ class EntryHeader extends StatelessWidget {
   }
 }
 
+class FoodEntryHeader extends StatelessWidget {
+  final String title = "Food & Drink";
+  final Color backgroundColor = Colors.blue;
+
+  @override
+  Widget build(BuildContext context) {
+    return EntryHeader(title: title, color: backgroundColor);
+  }
+}
+
+class BMEntryHeader extends StatelessWidget {
+  final String title = "Bowel Movement";
+  final Color backgroundColor = Colors.red;
+
+  @override
+  Widget build(BuildContext context) {
+    return EntryHeader(title: title, color: backgroundColor);
+  }
+}
+
+class MedicineEntryHeader extends StatelessWidget {
+  final String title = "Medicine";
+  final Color backgroundColor = Colors.green;
+
+  @override
+  Widget build(BuildContext context) {
+    return EntryHeader(title: title, color: backgroundColor);
+  }
+}
