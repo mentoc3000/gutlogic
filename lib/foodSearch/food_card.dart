@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'FoodSheet.dart';
 import 'package:gi_bliss/model/Food.dart';
 import 'package:gi_bliss/genericViews/itemCardLarge.dart';
 
