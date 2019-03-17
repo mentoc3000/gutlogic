@@ -14,7 +14,7 @@ class MainTabsState extends State<MainTabs> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     FoodSearch(),
-    Diary(),
+    DiaryPage(),
     PlaceholderWidget(Colors.red),
     AccountPage(),
   ];

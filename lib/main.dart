@@ -11,7 +11,7 @@ class GiBlissApp extends StatelessWidget {
 
   final routes = <String, WidgetBuilder> {
     AccountPage.tag: (context) => AccountPage(),
-    Diary.tag: (context) => Diary(),
+    DiaryPage.tag: (context) => DiaryPage(),
     FoodSearch.tag: (context) => FoodSearch(),
     MainTabs.tag: (context) => MainTabs()
   };

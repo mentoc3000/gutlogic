@@ -6,13 +6,13 @@ import 'package:gi_bliss/model/DiaryEntry.dart';
 import 'package:gi_bliss/model/Food.dart';
 import 'package:gi_bliss/helpers/Dummy.dart';
 
-class Diary extends StatefulWidget {
+class DiaryPage extends StatefulWidget {
   static String tag = 'diary-page';
   @override
-  DiaryState createState() => DiaryState();
+  DiaryPageState createState() => DiaryPageState();
 }
 
-class DiaryState extends State<Diary> {
+class DiaryPageState extends State<DiaryPage> {
 
   @override
   Widget build(BuildContext context) {
