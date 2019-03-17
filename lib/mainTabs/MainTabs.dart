@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gi_bliss/account/Account.dart';
 import 'package:gi_bliss/foodSearch/FoodSearch.dart';
 import 'package:gi_bliss/diary/Diary.dart';
 import 'package:gi_bliss/helpers/PlaceholderWidget.dart';
@@ -14,7 +15,7 @@ class MainTabsState extends State<MainTabs> {
     FoodSearch(),
     Diary(),
     PlaceholderWidget(Colors.red),
-    PlaceholderWidget(Colors.green),
+    Account(),
   ];
 
   @override
