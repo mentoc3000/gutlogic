@@ -6,6 +6,7 @@ import 'package:gi_bliss/helpers/Dummy.dart';
 import 'FoodCard.dart';
 
 class FoodSearch extends StatefulWidget {
+  static String tag = 'foodsearch-page';
   @override
   _FoodSearchState createState() {
     return _FoodSearchState();

@@ -7,6 +7,7 @@ import 'package:gi_bliss/model/Food.dart';
 import 'package:gi_bliss/helpers/Dummy.dart';
 
 class Diary extends StatefulWidget {
+  static String tag = 'diary-page';
   @override
   DiaryState createState() => DiaryState();
 }

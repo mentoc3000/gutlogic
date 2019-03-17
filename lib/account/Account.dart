@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Account extends StatefulWidget {
+  static String tag = 'account-page';
   @override
   AccountState createState() => AccountState();
 }
