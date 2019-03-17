@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gi_bliss/foodSearch/FoodSearch.dart';
+import 'package:gi_bliss/mainTabs/MainTabs.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(FoodSearch.tag);
+          Navigator.of(context).pushNamed(MainTabs.tag);
         },
         padding: EdgeInsets.all(12),
         color: Colors.lightBlueAccent,

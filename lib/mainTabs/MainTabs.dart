@@ -5,6 +5,7 @@ import 'package:gi_bliss/diary/Diary.dart';
 import 'package:gi_bliss/helpers/PlaceholderWidget.dart';
 
 class MainTabs extends StatefulWidget {
+  static String tag = 'maintabs-page';
   @override
   MainTabsState createState() => new MainTabsState();
 }
