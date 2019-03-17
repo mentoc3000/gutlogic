@@ -3,7 +3,7 @@ import 'package:gi_bliss/helpers/PlaceholderWidget.dart';
 import 'package:gi_bliss/model/Food.dart';
 import 'package:gi_bliss/model/FoodList.dart';
 import 'package:gi_bliss/helpers/Dummy.dart';
-import 'FoodCard.dart';
+import 'food_card.dart';
 
 class FoodSearchPage extends StatefulWidget {
   static String tag = 'foodsearch-page';
