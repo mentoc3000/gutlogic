@@ -3,7 +3,7 @@ import 'package:gi_bliss/mainTabs/MainTabs.dart';
 import 'package:gi_bliss/account/account_page.dart';
 import 'package:gi_bliss/diary/diary_page.dart';
 import 'package:gi_bliss/food_search/food_search_page.dart';
-import 'package:gi_bliss/login/Login.dart';
+import 'package:gi_bliss/login/login_page.dart';
 
 void main() => runApp(GiBlissApp());
 
