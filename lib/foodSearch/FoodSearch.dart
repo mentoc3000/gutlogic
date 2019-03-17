@@ -5,15 +5,15 @@ import 'package:gi_bliss/model/FoodList.dart';
 import 'package:gi_bliss/helpers/Dummy.dart';
 import 'FoodCard.dart';
 
-class FoodSearch extends StatefulWidget {
+class FoodSearchPage extends StatefulWidget {
   static String tag = 'foodsearch-page';
   @override
-  _FoodSearchState createState() {
-    return _FoodSearchState();
+  _FoodSearchPageState createState() {
+    return _FoodSearchPageState();
   }
 }
 
-class _FoodSearchState extends State<FoodSearch> {
+class _FoodSearchPageState extends State<FoodSearchPage> {
   static String _title = "Food Search";
   Widget _appBarTitle = new Text(_title);
   final TextEditingController _filter = new TextEditingController();
@@ -87,7 +87,7 @@ class _FoodSearchState extends State<FoodSearch> {
 
   Widget _buildListItem(BuildContext context, Food food) => new FoodCard(food);
 
-  _FoodSearchState() {
+  _FoodSearchPageState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {

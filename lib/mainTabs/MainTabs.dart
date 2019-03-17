@@ -13,7 +13,7 @@ class MainTabs extends StatefulWidget {
 class MainTabsState extends State<MainTabs> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    FoodSearch(),
+    FoodSearchPage(),
     DiaryPage(),
     PlaceholderWidget(Colors.red),
     AccountPage(),
