@@ -17,10 +17,6 @@ class DiaryState extends State<Diary> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Diary"),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(150.0),
-          child: Calendar(isExpandable: false,)
-        ),
       ),
       body: ListView(
         children: <Widget>[
