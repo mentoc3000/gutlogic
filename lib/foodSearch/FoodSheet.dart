@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:gi_bliss/model/Food.dart';
 
-class FoodSheet extends StatelessWidget {
+class FoodSheetPage extends StatelessWidget {
   final Food food;
 
-  FoodSheet({this.food});
+  FoodSheetPage({this.food});
 
   @override
   Widget build(BuildContext context) {
