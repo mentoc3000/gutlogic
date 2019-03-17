@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gi_bliss/account/account_page.dart';
-import 'package:gi_bliss/foodSearch/FoodSearch.dart';
+import 'package:gi_bliss/foodSearch/food_search_page.dart';
 import 'package:gi_bliss/diary/diary_page.dart';
 import 'package:gi_bliss/helpers/PlaceholderWidget.dart';
 
