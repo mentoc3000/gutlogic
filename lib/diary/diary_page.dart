@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gi_bliss/genericViews/ItemTileLarge.dart';
-import 'EntryHeader.dart';
+import 'entry_header.dart';
 import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:gi_bliss/model/DiaryEntry.dart';
 import 'package:gi_bliss/model/Food.dart';
