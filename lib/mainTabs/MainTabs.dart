@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gi_bliss/account/account_page.dart';
 import 'package:gi_bliss/food_search/food_search_page.dart';
 import 'package:gi_bliss/diary/diary_page.dart';
-import 'package:gi_bliss/helpers/PlaceholderWidget.dart';
+import 'package:gi_bliss/helpers/placeholder_widget.dart';
 
 class MainTabs extends StatefulWidget {
   static String tag = 'maintabs-page';
