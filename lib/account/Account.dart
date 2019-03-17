@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Account extends StatefulWidget {
+class AccountPage extends StatefulWidget {
   static String tag = 'account-page';
   @override
-  AccountState createState() => AccountState();
+  AccountPageState createState() => AccountPageState();
 }
 
-class AccountState extends State<Account> {
+class AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {

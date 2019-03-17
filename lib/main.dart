@@ -10,7 +10,7 @@ void main() => runApp(GiBlissApp());
 class GiBlissApp extends StatelessWidget {
 
   final routes = <String, WidgetBuilder> {
-    Account.tag: (context) => Account(),
+    AccountPage.tag: (context) => AccountPage(),
     Diary.tag: (context) => Diary(),
     FoodSearch.tag: (context) => FoodSearch(),
     MainTabs.tag: (context) => MainTabs()

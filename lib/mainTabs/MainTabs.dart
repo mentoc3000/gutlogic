@@ -16,7 +16,7 @@ class MainTabsState extends State<MainTabs> {
     FoodSearch(),
     Diary(),
     PlaceholderWidget(Colors.red),
-    Account(),
+    AccountPage(),
   ];
 
   @override
