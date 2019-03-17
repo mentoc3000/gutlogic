@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gi_bliss/model/Food.dart';
-import 'package:gi_bliss/genericViews/itemCardLarge.dart';
+import 'package:gi_bliss/generic_widgets/itemCardLarge.dart';
 
 class FoodCard extends StatelessWidget {
   final Food food;
