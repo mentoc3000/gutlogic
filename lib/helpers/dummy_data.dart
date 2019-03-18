@@ -1,4 +1,4 @@
-import 'package:gi_bliss/model/Food.dart';
+import 'package:gi_bliss/model/food.dart';
 import 'package:gi_bliss/model/FoodList.dart';
 import 'package:gi_bliss/model/diary_entry.dart';
 

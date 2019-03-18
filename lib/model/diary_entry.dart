@@ -1,4 +1,4 @@
-import 'Food.dart';
+import 'food.dart';
 
 class DiaryEntry {
   DateTime dateTime;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gi_bliss/helpers/placeholder_widget.dart';
-import 'package:gi_bliss/model/Food.dart';
+import 'package:gi_bliss/model/food.dart';
 import 'package:gi_bliss/model/FoodList.dart';
 import 'package:gi_bliss/helpers/Dummy.dart';
 import 'food_card.dart';

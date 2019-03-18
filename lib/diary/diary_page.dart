@@ -3,7 +3,7 @@ import 'package:gi_bliss/generic_widgets/item_tile_large.dart';
 import 'entry_header.dart';
 import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:gi_bliss/model/diary_entry.dart';
-import 'package:gi_bliss/model/Food.dart';
+import 'package:gi_bliss/model/food.dart';
 import 'package:gi_bliss/helpers/Dummy.dart';
 
 class DiaryPage extends StatefulWidget {

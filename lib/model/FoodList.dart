@@ -1,4 +1,4 @@
-import 'Food.dart';
+import 'food.dart';
 
 class FoodList {
   List<Food> foods = new List();
