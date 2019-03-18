@@ -1,6 +1,6 @@
 import 'package:gi_bliss/model/Food.dart';
 import 'package:gi_bliss/model/FoodList.dart';
-import 'package:gi_bliss/model/DiaryEntry.dart';
+import 'package:gi_bliss/model/diary_entry.dart';
 
 class Dummy {
   static final _artichoke = Food(
