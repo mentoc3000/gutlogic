@@ -1,5 +1,5 @@
 import 'package:gi_bliss/model/food.dart';
-import 'package:gi_bliss/model/FoodList.dart';
+import 'package:gi_bliss/model/food_list.dart';
 import 'package:gi_bliss/model/diary_entry.dart';
 
 class Dummy {
