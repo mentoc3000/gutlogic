@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gi_bliss/main_tabs.dart';
+import 'package:gut_ai/main_tabs.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';

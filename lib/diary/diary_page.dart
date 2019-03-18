@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gi_bliss/generic_widgets/item_tile_large.dart';
+import 'package:gut_ai/generic_widgets/item_tile_large.dart';
 import 'entry_header.dart';
-import 'package:flutter_calendar/flutter_calendar.dart';
-import 'package:gi_bliss/model/diary_entry.dart';
-import 'package:gi_bliss/model/food.dart';
-import 'package:gi_bliss/helpers/dummy_data.dart';
+import 'package:gut_ai/model/diary_entry.dart';
+import 'package:gut_ai/model/food.dart';
+import 'package:gut_ai/helpers/dummy_data.dart';
 
 class DiaryPage extends StatefulWidget {
   static String tag = 'diary-page';

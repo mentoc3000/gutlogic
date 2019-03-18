@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gi_bliss/helpers/placeholder_widget.dart';
-import 'package:gi_bliss/model/food.dart';
-import 'package:gi_bliss/model/food_list.dart';
-import 'package:gi_bliss/helpers/dummy_data.dart';
+import 'package:gut_ai/helpers/placeholder_widget.dart';
+import 'package:gut_ai/model/food.dart';
+import 'package:gut_ai/model/food_list.dart';
+import 'package:gut_ai/helpers/dummy_data.dart';
 import 'food_card.dart';
 
 class FoodSearchPage extends StatefulWidget {

@@ -1,4 +1,4 @@
-# gi_bliss
+# gut_ai
 
 A new Flutter project.
 
