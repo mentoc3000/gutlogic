@@ -1,5 +1,4 @@
 import 'package:gut_ai/model/food.dart';
-import 'package:gut_ai/model/food_list.dart';
 import 'package:gut_ai/model/diary_entry.dart';
 
 class Dummy {
@@ -16,11 +15,7 @@ class Dummy {
     irritants: []
   );
 
-  static final _foods = [_artichoke, _creamCheese, _egg];
-
-  static final foodList = FoodList(foods: _foods);
-
-
+  static final foodList = [_artichoke, _creamCheese, _egg];
 
   List<FoodAndDrinkEntry> foodAndDrinkEntries = [
     FoodAndDrinkEntry(

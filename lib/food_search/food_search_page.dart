@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/helpers/placeholder_widget.dart';
 import 'package:gut_ai/model/food.dart';
-import 'package:gut_ai/model/food_list.dart';
 import 'package:gut_ai/helpers/dummy_data.dart';
 import 'food_card.dart';
 
@@ -19,25 +18,25 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
   final TextEditingController _filter = new TextEditingController();
   Icon _searchIcon = new Icon(Icons.search);
   String _searchText = "";
-  FoodList _foods = new FoodList();
-  FoodList _filteredFoods = new FoodList();
+  List<Food> _foods = [];
+  List<Food> _filteredFoods = [];
 
   @override
   void initState() {
     super.initState();
 
-    _foods.foods = new List();
-    _filteredFoods.foods = new List();
+    _foods = new List();
+    _filteredFoods = new List();
 
     _getFoods();
   }
 
   void _getFoods() {
-    FoodList foods = Dummy.foodList;
+    List<Food> foods = Dummy.foodList;
     setState(() {
-      for (Food food in foods.foods) {
-        this._foods.foods.add(food);
-        this._filteredFoods.foods.add(food);
+      for (Food food in foods) {
+        this._foods.add(food);
+        this._filteredFoods.add(food);
       }
     });
   }
@@ -65,12 +64,12 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
 
   Widget _buildList(BuildContext context) {
     if (!(_searchText.isEmpty)) {
-      _filteredFoods.foods = new List();
-      for (int i = 0; i < _foods.foods.length; i++) {
-        if (_foods.foods[i].name
+      _filteredFoods = new List();
+      for (int i = 0; i < _foods.length; i++) {
+        if (_foods[i].name
             .toLowerCase()
             .contains(_searchText.toLowerCase())) {
-          _filteredFoods.foods.add(_foods.foods[i]);
+          _filteredFoods.add(_foods[i]);
         }
       }
     }
@@ -79,7 +78,6 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
       padding: const EdgeInsets.only(top: 20.0),
       children: this
           ._filteredFoods
-          .foods
           .map((data) => _buildListItem(context, data))
           .toList(),
     );
@@ -103,9 +101,9 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
   }
 
   void _resetFoods() {
-    this._filteredFoods.foods = new List();
-    for (Food food in _foods.foods) {
-      this._filteredFoods.foods.add(food);
+    this._filteredFoods = new List();
+    for (Food food in _foods) {
+      this._filteredFoods.add(food);
     }
   }
 
