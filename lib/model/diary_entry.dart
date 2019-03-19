@@ -1,4 +1,7 @@
 import 'food.dart';
+import 'bowel_movement.dart';
+import 'medicine.dart';
+import 'symptom.dart';
 
 class DiaryEntry {
   DateTime dateTime;
