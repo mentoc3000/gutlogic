@@ -1,5 +1,7 @@
 import 'package:gut_ai/model/food.dart';
 import 'package:gut_ai/model/diary_entry.dart';
+import 'package:gut_ai/model/bowel_movement.dart';
+import 'package:gut_ai/model/medicine.dart';
 
 class Dummy {
   static final _artichoke = Food(
@@ -33,15 +35,14 @@ class Dummy {
   List<BowelMovementEntry> bowelMovementEntries = [
     BowelMovementEntry(
       dateTime: DateTime(2019, 2, 7, 11, 31),
-      consistency: 4,
-      volume: 2
+      bowelMovement: BowelMovement(type: 4, volume: 2),
     )
   ];
 
   List<MedicineEntry> medicineEntries = [
     MedicineEntry(
       dateTime: DateTime(2019, 2, 7, 12, 0),
-      medicine: "Pro-8",
+      medicine: Medicine(name: "Pro-8"),
       dose: "1 pill"
     )
   ];

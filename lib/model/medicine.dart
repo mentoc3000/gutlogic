@@ -1,7 +1,7 @@
-class Logged {
+class Medicine {
   String name;
 
-  Logged({
+  Medicine({
     this.name
   });
 }

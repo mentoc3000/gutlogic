@@ -21,18 +21,16 @@ class FoodAndDrinkEntry extends DiaryEntry {
 }
 
 class BowelMovementEntry extends DiaryEntry {
-  int consistency;
-  int volume;
+  BowelMovement bowelMovement;
 
   BowelMovementEntry({
     DateTime dateTime,
-    this.consistency,
-    this.volume
+    this.bowelMovement
   }) : super(dateTime: dateTime);
 }
 
 class MedicineEntry extends DiaryEntry {
-  String medicine;
+  Medicine medicine;
   String dose;
 
   MedicineEntry({
