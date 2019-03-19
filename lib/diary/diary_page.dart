@@ -23,13 +23,13 @@ class DiaryPageState extends State<DiaryPage> {
       body: ListView(
         children: <Widget>[
           FoodEntryHeader(),
-          ItemTileLarge("Banana", "1 each"),
-          ItemTileLarge("Egg", "2 each"),
+          ItemTileLarge(heading: "Banana", subheading:"1 each"),
+          ItemTileLarge(heading: "Egg", subheading: "2 each"),
           BMEntryHeader(),
-          ItemTileLarge("Moderate Consistency", "Moderate Volume"),
+          ItemTileLarge(heading: "Moderate Consistency", subheading: "Moderate Volume"),
           MedicineEntryHeader(),
-          ItemTileLarge("Fiber", "2 Tbsp"),
-          ItemTileLarge("Pro-8", "1 each"),
+          ItemTileLarge(heading: "Fiber", subheading: "2 Tbsp"),
+          ItemTileLarge(heading: "Pro-8", subheading: "1 each"),
         ],
       ),
     );

@@ -5,7 +5,7 @@ class ItemTileLarge extends StatelessWidget {
   final String heading;
   final String subheading;
 
-  ItemTileLarge(this.heading, this.subheading);
+  ItemTileLarge({this.heading, this.subheading});
 
   @override
   Widget build(BuildContext context) {
