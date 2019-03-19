@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/generic_widgets/item_tile_large.dart';
+import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'entry_header.dart';
 import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/model/food.dart';
