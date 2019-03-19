@@ -6,13 +6,17 @@ class ItemTileLarge extends StatelessWidget {
   final String heading;
   final String subheading;
   final Sensitivity sensitivity;
-  Widget trailingWidget;
+  final Widget trailingWidget;
 
-  ItemTileLarge({this.heading, this.subheading, this.sensitivity}) {
-    if (this.sensitivity == null) {
-      this.trailingWidget = Icon(Icons.keyboard_arrow_right, size: 30.0);
+  ItemTileLarge({this.heading, this.subheading, this.sensitivity}) :
+    this.trailingWidget = _buildTrailing(sensitivity);
+
+  static Widget _buildTrailing(Sensitivity sensitivity) {
+    Widget trailingWidget;
+    if (sensitivity == null) {
+      trailingWidget = Icon(Icons.keyboard_arrow_right, size: 30.0);
     } else {
-      this.trailingWidget = SizedBox(
+      trailingWidget = SizedBox(
         width: 60,
         child: Row(
           children: [
@@ -22,6 +26,7 @@ class ItemTileLarge extends StatelessWidget {
         )
       );
     }
+    return trailingWidget;
   }
 
   @override
