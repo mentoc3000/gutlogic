@@ -5,8 +5,24 @@ import 'package:gut_ai/model/sensitivity.dart';
 class ItemTileLarge extends StatelessWidget {
   final String heading;
   final String subheading;
+  final Sensitivity sensitivity;
+  Widget trailingWidget;
 
-  ItemTileLarge({this.heading, this.subheading});
+  ItemTileLarge({this.heading, this.subheading, this.sensitivity}) {
+    if (this.sensitivity == null) {
+      this.trailingWidget = Icon(Icons.keyboard_arrow_right, size: 30.0);
+    } else {
+      this.trailingWidget = SizedBox(
+        width: 60,
+        child: Row(
+          children: [
+            SensitivityIndicatorLarge(sensitivity: sensitivity,),
+            Icon(Icons.keyboard_arrow_right, size: 30.0),
+          ]
+        )
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,15 +30,7 @@ class ItemTileLarge extends StatelessWidget {
       title: Text(this.heading),
       subtitle: Text(this.subheading),
       // SizedBox is a workaround for an issue with unconstrained trailing widget size
-      trailing: SizedBox(
-        width: 60,
-        child: Row(
-          children: [
-            SensitivityIndicatorLarge(sensitivity: Sensitivity.Major,),
-            Icon(Icons.keyboard_arrow_right, size: 30.0),
-          ]
-        )
-      )
+      trailing: this.trailingWidget
     );
   }
 
