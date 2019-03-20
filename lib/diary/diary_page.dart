@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/generic_widgets/item_tile.dart';
+import 'diary_tiles.dart';
 import 'entry_header.dart';
 import 'package:gut_ai/model/sensitivity.dart';
-import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/model/food.dart';
 import 'package:gut_ai/helpers/dummy_data.dart';
 
@@ -24,13 +23,13 @@ class DiaryPageState extends State<DiaryPage> {
       body: ListView(
         children: <Widget>[
           FoodEntryHeader(),
-          ItemTileLarge(heading: "Banana", subheading:"1 each", sensitivity: Sensitivity.Minor,),
-          ItemTileLarge(heading: "Egg", subheading: "2 each", sensitivity: Sensitivity.Major),
+          FoodAndDrinkTileLarge(entry: Dummy.foodAndDrinkEntries[0],),
+          FoodAndDrinkTileLarge(entry: Dummy.foodAndDrinkEntries[1],),
           BMEntryHeader(),
-          ItemTileLarge(heading: "Moderate Consistency", subheading: "Moderate Volume"),
+          BowelMovementTile(entry: Dummy.bowelMovementEntries[0],),
           MedicineEntryHeader(),
-          ItemTileLarge(heading: "Fiber", subheading: "2 Tbsp"),
-          ItemTileLarge(heading: "Pro-8", subheading: "1 each"),
+          MedicineTile(entry: Dummy.medicineEntries[0],),
+          MedicineTile(entry: Dummy.medicineEntries[1],),
         ],
       ),
     );

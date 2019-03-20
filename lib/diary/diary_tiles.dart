@@ -8,7 +8,7 @@ class FoodAndDrinkTileLarge extends ItemTileLarge {
   FoodAndDrinkTileLarge({this.entry}):
     super(
       heading: entry.food.name, 
-      subheading: entry.food.irritants.join(', ')
+      subheading: entry.quantity
     );
 
 }

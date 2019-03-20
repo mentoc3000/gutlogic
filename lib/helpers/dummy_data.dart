@@ -19,7 +19,7 @@ class Dummy {
 
   static final foodList = [_artichoke, _creamCheese, _egg];
 
-  List<FoodAndDrinkEntry> foodAndDrinkEntries = [
+  static List<FoodAndDrinkEntry> foodAndDrinkEntries = [
     FoodAndDrinkEntry(
       dateTime: DateTime(2019, 2, 7, 8, 14), 
       food: Food(name: "Bread", irritants: ['Fructans']),
@@ -32,18 +32,23 @@ class Dummy {
     )
   ];
 
-  List<BowelMovementEntry> bowelMovementEntries = [
+  static List<BowelMovementEntry> bowelMovementEntries = [
     BowelMovementEntry(
       dateTime: DateTime(2019, 2, 7, 11, 31),
       bowelMovement: BowelMovement(type: 4, volume: 2),
     )
   ];
 
-  List<MedicineEntry> medicineEntries = [
+  static List<MedicineEntry> medicineEntries = [
     MedicineEntry(
       dateTime: DateTime(2019, 2, 7, 12, 0),
       medicine: Medicine(name: "Pro-8"),
       dose: "1 pill"
-    )
+    ),
+    MedicineEntry(
+      dateTime: DateTime(2019, 2, 7, 12, 0),
+      medicine: Medicine(name: "Fiber"),
+      dose: "1 Tbsp"
+    ),
   ];
 }
