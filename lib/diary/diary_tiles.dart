@@ -59,6 +59,15 @@ class TimeLeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var formatter = DateFormat.jm();
-    return Text(formatter.format(datetime));
+    return Container(
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(formatter.format(datetime))
+        ],
+      )
+    );
   }
 }
