@@ -12,7 +12,7 @@ class FoodAndDrinkTileLarge extends StatelessWidget {
   Widget build(BuildContext context) {
     return ItemTileLarge (
       heading: entry.meal.name,
-      subheading: entry.meal.ingredients.fold('', (value, element) => value + ', ' + element.food.name),
+      subheading: entry.meal.ingredients.map((e) => e.food.name).join(', '),
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
     );
   }
