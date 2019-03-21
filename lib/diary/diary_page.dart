@@ -22,7 +22,7 @@ class DiaryPageState extends State<DiaryPage> {
       ),
       body: ListView(
         children: <Widget>[
-          FoodAndDrinkTileLarge(entry: Dummy.mealEntries[0],),
+          MealTileLarge(entry: Dummy.mealEntries[0],),
           BowelMovementTile(entry: Dummy.bowelMovementEntries[0],),
           MedicineTile(entry: Dummy.medicineEntries[0],),
           MedicineTile(entry: Dummy.medicineEntries[1],),

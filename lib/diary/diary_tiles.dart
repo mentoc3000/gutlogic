@@ -3,10 +3,10 @@ import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'package:intl/intl.dart';
 
-class FoodAndDrinkTileLarge extends StatelessWidget {
+class MealTileLarge extends StatelessWidget {
   final MealEntry entry;
 
-  FoodAndDrinkTileLarge({this.entry});
+  MealTileLarge({this.entry});
   
   @override
   Widget build(BuildContext context) {
