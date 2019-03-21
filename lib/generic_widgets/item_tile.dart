@@ -7,8 +7,9 @@ class ItemTileLarge extends StatelessWidget {
   final String subheading;
   final Sensitivity sensitivity;
   final Widget trailingWidget;
+  final Widget leading;
 
-  ItemTileLarge({this.heading, this.subheading, this.sensitivity}) :
+  ItemTileLarge({this.heading, this.subheading, this.sensitivity, this.leading}) :
     this.trailingWidget = _buildTrailing(sensitivity);
 
   static Widget _buildTrailing(Sensitivity sensitivity) {
@@ -16,6 +17,7 @@ class ItemTileLarge extends StatelessWidget {
     if (sensitivity == null) {
       trailingWidget = Icon(Icons.keyboard_arrow_right, size: 30.0);
     } else {
+      // SizedBox is a workaround for an issue with unconstrained trailing widget size
       trailingWidget = SizedBox(
         width: 60,
         child: Row(
@@ -34,7 +36,7 @@ class ItemTileLarge extends StatelessWidget {
     return new ListTile(
       title: Text(this.heading),
       subtitle: Text(this.subheading),
-      // SizedBox is a workaround for an issue with unconstrained trailing widget size
+      leading: this.leading,
       trailing: this.trailingWidget
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
+import 'package:intl/intl.dart';
 
 class FoodAndDrinkTileLarge extends StatelessWidget {
   final MealEntry entry;
@@ -12,6 +13,7 @@ class FoodAndDrinkTileLarge extends StatelessWidget {
     return ItemTileLarge (
       heading: entry.meal.name,
       subheading: entry.meal.ingredients.fold('', (value, element) => value + ', ' + element.food.name),
+      leading: TimeLeader(datetime: entry.dateTime,),
     );
   }
 
@@ -26,7 +28,8 @@ class BowelMovementTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ItemTileLarge (
       heading: 'Type ' + entry.bowelMovement.type.toString(), 
-      subheading: 'Volume: ' + entry.bowelMovement.volume.toString()
+      subheading: 'Volume: ' + entry.bowelMovement.volume.toString(),
+      leading: TimeLeader(datetime: entry.dateTime,),
     );
   }
 
@@ -41,8 +44,21 @@ class MedicineTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ItemTileLarge (
       heading: entry.medicine.name, 
-      subheading: entry.dose
+      subheading: entry.dose,
+      leading: TimeLeader(datetime: entry.dateTime,),
     );
   }
 
+}
+
+class TimeLeader extends StatelessWidget {
+  final DateTime datetime;
+
+  TimeLeader({this.datetime});
+
+  @override
+  Widget build(BuildContext context) {
+    var formatter = DateFormat.jm();
+    return Text(formatter.format(datetime));
+  }
 }
