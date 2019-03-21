@@ -13,7 +13,7 @@ class FoodAndDrinkTileLarge extends StatelessWidget {
     return ItemTileLarge (
       heading: entry.meal.name,
       subheading: entry.meal.ingredients.fold('', (value, element) => value + ', ' + element.food.name),
-      leading: TimeLeader(datetime: entry.dateTime,),
+      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
     );
   }
 
@@ -29,7 +29,7 @@ class BowelMovementTile extends StatelessWidget {
     return ItemTileLarge (
       heading: 'Type ' + entry.bowelMovement.type.toString(), 
       subheading: 'Volume: ' + entry.bowelMovement.volume.toString(),
-      leading: TimeLeader(datetime: entry.dateTime,),
+      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.purple,),
     );
   }
 
@@ -45,7 +45,7 @@ class MedicineTile extends StatelessWidget {
     return ItemTileLarge (
       heading: entry.medicine.name, 
       subheading: entry.dose,
-      leading: TimeLeader(datetime: entry.dateTime,),
+      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.orange,),
     );
   }
 
@@ -53,20 +53,32 @@ class MedicineTile extends StatelessWidget {
 
 class TimeLeader extends StatelessWidget {
   final DateTime datetime;
+  final Color borderColor;
 
-  TimeLeader({this.datetime});
+  TimeLeader({this.datetime, this.borderColor});
 
   @override
   Widget build(BuildContext context) {
     var formatter = DateFormat.jm();
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(formatter.format(datetime))
-        ],
+      padding: EdgeInsets.fromLTRB(0, 20, 5, 20),
+      decoration: BoxDecoration(
+        border: Border(
+          right: BorderSide(width: 3.0, color: this.borderColor)
+        )
+      ),
+      child: SizedBox(
+        width: 70.0,
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 3, 0),
+              child: Text(formatter.format(datetime))
+            )
+          ],
+        )
       )
     );
   }
