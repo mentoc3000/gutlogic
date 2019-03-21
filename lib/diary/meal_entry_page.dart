@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/model/diary_entry.dart';
 
-class FoodEntryPage extends StatefulWidget {
+class MealEntryPage extends StatefulWidget {
   static String tag = 'food-entry-page';
 
   final MealEntry entry;
 
-  FoodEntryPage({this.entry});
+  MealEntryPage({this.entry});
 
   @override
-  FoodEntryPageState createState() => FoodEntryPageState();
+  MealEntryPageState createState() => MealEntryPageState();
 }
 
-class FoodEntryPageState extends State<FoodEntryPage> {
+class MealEntryPageState extends State<MealEntryPage> {
 
   @override
   Widget build(BuildContext context) {

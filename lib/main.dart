@@ -4,6 +4,7 @@ import 'package:gut_ai/account/account_page.dart';
 import 'package:gut_ai/diary/diary_page.dart';
 import 'package:gut_ai/food_search/food_search_page.dart';
 import 'package:gut_ai/login/login_page.dart';
+import 'package:gut_ai/diary/meal_entry_page.dart';
 
 void main() => runApp(GiBlissApp());
 
@@ -13,7 +14,8 @@ class GiBlissApp extends StatelessWidget {
     AccountPage.tag: (context) => AccountPage(),
     DiaryPage.tag: (context) => DiaryPage(),
     FoodSearchPage.tag: (context) => FoodSearchPage(),
-    MainTabs.tag: (context) => MainTabs()
+    MainTabs.tag: (context) => MainTabs(),
+    MealEntryPage.tag: (context) => MealEntryPage()
   };
 
   @override
