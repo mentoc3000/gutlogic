@@ -2,6 +2,7 @@ import 'food.dart';
 import 'bowel_movement.dart';
 import 'medicine.dart';
 import 'symptom.dart';
+import 'meal.dart';
 
 class DiaryEntry {
   DateTime dateTime;
@@ -9,14 +10,12 @@ class DiaryEntry {
   DiaryEntry({this.dateTime});
 }
 
-class FoodAndDrinkEntry extends DiaryEntry {
-  Food food;
-  String quantity;
+class MealEntry extends DiaryEntry {
+  Meal meal;
 
-  FoodAndDrinkEntry({
+  MealEntry({
     DateTime dateTime,
-    this.food,
-    this.quantity
+    this.meal,
   }) : super(dateTime: dateTime);
 }
 

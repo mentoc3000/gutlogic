@@ -2,6 +2,9 @@ import 'package:gut_ai/model/food.dart';
 import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/model/bowel_movement.dart';
 import 'package:gut_ai/model/medicine.dart';
+import 'package:gut_ai/model/meal.dart';
+import 'package:gut_ai/model/ingredient.dart';
+import 'package:gut_ai/model/quantity.dart';
 
 class Dummy {
   static final _artichoke = Food(
@@ -19,17 +22,23 @@ class Dummy {
 
   static final foodList = [_artichoke, _creamCheese, _egg];
 
-  static List<FoodAndDrinkEntry> foodAndDrinkEntries = [
-    FoodAndDrinkEntry(
+  static List<MealEntry> mealEntries = [
+    MealEntry(
       dateTime: DateTime(2019, 2, 7, 8, 14), 
-      food: Food(name: "Bread", irritants: ['Fructans']),
-      quantity: "1 slice"
+      meal: Meal(
+        name: "Breakfast",
+        ingredients: [
+          Ingredient(
+            food: Food(name: "Bread", irritants: ['Fructans']),
+            quantity: Quantity(amount: 1.5, unit: "slices")
+          ),
+          Ingredient(
+            food: Food(name: "Egg", irritants: []),
+            quantity: Quantity(amount: 1, unit: "each")
+          )
+        ]
+      )
     ),
-    FoodAndDrinkEntry(
-      dateTime: DateTime(2019, 2, 7, 8, 14), 
-      food: Food(name: "Egg", irritants: []),
-      quantity: "1 each"
-    )
   ];
 
   static List<BowelMovementEntry> bowelMovementEntries = [

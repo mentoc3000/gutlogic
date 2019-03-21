@@ -4,7 +4,7 @@ import 'package:gut_ai/model/diary_entry.dart';
 class FoodEntryPage extends StatefulWidget {
   static String tag = 'food-entry-page';
 
-  final FoodAndDrinkEntry entry;
+  final MealEntry entry;
 
   FoodEntryPage({this.entry});
 
@@ -19,7 +19,7 @@ class FoodEntryPageState extends State<FoodEntryPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.entry.food.name),
+        title: Text(widget.entry.meal.name),
       ),
       body: null
     );

@@ -22,12 +22,8 @@ class DiaryPageState extends State<DiaryPage> {
       ),
       body: ListView(
         children: <Widget>[
-          FoodEntryHeader(),
-          FoodAndDrinkTileLarge(entry: Dummy.foodAndDrinkEntries[0],),
-          FoodAndDrinkTileLarge(entry: Dummy.foodAndDrinkEntries[1],),
-          BMEntryHeader(),
+          FoodAndDrinkTileLarge(entry: Dummy.mealEntries[0],),
           BowelMovementTile(entry: Dummy.bowelMovementEntries[0],),
-          MedicineEntryHeader(),
           MedicineTile(entry: Dummy.medicineEntries[0],),
           MedicineTile(entry: Dummy.medicineEntries[1],),
         ],

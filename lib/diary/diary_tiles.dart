@@ -3,12 +3,12 @@ import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
 
 class FoodAndDrinkTileLarge extends ItemTileLarge {
-  final FoodAndDrinkEntry entry;
+  final MealEntry entry;
 
   FoodAndDrinkTileLarge({this.entry}):
     super(
-      heading: entry.food.name, 
-      subheading: entry.quantity
+      heading: entry.meal.name, 
+      subheading: entry.meal.ingredients.fold('', (value, element) => value + ', ' + element.food.name)
     );
 
 }
