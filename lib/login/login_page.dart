@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(MainTabs.tag);
+          Navigator.of(context).pushNamed(Tabbed.tag);
         },
         padding: EdgeInsets.all(12),
         color: Colors.lightBlueAccent,
