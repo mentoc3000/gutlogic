@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'meal_entry_page.dart';
 import 'bm_entry_page.dart';
 import 'symptom_entry_page.dart';
+import 'medicine_entry_page.dart';
 
 class MealTileLarge extends StatelessWidget {
   final MealEntry entry;
@@ -56,6 +57,9 @@ class MedicineTile extends StatelessWidget {
       heading: entry.medicine.name, 
       subheading: entry.dose,
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.orange,),
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (context) => MedicineEntryPage(entry: entry,)
+      )),
     );
   }
 
