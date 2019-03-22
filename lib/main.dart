@@ -14,7 +14,6 @@ class GiBlissApp extends StatelessWidget {
     AccountPage.tag: (context) => AccountPage(),
     DiaryPage.tag: (context) => DiaryPage(),
     FoodSearchPage.tag: (context) => FoodSearchPage(),
-    MainTabs.tag: (context) => MainTabs(),
     Tabbed.tag: (context) => Tabbed()
     // MealEntryPage.tag: (context) => MealEntryPage(entry:)
   };
