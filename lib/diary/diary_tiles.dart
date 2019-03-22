@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'package:intl/intl.dart';
+import 'meal_entry_page.dart';
 
 class MealTileLarge extends StatelessWidget {
   final MealEntry entry;
@@ -14,6 +15,7 @@ class MealTileLarge extends StatelessWidget {
       heading: entry.meal.name,
       subheading: entry.meal.ingredients.map((e) => e.food.name).join(', '),
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
     );
   }
 

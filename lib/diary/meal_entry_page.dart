@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/model/diary_entry.dart';
+import 'package:gut_ai/helpers/placeholder_widget.dart';
 
 class MealEntryPage extends StatefulWidget {
   static String tag = 'food-entry-page';
@@ -21,7 +22,7 @@ class MealEntryPageState extends State<MealEntryPage> {
         centerTitle: true,
         title: Text(widget.entry.meal.name),
       ),
-      body: null
+      body: PlaceholderWidget(Colors.cyanAccent)
     );
   }
 }

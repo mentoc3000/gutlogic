@@ -8,8 +8,9 @@ class ItemTileLarge extends StatelessWidget {
   final Sensitivity sensitivity;
   final Widget trailingWidget;
   final Widget leading;
+  final Function onTap;
 
-  ItemTileLarge({this.heading, this.subheading, this.sensitivity, this.leading}) :
+  ItemTileLarge({this.heading, this.subheading, this.sensitivity, this.leading, this.onTap}) :
     this.trailingWidget = _buildTrailing(sensitivity);
 
   static Widget _buildTrailing(Sensitivity sensitivity) {
@@ -37,7 +38,8 @@ class ItemTileLarge extends StatelessWidget {
       title: Text(this.heading),
       subtitle: Text(this.subheading),
       leading: this.leading,
-      trailing: this.trailingWidget
+      trailing: this.trailingWidget,
+      onTap: this.onTap
     );
   }
 
