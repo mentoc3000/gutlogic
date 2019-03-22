@@ -3,6 +3,7 @@ import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'package:intl/intl.dart';
 import 'meal_entry_page.dart';
+import 'bm_entry_page.dart';
 
 class MealTileLarge extends StatelessWidget {
   final MealEntry entry;
@@ -35,6 +36,9 @@ class BowelMovementTile extends StatelessWidget {
       heading: 'Type ' + entry.bowelMovement.type.toString(), 
       subheading: 'Volume: ' + entry.bowelMovement.volume.toString(),
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.purple,),
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (context) => BMEntryPage(entry: entry,)
+      )),
     );
   }
 
