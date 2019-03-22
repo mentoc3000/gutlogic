@@ -3,7 +3,7 @@ import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/helpers/placeholder_widget.dart';
 
 class BMEntryPage extends StatefulWidget {
-  static String tag = 'food-entry-page';
+  static String tag = 'bm-entry-page';
 
   final BowelMovementEntry entry;
 
