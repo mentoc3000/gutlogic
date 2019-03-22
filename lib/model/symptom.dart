@@ -6,6 +6,10 @@ class Symptom {
     this.symptomType,
     this.severity,
   });
+
+  String name() {
+    return SymptomName[this.symptomType];
+  }
 }
 
 enum SymptomType {
@@ -13,3 +17,9 @@ enum SymptomType {
   constipation,
   bloating
 }
+
+const Map<SymptomType, String> SymptomName = {
+  SymptomType.gas: "Gas",
+  SymptomType.constipation: "Constipation",
+  SymptomType.bloating: "Bloating",
+};

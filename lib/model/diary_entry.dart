@@ -1,4 +1,3 @@
-import 'food.dart';
 import 'bowel_movement.dart';
 import 'medicine.dart';
 import 'symptom.dart';
@@ -36,5 +35,14 @@ class MedicineEntry extends DiaryEntry {
     DateTime dateTime,
     this.medicine,
     this.dose
+  }) : super(dateTime: dateTime);
+}
+
+class SymptomEntry extends DiaryEntry {
+  Symptom symptom;
+
+  SymptomEntry({
+    DateTime dateTime,
+    this.symptom,
   }) : super(dateTime: dateTime);
 }

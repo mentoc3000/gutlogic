@@ -4,6 +4,7 @@ import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'package:intl/intl.dart';
 import 'meal_entry_page.dart';
 import 'bm_entry_page.dart';
+import 'symptom_entry_page.dart';
 
 class MealTileLarge extends StatelessWidget {
   final MealEntry entry;
@@ -55,6 +56,26 @@ class MedicineTile extends StatelessWidget {
       heading: entry.medicine.name, 
       subheading: entry.dose,
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.orange,),
+    );
+  }
+
+}
+
+class SymptomTileLarge extends StatelessWidget {
+  final SymptomEntry entry;
+
+  SymptomTileLarge({this.entry});
+  
+  @override
+  Widget build(BuildContext context) {
+    return ItemTileLarge (
+      heading: entry.symptom.name(),
+      subheading: 'Severity: ' + entry.symptom.severity.toString(),
+      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
+      // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (context) => SymptomEntryPage(entry: entry,)
+      )),
     );
   }
 
