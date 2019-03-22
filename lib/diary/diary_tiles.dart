@@ -15,7 +15,10 @@ class MealTileLarge extends StatelessWidget {
       heading: entry.meal.name,
       subheading: entry.meal.ingredients.map((e) => e.food.name).join(', '),
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
+      // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (context) => MealEntryPage(entry: entry,)
+      )),
     );
   }
 
