@@ -5,6 +5,7 @@ import 'package:gut_ai/model/medicine.dart';
 import 'package:gut_ai/model/meal.dart';
 import 'package:gut_ai/model/ingredient.dart';
 import 'package:gut_ai/model/quantity.dart';
+import 'package:gut_ai/model/symptom.dart';
 
 class Dummy {
   static final _artichoke = Food(
@@ -45,6 +46,13 @@ class Dummy {
     BowelMovementEntry(
       dateTime: DateTime(2019, 2, 7, 11, 31),
       bowelMovement: BowelMovement(type: 4, volume: 2),
+    )
+  ];
+
+  static List<SymptomEntry> symptomEntries = [
+    SymptomEntry(
+      dateTime: DateTime(2019, 2, 7, 15, 31),
+      symptom: Symptom(symptomType: SymptomType.bloating, severity: 6),
     )
   ];
 

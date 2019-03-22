@@ -75,7 +75,7 @@ class SymptomTileLarge extends StatelessWidget {
     return ItemTileLarge (
       heading: entry.symptom.name(),
       subheading: 'Severity: ' + entry.symptom.severity.toString(),
-      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
+      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.red,),
       // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
       onTap: () => Navigator.push(context, MaterialPageRoute(
         builder: (context) => SymptomEntryPage(entry: entry,)

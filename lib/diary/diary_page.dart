@@ -26,6 +26,7 @@ class DiaryPageState extends State<DiaryPage> {
           BowelMovementTile(entry: Dummy.bowelMovementEntries[0],),
           MedicineTile(entry: Dummy.medicineEntries[0],),
           MedicineTile(entry: Dummy.medicineEntries[1],),
+          SymptomTileLarge(entry: Dummy.symptomEntries[0],)
         ],
       ),
     );
