@@ -29,9 +29,7 @@ class DiaryPageState extends State<DiaryPage> {
         title: Text("Diary"),
       ),
       body: ListView.separated(
-        separatorBuilder: (context, index) => Divider(
-              color: Colors.black,
-            ),
+        separatorBuilder: (context, index) => Divider(),
         itemCount: entries.length,
         itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.all(1.0),
