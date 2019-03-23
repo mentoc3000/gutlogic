@@ -14,7 +14,7 @@ class MealTileLarge extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return ItemTileLarge (
+    return GutAIListTile (
       heading: entry.meal.name,
       subheading: entry.meal.ingredients.map((e) => e.food.name).join(', '),
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
@@ -34,7 +34,7 @@ class BowelMovementTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ItemTileLarge (
+    return GutAIListTile (
       heading: 'Type ' + entry.bowelMovement.type.toString(), 
       subheading: 'Volume: ' + entry.bowelMovement.volume.toString(),
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.purple,),
@@ -53,7 +53,7 @@ class MedicineTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ItemTileLarge (
+    return GutAIListTile (
       heading: entry.medicine.name, 
       subheading: entry.dose,
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.orange,),
@@ -72,7 +72,7 @@ class SymptomTileLarge extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return ItemTileLarge (
+    return GutAIListTile (
       heading: entry.symptom.name(),
       subheading: 'Severity: ' + entry.symptom.severity.toString(),
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.red,),
@@ -95,7 +95,7 @@ class TimeLeader extends StatelessWidget {
   Widget build(BuildContext context) {
     var formatter = DateFormat.jm();
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 20, 5, 20),
+      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
       decoration: BoxDecoration(
         border: Border(
           right: BorderSide(width: 3.0, color: this.borderColor)

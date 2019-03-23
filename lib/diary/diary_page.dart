@@ -21,6 +21,7 @@ class DiaryPageState extends State<DiaryPage> {
         title: Text("Diary"),
       ),
       body: ListView(
+        itemExtent: 50,
         children: <Widget>[
           MealTileLarge(entry: Dummy.mealEntries[0],),
           BowelMovementTile(entry: Dummy.bowelMovementEntries[0],),
