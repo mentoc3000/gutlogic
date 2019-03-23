@@ -13,6 +13,14 @@ class DiaryPage extends StatefulWidget {
 
 class DiaryPageState extends State<DiaryPage> {
 
+  List<Widget> entries = [
+    MealTileLarge(entry: Dummy.mealEntries[0],),
+    BowelMovementTile(entry: Dummy.bowelMovementEntries[0],),
+    MedicineTile(entry: Dummy.medicineEntries[0],),
+    MedicineTile(entry: Dummy.medicineEntries[1],),
+    SymptomTileLarge(entry: Dummy.symptomEntries[0],)
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,15 +28,16 @@ class DiaryPageState extends State<DiaryPage> {
         centerTitle: true,
         title: Text("Diary"),
       ),
-      body: ListView(
-        itemExtent: 50,
-        children: <Widget>[
-          MealTileLarge(entry: Dummy.mealEntries[0],),
-          BowelMovementTile(entry: Dummy.bowelMovementEntries[0],),
-          MedicineTile(entry: Dummy.medicineEntries[0],),
-          MedicineTile(entry: Dummy.medicineEntries[1],),
-          SymptomTileLarge(entry: Dummy.symptomEntries[0],)
-        ],
+      body: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+              color: Colors.black,
+            ),
+        itemCount: entries.length,
+        itemBuilder: (context, index) => Padding(
+          padding: EdgeInsets.all(1.0),
+          child: entries[index],
+        ),
+        padding: EdgeInsets.all(0.0),
       ),
     );
   }

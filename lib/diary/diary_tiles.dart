@@ -103,6 +103,7 @@ class TimeLeader extends StatelessWidget {
       ),
       child: SizedBox(
         width: 70.0,
+        height: 70.0,
         child:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
