@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'sensitivity_indicator.dart';
 import 'package:gut_ai/model/sensitivity.dart';
 
-class ItemTileLarge extends StatelessWidget {
+class ItemTile extends StatelessWidget {
   final String heading;
   final String subheading;
   final Sensitivity sensitivity;
   final Widget trailingWidget;
   final Widget leading;
   final Function onTap;
-  static double size = 30;
+  final double size;
 
-  ItemTileLarge({this.heading, this.subheading, this.sensitivity, this.leading, this.onTap}) :
-    this.trailingWidget = _buildTrailing(sensitivity);
+  ItemTile({this.heading, this.subheading, this.sensitivity, this.leading, this.onTap, this.size}) :
+    this.trailingWidget = _buildTrailing(sensitivity, size);
 
-  static Widget _buildTrailing(Sensitivity sensitivity) {
+  static Widget _buildTrailing(Sensitivity sensitivity, double size) {
     Widget trailingWidget;
     if (sensitivity == null) {
       trailingWidget = Icon(Icons.keyboard_arrow_right, size: size);
@@ -24,7 +24,7 @@ class ItemTileLarge extends StatelessWidget {
         width: 2 * size,
         child: Row(
           children: [
-            SensitivityIndicator(sensitivity: sensitivity, size: ItemTileLarge.size),
+            SensitivityIndicator(sensitivity: sensitivity, size: size),
             Icon(Icons.keyboard_arrow_right, size: size),
           ]
         )
@@ -46,17 +46,49 @@ class ItemTileLarge extends StatelessWidget {
 
 }
 
-class ItemTileSmall extends ItemTileLarge {
-  static double size = 15;
+class ItemTileLarge extends StatelessWidget {
+  final String heading;
+  final String subheading;
+  final Sensitivity sensitivity;
+  final Widget leading;
+  final Function onTap;
+  static double size = 30;
+
+  ItemTileLarge({this.heading, this.subheading, this.sensitivity, this.leading, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return new ListTile(
-      title: Text(this.heading),
-      // subtitle: Text(this.subheading),
+    return new ItemTile(
+      heading: this.heading,
+      subheading: this.subheading,
       leading: this.leading,
-      trailing: this.trailingWidget,
-      onTap: this.onTap
+      sensitivity: this.sensitivity,
+      onTap: this.onTap,
+      size: ItemTileLarge.size
+    );
+  }
+
+}
+
+class ItemTileSmall extends StatelessWidget {
+  final String heading;
+  final String subheading;
+  final Sensitivity sensitivity;
+  final Widget leading;
+  final Function onTap;
+  static double size = 15;
+
+  ItemTileSmall({this.heading, this.subheading, this.sensitivity, this.leading, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return new ItemTile(
+      heading: this.heading,
+      subheading: this.subheading,
+      leading: this.leading,
+      sensitivity: this.sensitivity,
+      onTap: this.onTap,
+      size: ItemTileSmall.size
     );
   }
 }
