@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'sensitivity_indicator.dart';
 import 'package:gut_ai/model/sensitivity.dart';
+import 'package:gut_ai/model/food.dart';
+import 'package:gut_ai/model/bowel_movement.dart';
+import 'package:gut_ai/model/ingredient.dart';
+import 'package:gut_ai/model/medicine.dart';
+import 'package:gut_ai/model/symptom.dart';
 
 class GutAIListTile extends StatelessWidget {
   final String heading;
@@ -66,3 +71,19 @@ class GutAIListTile extends StatelessWidget {
 
 }
 
+class FoodListTile extends StatelessWidget {
+
+  final Food food;
+
+  FoodListTile({this.food});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(this.food.name),
+      subtitle: Text(this.food.irritants.join(', ')),
+      trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
+      // onTap: this.onTap,
+    );
+  }
+}

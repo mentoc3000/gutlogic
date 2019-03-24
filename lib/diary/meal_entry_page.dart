@@ -29,7 +29,7 @@ class MealEntryPageState extends State<MealEntryPage> {
           DatetimeView(),
           GutAIListTile(heading: 'Ingredients', adder: true,)
         ],
-        widget.entry.meal.ingredients.map((i) => GutAIListTile(heading: i.food.name)).toList()
+        widget.entry.meal.ingredients.map((i) => FoodListTile(food: i.food)).toList()
       ].expand((x) => x).toList();
   }
 
