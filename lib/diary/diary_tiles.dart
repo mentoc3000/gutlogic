@@ -7,10 +7,10 @@ import 'bm_entry_page.dart';
 import 'symptom_entry_page.dart';
 import 'medicine_entry_page.dart';
 
-class MealTileLarge extends StatelessWidget {
+class MealEntryListTile extends StatelessWidget {
   final MealEntry entry;
 
-  MealTileLarge({this.entry});
+  MealEntryListTile({this.entry});
   
   @override
   Widget build(BuildContext context) {
@@ -27,10 +27,10 @@ class MealTileLarge extends StatelessWidget {
 
 }
 
-class BowelMovementTile extends StatelessWidget {
+class BowelMovementEntryListTile extends StatelessWidget {
   final BowelMovementEntry entry;
 
-  BowelMovementTile({this.entry});
+  BowelMovementEntryListTile({this.entry});
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +46,10 @@ class BowelMovementTile extends StatelessWidget {
 
 }
 
-class MedicineTile extends StatelessWidget {
+class MedicineEntryListTile extends StatelessWidget {
   final MedicineEntry entry;
 
-  MedicineTile({this.entry});
+  MedicineEntryListTile({this.entry});
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +65,10 @@ class MedicineTile extends StatelessWidget {
 
 }
 
-class SymptomTileLarge extends StatelessWidget {
+class SymptomEntryListTile extends StatelessWidget {
   final SymptomEntry entry;
 
-  SymptomTileLarge({this.entry});
+  SymptomEntryListTile({this.entry});
   
   @override
   Widget build(BuildContext context) {

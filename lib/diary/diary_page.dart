@@ -14,11 +14,11 @@ class DiaryPage extends StatefulWidget {
 class DiaryPageState extends State<DiaryPage> {
 
   List<Widget> entries = [
-    MealTileLarge(entry: Dummy.mealEntries[0],),
-    BowelMovementTile(entry: Dummy.bowelMovementEntries[0],),
-    MedicineTile(entry: Dummy.medicineEntries[0],),
-    MedicineTile(entry: Dummy.medicineEntries[1],),
-    SymptomTileLarge(entry: Dummy.symptomEntries[0],)
+    MealEntryListTile(entry: Dummy.mealEntries[0],),
+    BowelMovementEntryListTile(entry: Dummy.bowelMovementEntries[0],),
+    MedicineEntryListTile(entry: Dummy.medicineEntries[0],),
+    MedicineEntryListTile(entry: Dummy.medicineEntries[1],),
+    SymptomEntryListTile(entry: Dummy.symptomEntries[0],)
   ];
 
   @override
