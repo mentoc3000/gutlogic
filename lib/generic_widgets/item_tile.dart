@@ -6,6 +6,7 @@ import 'package:gut_ai/model/bowel_movement.dart';
 import 'package:gut_ai/model/ingredient.dart';
 import 'package:gut_ai/model/medicine.dart';
 import 'package:gut_ai/model/symptom.dart';
+import 'package:gut_ai/food_search/food_sheet_page.dart';
 
 class GutAIListTile extends StatelessWidget {
   final String heading;
@@ -83,7 +84,7 @@ class FoodListTile extends StatelessWidget {
       title: Text(this.food.name),
       subtitle: Text(this.food.irritants.join(', ')),
       trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
-      // onTap: this.onTap,
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FoodSheetPage(food: this.food)))
     );
   }
 }
