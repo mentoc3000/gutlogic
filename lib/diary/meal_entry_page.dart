@@ -17,6 +17,11 @@ class MealEntryPage extends StatefulWidget {
 
 class MealEntryPageState extends State<MealEntryPage> {
 
+  List<Widget> items = [
+    DatetimeView(),
+    GutAIListTile(heading: 'Ingredients',)
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,10 +31,10 @@ class MealEntryPageState extends State<MealEntryPage> {
       ),
       body: ListView.separated(
         separatorBuilder: (context, index) => Divider(),
-        itemCount: 1,
+        itemCount: items.length,
         itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.all(1.0),
-          child: DatetimeView(),
+          child: items[index]
         ),
         padding: EdgeInsets.all(0.0),
       ),
