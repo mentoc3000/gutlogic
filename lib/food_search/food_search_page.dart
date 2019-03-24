@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gut_ai/helpers/placeholder_widget.dart';
 import 'package:gut_ai/model/food.dart';
 import 'package:gut_ai/helpers/dummy_data.dart';
-import 'food_card.dart';
+import 'package:gut_ai/generic_widgets/item_tile.dart';
 
 class FoodSearchPage extends StatefulWidget {
   static String tag = 'foodsearch-page';
@@ -83,7 +83,7 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, Food food) => new FoodCard(food);
+  Widget _buildListItem(BuildContext context, Food food) => new FoodListTile(food: food);
 
   _FoodSearchPageState() {
     _filter.addListener(() {
