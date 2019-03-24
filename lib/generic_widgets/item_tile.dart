@@ -11,13 +11,25 @@ class GutAIListTile extends StatelessWidget {
   final Function onTap;
   final double size;
   final bool dense;
+  final bool adder;
 
-  GutAIListTile({this.heading, this.subheading, this.sensitivity, this.leading, this.onTap, this.size, this.dense=false}) :
-    this.trailingWidget = _buildTrailing(sensitivity, size);
+  GutAIListTile({
+    this.heading, 
+    this.subheading, 
+    this.sensitivity, 
+    this.leading, 
+    this.adder=false, 
+    this.onTap, 
+    this.size, 
+    this.dense=false
+  }) :
+    this.trailingWidget = _buildTrailing(adder, sensitivity, size);
 
-  static Widget _buildTrailing(Sensitivity sensitivity, double size) {
+  static Widget _buildTrailing(bool adder, Sensitivity sensitivity, double size) {
     Widget trailingWidget;
-    if (sensitivity == null) {
+    if (adder) {
+      trailingWidget = Icon(Icons.add, size: size);
+    } else if (sensitivity == null) {
       trailingWidget = Icon(Icons.keyboard_arrow_right, size: size);
     } else {
       // SizedBox is a workaround for an issue with unconstrained trailing widget size

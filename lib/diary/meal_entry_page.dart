@@ -19,7 +19,7 @@ class MealEntryPageState extends State<MealEntryPage> {
 
   List<Widget> items = [
     DatetimeView(),
-    GutAIListTile(heading: 'Ingredients',)
+    GutAIListTile(heading: 'Ingredients', adder: true,)
   ];
 
   @override
