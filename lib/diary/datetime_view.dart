@@ -3,6 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class DatetimeView extends StatefulWidget {
+
+  final DateTime date;
+
+  DatetimeView({this.date});
+
   @override
   _DatetimeViewState createState() => _DatetimeViewState();
 }
@@ -21,10 +26,19 @@ class _DatetimeViewState extends State<DatetimeView> {
   DateTime date;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    this.date = widget.date;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: DateTimePickerFormField(
+        initialValue: widget.date,
         inputType: inputType,
         format: formats[inputType],
         editable: editable,
