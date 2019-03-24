@@ -22,13 +22,16 @@ class _DatetimeViewState extends State<DatetimeView> {
 
   @override
   Widget build(BuildContext context) {
-    return DateTimePickerFormField(
-      inputType: inputType,
-      format: formats[inputType],
-      editable: editable,
-      decoration: InputDecoration(
-          labelText: 'Date/Time', hasFloatingPlaceholder: false),
-      onChanged: (dt) => setState(() => date = dt),
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: DateTimePickerFormField(
+        inputType: inputType,
+        format: formats[inputType],
+        editable: editable,
+        decoration: InputDecoration(
+            labelText: 'Date/Time', hasFloatingPlaceholder: false),
+        onChanged: (dt) => setState(() => date = dt),
+      )
     );
   }
 
