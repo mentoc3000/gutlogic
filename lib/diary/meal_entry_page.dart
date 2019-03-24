@@ -17,10 +17,21 @@ class MealEntryPage extends StatefulWidget {
 
 class MealEntryPageState extends State<MealEntryPage> {
 
-  List<Widget> items = [
-    DatetimeView(),
-    GutAIListTile(heading: 'Ingredients', adder: true,)
-  ];
+  List<Widget> items;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    this.items = <List<Widget>>[
+        [
+          DatetimeView(),
+          GutAIListTile(heading: 'Ingredients', adder: true,)
+        ],
+        widget.entry.meal.ingredients.map((i) => GutAIListTile(heading: i.food.name)).toList()
+      ].expand((x) => x).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
