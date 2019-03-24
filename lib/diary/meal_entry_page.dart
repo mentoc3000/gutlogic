@@ -21,7 +21,6 @@ class MealEntryPageState extends State<MealEntryPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     this.items = <List<Widget>>[

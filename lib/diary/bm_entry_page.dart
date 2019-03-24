@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/helpers/placeholder_widget.dart';
+import 'package:gut_ai/generic_widgets/item_tile.dart';
+import 'datetime_view.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
@@ -15,6 +17,20 @@ class BMEntryPage extends StatefulWidget {
 
 class BMEntryPageState extends State<BMEntryPage> {
 
+  List<Widget> items;
+
+  @override
+  void initState() {
+    super.initState();
+
+    this.items = <List<Widget>>[
+        [
+          DatetimeView(date: widget.entry.dateTime),
+          GutAIListTile(heading: 'Ingredients', adder: true,)
+        ],
+      ].expand((x) => x).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +38,16 @@ class BMEntryPageState extends State<BMEntryPage> {
         centerTitle: true,
         title: Text('Bowel Movement'),
       ),
-      body: PlaceholderWidget(Colors.yellowAccent)
+      body: ListView.separated(
+        separatorBuilder: (context, index) => Divider(),
+        itemCount: items.length,
+        itemBuilder: (context, index) => Padding(
+          padding: EdgeInsets.all(1.0),
+          child: items[index]
+        ),
+        padding: EdgeInsets.all(0.0),
+      ),
     );
   }
 }
+
