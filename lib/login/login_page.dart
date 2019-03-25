@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/main_tabs.dart';
+import 'login_text_form_field.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -19,27 +20,9 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final email = TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      autofocus: false,
-      initialValue: 'alucard@gmail.com',
-      decoration: InputDecoration(
-        hintText: 'Email',
-        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-      ),
-    );
+    final email = LoginTextFormField(hintText: 'Email',);
 
-    final password = TextFormField(
-      autofocus: false,
-      initialValue: 'some password',
-      obscureText: true,
-      decoration: InputDecoration(
-        hintText: 'Password',
-        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-      ),
-    );
+    final password = LoginTextFormField(hintText: 'Password', obscureText: true,);
 
     final loginButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
