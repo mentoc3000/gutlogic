@@ -18,7 +18,6 @@ class _SliderTileState extends State<SliderTile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     this.value = widget.initial;
   }
