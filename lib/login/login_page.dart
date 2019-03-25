@@ -56,12 +56,34 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final forgotLabel = FlatButton(
-      child: Text(
-        'Forgot password?',
-        style: TextStyle(color: Colors.black54),
+    final forgotLabel = Column(
+      children: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: FlatButton(
+            child: Text(
+              'Forgot password?',
+              style: TextStyle(color: Colors.black54),
+            ),
+            onPressed: () {},
+          )
+        )
+      ]
+    );
+
+
+
+    final signupButton = Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        onPressed: () { },
+        padding: EdgeInsets.all(12),
+        color: Colors.grey,
+        child: Text('Sign Up', style: TextStyle(color: Colors.blue)),
       ),
-      onPressed: () {},
     );
 
     return Scaffold(
@@ -76,9 +98,10 @@ class _LoginPageState extends State<LoginPage> {
             email,
             SizedBox(height: 8.0),
             password,
-            SizedBox(height: 24.0),
+            forgotLabel,
+            SizedBox(height: 12.0),
             loginButton,
-            forgotLabel
+            signupButton
           ],
         ),
       ),
