@@ -27,17 +27,15 @@ class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Flexible(
-            child: Slider(
-              min: widget.minimum.toDouble(),
-              max: widget.maximum.toDouble(),
-              value: value.toDouble(),
-              divisions: widget.maximum - widget.minimum,
-              onChanged: (newValue) => setState(() => value=newValue.toInt()),
-            )
+          Slider(
+            min: widget.minimum.toDouble(),
+            max: widget.maximum.toDouble(),
+            value: value.toDouble(),
+            divisions: widget.maximum - widget.minimum,
+            onChanged: (newValue) => setState(() => value=newValue.toInt()),
           )
         ],
       ),
