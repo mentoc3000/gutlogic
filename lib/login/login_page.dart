@@ -65,7 +65,12 @@ class _LoginPageState extends State<LoginPage> {
               'Forgot password?',
               style: TextStyle(color: Colors.black54),
             ),
-            onPressed: () {},
+            onPressed: () {
+              final snackBar = SnackBar(
+                content: Text('Check your email to reset your password.')
+              );
+              Scaffold.of(context).showSnackBar(snackBar);
+            }
           )
         )
       ]

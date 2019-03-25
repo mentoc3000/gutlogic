@@ -21,7 +21,9 @@ class GiBlissApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: Scaffold(
+        body: LoginPage(),
+      ),
       routes: routes,
     );
   }
