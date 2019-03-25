@@ -67,7 +67,11 @@ class _LoginPageState extends State<LoginPage> {
             ),
             onPressed: () {
               final snackBar = SnackBar(
-                content: Text('Check your email to reset your password.')
+                content: Text('Check your email to reset your password.'),
+                action: SnackBarAction(
+                  label: 'Close',
+                  onPressed: () => Scaffold.of(context).removeCurrentSnackBar()
+                ),
               );
               Scaffold.of(context).showSnackBar(snackBar);
             }
