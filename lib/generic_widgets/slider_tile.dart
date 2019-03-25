@@ -29,11 +29,13 @@ class _SliderTileState extends State<SliderTile> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Slider(
-            min: widget.minimum,
-            max: widget.maximum,
-            value: value,
-            onChanged: (newValue) => setState(() => value=newValue),
+          Flexible(
+            child: Slider(
+              min: widget.minimum,
+              max: widget.maximum,
+              value: value,
+              onChanged: (newValue) => setState(() => value=newValue),
+            )
           )
         ],
       ),
