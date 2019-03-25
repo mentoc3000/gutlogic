@@ -5,6 +5,7 @@ import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'datetime_view.dart';
 import 'package:gut_ai/generic_widgets/slider_tile.dart';
 import 'bm_type_slider.dart';
+import 'bm_volume_slider.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
@@ -29,7 +30,8 @@ class BMEntryPageState extends State<BMEntryPage> {
         [
           DatetimeView(date: widget.entry.dateTime),
           GutAIListTile(heading: 'Ingredients', adder: true,),
-          BMTypeSliderTile(type: widget.entry.bowelMovement.type)
+          BMTypeSliderTile(type: widget.entry.bowelMovement.type),
+          BMVolumeSliderTile(volume: widget.entry.bowelMovement.volume,)
         ],
       ].expand((x) => x).toList();
   }
