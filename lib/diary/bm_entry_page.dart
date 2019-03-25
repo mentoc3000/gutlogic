@@ -3,6 +3,7 @@ import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/helpers/placeholder_widget.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'datetime_view.dart';
+import 'package:gut_ai/generic_widgets/slider_tile.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
@@ -26,7 +27,8 @@ class BMEntryPageState extends State<BMEntryPage> {
     this.items = <List<Widget>>[
         [
           DatetimeView(date: widget.entry.dateTime),
-          GutAIListTile(heading: 'Ingredients', adder: true,)
+          GutAIListTile(heading: 'Ingredients', adder: true,),
+          SliderTile()
         ],
       ].expand((x) => x).toList();
   }
