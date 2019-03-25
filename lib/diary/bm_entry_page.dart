@@ -29,7 +29,6 @@ class BMEntryPageState extends State<BMEntryPage> {
     this.items = <List<Widget>>[
         [
           DatetimeView(date: widget.entry.dateTime),
-          GutAIListTile(heading: 'Ingredients', adder: true,),
           BMTypeSliderTile(type: widget.entry.bowelMovement.type),
           BMVolumeSliderTile(volume: widget.entry.bowelMovement.volume,)
         ],
