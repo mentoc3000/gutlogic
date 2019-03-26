@@ -25,13 +25,26 @@ class _LoginPageState extends State<LoginPage> {
 
     final password = LoginTextFormField(hintText: 'Password', obscureText: true,);
 
+    final loginAction = () {
+      Navigator.of(context).pushNamed(Tabbed.tag);
+    };
+
     final loginButton = LoginButton(
       label: 'Log In',
       primary: true,
-      onPressed: () {
-        Navigator.of(context).pushNamed(Tabbed.tag);
-      },
+      onPressed: loginAction
     );
+
+    final forgotAction = () {
+      final snackBar = SnackBar(
+        content: Text('Check your email to reset your password.'),
+        action: SnackBarAction(
+          label: 'Close',
+          onPressed: () => Scaffold.of(context).removeCurrentSnackBar()
+        ),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    };
 
     final forgotLabel = Column(
       children: [
@@ -42,26 +55,18 @@ class _LoginPageState extends State<LoginPage> {
               'Forgot password?',
               style: TextStyle(color: Colors.black54),
             ),
-            onPressed: () {
-              final snackBar = SnackBar(
-                content: Text('Check your email to reset your password.'),
-                action: SnackBarAction(
-                  label: 'Close',
-                  onPressed: () => Scaffold.of(context).removeCurrentSnackBar()
-                ),
-              );
-              Scaffold.of(context).showSnackBar(snackBar);
-            }
+            onPressed: forgotAction
           )
         )
       ]
     );
 
+    final signupAction = () {};
 
     final signupButton = LoginButton(
       label: 'Create Account',
       primary: false,
-      onPressed: () {},
+      onPressed: signupAction,
     );
 
     return Scaffold(
