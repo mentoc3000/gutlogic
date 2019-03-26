@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/main_tabs.dart';
 import 'login_text_form_field.dart';
+import 'login_button.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -24,19 +25,12 @@ class _LoginPageState extends State<LoginPage> {
 
     final password = LoginTextFormField(hintText: 'Password', obscureText: true,);
 
-    final loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        onPressed: () {
-          Navigator.of(context).pushNamed(Tabbed.tag);
-        },
-        padding: EdgeInsets.all(12),
-        color: Colors.lightBlueAccent,
-        child: Text('Log In', style: TextStyle(color: Colors.white)),
-      ),
+    final loginButton = LoginButton(
+      label: 'Log In',
+      primary: true,
+      onPressed: () {
+        Navigator.of(context).pushNamed(Tabbed.tag);
+      },
     );
 
     final forgotLabel = Column(
@@ -64,18 +58,10 @@ class _LoginPageState extends State<LoginPage> {
     );
 
 
-
-    final signupButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        onPressed: () { },
-        padding: EdgeInsets.all(12),
-        color: Colors.grey,
-        child: Text('Sign Up', style: TextStyle(color: Colors.blue)),
-      ),
+    final signupButton = LoginButton(
+      label: 'Create Account',
+      primary: false,
+      onPressed: () {},
     );
 
     return Scaffold(
