@@ -21,9 +21,16 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final email = LoginTextFormField(hintText: 'Email',);
+    final email = LoginTextFormField(
+      hintText: 'Email',
+      // validator: emailValidator,
+    );
 
-    final password = LoginTextFormField(hintText: 'Password', obscureText: true,);
+    final password = LoginTextFormField(
+      hintText: 'Password', 
+      obscureText: true,
+      // validator: passwordValidator,
+    );
 
     final loginAction = () {
       Navigator.of(context).pushNamed(Tabbed.tag);

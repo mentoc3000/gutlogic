@@ -9,8 +9,8 @@ class LoginTextFormField extends StatelessWidget {
   LoginTextFormField({
     this.initialValue='', 
     this.hintText='', 
-    this.obscureText=false
-  });
+    this.obscureText=false,
+  }) ;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +24,24 @@ class LoginTextFormField extends StatelessWidget {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
+      // validator: this.validator,
     );
+  }
+}
+
+String emailValidator(String value) {
+  if (value.isEmpty) {
+    return 'Please enter your email address.';
+  } else {
+    return null;
+  }
+}
+
+
+String passwordValidator(String value) {
+  if (value.isEmpty) {
+    return 'Please enter your password.';
+  } else {
+    return null;
   }
 }
