@@ -8,13 +8,13 @@ import 'package:amazon_cognito_identity_dart/sig_v4.dart';
 import 'package:gut_ai/main_tabs.dart';
 
 // Setup AWS User Pool Id & Client Id settings here:
-const _awsUserPoolId = 'ap-southeast-1_xxxxxxxxx';
-const _awsClientId = 'xxxxxxxxxxxxxxxxxxxxxxxxxx';
+const _awsUserPoolId = 'us-east-1_g5I647HDV';
+const _awsClientId = '7og2og27lm3tf7mp46759emd9l';
 
 const _identityPoolId = 'ap-southeast-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
 // Setup endpoints here:
-const _region = 'ap-southeast-1';
+const _region = 'us-east-1';
 const _endpoint =
     'https://xxxxxxxxxx.execute-api.ap-southeast-1.amazonaws.com/dev';
 
@@ -693,6 +693,7 @@ class _LoginScreenState extends State<LoginScreen> {
         message = 'An unknown client error occured';
       }
     } catch (e) {
+      print(e);
       message = 'An unknown error occurred';
     }
     final snackBar = new SnackBar(
