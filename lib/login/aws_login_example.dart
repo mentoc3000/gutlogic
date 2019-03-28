@@ -782,6 +782,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               top: 10.0,
                             ),
                           ),
+                          new Container(
+                            padding: new EdgeInsets.all(20.0),
+                            width: screenSize.width,
+                            child: new RaisedButton(
+                              child: new Text(
+                                'Sign Up',
+                                style: new TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen()));
+                              },
+                              color: Colors.grey,
+                            ),
+                            margin: new EdgeInsets.only(
+                              top: 10.0,
+                            ),
+                          ),
                         ],
                       ),
                     ),
