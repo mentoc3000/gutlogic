@@ -873,7 +873,52 @@ class _SecureCounterScreenState extends State<SecureCounterScreen> {
               return new LoginScreen();
             }
 
-            return Tabbed();
+            return new Scaffold(
+              appBar: new AppBar(
+                title: new Text('Secure Counter'),
+              ),
+              body: new Center(
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Text(
+                      'Welcome ${_user.name}!',
+                      style: Theme.of(context).textTheme.display1,
+                    ),
+                    new Divider(),
+                    new Text(
+                      'You have pushed the button this many times:',
+                    ),
+                    new Text(
+                      '${_counter.count}',
+                      style: Theme.of(context).textTheme.display1,
+                    ),
+                    new Divider(),
+                    new Center(
+                      child: new InkWell(
+                        child: new Text(
+                          'Logout',
+                          style: new TextStyle(color: Colors.blueAccent),
+                        ),
+                        onTap: () {
+                          _userService.signOut();
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              floatingActionButton: new FloatingActionButton(
+                onPressed: () {
+                  if (snapshot.hasData) {
+                    _incrementCounter();
+                  }
+                },
+                tooltip: 'Increment',
+                child: new Icon(Icons.add),
+              ),
+            );
           }
           return new Scaffold(
               appBar: new AppBar(title: new Text('Loading...')));
