@@ -11,7 +11,7 @@ import 'package:gut_ai/main_tabs.dart';
 const _awsUserPoolId = 'us-east-1_g5I647HDV';
 const _awsClientId = '7og2og27lm3tf7mp46759emd9l';
 
-const _identityPoolId = 'ap-southeast-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
+const _identityPoolId = 'us-east-1:1dd7b0c3-3077-46cf-8a9f-94e68d45abfd';
 
 // Setup endpoints here:
 const _region = 'us-east-1';
