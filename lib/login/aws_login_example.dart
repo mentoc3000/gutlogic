@@ -352,7 +352,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => new SecureCounterScreen()),
+                        builder: (context) => new Tabbed()),
                   );
                 },
                 color: Colors.blue,
@@ -727,7 +727,7 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context, AsyncSnapshot<UserService> snapshot) {
           if (snapshot.hasData) {
             if (_isAuthenticated) {
-              return new SecureCounterScreen();
+              return new Tabbed();
             }
             final Size screenSize = MediaQuery.of(context).size;
             return new Scaffold(
