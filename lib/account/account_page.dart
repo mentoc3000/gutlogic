@@ -28,10 +28,10 @@ class AccountPageState extends State<AccountPage> {
               ),
               onTap: () async {
                 final _userService = new UserService(userPool);
+                await _userService.init();
                 await _userService.signOut();
-                Navigator.of(context, rootNavigator: true).push(
-                  MaterialPageRoute(builder: (context) => LoginScreen())
-                );
+                Navigator.of(context, rootNavigator: true)
+                  ..pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
               },
             ),
           ),
