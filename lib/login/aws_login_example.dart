@@ -702,7 +702,6 @@ class _LoginScreenState extends State<LoginScreen> {
         label: 'OK',
         onPressed: () async {
           if (_user.hasAccess) {
-            Navigator.pop(context);
             if (!_user.confirmed) {
               Navigator.push(
                 context,
@@ -710,6 +709,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     builder: (context) =>
                         new ConfirmationScreen(email: _user.email)),
               );
+            } else {
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (_) => Tabbed()
+              ));
             }
           }
         },
