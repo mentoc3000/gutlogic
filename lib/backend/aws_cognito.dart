@@ -7,14 +7,14 @@ import 'package:amazon_cognito_identity_dart/cognito.dart';
 import 'package:amazon_cognito_identity_dart/sig_v4.dart';
 
 // Setup AWS User Pool Id & Client Id settings here:
-const _awsUserPoolId = 'ap-southeast-1_xxxxxxxxx';
-const _awsClientId = 'xxxxxxxxxxxxxxxxxxxxxxxxxx';
+const _awsUserPoolId = 'us-east-1_g5I647HDV';
+const _awsClientId = '7og2og27lm3tf7mp46759emd9l';
 
-const _identityPoolId = 'ap-southeast-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
+const _identityPoolId = 'us-east-1:1dd7b0c3-3077-46cf-8a9f-94e68d45abfd';
 
 // Setup endpoints here:
-const _region = 'ap-southeast-1';
-const _endpoint =
+const region = 'us-east-1';
+const endpoint =
     'https://xxxxxxxxxx.execute-api.ap-southeast-1.amazonaws.com/dev';
 
 final userPool = new CognitoUserPool(_awsUserPoolId, _awsClientId);
@@ -58,6 +58,15 @@ class Storage extends CognitoStorage {
   }
 }
 
+class Counter {
+  int count;
+  Counter(this.count);
+
+  factory Counter.fromJson(json) {
+    return new Counter(json['count']);
+  }
+}
+
 class User {
   String email;
   String name;
@@ -78,6 +87,29 @@ class User {
       }
     });
     return user;
+  }
+}
+
+class CounterService {
+  AwsSigV4Client awsSigV4Client;
+  CounterService(this.awsSigV4Client);
+
+  /// Retrieve user's previous count from Lambda + DynamoDB
+  Future<Counter> getCounter() async {
+    final signedRequest =
+        new SigV4Request(awsSigV4Client, method: 'GET', path: '/counter');
+    final response =
+        await http.get(signedRequest.url, headers: signedRequest.headers);
+    return new Counter.fromJson(json.decode(response.body));
+  }
+
+  /// Increment user's count in DynamoDB
+  Future<Counter> incrementCounter() async {
+    final signedRequest =
+        new SigV4Request(awsSigV4Client, method: 'PUT', path: '/counter');
+    final response =
+        await http.put(signedRequest.url, headers: signedRequest.headers);
+    return new Counter.fromJson(json.decode(response.body));
   }
 }
 
