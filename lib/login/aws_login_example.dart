@@ -15,7 +15,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   User _user = new User();
-  final userService = new UserService(userPool);
+  final userService = new UserService();
 
   void submit(BuildContext context) async {
     _formKey.currentState.save();
@@ -148,7 +148,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   String confirmationCode;
   User _user = new User();
-  final _userService = new UserService(userPool);
+  final _userService = new UserService();
 
   _submit(BuildContext context) async {
     _formKey.currentState.save();
@@ -306,12 +306,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final _userService = new UserService(userPool);
+  final _userService = new UserService();
   User _user = new User();
   bool _isAuthenticated = false;
 
   Future<UserService> _getValues() async {
-    await _userService.init();
     _isAuthenticated = await _userService.checkAuthenticated();
     return _userService;
   }
@@ -466,7 +465,7 @@ class SecureCounterScreen extends StatefulWidget {
 }
 
 class _SecureCounterScreenState extends State<SecureCounterScreen> {
-  final _userService = new UserService(userPool);
+  final _userService = new UserService();
   CounterService _counterService;
   AwsSigV4Client _awsSigV4Client;
   User _user = new User();
@@ -482,7 +481,6 @@ class _SecureCounterScreenState extends State<SecureCounterScreen> {
 
   Future<UserService> _getValues(BuildContext context) async {
     try {
-      await _userService.init();
       _isAuthenticated = await _userService.checkAuthenticated();
       if (_isAuthenticated) {
         // get user attributes from cognito

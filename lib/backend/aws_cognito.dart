@@ -17,8 +17,6 @@ const region = 'us-east-1';
 const endpoint =
     'https://xxxxxxxxxx.execute-api.ap-southeast-1.amazonaws.com/dev';
 
-final userPool = new CognitoUserPool(_awsUserPoolId, _awsClientId);
-
 /// Extend CognitoStorage with Shared Preferences to persist account
 /// login sessions
 class Storage extends CognitoStorage {
@@ -114,14 +112,26 @@ class CounterService {
 }
 
 class UserService {
-  CognitoUserPool _userPool;
+  static final UserService _singleton = new UserService._internal();
+
+  static CognitoUserPool _userPool = new CognitoUserPool(_awsUserPoolId, _awsClientId);
   CognitoUser _cognitoUser;
   CognitoUserSession _session;
-  UserService(this._userPool);
+  // UserService(this._userPool);
   CognitoCredentials credentials;
+  bool isInitialized = false;
+
+  factory UserService() {
+    return _singleton;
+  }
+
+  UserService._internal();
 
   /// Initiate user session from local storage if present
   Future<bool> init() async {
+    if (isInitialized) {
+      return true;
+    }
     final prefs = await SharedPreferences.getInstance();
     final storage = new Storage(prefs);
     _userPool.storage = storage;
@@ -131,11 +141,16 @@ class UserService {
       return false;
     }
     _session = await _cognitoUser.getSession();
-    return _session.isValid();
+    bool sessionIsValid =_session.isValid();
+    if (sessionIsValid) {
+      isInitialized = true;
+    }
+    return sessionIsValid;
   }
 
   /// Get existing user from session with his/her attributes
   Future<User> getCurrentUser() async {
+    await init();
     if (_cognitoUser == null || _session == null) {
       return null;
     }
@@ -153,6 +168,7 @@ class UserService {
 
   /// Retrieve user credentials -- for use with other AWS services
   Future<CognitoCredentials> getCredentials() async {
+    await init();
     if (_cognitoUser == null || _session == null) {
       return null;
     }
@@ -163,6 +179,7 @@ class UserService {
 
   /// Login user
   Future<User> login(String email, String password) async {
+    await init();
     _cognitoUser =
         new CognitoUser(email, _userPool, storage: _userPool.storage);
 
@@ -197,6 +214,7 @@ class UserService {
 
   /// Confirm user's account with confirmation code sent to email
   Future<bool> confirmAccount(String email, String confirmationCode) async {
+    await init();
     _cognitoUser =
         new CognitoUser(email, _userPool, storage: _userPool.storage);
 
@@ -205,6 +223,7 @@ class UserService {
 
   /// Resend confirmation code to user's email
   Future<void> resendConfirmationCode(String email) async {
+    await init();
     _cognitoUser =
         new CognitoUser(email, _userPool, storage: _userPool.storage);
     await _cognitoUser.resendConfirmationCode();
@@ -212,6 +231,7 @@ class UserService {
 
   /// Check if user's current session is valid
   Future<bool> checkAuthenticated() async {
+    await init();
     if (_cognitoUser == null || _session == null) {
       return false;
     }
@@ -220,6 +240,7 @@ class UserService {
 
   /// Sign up new user
   Future<User> signUp(String email, String password, String name) async {
+    await init();
     CognitoUserPoolData data;
     final userAttributes = [
       new AttributeArg(name: 'name', value: name),
@@ -236,11 +257,16 @@ class UserService {
   }
 
   Future<void> signOut() async {
+    await init();
     if (credentials != null) {
       await credentials.resetAwsCredentials();
     }
     if (_cognitoUser != null) {
-      return _cognitoUser.signOut();
+      await _cognitoUser.signOut();
     }
+    isInitialized = false;
+    credentials = null;
+    _cognitoUser = null;
+    _session = null;
   }
 }

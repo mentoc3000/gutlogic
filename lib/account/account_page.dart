@@ -28,8 +28,7 @@ class AccountPageState extends State<AccountPage> {
                 style: new TextStyle(color: Colors.blueAccent),
               ),
               onTap: () async {
-                final _userService = new UserService(userPool);
-                await _userService.init();
+                final _userService = new UserService();
                 await _userService.signOut();
                 Navigator.of(context, rootNavigator: true)
                   ..pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
