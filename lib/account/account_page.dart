@@ -30,8 +30,9 @@ class AccountPageState extends State<AccountPage> {
                     style: new TextStyle(color: Colors.greenAccent),
                   ),
                   onTap: () async {
+                    String message = 'Hi there!';
                     final snackBar = SnackBar(
-                      content: Text('Hi there!'),
+                      content: Text(message),
                       action: SnackBarAction(
                         label: 'Close',
                         onPressed: () => Scaffold.of(context).removeCurrentSnackBar()
