@@ -17,26 +17,49 @@ class AccountPageState extends State<AccountPage> {
         centerTitle: true,
         title: Text("Account"),
       ),
-      body: ListView(
-        children: <Widget>[
-          ListTile(title: Text("Placeholder"),),
-          new Divider(),
-          new Center(
-            child: new InkWell(
-              child: new Text(
-                'Logout',
-                style: new TextStyle(color: Colors.blueAccent),
+      body: Builder(
+        builder: (BuildContext context) {
+          return ListView(
+            children: <Widget>[
+              ListTile(title: Text("Placeholder"),),
+              new Divider(),
+              new Center(
+                child: new InkWell(
+                  child: new Text(
+                    'Say Hello',
+                    style: new TextStyle(color: Colors.greenAccent),
+                  ),
+                  onTap: () async {
+                    final snackBar = SnackBar(
+                      content: Text('Hi there!'),
+                      action: SnackBarAction(
+                        label: 'Close',
+                        onPressed: () => Scaffold.of(context).removeCurrentSnackBar()
+                      ),
+                    );
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  },
+                ),
               ),
-              onTap: () async {
-                final _userService = new UserService();
-                await _userService.signOut();
-                Navigator.of(context, rootNavigator: true)
-                  ..pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
-              },
-            ),
-          ),
-        ],
-      ),
+              new Divider(),
+              new Center(
+                child: new InkWell(
+                  child: new Text(
+                    'Logout',
+                    style: new TextStyle(color: Colors.blueAccent),
+                  ),
+                  onTap: () async {
+                    final _userService = new UserService();
+                    await _userService.signOut();
+                    Navigator.of(context, rootNavigator: true)
+                      ..pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+      )
     );
   }
 }
