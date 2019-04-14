@@ -41,7 +41,7 @@ class AccountPageState extends State<AccountPage> {
                         region: region, sessionToken: credentials.sessionToken);
 
                     final signedRequest =
-                        new SigV4Request(awsSigV4Client, method: 'GET', path: '/counter');
+                        new SigV4Request(awsSigV4Client, method: 'GET', path: '/say-hello');
                     final response =
                         await http.get(signedRequest.url, headers: signedRequest.headers);
 
@@ -52,6 +52,7 @@ class AccountPageState extends State<AccountPage> {
                         label: 'Close',
                         onPressed: () => Scaffold.of(context).removeCurrentSnackBar()
                       ),
+                      duration: Duration(seconds: 30),
                     );
                     Scaffold.of(context).showSnackBar(snackBar);
                   },

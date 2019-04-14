@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amazon_cognito_identity_dart/cognito.dart';
 import 'package:amazon_cognito_identity_dart/sig_v4.dart';
+import 'package:http/http.dart' as http;
 
 // Setup AWS User Pool Id & Client Id settings here:
 const _awsUserPoolId = 'us-east-1_g5I647HDV';
