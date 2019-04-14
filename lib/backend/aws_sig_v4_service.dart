@@ -19,7 +19,7 @@ class AwsSigV4Service {
                                     sessionToken: credentials.sessionToken);
   }
 
-  Future<http.Response> request (String method, String path) async {
+  Future<http.Response> apiRequest (String method, String path) async {
     final methodCaps = method.toUpperCase();
     final signedRequest = new SigV4Request(awsSigV4Client, method: methodCaps, path: path);
     final response = await http.get(signedRequest.url, headers: signedRequest.headers);

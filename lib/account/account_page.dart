@@ -36,7 +36,7 @@ class AccountPageState extends State<AccountPage> {
                     final _userService = new UserService();
                     final credentials = await _userService.getCredentials();
                     final sigV4Service = new AwsSigV4Service(credentials);
-                    final response = await sigV4Service.request('GET', '/say-hello');
+                    final response = await sigV4Service.apiRequest('GET', '/say-hello');
                     
                     String message = response.body;
                     final snackBar = SnackBar(
