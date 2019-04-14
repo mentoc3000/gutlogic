@@ -11,11 +11,6 @@ const _awsClientId = '7og2og27lm3tf7mp46759emd9l';
 
 const _identityPoolId = 'us-east-1:0821f23e-a659-4393-8d38-1c40dcefc8b0';
 
-// Setup endpoints here:
-const region = 'us-east-1';
-const endpoint =
-    'https://psjb3o5scf.execute-api.us-east-1.amazonaws.com/dev';
-
 /// Extend CognitoStorage with Shared Preferences to persist account
 /// login sessions
 class Storage extends CognitoStorage {
