@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/login/aws_login_example.dart';
 import 'package:gut_ai/backend/user_service.dart';
+import 'package:amazon_cognito_identity_dart/sig_v4.dart';
+import 'package:http/http.dart' as http;
 
 class AccountPage extends StatefulWidget {
   static String tag = 'account-page';
@@ -30,7 +32,20 @@ class AccountPageState extends State<AccountPage> {
                     style: new TextStyle(color: Colors.greenAccent),
                   ),
                   onTap: () async {
-                    String message = 'Hi there!';
+
+                    // get session credentials
+                    final _userService = new UserService();
+                    final credentials = await _userService.getCredentials();
+                    final awsSigV4Client = new AwsSigV4Client(
+                        credentials.accessKeyId, credentials.secretAccessKey, endpoint,
+                        region: region, sessionToken: credentials.sessionToken);
+
+                    final signedRequest =
+                        new SigV4Request(awsSigV4Client, method: 'GET', path: '/counter');
+                    final response =
+                        await http.get(signedRequest.url, headers: signedRequest.headers);
+
+                    String message = response.body;
                     final snackBar = SnackBar(
                       content: Text(message),
                       action: SnackBarAction(
