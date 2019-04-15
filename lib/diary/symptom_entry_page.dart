@@ -20,7 +20,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Bowel Movement'),
+        title: Text('Symptom'),
       ),
       body: PlaceholderWidget(Colors.yellowAccent)
     );
