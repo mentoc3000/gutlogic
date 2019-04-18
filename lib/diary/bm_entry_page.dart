@@ -4,8 +4,6 @@ import 'package:gut_ai/helpers/placeholder_widget.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'datetime_view.dart';
 import 'package:gut_ai/generic_widgets/slider_tile.dart';
-import 'bm_type_slider.dart';
-import 'bm_volume_slider.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
@@ -55,3 +53,117 @@ class BMEntryPageState extends State<BMEntryPage> {
   }
 }
 
+
+
+class BMTypeSliderTile extends StatefulWidget {
+
+  final int minimum = 1;
+  final int maximum = 8;
+  final int type;
+  final List<String> descriptions = [
+    'Type 1',
+    'Type 2',
+    'Type 3',
+    'Type 4',
+    'Type 5',
+    'Type 6',
+    'Type 7',
+    'Type 8',
+  ];
+
+  BMTypeSliderTile({this.type: 5});
+
+  @override
+  _BMTypeSliderTileState createState() => _BMTypeSliderTileState();
+}
+
+class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
+
+  int value;
+  String description;
+
+  @override
+  void initState() {
+    super.initState();
+    this.value = widget.type;
+    this.description = widget.descriptions[widget.type - 1];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Slider(
+            min: widget.minimum.toDouble(),
+            max: widget.maximum.toDouble(),
+            value: value.toDouble(),
+            divisions: widget.maximum - widget.minimum,
+            onChanged: (newValue) => setState(() {
+              value=newValue.toInt();
+              description=widget.descriptions[value - 1];
+            }),
+          ),
+          Text(description)
+        ],
+      ),
+    );
+  }
+}
+
+
+
+class BMVolumeSliderTile extends StatefulWidget {
+
+  final int minimum = 1;
+  final int maximum = 5;
+  final int volume;
+  final List<String> descriptions = [
+    'Low Volume',
+    'Moderately Low Volume',
+    'Moderate Volume',
+    'Moderately High Volume',
+    'High Volume',
+  ];
+
+  BMVolumeSliderTile({this.volume: 3});
+
+  @override
+  _BMVolumeSliderTileState createState() => _BMVolumeSliderTileState();
+}
+
+class _BMVolumeSliderTileState extends State<BMVolumeSliderTile> {
+
+  int value;
+  String description;
+
+  @override
+  void initState() {
+    super.initState();
+    this.value = widget.volume;
+    this.description = widget.descriptions[widget.volume - 1];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Slider(
+            min: widget.minimum.toDouble(),
+            max: widget.maximum.toDouble(),
+            value: value.toDouble(),
+            divisions: widget.maximum - widget.minimum,
+            onChanged: (newValue) => setState(() {
+              value=newValue.toInt();
+              description=widget.descriptions[value - 1];
+            }),
+          ),
+          Text(description)
+        ],
+      ),
+    );
+  }
+}
