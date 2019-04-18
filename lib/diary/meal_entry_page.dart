@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/helpers/placeholder_widget.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
+import 'ingredient_entry_page.dart';
 import 'datetime_view.dart';
 
 class MealEntryPage extends StatefulWidget {
@@ -26,7 +27,10 @@ class MealEntryPageState extends State<MealEntryPage> {
     this.items = <List<Widget>>[
         [
           DatetimeView(date: widget.entry.dateTime),
-          AdderListTile(heading: 'Ingredients')
+          AdderListTile(
+            heading: 'Ingredients',
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => IngredientEntryPage(mealEntry: widget.entry,))),
+          )
         ],
         widget.entry.meal.ingredients.map((i) => FoodListTile(food: i.food)).toList()
       ].expand((x) => x).toList();
