@@ -31,7 +31,7 @@ class GutAIListTile extends StatelessWidget {
   static Widget _buildTrailing(bool adder, Sensitivity sensitivity, double size) {
     Widget trailingWidget;
     if (adder) {
-      trailingWidget = Icon(Icons.add, size: size);
+      trailingWidget = Adder(size: size);
     } else if (sensitivity == null) {
       trailingWidget = Icon(Icons.keyboard_arrow_right, size: size);
     } else {
@@ -82,6 +82,23 @@ class FoodListTile extends StatelessWidget {
       subtitle: Text(this.food.irritants.join(', ')),
       trailing: Icon(Icons.keyboard_arrow_right, size: 30.0),
       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FoodSheetPage(food: this.food)))
+    );
+  }
+}
+
+
+class Adder extends StatelessWidget {
+
+  final double size;
+  final Function onTap;
+
+  Adder({this.size, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Icon(Icons.add, size: size),
+      onTap: onTap,
     );
   }
 }
