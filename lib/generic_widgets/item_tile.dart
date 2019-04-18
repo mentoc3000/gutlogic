@@ -33,7 +33,7 @@ class GutAIListTile extends StatelessWidget {
     if (adder) {
       trailingWidget = Adder(size: size);
     } else if (sensitivity == null) {
-      trailingWidget = Icon(Icons.keyboard_arrow_right, size: size);
+      trailingWidget = Into(size: size);
     } else {
       // SizedBox is a workaround for an issue with unconstrained trailing widget size
       trailingWidget = SizedBox(
@@ -41,7 +41,7 @@ class GutAIListTile extends StatelessWidget {
         child: Row(
           children: [
             SensitivityIndicator(sensitivity: sensitivity, size: size),
-            Icon(Icons.keyboard_arrow_right, size: size),
+            Into(size: size),
           ]
         )
       );
@@ -98,6 +98,22 @@ class Adder extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Icon(Icons.add, size: size),
+      onTap: onTap,
+    );
+  }
+}
+
+class Into extends StatelessWidget {
+
+  final double size;
+  final Function onTap;
+
+  Into({this.size, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Icon(Icons.keyboard_arrow_right, size: size),
       onTap: onTap,
     );
   }
