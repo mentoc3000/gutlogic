@@ -73,9 +73,8 @@ class AdderListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GutAIListTile(
       heading: this.heading,
-      trailing: Adder(size: 30),
+      trailing: Adder(size: 30, onTap: onTap,),
       size: 30, 
-      onTap: onTap
     );
   }
 }
