@@ -18,14 +18,16 @@ class _QuantityViewState extends State<QuantityView> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
       child: Row(
         children: <Widget>[
           Flexible(
             child: TextFormField(
               keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
               decoration: InputDecoration(
-                hintText: 'Amount'
+                hintText: 'Amount',
               ),
+              textAlign: TextAlign.center,
               onSaved: (String amount) {
                 widget.quantity.amount = double.parse(amount);
               },
@@ -37,6 +39,7 @@ class _QuantityViewState extends State<QuantityView> {
               decoration: InputDecoration(
                 hintText: 'Units'
               ),
+              textAlign: TextAlign.center,
               onSaved: (String unit) {
                 widget.quantity.unit = unit;
               },
