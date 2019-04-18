@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:gut_ai/model/quantity.dart';
+
+class QuantityView extends StatefulWidget {
+
+  final Quantity quantity;
+
+  QuantityView({this.quantity});
+
+  @override
+  _QuantityViewState createState() => _QuantityViewState();
+}
+
+class _QuantityViewState extends State<QuantityView> {
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+              decoration: InputDecoration(
+                hintText: 'Amount'
+              ),
+              onSaved: (String amount) {
+                widget.quantity.amount = double.parse(amount);
+              },
+            ),
+          ),
+          Flexible(
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+              decoration: InputDecoration(
+                hintText: 'Units'
+              ),
+              onSaved: (String unit) {
+                widget.quantity.unit = unit;
+              },
+            ),
+          )
+        ],
+      )
+    );
+  }
+}
