@@ -62,6 +62,24 @@ class FoodListTile extends StatelessWidget {
   }
 }
 
+class AdderListTile extends StatelessWidget {
+
+  final String heading;
+  final Function onTap;
+
+  AdderListTile({this.heading, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GutAIListTile(
+      heading: this.heading,
+      trailing: Adder(size: 30),
+      size: 30, 
+      onTap: onTap
+    );
+  }
+}
+
 
 class Adder extends StatelessWidget {
 
