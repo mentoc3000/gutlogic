@@ -12,7 +12,6 @@ class GutAIListTile extends StatelessWidget {
   final String heading;
   final String subheading;
   final Sensitivity sensitivity;
-  final Widget trailingWidget;
   final Widget leading;
   final Function onTap;
   final double size;
@@ -27,9 +26,7 @@ class GutAIListTile extends StatelessWidget {
     this.adder=false, 
     this.onTap, 
     this.size, 
-    this.dense=false
-  }) :
-    this.trailingWidget = _buildTrailing(adder, sensitivity, size);
+    this.dense=false});
 
   static Widget _buildTrailing(bool adder, Sensitivity sensitivity, double size) {
     Widget trailingWidget;
@@ -64,7 +61,7 @@ class GutAIListTile extends StatelessWidget {
       title: Text(this.heading),
       subtitle: subheadingWidget,
       leading: this.leading,
-      trailing: this.trailingWidget,
+      trailing: _buildTrailing(adder, sensitivity, size),
       onTap: this.onTap,
       dense: this.dense,
     );
