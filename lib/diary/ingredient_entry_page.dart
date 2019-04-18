@@ -27,11 +27,9 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     super.initState();
     _ingredient = widget.ingredient;
 
-    this.items = <List<Widget>>[
-        [
-          QuantityView(quantity: _ingredient.quantity,),
-        ],
-      ].expand((x) => x).toList();
+    this.items = [
+      QuantityView(quantity: _ingredient.quantity,),
+    ];
   }
 
   @override
