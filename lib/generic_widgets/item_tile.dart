@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'sensitivity_indicator.dart';
 import 'package:gut_ai/model/sensitivity.dart';
 import 'package:gut_ai/model/food.dart';
+import 'package:gut_ai/model/ingredient.dart';
+import 'package:gut_ai/model/meal.dart';
+import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/food_search/food_sheet_page.dart';
+import 'package:gut_ai/diary/ingredient_entry_page.dart';
 
 class GutAIListTile extends StatelessWidget {
   final String heading;
@@ -58,6 +62,25 @@ class FoodListTile extends StatelessWidget {
       trailing: Into(size: 30),
       size: 30, 
       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FoodSheetPage(food: this.food)))
+    );
+  }
+}
+
+class IngredientTile extends StatelessWidget {
+
+  final MealEntry mealEntry;
+  final Ingredient ingredient;
+
+  IngredientTile({this.ingredient, this.mealEntry});
+
+  @override
+  Widget build(BuildContext context) {
+    return GutAIListTile(
+      heading: this.ingredient.food.name,
+      subheading: this.ingredient.food.irritants.join(', '),
+      trailing: Into(size: 30),
+      size: 30, 
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: this.ingredient, mealEntry: mealEntry)))
     );
   }
 }
