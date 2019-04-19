@@ -40,6 +40,15 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(_ingredient?.food?.name ?? 'Ingredient'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.check),
+            onPressed: () {
+              widget.onSaved(_ingredient);
+              Navigator.of(context).pop();
+            },
+          )
+        ],
       ),
       body: Form(
         child: ListView.separated(
