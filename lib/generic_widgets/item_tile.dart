@@ -113,9 +113,9 @@ class Adder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Icon(Icons.add, size: size),
-      onTap: onTap,
+    return IconButton(
+      icon: Icon(Icons.add, size: size),
+      onPressed: onTap,
     );
   }
 }
@@ -129,9 +129,9 @@ class Into extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Icon(Icons.keyboard_arrow_right, size: size),
-      onTap: onTap,
+    return IconButton(
+      icon: Icon(Icons.keyboard_arrow_right, size: size),
+      onPressed: onTap,
     );
   }
 }
