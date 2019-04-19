@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gut_ai/model/diary_entry.dart';
-import 'package:gut_ai/helpers/placeholder_widget.dart';
 import 'package:gut_ai/model/ingredient.dart';
 import 'quantity_view.dart';
 
@@ -23,7 +22,6 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
 
   @override
   void initState() {
-    print('Initializng...');
     super.initState();
     _ingredient = widget.ingredient;
 
