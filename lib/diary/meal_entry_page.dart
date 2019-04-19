@@ -22,6 +22,25 @@ class MealEntryPageState extends State<MealEntryPage> {
 
   List<Widget> items;
 
+  void addIngredient(Ingredient ingredient) {
+    return setState(() {
+      widget.entry.meal.ingredients.add(ingredient);
+    });
+  }
+
+  void updateIngredient(Ingredient oldIngredient, Ingredient newIngredient) {
+    return setState(() {
+      int idx = widget.entry.meal.ingredients.indexOf(oldIngredient);
+      widget.entry.meal.ingredients.replaceRange(idx, idx, [newIngredient]);
+    });
+  }
+
+  void deleteIngredient(Ingredient ingredient) {
+    return setState(() {
+      widget.entry.meal.ingredients.remove(ingredient);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +56,7 @@ class MealEntryPageState extends State<MealEntryPage> {
               Navigator.push(
                 context, 
                 MaterialPageRoute(
-                  builder: (context) => IngredientEntryPage(ingredient: newIngredient, onSaved: null)
+                  builder: (context) => IngredientEntryPage(ingredient: newIngredient, onSaved: addIngredient)
                 )
               );
             } 
@@ -47,7 +66,7 @@ class MealEntryPageState extends State<MealEntryPage> {
               mealEntry: widget.entry, 
               onTap:() => Navigator.push(
                 context, 
-                MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i, onSaved: null)))
+                MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i, onSaved: (n) => updateIngredient(i, n))))
               )
             ).toList()
           )
