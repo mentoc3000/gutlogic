@@ -6,10 +6,10 @@ import 'quantity_view.dart';
 class IngredientEntryPage extends StatefulWidget {
   static String tag = 'ingredient-entry-page';
 
-  final MealEntry mealEntry;
+  final Function onSaved;
   final Ingredient ingredient;
 
-  IngredientEntryPage({this.ingredient, this.mealEntry});
+  IngredientEntryPage({this.ingredient, this.onSaved});
 
   @override
   IngredientEntryPageState createState() => IngredientEntryPageState();

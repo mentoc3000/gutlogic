@@ -34,7 +34,7 @@ class MealEntryPageState extends State<MealEntryPage> {
             heading: 'Ingredients',
             onTap: () {
               Ingredient newIngredient = Ingredient();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: newIngredient, mealEntry: widget.entry,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: newIngredient, onSaved: null)));
             } 
           )]..addAll(
             widget.entry.meal.ingredients.map((i) => IngredientTile(ingredient: i, mealEntry: widget.entry,)).toList()

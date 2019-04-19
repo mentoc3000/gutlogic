@@ -80,7 +80,7 @@ class IngredientTile extends StatelessWidget {
       subheading: this.ingredient.food.irritants.join(', '),
       trailing: Into(size: 30),
       size: 30, 
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: this.ingredient, mealEntry: mealEntry)))
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: this.ingredient, onSaved: null)))
     );
   }
 }
