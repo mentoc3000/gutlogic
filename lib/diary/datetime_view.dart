@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:gut_ai/generic_widgets/gutai_card.dart';
 
 class DatetimeView extends StatefulWidget {
 
@@ -35,16 +36,18 @@ class _DatetimeViewState extends State<DatetimeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: DateTimePickerFormField(
-        initialValue: widget.date,
-        inputType: inputType,
-        format: formats[inputType],
-        editable: editable,
-        decoration: InputDecoration(
-            labelText: 'Date/Time', hasFloatingPlaceholder: false),
-        onChanged: (dt) => setState(() => date = dt),
+    return GutAICard(
+      child:Padding(
+        padding: EdgeInsets.all(16.0),
+        child: DateTimePickerFormField(
+          initialValue: widget.date,
+          inputType: inputType,
+          format: formats[inputType],
+          editable: editable,
+          decoration: InputDecoration(
+              labelText: 'Date/Time', hasFloatingPlaceholder: false),
+          onChanged: (dt) => setState(() => date = dt),
+        )
       )
     );
   }

@@ -5,6 +5,7 @@ import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'ingredient_entry_page.dart';
 import 'datetime_view.dart';
 import 'package:gut_ai/model/ingredient.dart';
+import 'package:gut_ai/generic_widgets/gutai_card.dart';
 
 class MealEntryPage extends StatefulWidget {
   static String tag = 'meal-entry-page';
@@ -25,19 +26,22 @@ class MealEntryPageState extends State<MealEntryPage> {
   void initState() {
     super.initState();
 
-    this.items = <List<Widget>>[
-        [
-          DatetimeView(date: widget.entry.dateTime),
-          AdderListTile(
+    this.items = [
+      DatetimeView(date: widget.entry.dateTime),
+      GutAICard(
+        child: Column(
+          children: [AdderListTile(
             heading: 'Ingredients',
             onTap: () {
               Ingredient newIngredient = Ingredient();
               Navigator.push(context, MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: newIngredient, mealEntry: widget.entry,)));
             } 
+          )]..addAll(
+            widget.entry.meal.ingredients.map((i) => FoodListTile(food: i.food)).toList()
           )
-        ],
-        widget.entry.meal.ingredients.map((i) => FoodListTile(food: i.food)).toList()
-      ].expand((x) => x).toList();
+        )
+      )
+    ];
   }
 
   @override
@@ -47,8 +51,7 @@ class MealEntryPageState extends State<MealEntryPage> {
         centerTitle: true,
         title: Text(widget.entry.meal.name),
       ),
-      body: ListView.separated(
-        separatorBuilder: (context, index) => Divider(),
+      body: ListView.builder(
         itemCount: items.length,
         itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.all(1.0),
