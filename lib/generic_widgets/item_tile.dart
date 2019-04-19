@@ -70,8 +70,9 @@ class IngredientTile extends StatelessWidget {
 
   final MealEntry mealEntry;
   final Ingredient ingredient;
+  final Function onTap;
 
-  IngredientTile({this.ingredient, this.mealEntry});
+  IngredientTile({this.ingredient, this.mealEntry, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,7 @@ class IngredientTile extends StatelessWidget {
       subheading: this.ingredient.food.irritants.join(', '),
       trailing: Into(size: 30),
       size: 30, 
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: this.ingredient, onSaved: null)))
+      onTap: onTap
     );
   }
 }
