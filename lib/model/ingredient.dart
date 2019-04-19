@@ -9,4 +9,11 @@ class Ingredient {
     this.food,
     this.quantity
   });
+
+  factory Ingredient.copy(Ingredient original) {
+    return Ingredient(
+      food: original.food,
+      quantity: original.quantity
+    );
+  }
 }

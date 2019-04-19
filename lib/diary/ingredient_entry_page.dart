@@ -22,7 +22,7 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
   @override
   void initState() {
     super.initState();
-    _ingredient = widget.ingredient;
+    _ingredient = Ingredient.copy(widget.ingredient);
   }
 
   List<Widget> buildItems() {
