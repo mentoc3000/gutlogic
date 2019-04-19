@@ -35,7 +35,7 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Ingredient'),
+        title: Text(_ingredient?.food?.name ?? 'Ingredient'),
       ),
       body: Form(
         child: ListView.separated(
