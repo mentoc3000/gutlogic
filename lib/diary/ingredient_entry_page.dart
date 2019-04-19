@@ -18,20 +18,24 @@ class IngredientEntryPage extends StatefulWidget {
 class IngredientEntryPageState extends State<IngredientEntryPage> {
 
   Ingredient _ingredient;
-  List<Widget> items;
 
   @override
   void initState() {
     super.initState();
     _ingredient = widget.ingredient;
+  }
 
-    this.items = [
+  List<Widget> buildItems() {
+    return [
       QuantityView(quantity: _ingredient.quantity,),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
+
+    List<Widget> items = buildItems();    
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
