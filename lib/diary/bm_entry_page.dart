@@ -3,7 +3,7 @@ import 'package:gut_ai/model/diary_entry.dart';
 import 'package:gut_ai/helpers/placeholder_widget.dart';
 import 'package:gut_ai/generic_widgets/item_tile.dart';
 import 'datetime_view.dart';
-import 'package:gut_ai/generic_widgets/slider_tile.dart';
+import 'package:gut_ai/generic_widgets/gutai_card.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
@@ -40,8 +40,7 @@ class BMEntryPageState extends State<BMEntryPage> {
         centerTitle: true,
         title: Text('Bowel Movement'),
       ),
-      body: ListView.separated(
-        separatorBuilder: (context, index) => Divider(),
+      body: ListView.builder(
         itemCount: items.length,
         itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.all(1.0),
@@ -91,7 +90,7 @@ class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GutAICard(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -147,7 +146,7 @@ class _BMVolumeSliderTileState extends State<BMVolumeSliderTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GutAICard(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
