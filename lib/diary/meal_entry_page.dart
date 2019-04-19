@@ -68,7 +68,7 @@ class MealEntryPageState extends State<MealEntryPage> {
                 context, 
                 MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i, onSaved: (n) => updateIngredient(i, n))))
               )
-            ).toList()
+            )
           )
         )
       )
