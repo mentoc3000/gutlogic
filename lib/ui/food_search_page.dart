@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'placeholder_widget.dart';
 import 'package:gut_ai/models/food.dart';
 import 'package:gut_ai/resources/dummy_data.dart';
 import 'item_tile.dart';
 
 class FoodSearchPage extends StatefulWidget {
   static String tag = 'foodsearch-page';
+
   @override
   _FoodSearchPageState createState() {
     return _FoodSearchPageState();
