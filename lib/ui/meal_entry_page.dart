@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/model/diary_entry.dart';
-import 'package:gut_ai/helpers/placeholder_widget.dart';
-import 'package:gut_ai/generic_widgets/item_tile.dart';
+import 'package:gut_ai/models/diary_entry.dart';
+import 'placeholder_widget.dart';
+import 'item_tile.dart';
 import 'ingredient_entry_page.dart';
 import 'datetime_view.dart';
-import 'package:gut_ai/model/ingredient.dart';
-import 'package:gut_ai/generic_widgets/gutai_card.dart';
+import 'package:gut_ai/models/ingredient.dart';
+import 'gutai_card.dart';
 
 class MealEntryPage extends StatefulWidget {
   static String tag = 'meal-entry-page';

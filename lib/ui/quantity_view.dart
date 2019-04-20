@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/model/quantity.dart';
-import 'package:gut_ai/generic_widgets/gutai_card.dart';
+import 'package:gut_ai/models/quantity.dart';
+import 'gutai_card.dart';
 
 class QuantityView extends StatefulWidget {
 

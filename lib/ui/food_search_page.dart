@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/helpers/placeholder_widget.dart';
-import 'package:gut_ai/model/food.dart';
-import 'package:gut_ai/helpers/dummy_data.dart';
-import 'package:gut_ai/generic_widgets/item_tile.dart';
+import 'placeholder_widget.dart';
+import 'package:gut_ai/models/food.dart';
+import 'package:gut_ai/resources/dummy_data.dart';
+import 'item_tile.dart';
 
 class FoodSearchPage extends StatefulWidget {
   static String tag = 'foodsearch-page';

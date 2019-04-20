@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:gut_ai/backend/user_service.dart';
+import 'package:gut_ai/resources/user_service.dart';
 import 'package:amazon_cognito_identity_dart/cognito.dart';
-import 'package:gut_ai/main_tabs.dart';
+import 'main_tabs.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override

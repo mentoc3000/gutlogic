@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/model/diary_entry.dart';
-import 'package:gut_ai/model/ingredient.dart';
+import 'package:gut_ai/models/diary_entry.dart';
+import 'package:gut_ai/models/ingredient.dart';
 import 'quantity_view.dart';
 
 class IngredientEntryPage extends StatefulWidget {

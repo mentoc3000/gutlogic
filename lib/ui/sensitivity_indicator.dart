@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/model/sensitivity.dart';
+import 'package:gut_ai/models/sensitivity.dart';
 
 class SensitivityIndicator extends StatelessWidget {
   final Sensitivity sensitivity;

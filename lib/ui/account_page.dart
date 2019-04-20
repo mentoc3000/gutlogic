@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/login/aws_login_example.dart';
-import 'package:gut_ai/backend/user_service.dart';
-import 'package:gut_ai/backend/aws_sig_v4_service.dart';
+import 'aws_login_example.dart';
+import 'package:gut_ai/resources/user_service.dart';
+import 'package:gut_ai/resources/aws_sig_v4_service.dart';
 
 class AccountPage extends StatefulWidget {
   static String tag = 'account-page';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/model/diary_entry.dart';
-import 'package:gut_ai/generic_widgets/item_tile.dart';
+import 'package:gut_ai/models/diary_entry.dart';
+import 'item_tile.dart';
 import 'package:intl/intl.dart';
 import 'meal_entry_page.dart';
 import 'bm_entry_page.dart';

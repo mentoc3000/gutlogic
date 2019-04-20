@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/main_tabs.dart';
+import 'main_tabs.dart';
 import 'login_text_form_field.dart';
 import 'login_button.dart';
 

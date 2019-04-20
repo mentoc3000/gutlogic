@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:gut_ai/model/food.dart';
-import 'package:gut_ai/generic_widgets/gutai_card.dart';
+import 'package:gut_ai/models/food.dart';
+import 'gutai_card.dart';
 
 class FoodSheetPage extends StatelessWidget {
   final Food food;

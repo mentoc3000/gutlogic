@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'diary_tiles.dart';
 import 'entry_header.dart';
-import 'package:gut_ai/model/sensitivity.dart';
-import 'package:gut_ai/model/food.dart';
-import 'package:gut_ai/helpers/dummy_data.dart';
+import 'package:gut_ai/models/sensitivity.dart';
+import 'package:gut_ai/models/food.dart';
+import 'package:gut_ai/resources/dummy_data.dart';
 
 class DiaryPage extends StatefulWidget {
   static String tag = 'diary-page';

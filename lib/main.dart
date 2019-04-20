@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/main_tabs.dart';
-import 'package:gut_ai/account/account_page.dart';
-import 'package:gut_ai/diary/diary_page.dart';
-import 'package:gut_ai/food_search/food_search_page.dart';
-// import 'package:gut_ai/login/login_page.dart';
-import 'package:gut_ai/diary/meal_entry_page.dart';
-import 'package:gut_ai/login/aws_login_example.dart';
+import 'package:gut_ai/ui/main_tabs.dart';
+import 'package:gut_ai/ui/account_page.dart';
+import 'package:gut_ai/ui/diary_page.dart';
+import 'package:gut_ai/ui/food_search_page.dart';
+// import 'package:gut_ai/ui/login_page.dart';
+import 'package:gut_ai/ui/meal_entry_page.dart';
+import 'package:gut_ai/ui/aws_login_example.dart';
 
 void main() => runApp(GiBlissApp());
 

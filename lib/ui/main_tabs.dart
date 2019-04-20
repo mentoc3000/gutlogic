@@ -2,10 +2,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gut_ai/account/account_page.dart';
-import 'package:gut_ai/food_search/food_search_page.dart';
-import 'package:gut_ai/diary/diary_page.dart';
-import 'package:gut_ai/helpers/placeholder_widget.dart';
+import 'account_page.dart';
+import 'food_search_page.dart';
+import 'diary_page.dart';
+import 'placeholder_widget.dart';
 
 class CustomTab extends StatelessWidget {
   final Widget child;

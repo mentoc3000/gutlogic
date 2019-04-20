@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/model/diary_entry.dart';
-import 'package:gut_ai/helpers/placeholder_widget.dart';
-import 'package:gut_ai/generic_widgets/item_tile.dart';
+import 'package:gut_ai/models/diary_entry.dart';
+import 'placeholder_widget.dart';
+import 'item_tile.dart';
 import 'datetime_view.dart';
-import 'package:gut_ai/generic_widgets/gutai_card.dart';
+import 'gutai_card.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';

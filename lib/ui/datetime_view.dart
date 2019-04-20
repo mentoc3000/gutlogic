@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:gut_ai/generic_widgets/gutai_card.dart';
+import 'gutai_card.dart';
 
 class DatetimeView extends StatefulWidget {
 
