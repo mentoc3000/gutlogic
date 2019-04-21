@@ -166,4 +166,12 @@ class IngredientSearchDelegate extends SearchDelegate {
     // If you want to add search suggestions as the user enters their search term, this is the place to do that.
     return Column();
   }
+  
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    assert(context != null);
+    final ThemeData theme = Theme.of(context);
+    assert(theme != null);
+    return theme;
+  }
 }
