@@ -26,12 +26,6 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     super.initState();
     _ingredient = Ingredient.copy(widget.ingredient);
   }
-  
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
 
   List<Widget> buildItems() {
     return [
@@ -83,6 +77,9 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
 }
 
 class IngredientSearchDelegate extends SearchDelegate {
+
+  final _foodBloc = FoodBloc();
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -100,7 +97,7 @@ class IngredientSearchDelegate extends SearchDelegate {
     return IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
-        bloc.dispose();
+        _foodBloc.dispose();
         close(context, null);
       },
     );
@@ -128,13 +125,13 @@ class IngredientSearchDelegate extends SearchDelegate {
     //     .searchBloc
     //     .searchTerm
     //     .add(query);
-    bloc.fetchQuery(query);
+    _foodBloc.fetchQuery(query);
 
     return Column(
       children: <Widget>[
         //Build the results based on the searchResults stream in the searchBloc
         StreamBuilder(
-          stream: bloc.allFoods,
+          stream: _foodBloc.allFoods,
           builder: (context, AsyncSnapshot<List<Food>> snapshot) {
             if (!snapshot.hasData) {
               return Column(
