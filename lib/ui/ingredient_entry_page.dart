@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gut_ai/models/diary_entry.dart';
 import 'package:gut_ai/models/ingredient.dart';
 import 'quantity_view.dart';
+import 'package:gut_ai/blocs/food_bloc.dart';
+import 'package:gut_ai/models/food.dart';
 
 class IngredientEntryPage extends StatefulWidget {
   static String tag = 'ingredient-entry-page';
@@ -23,6 +25,12 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
   void initState() {
     super.initState();
     _ingredient = Ingredient.copy(widget.ingredient);
+  }
+  
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
   }
 
   List<Widget> buildItems() {
@@ -100,16 +108,16 @@ class IngredientSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     // if (query.length < 3) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Text(
-              "Search term must be longer than two letters.",
-            ),
-          )
-        ],
-      );
+    //   return Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: <Widget>[
+    //       Center(
+    //         child: Text(
+    //           "Search term must be longer than two letters.",
+    //         ),
+    //       )
+    //     ],
+    //   );
     // }
     
     // //Add the search term to the searchBloc. 
@@ -119,45 +127,46 @@ class IngredientSearchDelegate extends SearchDelegate {
     //     .searchBloc
     //     .searchTerm
     //     .add(query);
+    bloc.fetchQuery(query);
 
-    // return Column(
-    //   children: <Widget>[
-    //     //Build the results based on the searchResults stream in the searchBloc
-    //     StreamBuilder(
-    //       stream: InheritedBlocs.of(context).searchBloc.searchResults,
-    //       builder: (context, AsyncSnapshot<List<Result>> snapshot) {
-    //         if (!snapshot.hasData) {
-    //           return Column(
-    //             crossAxisAlignment: CrossAxisAlignment.center,
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             children: <Widget>[
-    //               Center(child: CircularProgressIndicator()),
-    //             ],
-    //           );
-    //         } else if (snapshot.data.length == 0) {
-    //           return Column(
-    //             children: <Widget>[
-    //               Text(
-    //                 "No Results Found.",
-    //               ),
-    //             ],
-    //           );
-    //         } else {
-    //           var results = snapshot.data;
-    //           return ListView.builder(
-    //             itemCount: results.length,
-    //             itemBuilder: (context, index) {
-    //               var result = results[index];
-    //               return ListTile(
-    //                 title: Text(result.title),
-    //               );
-    //             },
-    //           );
-    //         }
-    //       },
-    //     ),
-    //   ],
-    // );
+    return Column(
+      children: <Widget>[
+        //Build the results based on the searchResults stream in the searchBloc
+        StreamBuilder(
+          stream: bloc.allFoods,
+          builder: (context, AsyncSnapshot<List<Food>> snapshot) {
+            if (!snapshot.hasData) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(child: CircularProgressIndicator()),
+                ],
+              );
+            } else if (snapshot.data.length == 0) {
+              return Column(
+                children: <Widget>[
+                  Text(
+                    "No Results Found.",
+                  ),
+                ],
+              );
+            } else {
+              var results = snapshot.data;
+              return ListView.builder(
+                itemCount: results.length,
+                itemBuilder: (context, index) {
+                  var result = results[index];
+                  return ListTile(
+                    title: Text(result.name),
+                  );
+                },
+              );
+            }
+          },
+        ),
+      ],
+    );
   }
 
   @override
@@ -166,7 +175,7 @@ class IngredientSearchDelegate extends SearchDelegate {
     // If you want to add search suggestions as the user enters their search term, this is the place to do that.
     return Column();
   }
-  
+
   @override
   ThemeData appBarTheme(BuildContext context) {
     assert(context != null);

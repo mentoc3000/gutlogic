@@ -1,20 +1,26 @@
 import '../resources/food_repository.dart';
-import 'package:rxdart/rxdart.dart';
+// import 'package:rxdart/rxdart.dart';
+import 'dart:async';
 import '../models/food.dart';
 
 class FoodBloc {
   final _repository = FoodRepository();
-  final _foodsFetcher = PublishSubject<List<Food>>();
+  final _foodsController = StreamController<List<Food>>();
 
-  Observable<List<Food>> get allFoods => _foodsFetcher.stream;
+  Stream<List<Food>> get allFoods => _foodsController.stream;
 
-  fetchAllMovies() async {
+  fetchAllFoods() async {
     List<Food> foods = await _repository.fetchAllFoods();
-    _foodsFetcher.sink.add(foods);
+    _foodsController.sink.add(foods);
+  }
+
+  fetchQuery(String query) async {
+    List<Food> foods = await _repository.fetchQuery(query);
+    _foodsController.sink.add(foods);
   }
 
   dispose() {
-    _foodsFetcher.close();
+    _foodsController.close();
   }
 }
 
