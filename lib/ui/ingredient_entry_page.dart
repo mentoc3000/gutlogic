@@ -100,6 +100,7 @@ class IngredientSearchDelegate extends SearchDelegate {
     return IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
+        bloc.dispose();
         close(context, null);
       },
     );
@@ -152,6 +153,7 @@ class IngredientSearchDelegate extends SearchDelegate {
                 ],
               );
             } else {
+              print('found data');
               var results = snapshot.data;
               return ListView.builder(
                 itemCount: results.length,

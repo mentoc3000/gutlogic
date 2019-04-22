@@ -5,7 +5,9 @@ import '../models/food.dart';
 
 class FoodBloc {
   final _repository = FoodRepository();
-  final _foodsController = StreamController<List<Food>>();
+
+  // Use broadcast stream because stream in search gets subscribed to multiple times
+  final _foodsController = StreamController<List<Food>>.broadcast();
 
   Stream<List<Food>> get allFoods => _foodsController.stream;
 
