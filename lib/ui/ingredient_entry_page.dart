@@ -153,10 +153,10 @@ class IngredientSearchDelegate extends SearchDelegate {
                 ],
               );
             } else {
-              print('found data');
               var results = snapshot.data;
               return ListView.builder(
                 itemCount: results.length,
+                shrinkWrap: true,
                 itemBuilder: (context, index) {
                   var result = results[index];
                   return ListTile(
