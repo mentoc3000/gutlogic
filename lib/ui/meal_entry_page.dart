@@ -41,6 +41,16 @@ class MealEntryPageState extends State<MealEntryPage> {
     });
   }
 
+  void newIngredient() {
+    Ingredient newIngredient = Ingredient();
+    Navigator.push(
+      context, 
+      MaterialPageRoute(
+        builder: (context) => IngredientEntryPage(ingredient: newIngredient, onSaved: addIngredient)
+      )
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,15 +61,7 @@ class MealEntryPageState extends State<MealEntryPage> {
         child: Column(
           children: [AdderListTile(
             heading: 'Ingredients',
-            onTap: () {
-              Ingredient newIngredient = Ingredient();
-              Navigator.push(
-                context, 
-                MaterialPageRoute(
-                  builder: (context) => IngredientEntryPage(ingredient: newIngredient, onSaved: addIngredient)
-                )
-              );
-            } 
+            onTap: newIngredient
           )]..addAll(
             widget.entry.meal.ingredients.map((i) => IngredientTile(
               ingredient: i, 
@@ -89,6 +91,10 @@ class MealEntryPageState extends State<MealEntryPage> {
           child: items[index]
         ),
         padding: EdgeInsets.all(0.0),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: newIngredient
       ),
     );
   }
