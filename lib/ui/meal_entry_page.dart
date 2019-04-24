@@ -20,7 +20,7 @@ class MealEntryPage extends StatefulWidget {
 
 class MealEntryPageState extends State<MealEntryPage> {
 
-  List<Widget> items;
+  MealEntry _entry;
 
   void addIngredient(Ingredient ingredient) {
     return setState(() {
@@ -55,16 +55,22 @@ class MealEntryPageState extends State<MealEntryPage> {
   void initState() {
     super.initState();
 
-    this.items = [
-      DatetimeView(date: widget.entry.dateTime),
+    _entry = widget.entry;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    List<Widget> items = [
+      DatetimeView(date: _entry.dateTime),
       GutAICard(
         child: Column(
           children: [HeaderListTile(
             heading: 'Ingredients',
           )]..addAll(
-            widget.entry.meal.ingredients.map((i) => IngredientTile(
+            _entry.meal.ingredients.map((i) => IngredientTile(
               ingredient: i, 
-              mealEntry: widget.entry, 
+              mealEntry: _entry, 
               onTap:() => Navigator.push(
                 context, 
                 MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i, onSaved: (n) => updateIngredient(i, n))))
@@ -74,14 +80,11 @@ class MealEntryPageState extends State<MealEntryPage> {
         )
       )
     ];
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.entry.meal.name),
+        title: Text(_entry.meal.name),
       ),
       body: ListView.builder(
         itemCount: items.length,
