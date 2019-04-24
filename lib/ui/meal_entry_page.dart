@@ -59,9 +59,8 @@ class MealEntryPageState extends State<MealEntryPage> {
       DatetimeView(date: widget.entry.dateTime),
       GutAICard(
         child: Column(
-          children: [AdderListTile(
+          children: [HeaderListTile(
             heading: 'Ingredients',
-            onTap: newIngredient
           )]..addAll(
             widget.entry.meal.ingredients.map((i) => IngredientTile(
               ingredient: i, 

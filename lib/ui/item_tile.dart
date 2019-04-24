@@ -103,6 +103,21 @@ class AdderListTile extends StatelessWidget {
   }
 }
 
+class HeaderListTile extends StatelessWidget {
+
+  final String heading;
+
+  HeaderListTile({this.heading});
+
+  @override
+  Widget build(BuildContext context) {
+    return GutAIListTile(
+      heading: this.heading,
+      size: 30, 
+    );
+  }
+}
+
 
 class Adder extends StatelessWidget {
 
