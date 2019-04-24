@@ -48,7 +48,11 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: IngredientSearchDelegate(),
+                delegate: IngredientSearchDelegate(
+                  onSelect: (food) {
+                    this._ingredient = Ingredient(food: food);
+                  }
+                ),
               );
             },
           ),
@@ -79,6 +83,9 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
 class IngredientSearchDelegate extends SearchDelegate {
 
   final _foodBloc = FoodBloc();
+  final void Function(Food) onSelect;
+
+  IngredientSearchDelegate({this.onSelect});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -92,14 +99,16 @@ class IngredientSearchDelegate extends SearchDelegate {
     ];
   }
 
+  closeSearch(BuildContext context) {
+    _foodBloc.dispose();
+    close(context, null);
+  }
+
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        _foodBloc.dispose();
-        close(context, null);
-      },
+      onPressed: () => closeSearch(context),
     );
   }
 
@@ -158,6 +167,10 @@ class IngredientSearchDelegate extends SearchDelegate {
                   var result = results[index];
                   return ListTile(
                     title: Text(result.name),
+                    onTap: () {
+                      this.onSelect(result);
+                      closeSearch(context);
+                    }
                   );
                 },
               );
