@@ -24,20 +24,20 @@ class MealEntryPageState extends State<MealEntryPage> {
 
   void addIngredient(Ingredient ingredient) {
     return setState(() {
-      widget.entry.meal.ingredients.add(ingredient);
+      _entry.meal.ingredients.add(ingredient);
     });
   }
 
   void updateIngredient(Ingredient oldIngredient, Ingredient newIngredient) {
     return setState(() {
-      int idx = widget.entry.meal.ingredients.indexOf(oldIngredient);
-      widget.entry.meal.ingredients.replaceRange(idx, idx, [newIngredient]);
+      int idx = _entry.meal.ingredients.indexOf(oldIngredient);
+      _entry.meal.ingredients.replaceRange(idx, idx, [newIngredient]);
     });
   }
 
   void deleteIngredient(Ingredient ingredient) {
     return setState(() {
-      widget.entry.meal.ingredients.remove(ingredient);
+      _entry.meal.ingredients.remove(ingredient);
     });
   }
 
@@ -54,7 +54,6 @@ class MealEntryPageState extends State<MealEntryPage> {
   @override
   void initState() {
     super.initState();
-
     _entry = widget.entry;
   }
 
