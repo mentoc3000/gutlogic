@@ -13,7 +13,7 @@ class DiaryPage extends StatefulWidget {
 
 class DiaryPageState extends State<DiaryPage> {
 
-  List<Widget> entries = [
+  List<Widget> entryTiles = [
     MealEntryListTile(entry: Dummy.mealEntries[0],),
     BowelMovementEntryListTile(entry: Dummy.bowelMovementEntries[0],),
     MedicineEntryListTile(entry: Dummy.medicineEntries[0],),
@@ -30,10 +30,10 @@ class DiaryPageState extends State<DiaryPage> {
       ),
       body: ListView.separated(
         separatorBuilder: (context, index) => Divider(),
-        itemCount: entries.length,
+        itemCount: entryTiles.length,
         itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.all(1.0),
-          child: entries[index],
+          child: entryTiles[index],
         ),
         padding: EdgeInsets.all(0.0),
       ),
