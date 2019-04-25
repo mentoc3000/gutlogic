@@ -24,7 +24,10 @@ class DiaryPageState extends State<DiaryPage> {
   Widget buildEntryTile(DiaryEntry entry) {
     switch (entry.runtimeType) {
       case MealEntry:
-        return MealEntryListTile(entry: entry,);
+        return MealEntryListTile(
+          entry: entry,
+          onUpdate: (e) => setState(() => entry = e),
+        );
       case BowelMovementEntry:
         return BowelMovementEntryListTile(entry: entry,);
       case MedicineEntry:

@@ -9,7 +9,7 @@ import 'medicine_entry_page.dart';
 
 class MealEntryListTile extends StatelessWidget {
   final MealEntry entry;
-  final Function onUpdate;
+  final void Function(MealEntry) onUpdate;
 
   MealEntryListTile({this.entry, this.onUpdate});
   
