@@ -67,14 +67,25 @@ class MealEntryPageState extends State<MealEntryPage> {
           children: [HeaderListTile(
             heading: 'Ingredients',
           )]..addAll(
-            _entry.meal.ingredients.map((i) => IngredientTile(
-              ingredient: i, 
-              mealEntry: _entry, 
-              onTap:() => Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i, onSaved: (n) => updateIngredient(i, n))))
-              )
-            )
+            _entry.meal.ingredients.map((i) => Dismissible(
+              key: ObjectKey(i),
+              child: IngredientTile(
+                ingredient: i, 
+                mealEntry: _entry, 
+                onTap:() => Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i, onSaved: (n) => updateIngredient(i, n)))
+                )
+              ),
+              onDismissed: (direction) {
+                if (direction ==DismissDirection.endToStart) {
+                  deleteIngredient(i);
+                  Scaffold
+                      .of(context)
+                      .showSnackBar(SnackBar(content: Text("${i.food.name} removed.")));
+                }
+              },
+            ))
           )
         )
       )
