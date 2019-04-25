@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'diary_tiles.dart';
 import 'entry_header.dart';
 import 'package:gut_ai/models/sensitivity.dart';
-import 'package:gut_ai/models/food.dart';
+import 'package:gut_ai/models/diary_entry.dart';
 import 'package:gut_ai/resources/dummy_data.dart';
 
 class DiaryPage extends StatefulWidget {
@@ -13,13 +13,28 @@ class DiaryPage extends StatefulWidget {
 
 class DiaryPageState extends State<DiaryPage> {
 
-  List<Widget> entryTiles = [
-    MealEntryListTile(entry: Dummy.mealEntries[0],),
-    BowelMovementEntryListTile(entry: Dummy.bowelMovementEntries[0],),
-    MedicineEntryListTile(entry: Dummy.medicineEntries[0],),
-    MedicineEntryListTile(entry: Dummy.medicineEntries[1],),
-    SymptomEntryListTile(entry: Dummy.symptomEntries[0],)
+  List<DiaryEntry> entries = [
+    Dummy.mealEntries[0],
+    Dummy.bowelMovementEntries[0],
+    Dummy.medicineEntries[0],
+    Dummy.medicineEntries[1],
+    Dummy.symptomEntries[0]
   ];
+
+  Widget buildEntryTile(DiaryEntry entry) {
+    switch (entry.runtimeType) {
+      case MealEntry:
+        return MealEntryListTile(entry: entry,);
+      case BowelMovementEntry:
+        return BowelMovementEntryListTile(entry: entry,);
+      case MedicineEntry:
+        return MedicineEntryListTile(entry: entry,);
+      case SymptomEntry:
+        return SymptomEntryListTile(entry: entry,);
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +45,10 @@ class DiaryPageState extends State<DiaryPage> {
       ),
       body: ListView.separated(
         separatorBuilder: (context, index) => Divider(),
-        itemCount: entryTiles.length,
+        itemCount: entries.length,
         itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.all(1.0),
-          child: entryTiles[index],
+          child: buildEntryTile(entries[index]),
         ),
         padding: EdgeInsets.all(0.0),
       ),
