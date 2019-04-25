@@ -9,8 +9,9 @@ import 'medicine_entry_page.dart';
 
 class MealEntryListTile extends StatelessWidget {
   final MealEntry entry;
+  final Function onUpdate;
 
-  MealEntryListTile({this.entry});
+  MealEntryListTile({this.entry, this.onUpdate});
   
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class MealEntryListTile extends StatelessWidget {
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
       // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
       onTap: () => Navigator.push(context, MaterialPageRoute(
-        builder: (context) => MealEntryPage(entry: entry,)
+        builder: (context) => MealEntryPage(entry: entry, onUpdate: onUpdate,)
       )),
     );
   }

@@ -11,8 +11,9 @@ class MealEntryPage extends StatefulWidget {
   static String tag = 'meal-entry-page';
 
   final MealEntry entry;
+  final void Function(MealEntry) onUpdate;
 
-  MealEntryPage({this.entry});
+  MealEntryPage({this.entry, this.onUpdate});
 
   @override
   MealEntryPageState createState() => MealEntryPageState();
@@ -23,22 +24,25 @@ class MealEntryPageState extends State<MealEntryPage> {
   MealEntry _entry;
 
   void addIngredient(Ingredient ingredient) {
-    return setState(() {
+    setState(() {
       _entry.meal.ingredients.add(ingredient);
     });
+    widget.onUpdate(_entry);
   }
 
   void updateIngredient(Ingredient oldIngredient, Ingredient newIngredient) {
-    return setState(() {
+    setState(() {
       int idx = _entry.meal.ingredients.indexOf(oldIngredient);
       _entry.meal.ingredients.replaceRange(idx, idx, [newIngredient]);
     });
+    widget.onUpdate(_entry);
   }
 
   void deleteIngredient(Ingredient ingredient) {
-    return setState(() {
+    setState(() {
       _entry.meal.ingredients.remove(ingredient);
     });
+    widget.onUpdate(_entry);
   }
 
   void newIngredient() {
