@@ -12,13 +12,6 @@ class DiaryPage extends StatefulWidget {
 class DiaryPageState extends State<DiaryPage> {
 
   final _diaryEntryBloc = DiaryEntryBloc();
-  List<DiaryEntry> entries;
-
-  @override
-  void initState() {
-    super.initState();
-    entries = _diaryEntryBloc.fetchAllDiaryEntries();
-  }
 
   @override
   void dispose() {
@@ -46,20 +39,43 @@ class DiaryPageState extends State<DiaryPage> {
 
   @override
   Widget build(BuildContext context) {
+    _diaryEntryBloc.fetchAllDiaryEntries();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text("Diary"),
       ),
-      body: ListView.separated(
-        separatorBuilder: (context, index) => Divider(),
-        itemCount: entries.length,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.all(1.0),
-          child: buildEntryTile(entries[index]),
-        ),
-        padding: EdgeInsets.all(0.0),
-      ),
+      body: Column(
+        children: <Widget>[
+          StreamBuilder(
+            stream: _diaryEntryBloc.allFoods,
+            builder: (context, AsyncSnapshot<List<DiaryEntry>> snapshot) {
+              if (!snapshot.hasData) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(child: CircularProgressIndicator()),
+                  ]
+                );
+              } else {
+                List<DiaryEntry> entries = snapshot.data;
+                return ListView.separated(
+                  separatorBuilder: (context, index) => Divider(),
+                  itemCount: entries.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => Padding(
+                    padding: EdgeInsets.all(1.0),
+                    child: buildEntryTile(entries[index]),
+                  ),
+                  padding: EdgeInsets.all(0.0),
+                );
+              }
+            },
+          )
+        ],
+      )
     );
   }
 }
