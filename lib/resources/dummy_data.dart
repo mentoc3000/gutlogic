@@ -1,11 +1,11 @@
-import 'package:gut_ai/models/food.dart';
-import 'package:gut_ai/models/diary_entry.dart';
-import 'package:gut_ai/models/bowel_movement.dart';
-import 'package:gut_ai/models/medicine.dart';
-import 'package:gut_ai/models/meal.dart';
-import 'package:gut_ai/models/ingredient.dart';
-import 'package:gut_ai/models/quantity.dart';
-import 'package:gut_ai/models/symptom.dart';
+import '../models/food.dart';
+import '../models/diary_entry.dart';
+import '../models/bowel_movement.dart';
+import '../models/medicine.dart';
+import '../models/meal.dart';
+import '../models/ingredient.dart';
+import '../models/quantity.dart';
+import '../models/symptom.dart';
 
 class Dummy {
   static final _artichoke = Food(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/models/diary_entry.dart';
+import '../models/diary_entry.dart';
 import 'placeholder_widget.dart';
 import 'item_tile.dart';
 import 'ingredient_entry_page.dart';
 import 'datetime_view.dart';
-import 'package:gut_ai/models/ingredient.dart';
+import '../models/ingredient.dart';
 import 'gutai_card.dart';
 
 class MealEntryPage extends StatefulWidget {

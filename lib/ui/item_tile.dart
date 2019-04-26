@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'sensitivity_indicator.dart';
-import 'package:gut_ai/models/sensitivity.dart';
-import 'package:gut_ai/models/food.dart';
-import 'package:gut_ai/models/ingredient.dart';
-import 'package:gut_ai/models/meal.dart';
-import 'package:gut_ai/models/diary_entry.dart';
+import '../models/sensitivity.dart';
+import '../models/food.dart';
+import '../models/ingredient.dart';
+import '../models/meal.dart';
+import '../models/diary_entry.dart';
 import 'food_sheet_page.dart';
 import 'ingredient_entry_page.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dummy_data.dart';
-import 'package:gut_ai/models/food.dart';
+import '../models/food.dart';
 
 class FoodRepository {
 

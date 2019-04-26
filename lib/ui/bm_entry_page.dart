@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/models/diary_entry.dart';
+import '../models/diary_entry.dart';
 import 'placeholder_widget.dart';
 import 'item_tile.dart';
 import 'datetime_view.dart';

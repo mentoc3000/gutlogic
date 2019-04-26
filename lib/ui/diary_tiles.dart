@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/models/diary_entry.dart';
+import '../models/diary_entry.dart';
 import 'item_tile.dart';
 import 'package:intl/intl.dart';
 import 'meal_entry_page.dart';

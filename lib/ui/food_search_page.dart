@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/models/food.dart';
-import 'package:gut_ai/resources/dummy_data.dart';
+import '../models/food.dart';
+import '../resources/dummy_data.dart';
 import 'item_tile.dart';
 
 class FoodSearchPage extends StatefulWidget {

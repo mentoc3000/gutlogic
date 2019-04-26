@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gut_ai/models/diary_entry.dart';
-import 'package:gut_ai/models/ingredient.dart';
+import '../models/diary_entry.dart';
+import '../models/ingredient.dart';
 import 'quantity_view.dart';
-import 'package:gut_ai/blocs/food_bloc.dart';
-import 'package:gut_ai/models/food.dart';
+import '../blocs/food_bloc.dart';
+import '../models/food.dart';
 
 class IngredientEntryPage extends StatefulWidget {
   static String tag = 'ingredient-entry-page';

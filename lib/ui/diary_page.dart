@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'diary_tiles.dart';
-import 'package:gut_ai/models/diary_entry.dart';
+import '../models/diary_entry.dart';
 import '../blocs/diary_entry_bloc.dart';
 
 class DiaryPage extends StatefulWidget {
