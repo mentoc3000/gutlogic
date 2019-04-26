@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'sensitivity_indicator.dart';
 import '../models/sensitivity.dart';
 import '../models/food.dart';
 import '../models/ingredient.dart';
-import '../models/meal.dart';
 import '../models/diary_entry.dart';
 import 'food_sheet_page.dart';
-import 'ingredient_entry_page.dart';
 
 class GutAIListTile extends StatelessWidget {
   final String heading;

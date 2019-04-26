@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/diary_entry.dart';
-import 'placeholder_widget.dart';
-import 'item_tile.dart';
 import 'datetime_view.dart';
 import 'gutai_card.dart';
 

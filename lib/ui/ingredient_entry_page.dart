@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/diary_entry.dart';
 import '../models/ingredient.dart';
 import 'quantity_view.dart';
 import '../blocs/food_bloc.dart';

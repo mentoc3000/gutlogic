@@ -4,7 +4,6 @@ import 'package:gut_ai/ui/account_page.dart';
 import 'package:gut_ai/ui/diary_page.dart';
 import 'package:gut_ai/ui/food_search_page.dart';
 // import 'package:gut_ai/ui/login_page.dart';
-import 'package:gut_ai/ui/meal_entry_page.dart';
 import 'package:gut_ai/ui/aws_login_example.dart';
 
 void main() => runApp(GiBlissApp());
