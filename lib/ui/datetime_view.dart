@@ -28,9 +28,7 @@ class _DatetimeViewState extends State<DatetimeView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     this.date = widget.date;
   }
 
