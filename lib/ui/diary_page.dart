@@ -4,6 +4,7 @@ import 'entry_header.dart';
 import 'package:gut_ai/models/sensitivity.dart';
 import 'package:gut_ai/models/diary_entry.dart';
 import 'package:gut_ai/resources/dummy_data.dart';
+import '../blocs/diary_entry_bloc.dart';
 
 class DiaryPage extends StatefulWidget {
   static String tag = 'diary-page';
@@ -13,13 +14,14 @@ class DiaryPage extends StatefulWidget {
 
 class DiaryPageState extends State<DiaryPage> {
 
-  List<DiaryEntry> entries = [
-    Dummy.mealEntries[0],
-    Dummy.bowelMovementEntries[0],
-    Dummy.medicineEntries[0],
-    Dummy.medicineEntries[1],
-    Dummy.symptomEntries[0]
-  ];
+  final _diaryEntryBloc = DiaryEntryBloc();
+  List<DiaryEntry> entries;
+
+  @override
+  void initState() {
+    super.initState();
+    entries = _diaryEntryBloc.fetchAllDiaryEntries();
+  }
 
   Widget buildEntryTile(DiaryEntry entry) {
     switch (entry.runtimeType) {
