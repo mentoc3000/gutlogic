@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'diary_tiles.dart';
-import 'entry_header.dart';
-import 'package:gut_ai/models/sensitivity.dart';
 import 'package:gut_ai/models/diary_entry.dart';
-import 'package:gut_ai/resources/dummy_data.dart';
 import '../blocs/diary_entry_bloc.dart';
 
 class DiaryPage extends StatefulWidget {
@@ -21,6 +18,12 @@ class DiaryPageState extends State<DiaryPage> {
   void initState() {
     super.initState();
     entries = _diaryEntryBloc.fetchAllDiaryEntries();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _diaryEntryBloc.dispose();
   }
 
   Widget buildEntryTile(DiaryEntry entry) {
