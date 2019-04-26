@@ -25,5 +25,3 @@ class FoodBloc {
     _foodsController.close();
   }
 }
-
-final bloc = FoodBloc();
