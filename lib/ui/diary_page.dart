@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'diary_tiles.dart';
 import 'meal_entry_page.dart';
 import '../models/diary_entry.dart';
-import '../models/meal.dart';
 import '../blocs/diary_entry_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -88,10 +87,7 @@ class DiaryPageState extends State<DiaryPage> {
             backgroundColor: Colors.blue,
             label: 'Food & Drink',
             onTap: () {
-              MealEntry newMeal = MealEntry(
-                dateTime: DateTime.now(),
-                meal: Meal(name: 'Meal')
-              );
+              MealEntry newMeal = MealEntry.newEntry();
               _diaryEntryBloc.addEntry(newMeal);
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) => MealEntryPage(

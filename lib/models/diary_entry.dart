@@ -18,6 +18,13 @@ class MealEntry extends DiaryEntry {
   }) : super(dateTime: dateTime) {
     this.meal = meal ?? Meal();
   }
+
+  factory MealEntry.newEntry() {
+    return MealEntry(
+      dateTime: DateTime.now(),
+      meal: Meal(name: 'Meal')
+    );
+  }
 }
 
 class BowelMovementEntry extends DiaryEntry {
