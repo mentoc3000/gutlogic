@@ -11,10 +11,16 @@ class DiaryEntryBloc {
 
   Stream<List<DiaryEntry>> get allFoods => _foodsController.stream;
 
-  fetchAllDiaryEntries() async {
+  void fetchAllDiaryEntries() async {
     List<DiaryEntry> foods = await _repository.fetchAllDiaryEntries();
     _foodsController.sink.add(foods);
   }
+
+  void addEntry(DiaryEntry newEntry) => _repository.addEntry;
+
+  void addEntries(List<DiaryEntry> newEntries) => _repository.addEntries;
+
+  void removeEntry(DiaryEntry entry) => _repository.removeEntry;
 
   dispose() {
     _foodsController.close();
