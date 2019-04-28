@@ -16,11 +16,11 @@ class DiaryEntryBloc {
     _foodsController.sink.add(foods);
   }
 
-  void addEntry(DiaryEntry newEntry) => _repository.addEntry;
+  void addEntry(DiaryEntry newEntry) => _repository.addEntry(newEntry);
 
-  void addEntries(List<DiaryEntry> newEntries) => _repository.addEntries;
+  void addEntries(List<DiaryEntry> newEntries) => _repository.addEntries(newEntries);
 
-  void removeEntry(DiaryEntry entry) => _repository.removeEntry;
+  void removeEntry(DiaryEntry entry) => _repository.removeEntry(entry);
 
   dispose() {
     _foodsController.close();
