@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'diary_tiles.dart';
 import '../models/diary_entry.dart';
 import '../blocs/diary_entry_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class DiaryPage extends StatefulWidget {
   static String tag = 'diary-page';
@@ -74,6 +75,30 @@ class DiaryPageState extends State<DiaryPage> {
               }
             },
           )
+        ],
+      ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        child: Icon(Icons.add),
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.accessibility),
+            backgroundColor: Colors.red,
+            label: 'First',
+            onTap: () => print('FIRST CHILD')
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.brush),
+            backgroundColor: Colors.blue,
+            label: 'Second',
+            onTap: () => print('SECOND CHILD'),
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.keyboard_voice),
+            backgroundColor: Colors.green,
+            label: 'Third',
+            onTap: () => print('THIRD CHILD'),
+          ),
         ],
       )
     );

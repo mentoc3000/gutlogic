@@ -25,6 +25,7 @@ dependencies:
   datetime_picker_formfield: ^0.1.8
   shared_preferences: ^0.5.1+2
   amazon_cognito_identity_dart: ^0.0.22
+  flutter_speed_dial: ^1.1.1
 
 dev_dependencies:
   flutter_test:
