@@ -14,28 +14,30 @@ class MealEntry extends DiaryEntry {
 
   MealEntry({
     DateTime dateTime,
-    this.meal,
-  }) : super(dateTime: dateTime);
+    Meal meal,
+  }) : super(dateTime: dateTime) {
+    this.meal = meal ?? Meal();
+  }
 }
 
 class BowelMovementEntry extends DiaryEntry {
   BowelMovement bowelMovement;
 
-  BowelMovementEntry({
-    DateTime dateTime,
-    this.bowelMovement
-  }) : super(dateTime: dateTime);
+  BowelMovementEntry({DateTime dateTime, BowelMovement bowelMovement})
+      : super(dateTime: dateTime) {
+    this.bowelMovement = bowelMovement ?? BowelMovement();
+  }
 }
 
 class MedicineEntry extends DiaryEntry {
   Medicine medicine;
   String dose;
 
-  MedicineEntry({
-    DateTime dateTime,
-    this.medicine,
-    this.dose
-  }) : super(dateTime: dateTime);
+  MedicineEntry({DateTime dateTime, Medicine medicine, String dose})
+      : super(dateTime: dateTime) {
+    this.medicine = medicine ?? Medicine();
+    this.dose = dose ?? '';
+  }
 }
 
 class SymptomEntry extends DiaryEntry {
@@ -43,6 +45,8 @@ class SymptomEntry extends DiaryEntry {
 
   SymptomEntry({
     DateTime dateTime,
-    this.symptom,
-  }) : super(dateTime: dateTime);
+    Symptom symptom,
+  }) : super(dateTime: dateTime) {
+    this.symptom = symptom ?? Symptom();
+  }
 }
