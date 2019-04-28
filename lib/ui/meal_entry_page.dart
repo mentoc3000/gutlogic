@@ -106,7 +106,7 @@ class MealEntryPageState extends State<MealEntryPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(_entry.meal.name),
+        title: Text(_entry.meal.name ?? 'Meal'),
       ),
       body: ListView.builder(
         itemCount: items.length,
