@@ -79,24 +79,30 @@ class DiaryPageState extends State<DiaryPage> {
       ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,
-        child: Icon(Icons.add),
+        // child: Icon(Icons.add),
         children: [
           SpeedDialChild(
-            child: Icon(Icons.accessibility),
-            backgroundColor: Colors.red,
-            label: 'First',
+            child: Icon(Icons.fastfood),
+            backgroundColor: Colors.blue,
+            label: 'Food & Drink',
             onTap: () => print('FIRST CHILD')
           ),
           SpeedDialChild(
-            child: Icon(Icons.brush),
-            backgroundColor: Colors.blue,
-            label: 'Second',
+            child: Icon(Icons.arrow_drop_up),
+            backgroundColor: Colors.purple,
+            label: 'Bowel Movement',
             onTap: () => print('SECOND CHILD'),
           ),
           SpeedDialChild(
-            child: Icon(Icons.keyboard_voice),
-            backgroundColor: Colors.green,
-            label: 'Third',
+            child: Icon(Icons.face),
+            backgroundColor: Colors.red,
+            label: 'Symptom',
+            onTap: () => print('THIRD CHILD'),
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.pause_circle_outline),
+            backgroundColor: Colors.orange,
+            label: 'Medicine',
             onTap: () => print('THIRD CHILD'),
           ),
         ],
