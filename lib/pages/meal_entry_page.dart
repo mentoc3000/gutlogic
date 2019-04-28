@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/diary_entry.dart';
-import 'item_tile.dart';
+import '../widgets/item_tile.dart';
 import 'ingredient_entry_page.dart';
-import 'datetime_view.dart';
+import '../widgets/datetime_view.dart';
 import '../models/ingredient.dart';
-import 'gutai_card.dart';
+import '../widgets/gutai_card.dart';
 
 class MealEntryPage extends StatefulWidget {
   static String tag = 'meal-entry-page';

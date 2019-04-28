@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'main_tabs.dart';
-import 'login_text_form_field.dart';
-import 'login_button.dart';
+import '../widgets/login_text_form_field.dart';
+import '../widgets/login_button.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';

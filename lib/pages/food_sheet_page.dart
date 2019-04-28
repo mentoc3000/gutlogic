@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/food.dart';
-import 'gutai_card.dart';
+import '../widgets/gutai_card.dart';
 
 class FoodSheetPage extends StatelessWidget {
   final Food food;

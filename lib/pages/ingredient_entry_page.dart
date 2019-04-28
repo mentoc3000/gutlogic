@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/ingredient.dart';
-import 'quantity_view.dart';
+import '../widgets/quantity_view.dart';
 import '../blocs/food_bloc.dart';
 import '../models/food.dart';
 

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/diary_entry.dart';
 import 'item_tile.dart';
 import 'package:intl/intl.dart';
-import 'meal_entry_page.dart';
-import 'bm_entry_page.dart';
-import 'symptom_entry_page.dart';
-import 'medicine_entry_page.dart';
+import '../pages/meal_entry_page.dart';
+import '../pages/bm_entry_page.dart';
+import '../pages/symptom_entry_page.dart';
+import '../pages/medicine_entry_page.dart';
 
 class MealEntryListTile extends StatelessWidget {
   final MealEntry entry;

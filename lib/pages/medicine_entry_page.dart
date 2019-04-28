@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/diary_entry.dart';
-import 'placeholder_widget.dart';
+import '../widgets/placeholder_widget.dart';
 
 class MedicineEntryPage extends StatefulWidget {
   static String tag = 'medicine-entry-page';

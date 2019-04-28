@@ -3,7 +3,7 @@ import '../models/sensitivity.dart';
 import '../models/food.dart';
 import '../models/ingredient.dart';
 import '../models/diary_entry.dart';
-import 'food_sheet_page.dart';
+import '../pages/food_sheet_page.dart';
 
 class GutAIListTile extends StatelessWidget {
   final String heading;

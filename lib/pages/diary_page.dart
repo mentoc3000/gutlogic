@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'diary_tiles.dart';
+import '../widgets/diary_tiles.dart';
 import 'meal_entry_page.dart';
 import '../models/diary_entry.dart';
 import '../blocs/diary_entry_bloc.dart';

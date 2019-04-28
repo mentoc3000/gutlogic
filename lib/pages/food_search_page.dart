@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/food.dart';
 import '../resources/dummy_data.dart';
-import 'item_tile.dart';
+import '../widgets/item_tile.dart';
 
 class FoodSearchPage extends StatefulWidget {
   static String tag = 'foodsearch-page';

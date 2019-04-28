@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/diary_entry.dart';
-import 'datetime_view.dart';
-import 'gutai_card.dart';
+import '../widgets/datetime_view.dart';
+import '../widgets/gutai_card.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
