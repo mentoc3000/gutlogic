@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'diary_tiles.dart';
+import 'meal_entry_page.dart';
 import '../models/diary_entry.dart';
 import '../blocs/diary_entry_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -85,7 +86,15 @@ class DiaryPageState extends State<DiaryPage> {
             child: Icon(Icons.fastfood),
             backgroundColor: Colors.blue,
             label: 'Food & Drink',
-            onTap: () => print('FIRST CHILD')
+            onTap: () {
+              MealEntry newMeal = MealEntry();
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => MealEntryPage(
+                  entry: newMeal,
+                  onUpdate: (e) => _diaryEntryBloc.addEntry(e),
+                )
+              ));
+            }
           ),
           SpeedDialChild(
             child: Icon(Icons.arrow_drop_up),
