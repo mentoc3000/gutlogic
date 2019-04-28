@@ -12,11 +12,7 @@ class Symptom {
   }
 }
 
-enum SymptomType {
-  gas,
-  constipation,
-  bloating
-}
+enum SymptomType { gas, constipation, bloating }
 
 const Map<SymptomType, String> SymptomName = {
   SymptomType.gas: "Gas",

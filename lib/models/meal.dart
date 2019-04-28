@@ -4,5 +4,7 @@ class Meal {
   String name;
   List<Ingredient> ingredients;
 
-  Meal({this.name, this.ingredients});
+  Meal({this.name, List<Ingredient> ingredients}) {
+    this.ingredients = ingredients ?? [];
+  }
 }
