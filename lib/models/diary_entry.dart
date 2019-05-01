@@ -1,7 +1,7 @@
 import 'bowel_movement.dart';
-import 'medicine.dart';
 import 'symptom.dart';
 import 'meal.dart';
+import 'dose.dart';
 
 class DiaryEntry {
   DateTime dateTime;
@@ -36,14 +36,12 @@ class BowelMovementEntry extends DiaryEntry {
   }
 }
 
-class MedicineEntry extends DiaryEntry {
-  Medicine medicine;
-  String dose;
+class DosesEntry extends DiaryEntry {
+  List<Dose> doses;
 
-  MedicineEntry({DateTime dateTime, Medicine medicine, String dose})
+  DosesEntry({DateTime dateTime, List<Dose> doses})
       : super(dateTime: dateTime) {
-    this.medicine = medicine ?? Medicine();
-    this.dose = dose ?? '';
+    this.doses = doses ?? [];
   }
 }
 

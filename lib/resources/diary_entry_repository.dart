@@ -10,8 +10,7 @@ class DiaryEntryRepository {
     entries = [
       Dummy.mealEntries[0],
       Dummy.bowelMovementEntries[0],
-      Dummy.medicineEntries[0],
-      Dummy.medicineEntries[1],
+      Dummy.dosesEntries[0],
       Dummy.symptomEntries[0]
     ];
   }

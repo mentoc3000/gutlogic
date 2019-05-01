@@ -1,5 +1,6 @@
 import '../models/food.dart';
 import '../models/diary_entry.dart';
+import '../models/dose.dart';
 import '../models/bowel_movement.dart';
 import '../models/medicine.dart';
 import '../models/meal.dart';
@@ -56,16 +57,19 @@ class Dummy {
     )
   ];
 
-  static List<MedicineEntry> medicineEntries = [
-    MedicineEntry(
+  static List<DosesEntry> dosesEntries = [
+    DosesEntry(
       dateTime: DateTime(2019, 2, 7, 12, 0),
-      medicine: Medicine(name: "Pro-8"),
-      dose: "1 pill"
-    ),
-    MedicineEntry(
-      dateTime: DateTime(2019, 2, 7, 12, 0),
-      medicine: Medicine(name: "Fiber"),
-      dose: "1 Tbsp"
-    ),
+      doses: [
+        Dose(
+          medicine: Medicine(name: "Pro-8"),
+          quantity: Quantity(amount: 1, unit: 'pill')
+        ),
+        Dose(
+          medicine: Medicine(name: "Fiber"),
+          quantity: Quantity(amount: 2, unit: 'Tbsp')
+        )
+      ]
+    )
   ];
 }

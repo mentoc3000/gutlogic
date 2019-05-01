@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import '../models/diary_entry.dart';
 import '../widgets/placeholder_widget.dart';
 
-class MedicineEntryPage extends StatefulWidget {
+class DosesEntryPage extends StatefulWidget {
   static String tag = 'medicine-entry-page';
 
-  final MedicineEntry entry;
+  final DosesEntry entry;
 
-  MedicineEntryPage({this.entry});
+  DosesEntryPage({this.entry});
 
   @override
-  MedicineEntryPageState createState() => MedicineEntryPageState();
+  DosesEntryPageState createState() => DosesEntryPageState();
 }
 
-class MedicineEntryPageState extends State<MedicineEntryPage> {
+class DosesEntryPageState extends State<DosesEntryPage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.entry.medicine.name),
+        title: Text('Medicine'),
       ),
       body: PlaceholderWidget(Colors.redAccent)
     );

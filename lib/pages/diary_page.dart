@@ -30,8 +30,8 @@ class DiaryPageState extends State<DiaryPage> {
         );
       case BowelMovementEntry:
         return BowelMovementEntryListTile(entry: entry,);
-      case MedicineEntry:
-        return MedicineEntryListTile(entry: entry,);
+      case DosesEntry:
+        return DosesEntryListTile(entry: entry,);
       case SymptomEntry:
         return SymptomEntryListTile(entry: entry,);
       default:

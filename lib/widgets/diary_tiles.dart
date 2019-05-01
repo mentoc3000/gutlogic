@@ -47,19 +47,19 @@ class BowelMovementEntryListTile extends StatelessWidget {
 
 }
 
-class MedicineEntryListTile extends StatelessWidget {
-  final MedicineEntry entry;
+class DosesEntryListTile extends StatelessWidget {
+  final DosesEntry entry;
 
-  MedicineEntryListTile({this.entry});
+  DosesEntryListTile({this.entry});
 
   @override
   Widget build(BuildContext context) {
     return GutAIListTile (
-      heading: entry.medicine.name, 
-      subheading: entry.dose,
+      heading: 'Medicine', 
+      subheading: entry.doses.map((d) => d.medicine.name).join(', '),
       leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.orange,),
       onTap: () => Navigator.push(context, MaterialPageRoute(
-        builder: (context) => MedicineEntryPage(entry: entry,)
+        builder: (context) => DosesEntryPage(entry: entry,)
       )),
     );
   }
