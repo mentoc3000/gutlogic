@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
 import '../models/diary_entry.dart';
-import 'item_tile.dart';
 import 'package:intl/intl.dart';
 import '../pages/meal_entry_page.dart';
 import '../pages/bm_entry_page.dart';
 import '../pages/symptom_entry_page.dart';
 import '../pages/medicine_entry_page.dart';
+
+class DiaryEntryListTile extends StatelessWidget {
+  final String heading;
+  final Iterable<String> subheadings;
+  final DateTime datetime;
+  final Color barColor;
+  final Function onTap;
+
+  DiaryEntryListTile({this.heading, this.subheadings, this.datetime, this.barColor, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Text(this.heading)
+        ],
+      ),
+    );
+  }
+}
 
 class MealEntryListTile extends StatelessWidget {
   final MealEntry entry;
@@ -15,10 +35,11 @@ class MealEntryListTile extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return GutAIListTile (
+    return DiaryEntryListTile (
       heading: entry.meal.name,
-      subheading: entry.meal.ingredients.map((e) => e.food.name).join(', '),
-      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.blue,),
+      subheadings: entry.meal.ingredients.map((e) => e.food.name),
+      datetime: entry.dateTime, 
+      barColor: Colors.blue,
       // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
       onTap: () => Navigator.push(context, MaterialPageRoute(
         builder: (context) => MealEntryPage(entry: entry, onUpdate: onUpdate,)
@@ -35,10 +56,11 @@ class BowelMovementEntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GutAIListTile (
+    return DiaryEntryListTile (
       heading: 'Type ' + entry.bowelMovement.type.toString(), 
-      subheading: 'Volume: ' + entry.bowelMovement.volume.toString(),
-      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.purple,),
+      subheadings: ['Volume: ' + entry.bowelMovement.volume.toString()],
+      datetime: entry.dateTime, 
+      barColor: Colors.purple,
       onTap: () => Navigator.push(context, MaterialPageRoute(
         builder: (context) => BMEntryPage(entry: entry,)
       )),
@@ -54,10 +76,11 @@ class DosesEntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GutAIListTile (
+    return DiaryEntryListTile (
       heading: 'Medicine', 
-      subheading: entry.doses.map((d) => d.medicine.name).join(', '),
-      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.orange,),
+      subheadings: entry.doses.map((d) => d.medicine.name),
+      datetime: entry.dateTime, 
+      barColor: Colors.orange,
       onTap: () => Navigator.push(context, MaterialPageRoute(
         builder: (context) => DosesEntryPage(entry: entry,)
       )),
@@ -73,10 +96,11 @@ class SymptomEntryListTile extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return GutAIListTile (
+    return DiaryEntryListTile (
       heading: entry.symptom.name(),
-      subheading: 'Severity: ' + entry.symptom.severity.toString(),
-      leading: TimeLeader(datetime: entry.dateTime, borderColor: Colors.red,),
+      subheadings: ['Severity: ' + entry.symptom.severity.toString()],
+      datetime: entry.dateTime, 
+      barColor: Colors.red,
       // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
       onTap: () => Navigator.push(context, MaterialPageRoute(
         builder: (context) => SymptomEntryPage(entry: entry,)
