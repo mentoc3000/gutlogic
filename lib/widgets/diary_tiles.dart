@@ -121,7 +121,7 @@ class MealEntryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiaryEntryListTile(
-      heading: entry.meal.name,
+      heading: 'Food & Drink',
       subheadings: entry.meal.ingredients.map((e) => e.food.name),
       datetime: entry.dateTime,
       barColor: Colors.blue,
@@ -147,8 +147,7 @@ class BowelMovementEntryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiaryEntryListTile(
-      heading: 'Type ' + entry.bowelMovement.type.toString(),
-      subheadings: ['Volume: ' + entry.bowelMovement.volume.toString()],
+      heading: 'Bowel Movement',
       datetime: entry.dateTime,
       barColor: Colors.purple,
       onTap: () => Navigator.push(
