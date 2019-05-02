@@ -17,10 +17,36 @@ class DiaryEntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var dateFormatter = DateFormat.jm();
     return Container(
       child: Row(
         children: <Widget>[
-          Text(this.heading)
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(width: 3.0, color: this.barColor)
+              )
+            ),
+            child: SizedBox(
+              width: 70.0,
+              // height: 70.0,
+              child:Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 0, 3, 0),
+                    child: Text(dateFormatter.format(datetime))
+                  )
+                ],
+              )
+            )
+          ),
+          Expanded(
+            child: Text(this.heading),
+          ),
+          Icon(Icons.keyboard_arrow_right)
         ],
       ),
     );

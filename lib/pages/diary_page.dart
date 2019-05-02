@@ -68,7 +68,7 @@ class DiaryPageState extends State<DiaryPage> {
                   itemCount: entries.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.all(1.0),
+                    padding: EdgeInsets.all(0.0),
                     child: buildEntryTile(entries[index]),
                   ),
                   padding: EdgeInsets.all(0.0),
