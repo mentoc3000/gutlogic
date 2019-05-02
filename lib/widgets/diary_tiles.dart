@@ -51,10 +51,31 @@ class DiaryEntryListTile extends StatelessWidget {
                   left: BorderSide(width: 3.0, color: this.barColor)
                 )
               ),
-              child: Text(this.heading, style: headingStyle,),
+              child:Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(this.heading, style: headingStyle,),
+                  Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Column(
+                      children: subheadings.map((s) => Container(
+                        padding:EdgeInsets.all(3.0),
+                        child: Text(s)
+                      )).toList()
+                    ),
+                  )
+                ],
+              )
             )
           ),
-          Icon(Icons.keyboard_arrow_right)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Icon(Icons.keyboard_arrow_right),
+            ]
+          )
         ],
       ),
     );
