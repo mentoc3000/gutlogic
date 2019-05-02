@@ -59,6 +59,8 @@ class DiaryEntryListTile extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: subheadings.map((s) => Container(
                         padding:EdgeInsets.all(3.0),
                         child: Text(s)
