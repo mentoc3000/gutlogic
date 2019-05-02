@@ -12,7 +12,6 @@ class DiaryPage extends StatefulWidget {
 }
 
 class DiaryPageState extends State<DiaryPage> {
-
   final _diaryEntryBloc = DiaryEntryBloc();
 
   @override
@@ -29,11 +28,17 @@ class DiaryPageState extends State<DiaryPage> {
           onUpdate: (e) => setState(() => entry = e),
         );
       case BowelMovementEntry:
-        return BowelMovementEntryListTile(entry: entry,);
+        return BowelMovementEntryListTile(
+          entry: entry,
+        );
       case DosesEntry:
-        return DosesEntryListTile(entry: entry,);
+        return DosesEntryListTile(
+          entry: entry,
+        );
       case SymptomEntry:
-        return SymptomEntryListTile(entry: entry,);
+        return SymptomEntryListTile(
+          entry: entry,
+        );
       default:
         return null;
     }
@@ -44,79 +49,83 @@ class DiaryPageState extends State<DiaryPage> {
     _diaryEntryBloc.fetchAllDiaryEntries();
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Diary"),
-      ),
-      body: Column(
-        children: <Widget>[
-          StreamBuilder(
-            stream: _diaryEntryBloc.allFoods,
-            builder: (context, AsyncSnapshot<List<DiaryEntry>> snapshot) {
-              if (!snapshot.hasData) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(child: CircularProgressIndicator()),
-                  ]
-                );
-              } else {
-                List<DiaryEntry> entries = snapshot.data;
-                return ListView.separated(
-                  separatorBuilder: (context, index) => Divider(),
-                  itemCount: entries.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.all(0.0),
-                    child: buildEntryTile(entries[index]),
-                  ),
-                  padding: EdgeInsets.all(0.0),
-                );
-              }
-            },
-          )
-        ],
-      ),
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        // child: Icon(Icons.add),
-        children: [
-          SpeedDialChild(
-            child: Icon(Icons.fastfood),
-            backgroundColor: Colors.blue,
-            label: 'Food & Drink',
-            onTap: () {
-              MealEntry newMeal = MealEntry.newEntry();
-              _diaryEntryBloc.addEntry(newMeal);
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) => MealEntryPage(
-                  entry: newMeal,
-                  onUpdate: (_) => _diaryEntryBloc.fetchAllDiaryEntries(),
-                )
-              ));
-            }
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.arrow_drop_up),
-            backgroundColor: Colors.purple,
-            label: 'Bowel Movement',
-            onTap: () => print('SECOND CHILD'),
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.face),
-            backgroundColor: Colors.red,
-            label: 'Symptom',
-            onTap: () => print('THIRD CHILD'),
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.pause_circle_outline),
-            backgroundColor: Colors.orange,
-            label: 'Medicine',
-            onTap: () => print('THIRD CHILD'),
-          ),
-        ],
-      )
-    );
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Diary"),
+        ),
+        body: Column(
+          children: <Widget>[
+            Expanded(
+              // child: Container(
+              //   decoration: BoxDecoration(border: Border.all()),
+                child: StreamBuilder(
+                  stream: _diaryEntryBloc.allFoods,
+                  builder: (context, AsyncSnapshot<List<DiaryEntry>> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(child: CircularProgressIndicator()),
+                          ],);
+                    } else {
+                      List<DiaryEntry> entries = snapshot.data;
+                      return ListView.separated(
+                        separatorBuilder: (context, index) => Divider(),
+                        itemCount: entries.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => Padding(
+                              padding: EdgeInsets.all(0.0),
+                              child: buildEntryTile(entries[index]),
+                            ),
+                        padding: EdgeInsets.all(0.0),
+                      );
+                    }
+                  },
+                ),
+              // ),
+            ),
+          ],
+        ),
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          // child: Icon(Icons.add),
+          children: [
+            SpeedDialChild(
+                child: Icon(Icons.fastfood),
+                backgroundColor: Colors.blue,
+                label: 'Food & Drink',
+                onTap: () {
+                  MealEntry newMeal = MealEntry.newEntry();
+                  _diaryEntryBloc.addEntry(newMeal);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MealEntryPage(
+                                entry: newMeal,
+                                onUpdate: (_) =>
+                                    _diaryEntryBloc.fetchAllDiaryEntries(),
+                              ),),);
+                },),
+            SpeedDialChild(
+              child: Icon(Icons.arrow_drop_up),
+              backgroundColor: Colors.purple,
+              label: 'Bowel Movement',
+              onTap: () => print('SECOND CHILD'),
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.face),
+              backgroundColor: Colors.red,
+              label: 'Symptom',
+              onTap: () => print('THIRD CHILD'),
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.pause_circle_outline),
+              backgroundColor: Colors.orange,
+              label: 'Medicine',
+              onTap: () => print('THIRD CHILD'),
+            ),
+          ],
+        ),);
   }
 }
