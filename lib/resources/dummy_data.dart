@@ -37,6 +37,10 @@ class Dummy {
           Ingredient(
             food: Food(name: "Egg", irritants: []),
             quantity: Quantity(amount: 1, unit: "each")
+          ),
+          Ingredient(
+            food: Food(name: "Orange Juice", irritants: []),
+            quantity: Quantity(amount: 8, unit: "oz")
           )
         ]
       )
