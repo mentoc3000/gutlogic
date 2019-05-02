@@ -13,6 +13,11 @@ class DiaryEntryListTile extends StatelessWidget {
   final Color barColor;
   final Function onTap;
 
+  static TextStyle headingStyle = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold
+  );
+
   DiaryEntryListTile({this.heading, this.subheadings, this.datetime, this.barColor, this.onTap});
 
   @override
@@ -23,15 +28,10 @@ class DiaryEntryListTile extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(width: 3.0, color: this.barColor)
-              )
-            ),
-            child: SizedBox(
-              width: 70.0,
+            child:SizedBox(
+              width: 80.0,
               // height: 70.0,
-              child:Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -44,7 +44,15 @@ class DiaryEntryListTile extends StatelessWidget {
             )
           ),
           Expanded(
-            child: Text(this.heading),
+            child:Container(
+              padding: EdgeInsets.fromLTRB(5.0, 3.0, 5.0, 3.0),
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(width: 3.0, color: this.barColor)
+                )
+              ),
+              child: Text(this.heading, style: headingStyle,),
+            )
           ),
           Icon(Icons.keyboard_arrow_right)
         ],
