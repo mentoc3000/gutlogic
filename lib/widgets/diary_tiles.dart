@@ -13,72 +13,73 @@ class DiaryEntryListTile extends StatelessWidget {
   final Color barColor;
   final Function onTap;
 
-  static TextStyle headingStyle = TextStyle(
-    fontSize: 18.0,
-    fontWeight: FontWeight.bold
-  );
+  static TextStyle headingStyle =
+      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
 
-  DiaryEntryListTile({this.heading, this.subheadings, this.datetime, this.barColor, this.onTap});
+  DiaryEntryListTile(
+      {this.heading,
+      this.subheadings,
+      this.datetime,
+      this.barColor,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
     var dateFormatter = DateFormat.jm();
     return Container(
-      child: Row(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-            child:SizedBox(
-              width: 80.0,
-              // height: 70.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 0, 3, 0),
-                    child: Text(dateFormatter.format(datetime))
-                  )
-                ],
-              )
-            )
-          ),
-          Expanded(
-            child:Container(
-              padding: EdgeInsets.fromLTRB(5.0, 3.0, 5.0, 3.0),
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(width: 3.0, color: this.barColor)
-                )
+      child: IntrinsicHeight(
+        child: Row(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topRight,
+              child: SizedBox(
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(0, 6, 5, 0),
+                  child: Text(
+                    dateFormatter.format(datetime),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                width: 80,
               ),
-              child:Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(this.heading, style: headingStyle,),
-                  Container(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: subheadings.map((s) => Container(
-                        padding:EdgeInsets.all(3.0),
-                        child: Text(s)
-                      )).toList()
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(5.0, 3.0, 5.0, 3.0),
+                decoration: BoxDecoration(
+                    border: Border(
+                        left: BorderSide(width: 3.0, color: this.barColor))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      this.heading,
+                      style: headingStyle,
                     ),
-                  )
-                ],
-              )
-            )
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Icon(Icons.keyboard_arrow_right),
-            ]
-          )
-        ],
+                    Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: subheadings
+                              .map((s) => Container(
+                                  padding: EdgeInsets.all(3.0), child: Text(s)))
+                              .toList()),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Icon(Icons.keyboard_arrow_right),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -89,21 +90,26 @@ class MealEntryListTile extends StatelessWidget {
   final void Function(MealEntry) onUpdate;
 
   MealEntryListTile({this.entry, this.onUpdate});
-  
+
   @override
   Widget build(BuildContext context) {
-    return DiaryEntryListTile (
+    return DiaryEntryListTile(
       heading: entry.meal.name,
       subheadings: entry.meal.ingredients.map((e) => e.food.name),
-      datetime: entry.dateTime, 
+      datetime: entry.dateTime,
       barColor: Colors.blue,
       // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
-      onTap: () => Navigator.push(context, MaterialPageRoute(
-        builder: (context) => MealEntryPage(entry: entry, onUpdate: onUpdate,)
-      )),
+      onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MealEntryPage(
+                    entry: entry,
+                    onUpdate: onUpdate,
+                  ),
+            ),
+          ),
     );
   }
-
 }
 
 class BowelMovementEntryListTile extends StatelessWidget {
@@ -113,17 +119,21 @@ class BowelMovementEntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DiaryEntryListTile (
-      heading: 'Type ' + entry.bowelMovement.type.toString(), 
+    return DiaryEntryListTile(
+      heading: 'Type ' + entry.bowelMovement.type.toString(),
       subheadings: ['Volume: ' + entry.bowelMovement.volume.toString()],
-      datetime: entry.dateTime, 
+      datetime: entry.dateTime,
       barColor: Colors.purple,
-      onTap: () => Navigator.push(context, MaterialPageRoute(
-        builder: (context) => BMEntryPage(entry: entry,)
-      )),
+      onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BMEntryPage(
+                    entry: entry,
+                  ),
+            ),
+          ),
     );
   }
-
 }
 
 class DosesEntryListTile extends StatelessWidget {
@@ -133,38 +143,46 @@ class DosesEntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DiaryEntryListTile (
-      heading: 'Medicine', 
+    return DiaryEntryListTile(
+      heading: 'Medicine',
       subheadings: entry.doses.map((d) => d.medicine.name),
-      datetime: entry.dateTime, 
+      datetime: entry.dateTime,
       barColor: Colors.orange,
-      onTap: () => Navigator.push(context, MaterialPageRoute(
-        builder: (context) => DosesEntryPage(entry: entry,)
-      )),
+      onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DosesEntryPage(
+                    entry: entry,
+                  ),
+            ),
+          ),
     );
   }
-
 }
 
 class SymptomEntryListTile extends StatelessWidget {
   final SymptomEntry entry;
 
   SymptomEntryListTile({this.entry});
-  
+
   @override
   Widget build(BuildContext context) {
-    return DiaryEntryListTile (
+    return DiaryEntryListTile(
       heading: entry.symptom.name(),
       subheadings: ['Severity: ' + entry.symptom.severity.toString()],
-      datetime: entry.dateTime, 
+      datetime: entry.dateTime,
       barColor: Colors.red,
       // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
-      onTap: () => Navigator.push(context, MaterialPageRoute(
-        builder: (context) => SymptomEntryPage(entry: entry,)
-      )),
+      onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SymptomEntryPage(
+                    entry: entry,
+                  ),
+            ),
+          ),
     );
   }
-
 }
 
 class TimeLeader extends StatelessWidget {
@@ -179,24 +197,21 @@ class TimeLeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
       decoration: BoxDecoration(
-        border: Border(
-          right: BorderSide(width: 3.0, color: this.borderColor)
-        )
+        border: Border(right: BorderSide(width: 3.0, color: this.borderColor)),
       ),
       child: SizedBox(
         width: 70.0,
         height: 70.0,
-        child:Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 3, 0),
-              child: Text(formatter.format(datetime))
-            )
+                padding: EdgeInsets.fromLTRB(0, 0, 3, 0),
+                child: Text(formatter.format(datetime)))
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }
