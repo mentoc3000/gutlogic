@@ -92,22 +92,25 @@ class DiaryEntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: IntrinsicHeight(
-        child: Row(
-          children: <Widget>[
-            buildTime(),
-            buildCenter(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Icon(Icons.keyboard_arrow_right),
-              ],
-            ),
-          ],
+    return InkWell(
+      child: Container(
+        child: IntrinsicHeight(
+          child: Row(
+            children: <Widget>[
+              buildTime(),
+              buildCenter(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Icon(Icons.keyboard_arrow_right),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
+      onTap: onTap,
     );
   }
 }
