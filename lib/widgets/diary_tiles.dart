@@ -13,9 +13,6 @@ class DiaryEntryListTile extends StatelessWidget {
   final Color barColor;
   final Function onTap;
 
-  static TextStyle headingStyle =
-      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
-
   DiaryEntryListTile(
       {this.heading,
       this.subheadings,
@@ -23,54 +20,84 @@ class DiaryEntryListTile extends StatelessWidget {
       this.barColor,
       this.onTap});
 
+  Widget buildTime() {
+    var dateFormatter = DateFormat.jm();
+    return Align(
+      alignment: Alignment.topRight,
+      child: SizedBox(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(0, 6, 5, 0),
+          child: Text(
+            dateFormatter.format(datetime),
+            textAlign: TextAlign.right,
+          ),
+        ),
+        width: 80,
+      ),
+    );
+  }
+
+  Widget buildHeading() {
+    return Text(
+      this.heading,
+      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget buildSubheading() {
+    return Container(
+      padding: EdgeInsets.only(left: 10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: subheadings
+            .map((s) => Container(
+                  padding: EdgeInsets.all(3.0),
+                  child: Text(s),
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  Widget buildCenter() {
+    List<Widget> children;
+    if (subheadings == null) {
+      children = [
+        buildHeading(),
+      ];
+    } else {
+      children = [
+        buildHeading(),
+        buildSubheading(),
+      ];
+    }
+
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(5.0, 3.0, 5.0, 3.0),
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(width: 3.0, color: this.barColor),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    var dateFormatter = DateFormat.jm();
     return Container(
       child: IntrinsicHeight(
         child: Row(
           children: <Widget>[
-            Align(
-              alignment: Alignment.topRight,
-              child: SizedBox(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(0, 6, 5, 0),
-                  child: Text(
-                    dateFormatter.format(datetime),
-                    textAlign: TextAlign.right,
-                  ),
-                ),
-                width: 80,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.fromLTRB(5.0, 3.0, 5.0, 3.0),
-                decoration: BoxDecoration(
-                    border: Border(
-                        left: BorderSide(width: 3.0, color: this.barColor))),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      this.heading,
-                      style: headingStyle,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 10.0),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: subheadings
-                              .map((s) => Container(
-                                  padding: EdgeInsets.all(3.0), child: Text(s)))
-                              .toList()),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            buildTime(),
+            buildCenter(),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -169,7 +196,7 @@ class SymptomEntryListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return DiaryEntryListTile(
       heading: entry.symptom.name(),
-      subheadings: ['Severity: ' + entry.symptom.severity.toString()],
+      // subheadings: ['Severity: ' + entry.symptom.severity.toString()],
       datetime: entry.dateTime,
       barColor: Colors.red,
       // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
