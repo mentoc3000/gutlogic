@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 import '../widgets/diary_tiles.dart';
 import 'meal_entry_page.dart';
 import '../models/diary_entry.dart';
@@ -44,6 +46,26 @@ class DiaryPageState extends State<DiaryPage> {
     }
   }
 
+  List<Widget> entriesToTiles(List<DiaryEntry> entries) {
+
+    if (entries == []) {
+      return [];
+    }
+
+    var dateFormatter = DateFormat.yMd();
+
+    List<Widget> tiles = [];
+    for (var i = 0; i < entries.length; i++) {
+      if (i == 0 || dateFormatter.format(entries[i].dateTime) != dateFormatter.format(entries[i-1].dateTime)) {
+        tiles.add(DateTile(dateTime: entries[i].dateTime));
+      }
+      tiles.add(buildEntryTile(entries[i]));
+    }
+
+    return tiles;
+
+  }
+
   @override
   Widget build(BuildContext context) {
     _diaryEntryBloc.fetchAllDiaryEntries();
@@ -69,14 +91,14 @@ class DiaryPageState extends State<DiaryPage> {
                             Center(child: CircularProgressIndicator()),
                           ],);
                     } else {
-                      List<DiaryEntry> entries = snapshot.data;
+                      List<Widget> tiles = entriesToTiles(snapshot.data);
                       return ListView.separated(
                         separatorBuilder: (context, index) => Divider(),
-                        itemCount: entries.length,
+                        itemCount: tiles.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => Padding(
                               padding: EdgeInsets.all(0.0),
-                              child: buildEntryTile(entries[index]),
+                              child: tiles[index],
                             ),
                         padding: EdgeInsets.all(0.0),
                       );

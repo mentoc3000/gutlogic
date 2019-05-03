@@ -214,32 +214,21 @@ class SymptomEntryListTile extends StatelessWidget {
   }
 }
 
-class TimeLeader extends StatelessWidget {
-  final DateTime datetime;
-  final Color borderColor;
+class DateTile extends StatelessWidget {
+  final DateTime dateTime;
 
-  TimeLeader({this.datetime, this.borderColor});
+  DateTile({this.dateTime});
 
   @override
   Widget build(BuildContext context) {
-    var formatter = DateFormat.jm();
+    var dateFormatter = DateFormat.MMMEd();
+
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-      decoration: BoxDecoration(
-        border: Border(right: BorderSide(width: 3.0, color: this.borderColor)),
-      ),
-      child: SizedBox(
-        width: 70.0,
-        height: 70.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            Container(
-                padding: EdgeInsets.fromLTRB(0, 0, 3, 0),
-                child: Text(formatter.format(datetime)))
-          ],
-        ),
+      padding: EdgeInsets.fromLTRB(30, 10, 10, 10),
+      color: Colors.grey,
+      child: Text(
+        dateFormatter.format(dateTime),
+        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal),
       ),
     );
   }

@@ -49,7 +49,7 @@ class Dummy {
 
   static List<BowelMovementEntry> bowelMovementEntries = [
     BowelMovementEntry(
-      dateTime: DateTime(2019, 2, 7, 11, 31),
+      dateTime: DateTime(2019, 2, 6, 18, 31),
       bowelMovement: BowelMovement(type: 4, volume: 2),
     )
   ];
