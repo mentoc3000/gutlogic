@@ -52,6 +52,7 @@ class DiaryPageState extends State<DiaryPage> {
       return [];
     }
 
+    entries.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     var dateFormatter = DateFormat.yMd();
 
     List<Widget> tiles = [];
