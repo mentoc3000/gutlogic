@@ -15,7 +15,6 @@ class BMEntryPage extends StatefulWidget {
 }
 
 class BMEntryPageState extends State<BMEntryPage> {
-
   List<Widget> items;
 
   @override
@@ -23,37 +22,37 @@ class BMEntryPageState extends State<BMEntryPage> {
     super.initState();
 
     this.items = <List<Widget>>[
-        [
-          DatetimeView(date: widget.entry.dateTime),
-          BMTypeSliderTile(type: widget.entry.bowelMovement.type),
-          BMVolumeSliderTile(volume: widget.entry.bowelMovement.volume,)
-        ],
-      ].expand((x) => x).toList();
+      [
+        DatetimeView(date: widget.entry.dateTime),
+        BMTypeSliderTile(type: widget.entry.bowelMovement.type),
+        BMVolumeSliderTile(
+          volume: widget.entry.bowelMovement.volume,
+        )
+      ],
+    ].expand((x) => x).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Bowel Movement'),
-      ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.all(1.0),
-          child: items[index]
+    return Theme(
+      data: Theme.of(context).copyWith(primaryColor: Colors.purple),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Bowel Movement'),
         ),
-        padding: EdgeInsets.all(0.0),
+        body: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) =>
+              Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+          padding: EdgeInsets.all(0.0),
+        ),
       ),
     );
   }
 }
 
-
-
 class BMTypeSliderTile extends StatefulWidget {
-
   final int minimum = 1;
   final int maximum = 8;
   final int type;
@@ -75,7 +74,6 @@ class BMTypeSliderTile extends StatefulWidget {
 }
 
 class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
-
   int value;
   String description;
 
@@ -98,9 +96,9 @@ class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
             value: value.toDouble(),
             divisions: widget.maximum - widget.minimum,
             onChanged: (newValue) => setState(() {
-              value=newValue.toInt();
-              description=widget.descriptions[value - 1];
-            }),
+                  value = newValue.toInt();
+                  description = widget.descriptions[value - 1];
+                }),
           ),
           Text(description)
         ],
@@ -109,10 +107,7 @@ class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
   }
 }
 
-
-
 class BMVolumeSliderTile extends StatefulWidget {
-
   final int minimum = 1;
   final int maximum = 5;
   final int volume;
@@ -131,7 +126,6 @@ class BMVolumeSliderTile extends StatefulWidget {
 }
 
 class _BMVolumeSliderTileState extends State<BMVolumeSliderTile> {
-
   int value;
   String description;
 
@@ -154,9 +148,9 @@ class _BMVolumeSliderTileState extends State<BMVolumeSliderTile> {
             value: value.toDouble(),
             divisions: widget.maximum - widget.minimum,
             onChanged: (newValue) => setState(() {
-              value=newValue.toInt();
-              description=widget.descriptions[value - 1];
-            }),
+                  value = newValue.toInt();
+                  description = widget.descriptions[value - 1];
+                }),
           ),
           Text(description)
         ],
