@@ -3,12 +3,11 @@ import 'package:gut_ai/models/diary_entry.dart';
 import 'package:gut_ai/models/meal.dart';
 
 void main() {
-  group('Diary Entry', () {
-    group('Meal Entry', () {
-      test('default constructor should create empty meal', () {
-        MealEntry mealEntry = MealEntry();
-        expect(mealEntry.dateTime, null);
-      });
+  group('Meal Entry', () {
+    test('default constructor should create empty meal', () {
+      MealEntry mealEntry = MealEntry();
+      expect(mealEntry.dateTime, null);
+      expect(mealEntry.meal.ingredients, []);
     });
   });
 }
