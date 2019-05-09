@@ -22,6 +22,7 @@ class AwsSigV4Service {
   Future<http.Response> apiRequest (String method, String path) async {
     final methodCaps = method.toUpperCase();
     final signedRequest = new SigV4Request(awsSigV4Client, method: methodCaps, path: path);
+    // TODO: put request in try/catch block
     final response = await http.get(signedRequest.url, headers: signedRequest.headers);
     return response;
   }
