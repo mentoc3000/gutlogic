@@ -31,6 +31,6 @@ class AppSyncService {
   Future<Map<String, dynamic>> query(String operationName, String operation) async {
     final query = 'query $operationName { $operation }';
     final body = {'operationName': operationName, 'query': query};
-    return _request(body);
+    return await _request(body);
   }
 }
