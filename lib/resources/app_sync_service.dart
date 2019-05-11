@@ -15,13 +15,7 @@ class AppSyncService {
 
  
   Future<String> query(String operationName, String operation) async {
-    final query = [
-      'query',
-      operationName,
-      '{',
-      operation,
-      '}'
-    ].join(' ');
+    final query = 'query $operationName { $operation }';
     final body = {'operationName': 'listFoods', 'query': query};
 
     final response = await http.post(
