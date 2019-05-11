@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:amazon_cognito_identity_dart/cognito.dart';
-import 'package:amazon_cognito_identity_dart/sig_v4.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,14 +13,15 @@ class AppSyncService {
 
   AppSyncService(this.session);
 
-  Future<String> listFoods() async {
-    final query = '''query listFoods {
-        listFoods {
-          items {
-            name
-          }
-        }
-      }''';
+ 
+  Future<String> query(String operationName, String operation) async {
+    final query = [
+      'query',
+      operationName,
+      '{',
+      operation,
+      '}'
+    ].join(' ');
     final body = {'operationName': 'listFoods', 'query': query};
 
     final response = await http.post(
@@ -32,7 +32,7 @@ class AppSyncService {
       },
       body: json.encode(body),
     );
-    
+
     return response.body;
   }
 }

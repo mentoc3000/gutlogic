@@ -8,7 +8,13 @@ void main() {
       final userService = UserServiceStub();
       final session = await userService.getSession();
       final appSyncService = AppSyncService(session);
-      String foodList = await appSyncService.listFoods();
+      final operationName = 'listFoods';
+      final operation = '''listFoods {
+        items {
+          name
+        }
+      }''';
+      String foodList = await appSyncService.query(operationName, operation);
       expect(foodList,
           '{"data":{"listFoods":{"items":[{"name":"Orange Juice"},{"name":"Egg"},{"name":"Cream Cheese"},{"name":"Tomato"},{"name":"Bread"}]}}}');
     });
