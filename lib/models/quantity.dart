@@ -6,4 +6,11 @@ class Quantity {
     this.amount,
     this.unit
   });
+
+  factory Quantity.fromJson(Map<String, dynamic> parsedJson) {
+    return Quantity(
+      amount: parsedJson['amount'],
+      unit: parsedJson['unit'],
+    );
+  }
 }

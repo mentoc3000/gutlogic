@@ -7,6 +7,13 @@ class Symptom {
     this.severity,
   });
 
+  factory Symptom.fromJson(Map<String, dynamic> parsedJson) {
+    return Symptom(
+      symptomType: parsedJson['symptomType'],
+      severity: parsedJson['severity'],
+    );
+  }
+
   String name() {
     return SymptomName[this.symptomType];
   }
