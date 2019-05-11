@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amazon_cognito_identity_dart/cognito.dart';
-import 'package:amazon_cognito_identity_dart/sig_v4.dart';
-import 'package:http/http.dart' as http;
 
 // Setup AWS User Pool Id & Client Id settings here:
 const _awsUserPoolId = 'us-east-1_g5I647HDV';
@@ -50,14 +48,6 @@ class Storage extends CognitoStorage {
   }
 }
 
-class Counter {
-  int count;
-  Counter(this.count);
-
-  factory Counter.fromJson(json) {
-    return new Counter(json['count']);
-  }
-}
 
 class User {
   String email;
@@ -99,7 +89,7 @@ class UserService {
   UserService._internal();
 
   /// Initiate user session from local storage if present
-  Future<bool> init() async {
+  Future<bool> _init() async {
     if (isInitialized) {
       return true;
     }
@@ -121,7 +111,7 @@ class UserService {
 
   /// Get existing user from session with his/her attributes
   Future<User> getCurrentUser() async {
-    await init();
+    await _init();
     if (_cognitoUser == null || _session == null) {
       return null;
     }
@@ -139,7 +129,7 @@ class UserService {
 
   /// Retrieve user credentials -- for use with other AWS services
   Future<CognitoCredentials> getCredentials() async {
-    await init();
+    await _init();
     if (_cognitoUser == null || _session == null) {
       return null;
     }
@@ -150,7 +140,7 @@ class UserService {
 
   /// Login user
   Future<User> login(String email, String password) async {
-    await init();
+    await _init();
     _cognitoUser =
         new CognitoUser(email, _userPool, storage: _userPool.storage);
 
@@ -185,7 +175,7 @@ class UserService {
 
   /// Confirm user's account with confirmation code sent to email
   Future<bool> confirmAccount(String email, String confirmationCode) async {
-    await init();
+    await _init();
     _cognitoUser =
         new CognitoUser(email, _userPool, storage: _userPool.storage);
 
@@ -194,7 +184,7 @@ class UserService {
 
   /// Resend confirmation code to user's email
   Future<void> resendConfirmationCode(String email) async {
-    await init();
+    await _init();
     _cognitoUser =
         new CognitoUser(email, _userPool, storage: _userPool.storage);
     await _cognitoUser.resendConfirmationCode();
@@ -202,7 +192,7 @@ class UserService {
 
   /// Check if user's current session is valid
   Future<bool> checkAuthenticated() async {
-    await init();
+    await _init();
     if (_cognitoUser == null || _session == null) {
       return false;
     }
@@ -211,7 +201,7 @@ class UserService {
 
   /// Sign up new user
   Future<User> signUp(String email, String password, String name) async {
-    await init();
+    await _init();
     CognitoUserPoolData data;
     final userAttributes = [
       new AttributeArg(name: 'name', value: name),
@@ -228,7 +218,7 @@ class UserService {
   }
 
   Future<void> signOut() async {
-    await init();
+    await _init();
     if (credentials != null) {
       await credentials.resetAwsCredentials();
     }
