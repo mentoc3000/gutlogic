@@ -9,9 +9,10 @@ class AppSyncService {
   static final _endpoint =
       'https://j2tiu53n6neijg4ui62usmcrdu.appsync-api.us-east-1.amazonaws.com/graphql';
   static final _apiId = 'coyxq2bw5naqjdpp5jevvroeli';
+
   CognitoUserSession session;
 
-  AppSyncService(this.session) {}
+  AppSyncService(this.session);
 
   Future<String> listFoods() async {
     final query = '''query listFoods {
@@ -22,6 +23,7 @@ class AppSyncService {
         }
       }''';
     final body = {'operationName': 'listFoods', 'query': query};
+
     final response = await http.post(
       _endpoint,
       headers: {
@@ -30,6 +32,7 @@ class AppSyncService {
       },
       body: json.encode(body),
     );
+    
     return response.body;
   }
 }
