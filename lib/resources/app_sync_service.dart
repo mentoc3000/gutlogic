@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:amazon_cognito_identity_dart/cognito.dart';
 import 'package:amazon_cognito_identity_dart/sig_v4.dart';
 import 'package:http/http.dart' as http;
-import 'user_service.dart';
 import 'dart:convert';
 
 class AppSyncService {
@@ -29,12 +28,15 @@ class AppSyncService {
     return response;
   }
 
-  Future<String> getQuery() async {
+  Future<String> listFoods() async {
     final body = {
-      'operationName': 'CreateItem',
-      'query': '''mutation CreateItem {
-        createItem(name: "Some Name") {
-          name
+      'operationName': 'listFoods',
+      'query': '''query listFoods {
+        listFoods {
+          items {
+            id
+            name
+          }
         }
       }''',
     };

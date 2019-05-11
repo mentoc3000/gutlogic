@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'user_service_stub.dart';
-import 'package:amazon_cognito_identity_dart/cognito.dart';
 import 'package:gut_ai/resources/aws_sig_v4_service.dart';
 
 void main() {
