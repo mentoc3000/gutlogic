@@ -12,7 +12,7 @@ class UserServiceStub {
 
   UserServiceStub();
 
-  Future<CognitoCredentials> getCredentials() async {
+  Future<CognitoUserSession> getSession() async {
     CognitoUserPool _userPool =
         new CognitoUserPool(_awsUserPoolId, _awsClientId);
     CognitoUser _cognitoUser = new CognitoUser(_email, _userPool);
@@ -23,7 +23,13 @@ class UserServiceStub {
     );
     CognitoUserSession _session =
         await _cognitoUser.authenticateUser(authDetails);
+    return _session;
+  }
 
+  Future<CognitoCredentials> getCredentials() async {
+    CognitoUserPool _userPool =
+        new CognitoUserPool(_awsUserPoolId, _awsClientId);
+    CognitoUserSession _session = await getSession();
     CognitoCredentials credentials =
         new CognitoCredentials(_identityPoolId, _userPool);
     await credentials.getAwsCredentials(_session.getIdToken().getJwtToken());

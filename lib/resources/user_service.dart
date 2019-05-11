@@ -138,6 +138,11 @@ class UserService {
     return credentials;
   }
 
+  Future<CognitoUserSession> getSession() async {
+    await _init();
+    return _session;
+  }
+
   /// Login user
   Future<User> login(String email, String password) async {
     await _init();

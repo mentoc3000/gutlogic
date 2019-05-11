@@ -10,7 +10,7 @@ void main() {
       final credentials = await userService.getCredentials();
       final appSyncService =AppSyncService(credentials);
       String foodList = await appSyncService.listFoods();
-      expect(foodList, '[]');
+      expect(foodList, '{"data":{"listFoods":{"items":[{"name":"Orange Juice"},{"name":"Egg"},{"name":"Cream Cheese"},{"name":"Tomato"},{"name":"Bread"}]}}}');
     });
   });
 }
