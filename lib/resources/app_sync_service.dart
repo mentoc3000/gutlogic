@@ -12,10 +12,8 @@ class AppSyncService {
   CognitoUserSession session;
 
   AppSyncService(this.session);
- 
-  Future<Map<String, dynamic>> query(String operationName, String operation) async {
-    final query = 'query $operationName { $operation }';
-    final body = {'operationName': operationName, 'query': query};
+
+  Future<Map<String, dynamic>> _request(Map<String, dynamic> body) async {
 
     final response = await http.post(
       _endpoint,
@@ -27,5 +25,12 @@ class AppSyncService {
     );
 
     return json.decode(response.body);
+
+  }
+ 
+  Future<Map<String, dynamic>> query(String operationName, String operation) async {
+    final query = 'query $operationName { $operation }';
+    final body = {'operationName': operationName, 'query': query};
+    return _request(body);
   }
 }
