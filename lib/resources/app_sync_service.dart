@@ -12,9 +12,8 @@ class AppSyncService {
   CognitoUserSession session;
 
   AppSyncService(this.session);
-
  
-  Future<String> query(String operationName, String operation) async {
+  Future<Map<String, dynamic>> query(String operationName, String operation) async {
     final query = 'query $operationName { $operation }';
     final body = {'operationName': operationName, 'query': query};
 
@@ -27,6 +26,6 @@ class AppSyncService {
       body: json.encode(body),
     );
 
-    return response.body;
+    return json.decode(response.body);
   }
 }

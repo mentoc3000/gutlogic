@@ -14,9 +14,22 @@ void main() {
           name
         }
       }''';
-      String foodList = await appSyncService.query(operationName, operation);
-      expect(foodList,
-          '{"data":{"listFoods":{"items":[{"name":"Orange Juice"},{"name":"Egg"},{"name":"Cream Cheese"},{"name":"Tomato"},{"name":"Bread"}]}}}');
+      Map<String, dynamic> foodList = await appSyncService.query(operationName, operation);
+      Map<String, dynamic> expected = {
+        'data': {
+          'listFoods': {
+            'items': [
+              {"name":"Orange Juice"},
+              {"name":"Egg"},
+              {"name":"Cream Cheese"},
+              {"name":"Tomato"},
+              {"name":"Bread"}
+            ]
+          }
+        }
+      };
+      expect(foodList, expected);
+
     });
   });
 }
