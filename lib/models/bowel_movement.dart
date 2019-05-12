@@ -1,4 +1,6 @@
-class BowelMovement {
+import 'package:equatable/equatable.dart';
+
+class BowelMovement extends Equatable {
   int type;
   int volume;
 

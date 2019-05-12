@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'quantity.dart';
 import 'medicine.dart';
 
-class Dose {
+class Dose extends Equatable {
   Medicine medicine;
   Quantity quantity;
 

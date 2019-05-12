@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'bowel_movement.dart';
 import 'symptom.dart';
 import 'meal.dart';
 import 'dose.dart';
 
-class DiaryEntry {
+class DiaryEntry extends Equatable {
   DateTime dateTime;
 
   DiaryEntry({this.dateTime});

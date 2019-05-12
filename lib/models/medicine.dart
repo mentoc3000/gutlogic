@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'quantity.dart';
 
-class Medicine {
+class Medicine extends Equatable {
   String name;
 
   Medicine({

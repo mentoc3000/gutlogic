@@ -1,4 +1,6 @@
-class Symptom {
+import 'package:equatable/equatable.dart';
+
+class Symptom extends Equatable {
   SymptomType symptomType;
   int severity;
 

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class Food  extends Equatable{
+class Food extends Equatable {
   String name;
   List<String> irritants;
 

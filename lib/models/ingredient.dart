@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'food.dart';
 import 'quantity.dart';
 
-class Ingredient {
+class Ingredient extends Equatable {
   Food food;
   Quantity quantity;
 

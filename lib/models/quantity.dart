@@ -1,4 +1,6 @@
-class Quantity {
+import 'package:equatable/equatable.dart';
+
+class Quantity extends Equatable {
   double amount;
   String unit;
 

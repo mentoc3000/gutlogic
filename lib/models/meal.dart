@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'ingredient.dart';
 
-class Meal {
+class Meal extends Equatable {
   String name;
   List<Ingredient> ingredients;
 
