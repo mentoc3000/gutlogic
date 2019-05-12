@@ -138,8 +138,7 @@ class UserService {
     return credentials;
   }
 
-  Future<CognitoUserSession> getSession() async {
-    await _init();
+  CognitoUserSession getSession() {
     return _session;
   }
 

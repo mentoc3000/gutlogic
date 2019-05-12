@@ -3,6 +3,8 @@ import '../models/ingredient.dart';
 import '../widgets/quantity_view.dart';
 import '../blocs/food_bloc.dart';
 import '../models/food.dart';
+import '../resources/app_sync_service.dart';
+import '../resources/user_service.dart';
 
 class IngredientEntryPage extends StatefulWidget {
   static String tag = 'ingredient-entry-page';
@@ -17,7 +19,6 @@ class IngredientEntryPage extends StatefulWidget {
 }
 
 class IngredientEntryPageState extends State<IngredientEntryPage> {
-
   Ingredient _ingredient;
 
   @override
@@ -28,63 +29,63 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
 
   List<Widget> buildItems() {
     return [
-      QuantityView(quantity: _ingredient.quantity,),
+      QuantityView(
+        quantity: _ingredient.quantity,
+      ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-
-    List<Widget> items = buildItems();    
+    List<Widget> items = buildItems();
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(_ingredient?.food?.name ?? 'Ingredient'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: IngredientSearchDelegate(
-                  onSelect: (food) {
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(_ingredient?.food?.name ?? 'Ingredient'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: IngredientSearchDelegate(onSelect: (food) {
                     this._ingredient = Ingredient(food: food);
-                  }
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () {
-              widget.onSaved(_ingredient);
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-      body: Form(
-        child: ListView.separated(
-          separatorBuilder: (context, index) => Divider(),
-          itemCount: items.length,
-          itemBuilder: (context, index) => Padding(
-            padding: EdgeInsets.all(1.0),
-            child: items[index]
-          ),
-          padding: EdgeInsets.all(0.0),
+                  }),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.check),
+              onPressed: () {
+                widget.onSaved(_ingredient);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         ),
-      )
-    );
+        body: Form(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(),
+            itemCount: items.length,
+            itemBuilder: (context, index) =>
+                Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+            padding: EdgeInsets.all(0.0),
+          ),
+        ));
   }
 }
 
 class IngredientSearchDelegate extends SearchDelegate {
-
-  final _foodBloc = FoodBloc();
+  FoodBloc _foodBloc;
   final void Function(Food) onSelect;
 
-  IngredientSearchDelegate({this.onSelect});
+  IngredientSearchDelegate({this.onSelect}) {
+    final userService = UserService();
+    final session = userService.getSession();
+    AppSyncService appSyncService = AppSyncService(session);
+    _foodBloc = FoodBloc(appSyncService);
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -125,8 +126,8 @@ class IngredientSearchDelegate extends SearchDelegate {
     //     ],
     //   );
     // }
-    
-    // //Add the search term to the searchBloc. 
+
+    // //Add the search term to the searchBloc.
     // //The Bloc will then handle the searching and add the results to the searchResults stream.
     // //This is the equivalent of submitting the search term to whatever search service you are using
     // InheritedBlocs.of(context)
@@ -165,12 +166,11 @@ class IngredientSearchDelegate extends SearchDelegate {
                 itemBuilder: (context, index) {
                   var result = results[index];
                   return ListTile(
-                    title: Text(result.name),
-                    onTap: () {
-                      this.onSelect(result);
-                      closeSearch(context);
-                    }
-                  );
+                      title: Text(result.name),
+                      onTap: () {
+                        this.onSelect(result);
+                        closeSearch(context);
+                      });
                 },
               );
             }
@@ -182,7 +182,7 @@ class IngredientSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // This method is called everytime the search term changes. 
+    // This method is called everytime the search term changes.
     // If you want to add search suggestions as the user enters their search term, this is the place to do that.
     return Column();
   }
