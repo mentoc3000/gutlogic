@@ -34,7 +34,7 @@ class AppSyncService {
     return await _request(body);
   }
 
-  static List<dynamic> getItems(Map<String, dynamic> parsedJson, String operationName) {
+  static List<Map<String, dynamic>> getItems(Map<String, dynamic> parsedJson, String operationName) {
     return parsedJson['data'][operationName]['items'];
   }
 }

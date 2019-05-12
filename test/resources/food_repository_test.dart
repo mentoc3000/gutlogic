@@ -21,7 +21,7 @@ void main() {
           .thenAnswer((i) => Future(() => expected));
       FoodRepository foodRepository = FoodRepository(appSyncService);
       List<Food> foods = await foodRepository.fetchAllFoods();
-      expect(foods, items.map((x) => Food.fromJson(x)));
+      expect(foods, items.map((x) => Food.fromJson(x)).toList());
     });
   });
 }

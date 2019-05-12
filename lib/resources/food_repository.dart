@@ -14,7 +14,7 @@ class FoodRepository {
     const operation = 'listFoods { items { name } }';
     final response = await appSyncService.query(operationName, operation);
     return AppSyncService.getItems(response, operationName)
-        .map((x) => Food.fromJson(x));
+        .map((x) => Food.fromJson(x)).toList();
   }
 
   Future<List<Food>> fetchQuery(String query) {
