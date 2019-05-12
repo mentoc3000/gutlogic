@@ -31,5 +31,24 @@ void main() {
       expect(foodList, expected);
 
     });
+
+    test('extracts list of items', () {
+      const operationName = 'listFoods';
+      const items = [
+              {"name":"Orange Juice"},
+              {"name":"Egg"},
+              {"name":"Cream Cheese"},
+              {"name":"Tomato"},
+              {"name":"Bread"}
+            ];
+      const parsedJson = {
+        'data': {
+          operationName: {
+            'items': items
+          }
+        }
+      };
+      expect(AppSyncService.getItems(parsedJson, operationName), items);
+    });
   });
 }

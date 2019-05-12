@@ -33,4 +33,8 @@ class AppSyncService {
     final body = {'operationName': operationName, 'query': query};
     return await _request(body);
   }
+
+  static List<Map<String, dynamic>> getItems(Map<String, dynamic> parsedJson, String operationName) {
+    return parsedJson['data'][operationName]['items'];
+  }
 }
