@@ -6,7 +6,7 @@ void main() {
   group('Symptom Type Repository', () {
     test('fetches all symptom types', () async {
       SymptomTypeRepository symptomTypeRepository = SymptomTypeRepository();
-      List<SymptomType> symptomTypes = await symptomTypeRepository.fetchAllSymptomTypes();
+      List<SymptomType> symptomTypes = await symptomTypeRepository.fetchAll();
       expect(symptomTypes.length, 3);
       expect(symptomTypes.contains(SymptomType.gas), true);
       expect(symptomTypes.contains(SymptomType.constipation), true);

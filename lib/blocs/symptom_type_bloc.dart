@@ -13,7 +13,7 @@ class SymptomTypeBloc {
   Stream<List<SymptomType>> get allSymptomTypes => _symptomTypeController.stream;
 
   fetchAllSymptomTypes() async {
-    List<SymptomType> foods = await symptomTypeRepository.fetchAllSymptomTypes();
+    List<SymptomType> foods = await symptomTypeRepository.fetchAll();
     _symptomTypeController.sink.add(foods);
   }
 
