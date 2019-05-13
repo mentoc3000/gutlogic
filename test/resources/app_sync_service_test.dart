@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'user_service_stub.dart';
 import 'package:gut_ai/resources/app_sync_service.dart';
+import 'dart:convert';
 
 void main() {
   group('AppSync Service', () {
@@ -41,13 +42,14 @@ void main() {
               {"name":"Tomato"},
               {"name":"Bread"}
             ];
-      const parsedJson = {
+      Map<String, dynamic> response = {
         'data': {
           operationName: {
             'items': items
           }
         }
       };
+      Map<String, dynamic> parsedJson = json.decode(json.encode(response));
       expect(AppSyncService.getItems(parsedJson, operationName), items);
     });
   });
