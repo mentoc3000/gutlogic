@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dummy_data.dart';
 import '../models/food.dart';
 import 'app_sync_service.dart';
 
@@ -17,12 +16,11 @@ class FoodRepository {
         .map((x) => Food.fromJson(x)).toList();
   }
 
-  Future<List<Food>> fetchQuery(String query) {
-    return Future(() {
+  Future<List<Food>> fetchQuery(String query) async {
+    final allFoods = await fetchAllFoods();
       if (query == '') {
-        return fetchAllFoods();
+        return allFoods;
       }
-      return Dummy.foodList.where((f) => f.name.contains(query)).toList();
-    });
+      return allFoods.where((f) => f.name.contains(query)).toList();
   }
 }
