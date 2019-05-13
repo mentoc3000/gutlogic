@@ -49,32 +49,33 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     List<Widget> items = buildItems();
 
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(_ingredient?.food?.name ?? 'Ingredient'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: showFoodSearch,
-            ),
-            IconButton(
-              icon: Icon(Icons.check),
-              onPressed: () {
-                widget.onSaved(_ingredient);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-        body: Form(
-          child: ListView.separated(
-            separatorBuilder: (context, index) => Divider(),
-            itemCount: items.length,
-            itemBuilder: (context, index) =>
-                Padding(padding: EdgeInsets.all(1.0), child: items[index]),
-            padding: EdgeInsets.all(0.0),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(_ingredient?.food?.name ?? 'Ingredient'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: showFoodSearch,
           ),
-        ));
+          IconButton(
+            icon: Icon(Icons.check),
+            onPressed: () {
+              widget.onSaved(_ingredient);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+      body: Form(
+        child: ListView.separated(
+          separatorBuilder: (context, index) => Divider(),
+          itemCount: items.length,
+          itemBuilder: (context, index) =>
+              Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+          padding: EdgeInsets.all(0.0),
+        ),
+      ),
+    );
   }
 }
 
