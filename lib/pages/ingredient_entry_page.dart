@@ -35,7 +35,7 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     ];
   }
 
-  void showFoodSearch() {
+  void showFoodSearch(BuildContext context) {
     showSearch(
       context: context,
       delegate: IngredientSearchDelegate(onSelect: (food) {
@@ -55,7 +55,7 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: showFoodSearch,
+            onPressed: () => showFoodSearch(context),
           ),
           IconButton(
             icon: Icon(Icons.check),
