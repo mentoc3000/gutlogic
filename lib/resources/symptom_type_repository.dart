@@ -6,7 +6,7 @@ class SymptomTypeRepository {
   SymptomTypeRepository();
 
   Future<List<SymptomType>> fetchAllSymptomTypes() async {
-    await Future.delayed(Duration(seconds: 1));
+    // await Future.delayed(Duration(seconds: 1));
     return SymptomType.values;
   }
 
