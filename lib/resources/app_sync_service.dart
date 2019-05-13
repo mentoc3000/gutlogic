@@ -35,6 +35,7 @@ class AppSyncService {
   }
 
   static List<Map<String, dynamic>> getItems(Map<String, dynamic> parsedJson, String operationName) {
-    return parsedJson['data'][operationName]['items'];
+    // return parsedJson['data'][operationName]['items'];
+    return (parsedJson['data'][operationName]['items'] as List).cast<Map<String, dynamic>>().toList();
   }
 }
