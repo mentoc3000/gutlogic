@@ -17,7 +17,7 @@ class FoodBloc {
   Stream<List<Food>> get allFoods => _foodsController.stream;
 
   fetchAllFoods() async {
-    List<Food> foods = await foodRepository.fetchAllFoods();
+    List<Food> foods = await foodRepository.fetchAll();
     _foodsController.sink.add(foods);
   }
 

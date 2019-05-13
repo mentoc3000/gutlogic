@@ -8,7 +8,7 @@ class FoodRepository {
   FoodRepository(this.appSyncService);
 
   // Future<List<Food>> fetchAllFoods() => Future(() => Dummy.foodList);
-  Future<List<Food>> fetchAllFoods() async {
+  Future<List<Food>> fetchAll() async {
     const operationName = 'listFoods';
     const operation = 'listFoods { items { name } }';
     final response = await appSyncService.query(operationName, operation);
@@ -17,7 +17,7 @@ class FoodRepository {
   }
 
   Future<List<Food>> fetchQuery(String query) async {
-    final allFoods = await fetchAllFoods();
+    final allFoods = await fetchAll();
       if (query == '') {
         return allFoods;
       }
