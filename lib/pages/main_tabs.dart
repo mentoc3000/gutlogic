@@ -36,10 +36,10 @@ class _TabbedState extends State<Tabbed> {
 
   final List<CustomTab> tabs = <CustomTab>[
     CustomTab(
-      child: FoodSearchPage(),
+      child: DiaryPage(),
     ),
     CustomTab(
-      child: DiaryPage(),
+      child: FoodSearchPage(),
     ),
     CustomTab(
       child: PlaceholderWidget(Colors.red),
@@ -108,7 +108,7 @@ class _TabbedState extends State<Tabbed> {
               color: _currentTab == 0
                   ? Color.fromRGBO(58, 66, 86, 1.0)
                   : Color.fromRGBO(58, 66, 86, 0.3),
-              icon: const Icon(Icons.search),
+              icon: const Icon(Icons.subject),
               onPressed: () {
                 _setTab(0);
               },
@@ -118,7 +118,7 @@ class _TabbedState extends State<Tabbed> {
               color: _currentTab == 1
                   ? Color.fromRGBO(58, 66, 86, 1.0)
                   : Color.fromRGBO(58, 66, 86, 0.3),
-              icon: const Icon(Icons.subject),
+              icon: const Icon(Icons.search),
               onPressed: () {
                 _setTab(1);
               },
