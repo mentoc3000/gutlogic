@@ -35,6 +35,15 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     ];
   }
 
+  void showFoodSearch() {
+    showSearch(
+      context: context,
+      delegate: IngredientSearchDelegate(onSelect: (food) {
+        this._ingredient = Ingredient(food: food);
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> items = buildItems();
@@ -46,14 +55,7 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: IngredientSearchDelegate(onSelect: (food) {
-                    this._ingredient = Ingredient(food: food);
-                  }),
-                );
-              },
+              onPressed: showFoodSearch,
             ),
             IconButton(
               icon: Icon(Icons.check),
