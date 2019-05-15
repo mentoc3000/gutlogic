@@ -1,8 +1,9 @@
 import 'dart:async';
 import '../models/food.dart';
 import 'app_sync_service.dart';
+import 'searchable_repository.dart';
 
-class FoodRepository {
+class FoodRepository implements SearchableRepository{
   final AppSyncService appSyncService;
 
   FoodRepository(this.appSyncService);
