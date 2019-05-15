@@ -143,7 +143,7 @@ class IngredientSearchDelegate extends SearchDelegate {
       children: <Widget>[
         //Build the results based on the searchResults stream in the searchBloc
         StreamBuilder(
-          stream: _foodBloc.allFoods,
+          stream: _foodBloc.all,
           builder: (context, AsyncSnapshot<List<Food>> snapshot) {
             if (!snapshot.hasData) {
               return Column(

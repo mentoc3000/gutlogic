@@ -3,8 +3,9 @@ import '../resources/food_repository.dart';
 import 'dart:async';
 import '../models/food.dart';
 import '../resources/app_sync_service.dart';
+import 'bloc_interfaces.dart';
 
-class FoodBloc {
+class FoodBloc implements SearchableBloc{
   // final AppSyncService appSyncService;
   final FoodRepository foodRepository;
 
@@ -14,9 +15,9 @@ class FoodBloc {
   // Use broadcast stream because stream in search gets subscribed to multiple times
   final _foodsController = StreamController<List<Food>>.broadcast();
 
-  Stream<List<Food>> get allFoods => _foodsController.stream;
+  Stream<List<Food>> get all => _foodsController.stream;
 
-  fetchAllFoods() async {
+  fetchAll() async {
     List<Food> foods = await foodRepository.fetchAll();
     _foodsController.sink.add(foods);
   }
