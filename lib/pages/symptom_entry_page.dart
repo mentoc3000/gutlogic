@@ -28,7 +28,19 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
 
   List<Widget> buildItems() {
     return [
+      DatetimeView(date: _symptomEntry.dateTime),
+      buildSeveritySlider(),
     ];
+  }
+
+  Widget buildSeveritySlider() {
+    return Slider(
+      min: 0,
+      max: 10,
+      divisions: 11,
+      value: _symptomEntry.symptom.severity,
+      onChanged: (newValue) => setState(() => _symptomEntry.symptom.severity = newValue),
+    );
   }
 
   void showFoodSearch(BuildContext context) {
@@ -74,6 +86,8 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     );
   }
 }
+
+
 
 class SymptomSearchDelegate extends SearchDelegate {
   SymptomTypeBloc _symptomTypeBloc;

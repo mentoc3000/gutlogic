@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Symptom extends Equatable {
   SymptomType symptomType;
-  int severity;
+  double severity;
 
   Symptom({
     this.symptomType,
