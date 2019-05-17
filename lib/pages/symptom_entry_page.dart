@@ -47,7 +47,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(_symptomEntry?.symptom?.symptomType?.toString() ?? 'Symptom'),
+        title: Text(SymptomName[_symptomEntry?.symptom?.symptomType] ?? 'Symptom'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -162,7 +162,7 @@ class SymptomSearchDelegate extends SearchDelegate {
                 itemBuilder: (context, index) {
                   var result = results[index];
                   return ListTile(
-                      title: Text(result.toString()),
+                      title: Text(SymptomName[result]),
                       onTap: () {
                         this.onSelect(result);
                         closeSearch(context);
