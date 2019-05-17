@@ -34,12 +34,22 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
   }
 
   Widget buildSeveritySlider() {
-    return Slider(
-      min: 0,
-      max: 10,
-      divisions: 11,
-      value: _symptomEntry.symptom.severity,
-      onChanged: (newValue) => setState(() => _symptomEntry.symptom.severity = newValue),
+    return Column(
+      children: [
+        Slider(
+          min: 0,
+          max: 10,
+          divisions: 11,
+          value: _symptomEntry.symptom.severity,
+          onChanged: (newValue) =>
+              setState(() => _symptomEntry.symptom.severity = newValue),
+        ),
+        Row(
+          children: <Widget>[
+            Image.asset('assets/pain_scale/no_pain.jpg')
+          ],
+        ),
+      ],
     );
   }
 
@@ -59,7 +69,8 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(SymptomName[_symptomEntry?.symptom?.symptomType] ?? 'Symptom'),
+        title:
+            Text(SymptomName[_symptomEntry?.symptom?.symptomType] ?? 'Symptom'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -86,8 +97,6 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     );
   }
 }
-
-
 
 class SymptomSearchDelegate extends SearchDelegate {
   SymptomTypeBloc _symptomTypeBloc;
