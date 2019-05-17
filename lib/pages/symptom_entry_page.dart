@@ -34,30 +34,47 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
   }
 
   Widget buildSeveritySlider() {
-
-    List<SeverityIndicator> severity_indicators =[
+    List<SeverityIndicator> severityIndicators = [
       SeverityIndicator(
-      image: Image.asset('assets/pain_scale/no_pain.jpg'),
-      label: 'No Pain',
+        image: Image.asset(
+          'assets/pain_scale/no_pain.jpg',
+          scale: 5,
+        ),
+        label: 'No Pain',
       ),
       SeverityIndicator(
-        image: Image.asset('assets/pain_scale/discomfort.jpg'),
+        image: Image.asset(
+          'assets/pain_scale/discomfort.jpg',
+          scale: 5,
+        ),
         label: 'Discomfort',
       ),
       SeverityIndicator(
-        image: Image.asset('assets/pain_scale/distressing.jpg'),
+        image: Image.asset(
+          'assets/pain_scale/distressing.jpg',
+          scale: 5,
+        ),
         label: 'Distressing',
       ),
       SeverityIndicator(
-        image: Image.asset('assets/pain_scale/intense.jpg'),
+        image: Image.asset(
+          'assets/pain_scale/intense.jpg',
+          scale: 5,
+        ),
         label: 'Intense',
       ),
       SeverityIndicator(
-        image: Image.asset('assets/pain_scale/horrible.jpg'),
+        image: Image.asset(
+          'assets/pain_scale/horrible.jpg',
+          scale: 5,
+        ),
         label: 'Horrible',
       ),
       SeverityIndicator(
-        image: Image.asset('assets/pain_scale/unspeakable.jpg'),
+        image: Image.asset(
+          'assets/pain_scale/unspeakable.jpg',
+          scale: 5,
+        ),
         label: 'Unspeakable',
       ),
     ];
@@ -73,7 +90,8 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
               setState(() => _symptomEntry.symptom.severity = newValue),
         ),
         Row(
-          children: severity_indicators
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: severityIndicators,
         ),
       ],
     );
@@ -124,7 +142,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
   }
 }
 
-class SeverityIndicator extends StatelessWidget{
+class SeverityIndicator extends StatelessWidget {
   final Image image;
   final String label;
 
@@ -133,14 +151,7 @@ class SeverityIndicator extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
-        Transform(
-          transform: Matrix4.identity()
-            ..scale(0.25),
-          child: image,
-        ),
-        Text(label)
-      ],
+      children: <Widget>[image, Text(label)],
     );
   }
 }
