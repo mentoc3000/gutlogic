@@ -10,9 +10,9 @@ class SymptomTypeBloc {
   // Use broadcast stream because stream in search gets subscribed to multiple times
   final _symptomTypeController = StreamController<List<SymptomType>>.broadcast();
 
-  Stream<List<SymptomType>> get allSymptomTypes => _symptomTypeController.stream;
+  Stream<List<SymptomType>> get all => _symptomTypeController.stream;
 
-  fetchAllSymptomTypes() async {
+  fetchAll() async {
     List<SymptomType> foods = await symptomTypeRepository.fetchAll();
     _symptomTypeController.sink.add(foods);
   }
