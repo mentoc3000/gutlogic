@@ -191,8 +191,9 @@ class DosesEntryListTile extends StatelessWidget {
 
 class SymptomEntryListTile extends StatelessWidget {
   final SymptomEntry entry;
+  final void Function(SymptomEntry) onSaved;
 
-  SymptomEntryListTile({this.entry});
+  SymptomEntryListTile({this.entry, this.onSaved});
 
   @override
   Widget build(BuildContext context) {
@@ -207,6 +208,7 @@ class SymptomEntryListTile extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => SymptomEntryPage(
                     entry: entry,
+                    onSaved: onSaved,
                   ),
             ),
           ),

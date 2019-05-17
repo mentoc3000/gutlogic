@@ -40,6 +40,7 @@ class DiaryPageState extends State<DiaryPage> {
       case SymptomEntry:
         return SymptomEntryListTile(
           entry: entry,
+          onSaved: (e) => setState(() => entry = e),
         );
       default:
         return null;
