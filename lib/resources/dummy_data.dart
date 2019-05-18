@@ -57,7 +57,7 @@ class Dummy {
   static List<SymptomEntry> symptomEntries = [
     SymptomEntry(
       dateTime: DateTime(2019, 2, 7, 15, 31),
-      symptom: Symptom(symptomType: SymptomType.bloating, severity: 6),
+      symptom: Symptom(symptomType: SymptomType(name: 'Bloating'), severity: 6),
     )
   ];
 

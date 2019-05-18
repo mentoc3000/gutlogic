@@ -114,7 +114,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
       appBar: AppBar(
         centerTitle: true,
         title:
-            Text(SymptomName[_symptomEntry?.symptom?.symptomType] ?? 'Symptom'),
+            Text(_symptomEntry?.symptom?.symptomType?.name ?? 'Symptom'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -161,7 +161,7 @@ class SymptomSearchDelegate extends SearchDelegate {
   final void Function(SymptomType) onSelect;
 
   SymptomSearchDelegate({this.onSelect}) {
-    _symptomTypeBloc = SymptomTypeBloc();
+    _symptomTypeBloc = SymptomTypeBloc(null);
   }
 
   @override
@@ -243,7 +243,7 @@ class SymptomSearchDelegate extends SearchDelegate {
                 itemBuilder: (context, index) {
                   var result = results[index];
                   return ListTile(
-                      title: Text(SymptomName[result]),
+                      title: Text(result.name),
                       onTap: () {
                         this.onSelect(result);
                         closeSearch(context);

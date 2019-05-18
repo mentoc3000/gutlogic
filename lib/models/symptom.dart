@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:gut_ai/models/model_interfaces.dart';
 
 class Symptom extends Equatable {
   SymptomType symptomType;
@@ -17,14 +18,17 @@ class Symptom extends Equatable {
   }
 
   String name() {
-    return SymptomName[this.symptomType];
+    return this.symptomType.name;
   }
 }
 
-enum SymptomType { gas, constipation, bloating }
+class SymptomType extends Equatable implements Searchable {
 
-const Map<SymptomType, String> SymptomName = {
-  SymptomType.gas: "Gas",
-  SymptomType.constipation: "Constipation",
-  SymptomType.bloating: "Bloating",
-};
+  final String name;
+
+  SymptomType({this.name});
+
+  String searchHeading() {
+    return name;
+  }
+}
