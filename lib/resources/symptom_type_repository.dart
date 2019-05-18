@@ -1,7 +1,8 @@
 import 'dart:async';
 import '../models/symptom.dart';
+import '../resources/searchable_repository.dart';
 
-class SymptomTypeRepository {
+class SymptomTypeRepository implements SearchableRepository {
 
   final List<SymptomType> allSymptomTypes = [
     SymptomType(name: 'Bloating'),
