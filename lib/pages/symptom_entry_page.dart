@@ -7,10 +7,9 @@ import 'gutai_search_delegate.dart';
 class SymptomEntryPage extends StatefulWidget {
   static String tag = 'symptom-entry-page';
 
-  final void Function(SymptomEntry) onSaved;
   final SymptomEntry entry;
 
-  SymptomEntryPage({this.entry, this.onSaved});
+  SymptomEntryPage({this.entry});
 
   @override
   SymptomEntryPageState createState() => SymptomEntryPageState();
@@ -124,13 +123,6 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () => showFoodSearch(context),
-          ),
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () {
-              widget.onSaved(_symptomEntry);
-              Navigator.of(context).pop();
-            },
           ),
         ],
       ),

@@ -206,10 +206,7 @@ class SymptomEntryListTile extends StatelessWidget {
       onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SymptomEntryPage(
-                    entry: entry,
-                    onSaved: onSaved,
-                  ),
+              builder: (context) => SymptomEntryPage(entry: entry),
             ),
           ),
     );
