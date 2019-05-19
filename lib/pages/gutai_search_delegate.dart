@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../models/model_interfaces.dart';
 import '../blocs/bloc_interfaces.dart';
 
-class SymptomSearchDelegate extends SearchDelegate {
+class GutAiSearchDelegate extends SearchDelegate {
   SearchableBloc searchableBloc;
   final void Function(Searchable) onSelect;
 
-  SymptomSearchDelegate({this.searchableBloc, this.onSelect});
+  GutAiSearchDelegate({this.searchableBloc, this.onSelect});
 
   @override
   List<Widget> buildActions(BuildContext context) {

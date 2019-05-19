@@ -5,6 +5,7 @@ import '../blocs/food_bloc.dart';
 import '../models/food.dart';
 import '../resources/app_sync_service.dart';
 import '../resources/user_service.dart';
+import 'gutai_search_delegate.dart';
 
 class IngredientEntryPage extends StatefulWidget {
   static String tag = 'ingredient-entry-page';
@@ -36,11 +37,19 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
   }
 
   void showFoodSearch(BuildContext context) {
+    final userService = UserService();
+    final session = userService.getSession();
+    AppSyncService appSyncService = AppSyncService(session);
+    FoodBloc foodBloc = FoodBloc(appSyncService);
+
+    final onSelect = (food) => this._ingredient = Ingredient(food: food);
+
     showSearch(
       context: context,
-      delegate: IngredientSearchDelegate(onSelect: (food) {
-        this._ingredient = Ingredient(food: food);
-      }),
+      delegate: GutAiSearchDelegate(
+        searchableBloc: foodBloc,
+        onSelect: onSelect,
+      ),
     );
   }
 
