@@ -6,30 +6,31 @@ abstract class GutAiBloc {
 
   final SearchableRepository repository;
 
-  final controller = StreamController<List<Searchable>>.broadcast();
-
   GutAiBloc({this.repository});
-
-  dispose() {
-    controller.close();
-  }
 
 }
 
 abstract class SearchableBloc extends GutAiBloc {
+
+  final controller = StreamController<List<Searchable>>.broadcast();
+
   Stream<List<Searchable>> get all => controller.stream;
 
   SearchableBloc({SearchableRepository repository})
     : super(repository: repository);
 
   void fetchAll() async {
-    List<Searchable> foods = await repository.fetchAll();
-    controller.sink.add(foods);
+    List<Searchable> items = await repository.fetchAll();
+    controller.sink.add(items);
   }
 
   void fetchQuery(String query) async {
-    List<Searchable> foods = await repository.fetchQuery(query);
-    controller.sink.add(foods);
+    List<Searchable> items = await repository.fetchQuery(query);
+    controller.sink.add(items);
+  }
+
+  dispose() {
+    controller.close();
   }
 
 }
