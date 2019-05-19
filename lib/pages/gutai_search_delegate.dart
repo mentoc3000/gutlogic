@@ -3,12 +3,10 @@ import '../models/model_interfaces.dart';
 import '../blocs/bloc_interfaces.dart';
 
 class SymptomSearchDelegate extends SearchDelegate {
-  SearchableBloc _symptomTypeBloc;
+  SearchableBloc searchableBloc;
   final void Function(Searchable) onSelect;
 
-  SymptomSearchDelegate({this.onSelect}) {
-    _symptomTypeBloc = SearchableBloc(null);
-  }
+  SymptomSearchDelegate({this.searchableBloc, this.onSelect});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -23,7 +21,7 @@ class SymptomSearchDelegate extends SearchDelegate {
   }
 
   closeSearch(BuildContext context) {
-    _symptomTypeBloc.dispose();
+    searchableBloc.dispose();
     close(context, null);
   }
 
@@ -57,14 +55,14 @@ class SymptomSearchDelegate extends SearchDelegate {
     //     .searchBloc
     //     .searchTerm
     //     .add(query);
-    _symptomTypeBloc.fetchQuery(query);
+    searchableBloc.fetchQuery(query);
 
     return Column(
       children: <Widget>[
         //Build the results based on the searchResults stream in the searchBloc
         StreamBuilder(
-          stream: _symptomTypeBloc.all,
-          builder: (context, AsyncSnapshot<List<SymptomType>> snapshot) {
+          stream: searchableBloc.all,
+          builder: (context, AsyncSnapshot<List<Searchable>> snapshot) {
             if (!snapshot.hasData) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,7 +87,7 @@ class SymptomSearchDelegate extends SearchDelegate {
                 itemBuilder: (context, index) {
                   var result = results[index];
                   return ListTile(
-                      title: Text(result.name),
+                      title: Text(result.searchHeading()),
                       onTap: () {
                         this.onSelect(result);
                         closeSearch(context);
