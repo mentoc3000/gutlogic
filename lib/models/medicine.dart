@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'quantity.dart';
+import 'model_interfaces.dart';
 
-class Medicine extends Equatable {
+class Medicine extends Equatable implements Searchable {
   String name;
 
   Medicine({
@@ -13,4 +13,6 @@ class Medicine extends Equatable {
       name: parsedJson['name'],
     );
   }
+
+  String searchHeading() => name;
 }
