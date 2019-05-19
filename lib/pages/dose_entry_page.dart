@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:gut_ai/blocs/medicine_bloc.dart';
 import '../models/dose.dart';
 import '../widgets/quantity_view.dart';
-import '../blocs/food_bloc.dart';
-import '../resources/app_sync_service.dart';
-import '../resources/user_service.dart';
 import 'gutai_search_delegate.dart';
 
 class DoseEntryPage extends StatefulWidget {
   static String tag = 'dose-entry-page';
 
-  final void Function(Dose) onSaved;
   final Dose dose;
 
-  DoseEntryPage({this.dose, this.onSaved});
+  DoseEntryPage({this.dose});
 
   @override
   DoseEntryPageState createState() => DoseEntryPageState();
@@ -25,7 +21,7 @@ class DoseEntryPageState extends State<DoseEntryPage> {
   @override
   void initState() {
     super.initState();
-    _dose = Dose.copy(widget.dose);
+    _dose = widget.dose;
   }
 
   List<Widget> buildItems() {
@@ -62,13 +58,6 @@ class DoseEntryPageState extends State<DoseEntryPage> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () => showFoodSearch(context),
-          ),
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () {
-              widget.onSaved(_dose);
-              Navigator.of(context).pop();
-            },
           ),
         ],
       ),

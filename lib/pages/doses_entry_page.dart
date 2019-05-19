@@ -10,9 +10,8 @@ class DosesEntryPage extends StatefulWidget {
   static String tag = 'medicine-entry-page';
 
   final DosesEntry entry;
-  final void Function(DosesEntry) onUpdate;
 
-  DosesEntryPage({this.entry, this.onUpdate});
+  DosesEntryPage({this.entry});
 
   @override
   DosesEntryPageState createState() => DosesEntryPageState();
@@ -21,35 +20,23 @@ class DosesEntryPage extends StatefulWidget {
 class DosesEntryPageState extends State<DosesEntryPage> {
   DosesEntry _entry;
 
-  void addDose(Dose ingredient) {
-    setState(() {
-      _entry.doses.add(ingredient);
-    });
-    widget.onUpdate(_entry);
-  }
-
-  void updateDose(Dose oldDose, Dose newDose) {
-    setState(() {
-      int idx = _entry.doses.indexOf(oldDose);
-      _entry.doses.replaceRange(idx, idx, [newDose]);
-    });
-    widget.onUpdate(_entry);
-  }
-
   void deleteDose(Dose ingredient) {
     setState(() {
       _entry.doses.remove(ingredient);
     });
-    widget.onUpdate(_entry);
   }
 
   void newDose() {
     Dose newDose = Dose();
+    setState(() {
+      _entry.doses.add(newDose);
+    });
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                DoseEntryPage(dose: newDose, onSaved: addDose)));
+      context,
+      MaterialPageRoute(
+        builder: (context) => DoseEntryPage(dose: newDose),
+      ),
+    );
   }
 
   @override
@@ -73,19 +60,23 @@ class DosesEntryPageState extends State<DosesEntryPage> {
                 (i) => Dismissible(
                       key: ObjectKey(i),
                       child: DoseTile(
-                          dose: i,
-                          dosesEntry: _entry,
-                          onTap: () => Navigator.push(
+                        dose: i,
+                        dosesEntry: _entry,
+                        onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DoseEntryPage(
-                                      dose: i,
-                                      onSaved: (n) => updateDose(i, n))))),
+                                builder: (context) => DoseEntryPage(dose: i),
+                              ),
+                            ),
+                      ),
                       onDismissed: (direction) {
                         if (direction == DismissDirection.endToStart) {
                           deleteDose(i);
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text("${i.medicine.name} removed.")));
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("${i.medicine.name} removed."),
+                            ),
+                          );
                         }
                       },
                       background: Container(
