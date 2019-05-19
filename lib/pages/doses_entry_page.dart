@@ -4,6 +4,7 @@ import '../models/dose.dart';
 import '../widgets/datetime_view.dart';
 import '../widgets/gutai_card.dart';
 import '../widgets/item_tile.dart';
+import 'dose_entry_page.dart';
 
 class DosesEntryPage extends StatefulWidget {
   static String tag = 'medicine-entry-page';
@@ -18,7 +19,6 @@ class DosesEntryPage extends StatefulWidget {
 }
 
 class DosesEntryPageState extends State<DosesEntryPage> {
-
   DosesEntry _entry;
 
   void addDose(Dose ingredient) {
@@ -46,11 +46,10 @@ class DosesEntryPageState extends State<DosesEntryPage> {
   void newDose() {
     Dose newDose = Dose();
     Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => DoseEntryPage(ingredient: newDose, onSaved: addDose)
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                DoseEntryPage(dose: newDose, onSaved: addDose)));
   }
 
   @override
@@ -61,44 +60,47 @@ class DosesEntryPageState extends State<DosesEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-
     List<Widget> items = [
       DatetimeView(date: _entry.dateTime),
       GutAICard(
         child: Column(
-          children: [HeaderListTile(
-            heading: 'Doses',
-          )]..addAll(
-            _entry.doses.map((i) => Dismissible(
-              key: ObjectKey(i),
-              child: DoseTile(
-                dose: i, 
-                dosesEntry: _entry, 
-                onTap:() => Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => DoseEntryPage(ingredient: i, onSaved: (n) => updateDose(i, n)))
-                )
+          children: [
+            HeaderListTile(
+              heading: 'Doses',
+            )
+          ]..addAll(
+              _entry.doses.map(
+                (i) => Dismissible(
+                      key: ObjectKey(i),
+                      child: DoseTile(
+                          dose: i,
+                          dosesEntry: _entry,
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DoseEntryPage(
+                                      dose: i,
+                                      onSaved: (n) => updateDose(i, n))))),
+                      onDismissed: (direction) {
+                        if (direction == DismissDirection.endToStart) {
+                          deleteDose(i);
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text("${i.medicine.name} removed.")));
+                        }
+                      },
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: 20.0),
+                        color: Colors.red,
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
               ),
-              onDismissed: (direction) {
-                if (direction ==DismissDirection.endToStart) {
-                  deleteDose(i);
-                  Scaffold
-                      .of(context)
-                      .showSnackBar(SnackBar(content: Text("${i.medicine.name} removed.")));
-                }
-              },
-              background: Container(
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.only(right: 20.0),
-                color: Colors.red,
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                ),
-              )
-            ))
-          )
-        )
+            ),
+        ),
       )
     ];
 
@@ -109,16 +111,12 @@ class DosesEntryPageState extends State<DosesEntryPage> {
       ),
       body: ListView.builder(
         itemCount: items.length,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.all(1.0),
-          child: items[index]
-        ),
+        itemBuilder: (context, index) =>
+            Padding(padding: EdgeInsets.all(1.0), child: items[index]),
         padding: EdgeInsets.all(0.0),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: newDose
-      ),
+      floatingActionButton:
+          FloatingActionButton(child: Icon(Icons.add), onPressed: newDose),
     );
   }
 }

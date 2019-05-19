@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../pages/meal_entry_page.dart';
 import '../pages/bm_entry_page.dart';
 import '../pages/symptom_entry_page.dart';
-import '../pages/medicine_entry_page.dart';
+import '../pages/doses_entry_page.dart';
 
 class DiaryEntryListTile extends StatelessWidget {
   final String heading;

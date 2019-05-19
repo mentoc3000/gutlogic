@@ -8,6 +8,10 @@ class Dose extends Equatable {
 
   Dose({this.medicine, this.quantity});
 
+  factory Dose.copy(Dose original) {
+    return Dose(medicine: original.medicine, quantity: original.quantity);
+  }
+
   factory Dose.fromJson(Map<String, dynamic> parsedJson) {
     return Dose(
       medicine: Medicine.fromJson(parsedJson['type']),

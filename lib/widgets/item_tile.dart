@@ -16,15 +16,15 @@ class GutAIListTile extends StatelessWidget {
   final bool dense;
   final Widget trailing;
 
-  GutAIListTile({
-    this.heading, 
-    this.subheading, 
-    this.sensitivity, 
-    this.leading, 
-    this.trailing, 
-    this.onTap, 
-    this.size, 
-    this.dense=false});
+  GutAIListTile(
+      {this.heading,
+      this.subheading,
+      this.sensitivity,
+      this.leading,
+      this.trailing,
+      this.onTap,
+      this.size,
+      this.dense = false});
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +43,9 @@ class GutAIListTile extends StatelessWidget {
       dense: this.dense,
     );
   }
-
 }
 
 class FoodListTile extends StatelessWidget {
-
   final Food food;
 
   FoodListTile({this.food});
@@ -55,17 +53,18 @@ class FoodListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GutAIListTile(
-      heading: this.food.name,
-      subheading: this.food.irritants.join(', '),
-      trailing: Into(size: 30),
-      size: 30, 
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FoodSheetPage(food: this.food)))
-    );
+        heading: this.food.name,
+        subheading: this.food.irritants.join(', '),
+        trailing: Into(size: 30),
+        size: 30,
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FoodSheetPage(food: this.food))));
   }
 }
 
 class IngredientTile extends StatelessWidget {
-
   final MealEntry mealEntry;
   final Ingredient ingredient;
   final Function onTap;
@@ -75,17 +74,15 @@ class IngredientTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GutAIListTile(
-      heading: this.ingredient.food.name,
-      subheading: this.ingredient.food.irritants.join(', '),
-      trailing: Into(size: 30),
-      size: 30, 
-      onTap: onTap
-    );
+        heading: this.ingredient.food.name,
+        subheading: this.ingredient.food.irritants.join(', '),
+        trailing: Into(size: 30),
+        size: 30,
+        onTap: onTap);
   }
 }
 
 class DoseTile extends StatelessWidget {
-
   final DosesEntry dosesEntry;
   final Dose dose;
   final Function onTap;
@@ -95,17 +92,15 @@ class DoseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GutAIListTile(
-      heading: this.dose.medicine.name,
-      subheading: this.dose.quantity.toString(),
-      trailing: Into(size: 30),
-      size: 30, 
-      onTap: onTap
-    );
+        heading: this.dose.medicine.name,
+        subheading: this.dose.quantity.toString(),
+        trailing: Into(size: 30),
+        size: 30,
+        onTap: onTap);
   }
 }
 
 class AdderListTile extends StatelessWidget {
-
   final String heading;
   final Function onTap;
 
@@ -115,14 +110,16 @@ class AdderListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GutAIListTile(
       heading: this.heading,
-      trailing: Adder(size: 30, onTap: onTap,),
-      size: 30, 
+      trailing: Adder(
+        size: 30,
+        onTap: onTap,
+      ),
+      size: 30,
     );
   }
 }
 
 class HeaderListTile extends StatelessWidget {
-
   final String heading;
 
   HeaderListTile({this.heading});
@@ -131,14 +128,12 @@ class HeaderListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GutAIListTile(
       heading: this.heading,
-      size: 30, 
+      size: 30,
     );
   }
 }
 
-
 class Adder extends StatelessWidget {
-
   final double size;
   final Function onTap;
 
@@ -154,7 +149,6 @@ class Adder extends StatelessWidget {
 }
 
 class Into extends StatelessWidget {
-
   final double size;
   final Function onTap;
 
