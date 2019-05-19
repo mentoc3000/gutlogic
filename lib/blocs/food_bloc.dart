@@ -10,5 +10,5 @@ class FoodBloc extends SearchableBloc{
   FoodBloc(AppSyncService appSyncService)
       : super(repository: FoodRepository(appSyncService));
 
-  Stream<List<Food>> get all => controller.stream;
+  Stream<List<Food>> get all => controller.stream.cast();
 }

@@ -10,6 +10,6 @@ class SymptomTypeBloc extends SearchableBloc{
   SymptomTypeBloc(AppSyncService appSyncService)
       : super(repository: SymptomTypeRepository());
 
-  Stream<List<SymptomType>> get all => controller.stream;
+  Stream<List<SymptomType>> get all => controller.stream.cast();
 
 }
