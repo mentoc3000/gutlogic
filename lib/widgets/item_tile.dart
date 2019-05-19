@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/sensitivity.dart';
 import '../models/food.dart';
+import '../models/dose.dart';
 import '../models/ingredient.dart';
 import '../models/diary_entry.dart';
 import '../pages/food_sheet_page.dart';
@@ -76,6 +77,26 @@ class IngredientTile extends StatelessWidget {
     return GutAIListTile(
       heading: this.ingredient.food.name,
       subheading: this.ingredient.food.irritants.join(', '),
+      trailing: Into(size: 30),
+      size: 30, 
+      onTap: onTap
+    );
+  }
+}
+
+class DoseTile extends StatelessWidget {
+
+  final DosesEntry dosesEntry;
+  final Dose dose;
+  final Function onTap;
+
+  DoseTile({this.dose, this.dosesEntry, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GutAIListTile(
+      heading: this.dose.medicine.name,
+      subheading: this.dose.quantity.toString(),
       trailing: Into(size: 30),
       size: 30, 
       onTap: onTap

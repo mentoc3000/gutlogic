@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/ingredient.dart';
 import '../widgets/quantity_view.dart';
 import '../blocs/food_bloc.dart';
-import '../models/food.dart';
 import '../resources/app_sync_service.dart';
 import '../resources/user_service.dart';
 import 'gutai_search_delegate.dart';

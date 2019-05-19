@@ -15,4 +15,8 @@ class Quantity extends Equatable {
       unit: parsedJson['unit'],
     );
   }
+
+  String toString() {
+    return amount.toString() + ' ' + unit;
+  }
 }
