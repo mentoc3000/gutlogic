@@ -8,9 +8,10 @@ void main() {
       SymptomTypeRepository symptomTypeRepository = SymptomTypeRepository();
       List<SymptomType> symptomTypes = await symptomTypeRepository.fetchAll();
       expect(symptomTypes.length, 3);
-      expect(symptomTypes.contains(SymptomType.gas), true);
-      expect(symptomTypes.contains(SymptomType.constipation), true);
-      expect(symptomTypes.contains(SymptomType.bloating), true);
+      List<String> names = symptomTypes.map((t) => t.name).toList();
+      expect(names.contains('Gas'), true);
+      expect(names.contains('Constipation'), true);
+      expect(names.contains('Bloating'), true);
     });
   });
 }
