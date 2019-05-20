@@ -22,21 +22,6 @@ class MealEntryPageState extends State<MealEntryPage> {
 
   MealEntry _entry;
 
-  void addIngredient(Ingredient ingredient) {
-    setState(() {
-      _entry.meal.ingredients.add(ingredient);
-    });
-    widget.onUpdate(_entry);
-  }
-
-  void updateIngredient(Ingredient oldIngredient, Ingredient newIngredient) {
-    setState(() {
-      int idx = _entry.meal.ingredients.indexOf(oldIngredient);
-      _entry.meal.ingredients.replaceRange(idx, idx, [newIngredient]);
-    });
-    widget.onUpdate(_entry);
-  }
-
   void deleteIngredient(Ingredient ingredient) {
     setState(() {
       _entry.meal.ingredients.remove(ingredient);
@@ -44,12 +29,13 @@ class MealEntryPageState extends State<MealEntryPage> {
     widget.onUpdate(_entry);
   }
 
-  void newIngredient() {
+  void addIngredient() {
     Ingredient newIngredient = Ingredient();
+    _entry.meal.ingredients.add(newIngredient);
     Navigator.push(
       context, 
       MaterialPageRoute(
-        builder: (context) => IngredientEntryPage(ingredient: newIngredient, onSaved: addIngredient)
+        builder: (context) => IngredientEntryPage(ingredient: newIngredient)
       )
     );
   }
@@ -77,7 +63,7 @@ class MealEntryPageState extends State<MealEntryPage> {
                 mealEntry: _entry, 
                 onTap:() => Navigator.push(
                   context, 
-                  MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i, onSaved: (n) => updateIngredient(i, n)))
+                  MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i)),
                 )
               ),
               onDismissed: (direction) {
@@ -118,7 +104,7 @@ class MealEntryPageState extends State<MealEntryPage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: newIngredient
+        onPressed: addIngredient
       ),
     );
   }

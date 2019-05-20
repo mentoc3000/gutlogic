@@ -9,10 +9,6 @@ class Ingredient extends Equatable implements Searchable{
 
   Ingredient({this.food, this.quantity});
 
-  factory Ingredient.copy(Ingredient original) {
-    return Ingredient(food: original.food, quantity: original.quantity);
-  }
-
   factory Ingredient.fromJson(Map<String, dynamic> parsedJson) {
     return Ingredient(
       food: Food.fromJson(parsedJson['food']),

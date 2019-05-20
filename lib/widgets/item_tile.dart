@@ -75,7 +75,7 @@ class IngredientTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GutAIListTile(
         heading: this.ingredient.food.name,
-        subheading: this.ingredient.food.irritants.join(', '),
+        subheading: this.ingredient.food.irritants?.join(', ') ?? '',
         trailing: Into(size: 30),
         size: 30,
         onTap: onTap);

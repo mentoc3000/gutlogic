@@ -12,14 +12,14 @@ class QuantityView extends StatefulWidget {
 }
 
 class _QuantityViewState extends State<QuantityView> {
-
   TextEditingController _amountController;
   TextEditingController _unitController;
 
   @override
   void initState() {
     super.initState();
-    _amountController = TextEditingController(text: widget.quantity.amount.toString());
+    _amountController =
+        TextEditingController(text: widget.quantity.amount.toString());
     _unitController = TextEditingController(text: widget.quantity.unit);
   }
 
@@ -34,9 +34,7 @@ class _QuantityViewState extends State<QuantityView> {
               child: TextField(
                 keyboardType: TextInputType.numberWithOptions(
                     signed: false, decimal: true),
-                decoration: InputDecoration(
-                  hintText: 'Amount'
-                ),
+                decoration: InputDecoration(hintText: 'Amount'),
                 controller: _amountController,
                 textAlign: TextAlign.center,
                 onChanged: (String amount) {

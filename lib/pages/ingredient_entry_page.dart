@@ -9,10 +9,9 @@ import 'gutai_search_delegate.dart';
 class IngredientEntryPage extends StatefulWidget {
   static String tag = 'ingredient-entry-page';
 
-  final void Function(Ingredient) onSaved;
   final Ingredient ingredient;
 
-  IngredientEntryPage({this.ingredient, this.onSaved});
+  IngredientEntryPage({this.ingredient});
 
   @override
   IngredientEntryPageState createState() => IngredientEntryPageState();
@@ -24,7 +23,7 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
   @override
   void initState() {
     super.initState();
-    _ingredient = Ingredient.copy(widget.ingredient);
+    _ingredient = widget.ingredient;
   }
 
   List<Widget> buildItems() {
@@ -41,7 +40,7 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     AppSyncService appSyncService = AppSyncService(session);
     FoodBloc foodBloc = FoodBloc(appSyncService);
 
-    final onSelect = (food) => this._ingredient = Ingredient(food: food);
+    final onSelect = (food) => this._ingredient.food = food;
 
     showSearch(
       context: context,
@@ -64,13 +63,6 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () => showFoodSearch(context),
-          ),
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () {
-              widget.onSaved(_ingredient);
-              Navigator.of(context).pop();
-            },
           ),
         ],
       ),
