@@ -55,7 +55,7 @@ void main() {
       expect(find.text(unit), findsOneWidget);
     });
 
-    testWidgets('displays entered value', (WidgetTester tester) async {
+    testWidgets('updates value', (WidgetTester tester) async {
       const double initAmount = 1.5;
       const String initUnit = 'Bones';
       final Quantity quantity = Quantity(amount: initAmount, unit: initUnit);
@@ -72,6 +72,8 @@ void main() {
       expect(find.text(initUnit), findsNothing);
       expect(find.text(newAmount.toString()), findsOneWidget);
       expect(find.text(newUnit), findsOneWidget);
+      expect(quantity.amount, newAmount);
+      expect(quantity.unit, newUnit);
     });
   });
 }
