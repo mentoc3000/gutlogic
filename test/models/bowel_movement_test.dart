@@ -3,7 +3,6 @@ import 'package:gut_ai/models/bowel_movement.dart';
 
 void main() {
   group('BowelMovement', () {
-
     test('constructs empty object', () {
       BowelMovement bm = BowelMovement();
       expect(bm.type, null);
@@ -17,10 +16,8 @@ void main() {
     });
 
     test('is equatable', () {
-      expect(
-        BowelMovement(type: 3, volume: 4),
-        BowelMovement(type: 3, volume: 4),
-      );
+      final constructBM = () => BowelMovement(type: 3, volume: 4);
+      expect(constructBM(), constructBM());
     });
 
     test('is constructable from JSON', () {
@@ -32,6 +29,5 @@ void main() {
       expect(bm.type, 3);
       expect(bm.volume, 4);
     });
-
   });
 }
