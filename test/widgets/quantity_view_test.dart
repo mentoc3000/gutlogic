@@ -34,7 +34,7 @@ Widget overlay({Widget child}) {
 }
 
 void main() {
-  group('Quantity View widget', () {
+  group('QuantityView', () {
     // testWidgets('displays default value', (WidgetTester tester) async {
     //   // Build our app and trigger a frame.
     //   await tester.pumpWidget(overlay(child: QuantityView()));
