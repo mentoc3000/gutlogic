@@ -42,16 +42,36 @@ void main() {
     //   expect(find.text('Amount'), findsOneWidget);
     //   expect(find.text('Units'), findsOneWidget);
     // });
+
     testWidgets('displays initial value', (WidgetTester tester) async {
       const double amount = 1.5;
       const String unit = 'Bones';
       final Quantity quantity = Quantity(amount: amount, unit: unit);
 
       // Build our app and trigger a frame.
-      await tester.pumpWidget(overlay(child:QuantityView(quantity: quantity)));
+      await tester.pumpWidget(overlay(child: QuantityView(quantity: quantity)));
 
       expect(find.text(amount.toString()), findsOneWidget);
       expect(find.text(unit), findsOneWidget);
+    });
+
+    testWidgets('displays entered value', (WidgetTester tester) async {
+      const double initAmount = 1.5;
+      const String initUnit = 'Bones';
+      final Quantity quantity = Quantity(amount: initAmount, unit: initUnit);
+
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(overlay(child: QuantityView(quantity: quantity)));
+
+      const double newAmount = 2.0;
+      const String newUnit = 'Cups';
+      await tester.enterText(find.byType(TextField).first, newAmount.toString());
+      await tester.enterText(find.byType(TextField).last, newUnit);
+
+      expect(find.text(initAmount.toString()), findsNothing);
+      expect(find.text(initUnit), findsNothing);
+      expect(find.text(newAmount.toString()), findsOneWidget);
+      expect(find.text(newUnit), findsOneWidget);
     });
   });
 }
