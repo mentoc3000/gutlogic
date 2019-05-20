@@ -35,7 +35,7 @@ class DoseEntryPageState extends State<DoseEntryPage> {
   void showFoodSearch(BuildContext context) {
     MedicineBloc medicineBloc = MedicineBloc();
 
-    final onSelect = (medicine) => this._dose = Dose(medicine: medicine);
+    final onSelect = (medicine) => this._dose.medicine = medicine;
 
     showSearch(
       context: context,

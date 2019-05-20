@@ -67,7 +67,7 @@ class DosesEntryPageState extends State<DosesEntryPage> {
                               MaterialPageRoute(
                                 builder: (context) => DoseEntryPage(dose: i),
                               ),
-                            ).then((_) => build(context)),
+                            ),
                       ),
                       onDismissed: (direction) {
                         if (direction == DismissDirection.endToStart) {
