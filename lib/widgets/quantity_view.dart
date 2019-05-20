@@ -12,6 +12,17 @@ class QuantityView extends StatefulWidget {
 }
 
 class _QuantityViewState extends State<QuantityView> {
+
+  TextEditingController _amountController;
+  TextEditingController _unitController;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController = TextEditingController(text: widget.quantity.amount.toString());
+    _unitController = TextEditingController(text: widget.quantity.unit);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GutAICard(
@@ -20,27 +31,27 @@ class _QuantityViewState extends State<QuantityView> {
         child: Row(
           children: <Widget>[
             Flexible(
-              child: TextFormField(
+              child: TextField(
                 keyboardType: TextInputType.numberWithOptions(
                     signed: false, decimal: true),
                 decoration: InputDecoration(
-                  hintText: 'Amount',
+                  hintText: 'Amount'
                 ),
+                controller: _amountController,
                 textAlign: TextAlign.center,
-                initialValue: widget.quantity.amount.toString(),
-                onSaved: (String amount) {
+                onChanged: (String amount) {
                   widget.quantity.amount = double.parse(amount);
                 },
               ),
             ),
             Flexible(
-              child: TextFormField(
+              child: TextField(
                 keyboardType: TextInputType.numberWithOptions(
                     signed: false, decimal: true),
                 decoration: InputDecoration(hintText: 'Units'),
+                controller: _unitController,
                 textAlign: TextAlign.center,
-                initialValue: widget.quantity.unit.toString(),
-                onSaved: (String unit) {
+                onChanged: (String unit) {
                   widget.quantity.unit = unit;
                 },
               ),
