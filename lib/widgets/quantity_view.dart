@@ -3,7 +3,6 @@ import '../models/quantity.dart';
 import 'gutai_card.dart';
 
 class QuantityView extends StatefulWidget {
-
   final Quantity quantity;
 
   QuantityView({this.quantity});
@@ -13,9 +12,6 @@ class QuantityView extends StatefulWidget {
 }
 
 class _QuantityViewState extends State<QuantityView> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return GutAICard(
@@ -25,7 +21,8 @@ class _QuantityViewState extends State<QuantityView> {
           children: <Widget>[
             Flexible(
               child: TextFormField(
-                keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+                keyboardType: TextInputType.numberWithOptions(
+                    signed: false, decimal: true),
                 decoration: InputDecoration(
                   hintText: 'Amount',
                 ),
@@ -38,10 +35,9 @@ class _QuantityViewState extends State<QuantityView> {
             ),
             Flexible(
               child: TextFormField(
-                keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-                decoration: InputDecoration(
-                  hintText: 'Units'
-                ),
+                keyboardType: TextInputType.numberWithOptions(
+                    signed: false, decimal: true),
+                decoration: InputDecoration(hintText: 'Units'),
                 textAlign: TextAlign.center,
                 initialValue: widget.quantity.unit.toString(),
                 onSaved: (String unit) {
@@ -50,8 +46,8 @@ class _QuantityViewState extends State<QuantityView> {
               ),
             )
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }
