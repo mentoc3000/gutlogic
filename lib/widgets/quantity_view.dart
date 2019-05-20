@@ -30,6 +30,7 @@ class _QuantityViewState extends State<QuantityView> {
                   hintText: 'Amount',
                 ),
                 textAlign: TextAlign.center,
+                initialValue: widget.quantity.amount.toString(),
                 onSaved: (String amount) {
                   widget.quantity.amount = double.parse(amount);
                 },
@@ -42,6 +43,7 @@ class _QuantityViewState extends State<QuantityView> {
                   hintText: 'Units'
                 ),
                 textAlign: TextAlign.center,
+                initialValue: widget.quantity.unit.toString(),
                 onSaved: (String unit) {
                   widget.quantity.unit = unit;
                 },
