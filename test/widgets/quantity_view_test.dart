@@ -11,25 +11,47 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/models/quantity.dart';
 import 'package:gut_ai/widgets/quantity_view.dart';
 
+Widget overlay({Widget child}) {
+  return Directionality(
+    textDirection: TextDirection.ltr,
+    child: MediaQuery(
+      data: const MediaQueryData(size: Size(800.0, 600.0)),
+      child: Overlay(
+        initialEntries: <OverlayEntry>[
+          OverlayEntry(
+            builder: (BuildContext context) {
+              return Center(
+                child: Material(
+                  child: child,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 void main() {
-  // group('Quantity View widget', () {
-  //   testWidgets('displays default value', (WidgetTester tester) async {
-  //     // Build our app and trigger a frame.
-  //     await tester.pumpWidget(QuantityView());
+  group('Quantity View widget', () {
+    // testWidgets('displays default value', (WidgetTester tester) async {
+    //   // Build our app and trigger a frame.
+    //   await tester.pumpWidget(overlay(child: QuantityView()));
 
-  //     expect(find.widgetWithText(TextFormField, 'Amount'), findsOneWidget);
-  //     expect(find.widgetWithText(TextFormField, 'Units'), findsOneWidget);
-  //   });
-  //   testWidgets('displays initial value', (WidgetTester tester) async {
-  //     const double amount = 1.5;
-  //     const String unit = 'Bones';
-  //     final Quantity quantity = Quantity(amount: amount, unit: unit);
+    //   expect(find.text('Amount'), findsOneWidget);
+    //   expect(find.text('Units'), findsOneWidget);
+    // });
+    testWidgets('displays initial value', (WidgetTester tester) async {
+      const double amount = 1.5;
+      const String unit = 'Bones';
+      final Quantity quantity = Quantity(amount: amount, unit: unit);
 
-  //     // Build our app and trigger a frame.
-  //     await tester.pumpWidget(QuantityView(quantity: quantity));
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(overlay(child:QuantityView(quantity: quantity)));
 
-  //     expect(find.widgetWithText(TextFormField, amount.toString()), findsOneWidget);
-  //     expect(find.widgetWithText(TextFormField, unit), findsOneWidget);
-  //   });
-  // });
+      expect(find.text(amount.toString()), findsOneWidget);
+      expect(find.text(unit), findsOneWidget);
+    });
+  });
 }
