@@ -1,6 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'ingredient.dart';
 
+part 'meal.g.dart';
+
+@JsonSerializable()
 class Meal extends Equatable {
   String name;
   List<Ingredient> ingredients;
@@ -9,11 +13,8 @@ class Meal extends Equatable {
     this.ingredients = ingredients ?? [];
   }
 
-  factory Meal.fromJson(Map<String, dynamic> parsedJson) {
-    List<Map<String, dynamic>> ingredients = parsedJson['ingredients'];
-    return Meal(
-      name: parsedJson['name'],
-      ingredients: ingredients.map((x) => Ingredient.fromJson(x)),
-    );
-  }
+  factory Meal.fromJson(Map<String, dynamic> json) =>
+      _$MealFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MealToJson(this);
 }

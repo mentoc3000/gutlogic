@@ -10,7 +10,8 @@ class BowelMovement extends Equatable {
 
   BowelMovement({this.type, this.volume});
 
-  factory BowelMovement.fromJson(Map<String, dynamic> json) => _$BowelMovementFromJson(json);
+  factory BowelMovement.fromJson(Map<String, dynamic> json) =>
+      _$BowelMovementFromJson(json);
 
   Map<String, dynamic> toJson() => _$BowelMovementToJson(this);
 }
