@@ -7,6 +7,12 @@ class SymptomType extends Equatable implements Searchable {
 
   SymptomType({this.name});
 
+  factory SymptomType.fromJson(Map<String, dynamic> parsedJson) {
+    return SymptomType(
+      name: parsedJson['name'],
+    );
+  }
+
   String searchHeading() {
     return name;
   }
