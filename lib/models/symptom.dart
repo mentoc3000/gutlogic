@@ -12,7 +12,7 @@ class Symptom extends Equatable {
 
   factory Symptom.fromJson(Map<String, dynamic> parsedJson) {
     return Symptom(
-      symptomType: parsedJson['symptomType'],
+      symptomType: SymptomType.fromJson(parsedJson['symptomType']),
       severity: parsedJson['severity'],
     );
   }
