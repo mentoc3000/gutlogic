@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/models/dose.dart';
 import 'package:gut_ai/models/medicine.dart';
 import 'package:gut_ai/models/quantity.dart';
+import 'dart:convert';
 
 void main() {
   group('Dose', () {
@@ -18,8 +19,8 @@ void main() {
         medicine: medicine,
         quantity: quantity,
       );
-      expect(dose.medicine, 3);
-      expect(dose.quantity, 4);
+      expect(dose.medicine, medicine);
+      expect(dose.quantity, quantity);
     });
 
     test('is equatable', () {
@@ -31,13 +32,15 @@ void main() {
     });
 
     test('is constructable from JSON', () {
-      const Map<String, dynamic> doseJson = {
-        'medicine': 3,
-        'quantity': 4,
+      Medicine medicine = Medicine(name: 'Pro-8');
+      Quantity quantity = Quantity(amount: 3, unit: 'Pills');
+      Map<String, dynamic> doseJson = {
+        'medicine': json.encode(medicine),
+        'quantity': json.encode(quantity),
       };
       Dose dose = Dose.fromJson(doseJson);
-      expect(dose.medicine, 3);
-      expect(dose.quantity, 4);
+      expect(dose.medicine, medicine);
+      expect(dose.quantity, quantity);
     });
   });
 }
