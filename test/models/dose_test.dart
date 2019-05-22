@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/models/dose.dart';
 import 'package:gut_ai/models/medicine.dart';
 import 'package:gut_ai/models/quantity.dart';
-import 'dart:convert';
 
 void main() {
   group('Dose', () {
@@ -35,8 +34,8 @@ void main() {
       Medicine medicine = Medicine(name: 'Pro-8');
       Quantity quantity = Quantity(amount: 3, unit: 'Pills');
       Map<String, dynamic> doseJson = {
-        'medicine': json.encode(medicine),
-        'quantity': json.encode(quantity),
+        'medicine': medicine.toJson(),
+        'quantity': quantity.toJson(),
       };
       Dose dose = Dose.fromJson(doseJson);
       expect(dose.medicine, medicine);
