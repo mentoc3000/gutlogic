@@ -16,8 +16,8 @@ void main() {
     });
 
     test('is equatable', () {
-      final constructBM = () => Quantity(amount: 3, unit: 'Cups');
-      expect(constructBM(), constructBM());
+      final constructQuantity = () => Quantity(amount: 3, unit: 'Cups');
+      expect(constructQuantity(), constructQuantity());
     });
 
     test('is constructable from JSON', () {
