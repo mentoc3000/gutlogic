@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:gut_ai/models/model_interfaces.dart';
+import 'symptom_type.dart';
 
 class Symptom extends Equatable {
   SymptomType symptomType;
@@ -19,16 +19,5 @@ class Symptom extends Equatable {
 
   String name() {
     return this.symptomType.name;
-  }
-}
-
-class SymptomType extends Equatable implements Searchable {
-
-  final String name;
-
-  SymptomType({this.name});
-
-  String searchHeading() {
-    return name;
   }
 }

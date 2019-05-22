@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/resources/symptom_type_repository.dart';
-import 'package:gut_ai/models/symptom.dart';
+import 'package:gut_ai/models/symptom_type.dart';
 
 void main() {
   group('Symptom Type Repository', () {

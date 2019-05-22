@@ -1,13 +1,14 @@
-import '../models/food.dart';
+import '../models/bowel_movement.dart';
 import '../models/diary_entry.dart';
 import '../models/dose.dart';
-import '../models/bowel_movement.dart';
-import '../models/medicine.dart';
-import '../models/meal.dart';
+import '../models/food.dart';
 import '../models/ingredient.dart';
-import '../models/quantity.dart';
-import '../models/symptom.dart';
 import '../models/irritant.dart';
+import '../models/meal.dart';
+import '../models/medicine.dart';
+import '../models/quantity.dart';
+import '../models/symptom_type.dart';
+import '../models/symptom.dart';
 
 class Dummy {
   static final _artichoke = Food(

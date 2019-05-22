@@ -1,5 +1,5 @@
 import 'dart:async';
-import '../models/symptom.dart';
+import '../models/symptom_type.dart';
 import '../resources/searchable_repository.dart';
 
 class SymptomTypeRepository implements SearchableRepository {
