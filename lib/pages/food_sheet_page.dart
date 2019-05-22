@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/food.dart';
+import '../models/irritant.dart';
 import '../widgets/gutai_card.dart';
 
 class FoodSheetPage extends StatelessWidget {
@@ -54,7 +55,7 @@ class _OverallAssessmentCard extends StatelessWidget {
 }
 
 class _IrritantsAssessmentCard extends StatelessWidget {
-  final List<String> irritants;
+  final List<Irritant> irritants;
 
   _IrritantsAssessmentCard({this.irritants});
 
@@ -72,7 +73,7 @@ class _IrritantsAssessmentCard extends StatelessWidget {
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)
             ),
             Column(
-              children: irritants.map((name) => _IrritantAssessmentWidget(name: name, sensitivity: name.hashCode%2)).toList(),
+              children: irritants.map((i) => _IrritantAssessmentWidget(name: i.name, sensitivity: i.hashCode%2)).toList(),
             )
           ],
         ),

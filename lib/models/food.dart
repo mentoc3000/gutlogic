@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'model_interfaces.dart';
+import 'irritant.dart';
 
 class Food extends Equatable implements Searchable{
   String name;
-  List<String> irritants;
+  List<Irritant> irritants;
 
   Food({this.name, this.irritants});
 
