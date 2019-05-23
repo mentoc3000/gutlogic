@@ -7,6 +7,8 @@ part 'meal.g.dart';
 @JsonSerializable()
 class Meal extends Equatable {
   String name;
+
+  @JsonKey(fromJson: ingredientsFromJson)
   List<Ingredient> ingredients;
 
   Meal({this.name, List<Ingredient> ingredients}) {

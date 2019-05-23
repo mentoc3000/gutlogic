@@ -41,5 +41,17 @@ void main() {
       expect(meal.name, name);
       expect(meal.ingredients, ingredients);
     });
+
+    test('is serializable', () {
+      Ingredient ingredient = Ingredient(food: Food(name: 'Pizza'));
+      Meal meal = Meal(
+        name: 'Breakfast',
+        ingredients: [ingredient],
+      );
+      expect(meal.toJson(), {
+        'name': 'Breakfast',
+        'ingredients': [ingredient.toJson()],
+      });
+    });
   });
 }
