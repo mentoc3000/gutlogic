@@ -25,5 +25,10 @@ void main() {
       Medicine medicine = Medicine.fromJson(medicineJson);
       expect(medicine.name, 'Pro-8');
     });
+
+    test('is serializable', () {
+      Medicine medicine = Medicine(name: 'Pro-8');
+      expect(medicine.toJson(), {'name': 'Pro-8'});
+    });
   });
 }
