@@ -41,5 +41,23 @@ void main() {
       expect(dose.medicine, medicine);
       expect(dose.quantity, quantity);
     });
+
+    test('is serializable', () {
+      Medicine medicine = Medicine(name: 'Pro-8');
+      Quantity quantity = Quantity(amount: 3.0, unit: 'Pill');
+      Dose dose = Dose(
+        medicine: medicine,
+        quantity: quantity,
+      );
+      expect(dose.toJson(), {
+        'medicine': {
+          'name': 'Pro-8',
+        },
+        'quantity': {
+          'amount': 3.0,
+          'unit': 'Pill',
+        },
+      });
+    });
   });
 }

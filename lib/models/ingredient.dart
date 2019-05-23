@@ -20,3 +20,7 @@ class Ingredient extends Equatable implements Searchable{
 
   String searchHeading() => food.name;
 }
+
+List<Ingredient> ingredientsFromJson(List<Map<String, dynamic>> json) {
+  return json.map((i) => Ingredient.fromJson(i)).toList();
+}

@@ -29,5 +29,13 @@ void main() {
       expect(bm.type, 3);
       expect(bm.volume, 4);
     });
+
+    test('is serializable', () {
+      BowelMovement bm = BowelMovement(type: 3, volume: 4);
+      expect(bm.toJson(), {
+        'type': 3,
+        'volume': 4,
+      });
+    });
   });
 }
