@@ -6,16 +6,17 @@ import 'irritant.dart';
 part 'food.g.dart';
 
 @JsonSerializable()
-class Food extends Equatable implements Searchable{
+class Food extends Equatable implements Searchable {
   String name;
+
+  @JsonKey(fromJson: irritantsFromJson)
   List<Irritant> irritants;
 
   Food({this.name, irritants}) {
     this.irritants = irritants ?? [];
   }
 
-  factory Food.fromJson(Map<String, dynamic> json) =>
-      _$FoodFromJson(json);
+  factory Food.fromJson(Map<String, dynamic> json) => _$FoodFromJson(json);
 
   Map<String, dynamic> toJson() => _$FoodToJson(this);
 

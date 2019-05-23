@@ -17,3 +17,8 @@ class Irritant extends Equatable implements Searchable{
 
   String searchHeading() => name;
 }
+
+
+List<Irritant> irritantsFromJson(List<Map<String, dynamic>> json) {
+  return json.map((i) => Irritant.fromJson(i)).toList();
+}

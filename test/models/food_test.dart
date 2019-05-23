@@ -30,15 +30,26 @@ void main() {
     });
 
     test('is constructable from JSON', () {
-      const Map<String, dynamic> foodJson = {
+      Irritant irritant = Irritant(name: 'Fructan');
+      Map<String, dynamic> foodJson = {
         'name': 'Pizza',
-        'irritants': [
-          {'name': 'Garlic'},
-        ],
+        'irritants': [irritant.toJson()],
       };
       Food food = Food.fromJson(foodJson);
       expect(food.name, foodJson['name']);
-      expect(food.irritants, [Irritant(name: 'Garlic')]);
+      expect(food.irritants, [irritant]);
+    });
+
+    test('is serializable', () {
+      Irritant irritant = Irritant(name: 'Fructan');
+      Food food = Food(
+        name: 'Garlic',
+        irritants: [irritant],
+      );
+      expect(food.toJson(), {
+        'name': 'Garlic',
+        'irritants': [irritant.toJson()],
+      });
     });
   });
 }
