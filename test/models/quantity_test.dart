@@ -20,7 +20,7 @@ void main() {
       expect(constructQuantity(), constructQuantity());
     });
 
-    test('is constructable from JSON', () {
+    test('is deserializable', () {
       const Map<String, dynamic> quantityJson = {
         'amount': 3.0,
         'unit': 'Cups',

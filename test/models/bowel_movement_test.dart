@@ -20,7 +20,7 @@ void main() {
       expect(constructBM(), constructBM());
     });
 
-    test('is constructable from JSON', () {
+    test('is deserializable', () {
       const Map<String, dynamic> bmJson = {
         'type': 3,
         'volume': 4,

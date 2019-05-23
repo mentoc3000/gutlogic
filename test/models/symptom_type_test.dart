@@ -18,7 +18,7 @@ void main() {
       expect(constructSymptomType(), constructSymptomType());
     });
 
-    test('is constructable from JSON', () {
+    test('is deserializable', () {
       const Map<String, dynamic> medicineJson = {
         'name': 'Gas',
       };

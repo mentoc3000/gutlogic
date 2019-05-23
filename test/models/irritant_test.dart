@@ -18,7 +18,7 @@ void main() {
       expect(constructIrritant(), constructIrritant());
     });
 
-    test('is constructable from JSON', () {
+    test('is deserializable', () {
       const Map<String, dynamic> irritantJson = {
         'name': 'Fructan',
       };

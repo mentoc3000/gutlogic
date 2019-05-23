@@ -18,7 +18,7 @@ void main() {
       expect(constructMedicine(), constructMedicine());
     });
 
-    test('is constructable from JSON', () {
+    test('is deserializable', () {
       const Map<String, dynamic> medicineJson = {
         'name': 'Pro-8',
       };

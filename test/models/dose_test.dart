@@ -30,7 +30,7 @@ void main() {
       expect(constructDose(), constructDose());
     });
 
-    test('is constructable from JSON', () {
+    test('is deserializable', () {
       Medicine medicine = Medicine(name: 'Pro-8');
       Quantity quantity = Quantity(amount: 3, unit: 'Pills');
       Map<String, dynamic> doseJson = {

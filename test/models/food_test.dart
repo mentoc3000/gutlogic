@@ -29,7 +29,7 @@ void main() {
       expect(constructFood(), constructFood());
     });
 
-    test('is constructable from JSON', () {
+    test('is deserializable', () {
       Irritant irritant = Irritant(name: 'Fructan');
       Map<String, dynamic> foodJson = {
         'name': 'Pizza',
