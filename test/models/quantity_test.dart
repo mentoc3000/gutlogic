@@ -29,5 +29,10 @@ void main() {
       expect(quantity.amount, 3.0);
       expect(quantity.unit, 'Cups');
     });
+
+    test('is serializable', () {
+      Quantity quantity = Quantity(amount: 3.4, unit: 'pint');
+      expect(quantity.toJson(), {'amount': 3.4, 'unit': 'pint'});
+    });
   });
 }
