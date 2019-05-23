@@ -25,5 +25,10 @@ void main() {
       SymptomType symptomType = SymptomType.fromJson(medicineJson);
       expect(symptomType.name, 'Gas');
     });
+
+    test('is serializable', () {
+      SymptomType symptomType = SymptomType(name: 'Gas');
+      expect(symptomType.toJson(), {'name': 'Gas'});
+    });
   });
 }
