@@ -15,6 +15,8 @@ class Dose extends Equatable {
   factory Dose.fromJson(Map<String, dynamic> json) => _$DoseFromJson(json);
 
   Map<String, dynamic> toJson() => _$DoseToJson(this);
-  
+}
 
+List<Dose> dosesFromJson(List<Map<String, dynamic>> json) {
+  return json.map((i) => Dose.fromJson(i)).toList();
 }

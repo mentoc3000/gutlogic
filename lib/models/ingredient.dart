@@ -7,7 +7,7 @@ import 'model_interfaces.dart';
 part 'ingredient.g.dart';
 
 @JsonSerializable()
-class Ingredient extends Equatable implements Searchable{
+class Ingredient extends Equatable implements Searchable {
   Food food;
   Quantity quantity;
 

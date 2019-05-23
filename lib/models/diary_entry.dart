@@ -54,6 +54,7 @@ class BowelMovementEntry extends DiaryEntry {
 
 @JsonSerializable()
 class DosesEntry extends DiaryEntry {
+  @JsonKey(fromJson: dosesFromJson)
   List<Dose> doses;
 
   DosesEntry({DateTime dateTime, List<Dose> doses})
