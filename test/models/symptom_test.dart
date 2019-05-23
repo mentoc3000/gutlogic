@@ -37,5 +37,17 @@ void main() {
       expect(symptom.symptomType, SymptomType(name: 'Gas'));
       expect(symptom.severity, 4.56);
     });
+
+    test('is serializable', () {
+      SymptomType symptomType = SymptomType(name: 'Gas');
+      Symptom symptom = Symptom(
+        symptomType: symptomType,
+        severity: 3,
+      );
+      expect(symptom.toJson(), {
+        'symptomType': symptomType.toJson(),
+        'severity': 3,
+      });
+    });
   });
 }
