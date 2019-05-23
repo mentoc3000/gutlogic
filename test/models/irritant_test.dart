@@ -25,5 +25,10 @@ void main() {
       Irritant irritant = Irritant.fromJson(irritantJson);
       expect(irritant.name, 'Fructan');
     });
+
+    test('is serializable', () {
+      Irritant irritant = Irritant(name: 'Fructan');
+      expect(irritant.toJson(), {'name': 'Fructan'});
+    });
   });
 }
