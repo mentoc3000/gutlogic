@@ -41,5 +41,20 @@ void main() {
       expect(ingredient.food, food);
       expect(ingredient.quantity, quantity);
     });
+
+    test('is serializable', () {
+      Quantity quantity = Quantity(amount: 1.2);
+      Food food = Food(
+        name: 'Garlic',
+      );
+      Ingredient ingredient = Ingredient(
+            food: food,
+            quantity: quantity,
+          );
+      expect(ingredient.toJson(), {
+        'food': food.toJson(),
+        'quantity': quantity.toJson(),
+      });
+    });
   });
 }
