@@ -18,5 +18,5 @@ class Dose extends Equatable {
 }
 
 List<Dose> dosesFromJson(List<Map<String, dynamic>> json) {
-  return json.map((i) => Dose.fromJson(i)).toList();
+  return json?.map((i) => Dose.fromJson(i))?.toList() ?? [];
 }

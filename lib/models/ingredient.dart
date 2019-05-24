@@ -22,5 +22,5 @@ class Ingredient extends Equatable implements Searchable {
 }
 
 List<Ingredient> ingredientsFromJson(List<Map<String, dynamic>> json) {
-  return json.map((i) => Ingredient.fromJson(i)).toList();
+  return json?.map((i) => Ingredient.fromJson(i))?.toList() ?? [];
 }
