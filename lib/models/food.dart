@@ -13,7 +13,7 @@ class Food extends Equatable implements Searchable {
   List<Irritant> irritants;
 
   Food({this.name, irritants}) {
-    this.irritants = irritants ?? [];
+    this.irritants = irritants?.cast<Irritant>() ?? [];
   }
 
   factory Food.fromJson(Map<String, dynamic> json) => _$FoodFromJson(json);

@@ -21,6 +21,13 @@ void main() {
       expect(food.irritants, irritants);
     });
 
+    test('constructs with empty irritant list', () {
+      const name = 'Bread';
+      Food food = Food(name: name, irritants: []);
+      expect(food.name, name);
+      expect(food.irritants, []);
+    });
+
     test('is equatable', () {
       final constructFood = () => Food(
             name: 'Orange Juice',
