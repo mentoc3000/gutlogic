@@ -9,8 +9,9 @@ part 'diary_entry.g.dart';
 
 class DiaryEntry extends Equatable {
   DateTime dateTime;
+  String notes;
 
-  DiaryEntry({this.dateTime});
+  DiaryEntry({this.dateTime, this.notes = ''});
 }
 
 @JsonSerializable()
@@ -20,15 +21,16 @@ class MealEntry extends DiaryEntry {
   MealEntry({
     DateTime dateTime,
     Meal meal,
-  }) : super(dateTime: dateTime) {
+    String notes,
+  }) : super(
+          dateTime: dateTime,
+          notes: notes,
+        ) {
     this.meal = meal ?? Meal();
   }
 
   factory MealEntry.newEntry() {
-    return MealEntry(
-      dateTime: DateTime.now(),
-      meal: Meal(name: 'Meal')
-    );
+    return MealEntry(dateTime: DateTime.now(), meal: Meal(name: 'Meal'));
   }
 
   factory MealEntry.fromJson(Map<String, dynamic> json) =>
@@ -41,8 +43,14 @@ class MealEntry extends DiaryEntry {
 class BowelMovementEntry extends DiaryEntry {
   BowelMovement bowelMovement;
 
-  BowelMovementEntry({DateTime dateTime, BowelMovement bowelMovement})
-      : super(dateTime: dateTime) {
+  BowelMovementEntry({
+    DateTime dateTime,
+    BowelMovement bowelMovement,
+    String notes,
+  }) : super(
+          dateTime: dateTime,
+          notes: notes,
+        ) {
     this.bowelMovement = bowelMovement ?? BowelMovement();
   }
 
@@ -57,8 +65,14 @@ class DosesEntry extends DiaryEntry {
   @JsonKey(fromJson: dosesFromJson)
   List<Dose> doses;
 
-  DosesEntry({DateTime dateTime, List<Dose> doses})
-      : super(dateTime: dateTime) {
+  DosesEntry({
+    DateTime dateTime,
+    List<Dose> doses,
+    String notes,
+  }) : super(
+          dateTime: dateTime,
+          notes: notes,
+        ) {
     this.doses = doses ?? [];
   }
 
@@ -75,7 +89,11 @@ class SymptomEntry extends DiaryEntry {
   SymptomEntry({
     DateTime dateTime,
     Symptom symptom,
-  }) : super(dateTime: dateTime) {
+    String notes,
+  }) : super(
+          dateTime: dateTime,
+          notes: notes,
+        ) {
     this.symptom = symptom ?? Symptom();
   }
 
