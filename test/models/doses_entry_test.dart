@@ -10,6 +10,7 @@ void main() {
       DosesEntry dosesEntry = DosesEntry();
       expect(dosesEntry.doses, []);
       expect(dosesEntry.dateTime, null);
+      expect(dosesEntry.notes, '');
     });
 
     test('constructs simple object', () {
@@ -21,6 +22,18 @@ void main() {
       );
       expect(dosesEntry.doses, doses);
       expect(dosesEntry.dateTime, dateTime);
+      expect(dosesEntry.notes, '');
+    });
+
+    test('constructs with no doses', () {
+      DateTime dateTime = DateTime.now();
+      DosesEntry dosesEntry = DosesEntry(
+        doses: [],
+        dateTime: dateTime,
+      );
+      expect(dosesEntry.doses, []);
+      expect(dosesEntry.dateTime, dateTime);
+      expect(dosesEntry.notes, '');
     });
 
     test('is equatable', () {
@@ -54,10 +67,12 @@ void main() {
       DosesEntry dosesEntry = DosesEntry(
         doses: [dose],
         dateTime: DateTime.fromMicrosecondsSinceEpoch(0),
+        notes: 'Noteworthy',
       );
       expect(dosesEntry.toJson(), {
         'doses': [dose.toJson()],
         'dateTime': DateTime.fromMicrosecondsSinceEpoch(0).toIso8601String(),
+        'notes': 'Noteworthy',
       });
     });
   });

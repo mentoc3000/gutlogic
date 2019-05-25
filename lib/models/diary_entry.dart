@@ -11,7 +11,9 @@ class DiaryEntry extends Equatable {
   DateTime dateTime;
   String notes;
 
-  DiaryEntry({this.dateTime, this.notes = ''});
+  DiaryEntry({this.dateTime, String notes}){
+    this.notes = notes ?? '';
+  }
 }
 
 @JsonSerializable()
@@ -73,7 +75,7 @@ class DosesEntry extends DiaryEntry {
           dateTime: dateTime,
           notes: notes,
         ) {
-    this.doses = doses ?? [];
+    this.doses = doses?.cast<Dose>() ?? [];
   }
 
   factory DosesEntry.fromJson(Map<String, dynamic> json) =>
