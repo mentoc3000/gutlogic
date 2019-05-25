@@ -31,6 +31,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     ];
   }
 
+// TODO: make severity slider a class
   Widget buildSeveritySlider() {
     List<SeverityIndicator> severityIndicators = [
       SeverityIndicator(
