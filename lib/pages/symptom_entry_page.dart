@@ -3,6 +3,7 @@ import 'package:gut_ai/blocs/symptom_type_bloc.dart';
 import '../models/diary_entry.dart';
 import '../widgets/datetime_view.dart';
 import 'gutai_search_delegate.dart';
+import '../widgets/notes_tile.dart';
 
 class SymptomEntryPage extends StatefulWidget {
   static String tag = 'symptom-entry-page';
@@ -28,6 +29,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     return [
       DatetimeView(date: _symptomEntry.dateTime),
       buildSeveritySlider(),
+      NotesTile(notes: _symptomEntry.notes),
     ];
   }
 
