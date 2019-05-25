@@ -33,6 +33,7 @@ class _NotesTileState extends State<NotesTile> {
               controller: _notesController,
               onChanged: (newValue) =>
                   widget.notes.replaceRange(0, null, newValue),
+              maxLines: null,
             ),
           ],
         ),
