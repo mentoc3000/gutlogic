@@ -5,6 +5,7 @@ import 'ingredient_entry_page.dart';
 import '../widgets/datetime_view.dart';
 import '../models/ingredient.dart';
 import '../widgets/gutai_card.dart';
+import '../widgets/notes_tile.dart';
 
 class MealEntryPage extends StatefulWidget {
   static String tag = 'meal-entry-page';
@@ -19,7 +20,6 @@ class MealEntryPage extends StatefulWidget {
 }
 
 class MealEntryPageState extends State<MealEntryPage> {
-
   MealEntry _entry;
 
   void deleteIngredient(Ingredient ingredient) {
@@ -33,10 +33,10 @@ class MealEntryPageState extends State<MealEntryPage> {
     Ingredient newIngredient = Ingredient();
     _entry.meal.ingredients.add(newIngredient);
     Navigator.push(
-      context, 
+      context,
       MaterialPageRoute(
-        builder: (context) => IngredientEntryPage(ingredient: newIngredient)
-      )
+        builder: (context) => IngredientEntryPage(ingredient: newIngredient),
+      ),
     );
   }
 
@@ -48,45 +48,48 @@ class MealEntryPageState extends State<MealEntryPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> ingredientTiles = _entry.meal.ingredients.map((i) {
+      return Dismissible(
+        key: ObjectKey(i),
+        child: IngredientTile(
+            ingredient: i,
+            mealEntry: _entry,
+            onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => IngredientEntryPage(ingredient: i)),
+                )),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart) {
+            deleteIngredient(i);
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text("${i.food.name} removed.")));
+          }
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 20.0),
+          color: Colors.red,
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }).toList();
 
     List<Widget> items = [
       DatetimeView(date: _entry.dateTime),
       GutAICard(
         child: Column(
-          children: [HeaderListTile(
-            heading: 'Ingredients',
-          )]..addAll(
-            _entry.meal.ingredients.map((i) => Dismissible(
-              key: ObjectKey(i),
-              child: IngredientTile(
-                ingredient: i, 
-                mealEntry: _entry, 
-                onTap:() => Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => IngredientEntryPage(ingredient: i)),
-                )
-              ),
-              onDismissed: (direction) {
-                if (direction ==DismissDirection.endToStart) {
-                  deleteIngredient(i);
-                  Scaffold
-                      .of(context)
-                      .showSnackBar(SnackBar(content: Text("${i.food.name} removed.")));
-                }
-              },
-              background: Container(
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.only(right: 20.0),
-                color: Colors.red,
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                ),
-              )
-            ))
-          )
-        )
-      )
+          children: [
+            HeaderListTile(
+              heading: 'Ingredients',
+            )
+          ]..addAll(ingredientTiles),
+        ),
+      ),
+      NotesTile(notes: _entry.notes)
     ];
 
     return Scaffold(
@@ -96,16 +99,12 @@ class MealEntryPageState extends State<MealEntryPage> {
       ),
       body: ListView.builder(
         itemCount: items.length,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.all(1.0),
-          child: items[index]
-        ),
+        itemBuilder: (context, index) =>
+            Padding(padding: EdgeInsets.all(1.0), child: items[index]),
         padding: EdgeInsets.all(0.0),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: addIngredient
-      ),
+          child: Icon(Icons.add), onPressed: addIngredient),
     );
   }
 }
