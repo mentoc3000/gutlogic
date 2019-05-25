@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/diary_entry.dart';
 import '../widgets/datetime_view.dart';
 import '../widgets/gutai_card.dart';
+import '../widgets/notes_tile.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
@@ -25,9 +26,8 @@ class BMEntryPageState extends State<BMEntryPage> {
       [
         DatetimeView(date: widget.entry.dateTime),
         BMTypeSliderTile(type: widget.entry.bowelMovement.type),
-        BMVolumeSliderTile(
-          volume: widget.entry.bowelMovement.volume,
-        )
+        BMVolumeSliderTile(volume: widget.entry.bowelMovement.volume),
+        NotesTile(notes: widget.entry.notes),
       ],
     ].expand((x) => x).toList();
   }
