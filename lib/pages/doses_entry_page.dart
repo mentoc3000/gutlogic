@@ -5,6 +5,7 @@ import '../widgets/datetime_view.dart';
 import '../widgets/gutai_card.dart';
 import '../widgets/item_tile.dart';
 import 'dose_entry_page.dart';
+import '../widgets/notes_tile.dart';
 
 class DosesEntryPage extends StatefulWidget {
   static String tag = 'medicine-entry-page';
@@ -47,6 +48,41 @@ class DosesEntryPageState extends State<DosesEntryPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> doseTiles = _entry.doses.map((i) {
+      return Dismissible(
+        key: ObjectKey(i),
+        child: DoseTile(
+          dose: i,
+          dosesEntry: _entry,
+          onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DoseEntryPage(dose: i),
+                ),
+              ),
+        ),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart) {
+            deleteDose(i);
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text("${i.medicine.name} removed."),
+              ),
+            );
+          }
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 20.0),
+          color: Colors.red,
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }).toList();
+
     List<Widget> items = [
       DatetimeView(date: _entry.dateTime),
       GutAICard(
@@ -55,44 +91,10 @@ class DosesEntryPageState extends State<DosesEntryPage> {
             HeaderListTile(
               heading: 'Doses',
             )
-          ]..addAll(
-              _entry.doses.map(
-                (i) => Dismissible(
-                      key: ObjectKey(i),
-                      child: DoseTile(
-                        dose: i,
-                        dosesEntry: _entry,
-                        onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DoseEntryPage(dose: i),
-                              ),
-                            ),
-                      ),
-                      onDismissed: (direction) {
-                        if (direction == DismissDirection.endToStart) {
-                          deleteDose(i);
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("${i.medicine.name} removed."),
-                            ),
-                          );
-                        }
-                      },
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: EdgeInsets.only(right: 20.0),
-                        color: Colors.red,
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-              ),
-            ),
+          ]..addAll(doseTiles),
         ),
-      )
+      ),
+      NotesTile(notes: _entry.notes),
     ];
 
     return Scaffold(
