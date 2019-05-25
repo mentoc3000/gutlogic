@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gutai_card.dart';
 
 class NotesTile extends StatefulWidget {
 
@@ -22,8 +23,8 @@ class _NotesTileState extends State<NotesTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
+    return GutAICard(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text('Notes'),
