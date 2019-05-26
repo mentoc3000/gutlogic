@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'resources/user_repository.dart';
+
+import 'blocs/bloc/authentication_bloc.dart';
+import 'blocs/bloc/authentication_state.dart';
+import 'blocs/bloc/authentication_event.dart';
+import 'pages/splash_page.dart';
+import 'pages/login_page.dart';
+import 'pages/main_tabs.dart';
 import 'package:gut_ai/pages/main_tabs.dart';
 import 'package:gut_ai/pages/account_page.dart';
 import 'package:gut_ai/pages/diary_page.dart';
@@ -6,25 +17,88 @@ import 'package:gut_ai/pages/food_search_page.dart';
 // import 'package:gut_ai/pages/login_page.dart';
 import 'package:gut_ai/pages/aws_login_example.dart';
 
-void main() => runApp(GiBlissApp());
+class SimpleBlocDelegate extends BlocDelegate {
+  @override
+  void onEvent(Bloc bloc, Object event) {
+    super.onEvent(bloc, event);
+    print(event);
+  }
 
-class GiBlissApp extends StatelessWidget {
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print(transition);
+  }
 
-  final routes = <String, WidgetBuilder> {
-    AccountPage.tag: (context) => AccountPage(),
-    DiaryPage.tag: (context) => DiaryPage(),
-    FoodSearchPage.tag: (context) => FoodSearchPage(),
-    Tabbed.tag: (context) => Tabbed()
-    // MealEntryPage.tag: (context) => MealEntryPage(entry:)
-  };
+  @override
+  void onError(Bloc bloc, Object error, StackTrace stacktrace) {
+    super.onError(bloc, error, stacktrace);
+    print(error);
+  }
+}
+
+void main() {
+  BlocSupervisor.delegate = SimpleBlocDelegate();
+  runApp(App(userRepository: UserRepository()));
+}
+
+class App extends StatefulWidget {
+  final UserRepository userRepository;
+
+  App({Key key, @required this.userRepository}) : super(key: key);
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  AuthenticationBloc _authenticationBloc;
+  UserRepository get _userRepository => widget.userRepository;
+
+  @override
+  void initState() {
+    _authenticationBloc = AuthenticationBloc(userRepository: _userRepository);
+    _authenticationBloc.dispatch(AppStarted());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _authenticationBloc.dispose();
+    super.dispose();
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: LoginScreen(),
+    return BlocProvider<AuthenticationBloc>(
+      bloc: _authenticationBloc,
+      child: MaterialApp(
+        home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
+          bloc: _authenticationBloc,
+          builder: (BuildContext context, AuthenticationState state) {
+            if (state is AuthenticationUninitialized) {
+              return SplashPage();
+            }
+            if (state is AuthenticationAuthenticated) {
+              return Tabbed();
+            }
+            if (state is AuthenticationUnauthenticated) {
+              return LoginPage(userRepository: _userRepository);
+            }
+            if (state is AuthenticationLoading) {
+              return LoadingIndicator();
+            }
+          },
+        ),
       ),
-      routes: routes,
     );
   }
+}
+class LoadingIndicator extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Center(
+        child: CircularProgressIndicator(),
+      );
 }
