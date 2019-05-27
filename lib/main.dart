@@ -65,8 +65,6 @@ class _AppState extends State<App> {
     super.dispose();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthenticationBloc>(

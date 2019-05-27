@@ -156,11 +156,6 @@ class UserRepository {
     if (!_session.isValid()) {
       return false;
     }
-    final attributes = await _cognitoUser.getUserAttributes();
-    if (attributes == null) {
-      return false;
-    }
-    final user = new User.fromUserAttributes(attributes);
-    return user.hasAccess;
+    return true;
   }
 }
