@@ -164,7 +164,6 @@ class UserRepository {
       return false;
     }
     final user = new User.fromUserAttributes(attributes);
-    user.hasAccess = true;
     return user.hasAccess;
   }
 }
