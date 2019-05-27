@@ -96,7 +96,7 @@ class UserRepository {
     @required String password,
   }) async {
     // await Future.delayed(Duration(seconds: 1));
-    _cognitoUser = new CognitoUser(username, _userPool);
+    _cognitoUser = new CognitoUser(username, _userPool, storage: _userPool.storage);
     final authDetails = new AuthenticationDetails(
       username: username,
       password: password,
