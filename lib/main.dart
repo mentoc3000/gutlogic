@@ -11,11 +11,6 @@ import 'pages/splash_page.dart';
 import 'pages/login_page.dart';
 import 'pages/main_tabs.dart';
 import 'package:gut_ai/pages/main_tabs.dart';
-import 'package:gut_ai/pages/account_page.dart';
-import 'package:gut_ai/pages/diary_page.dart';
-import 'package:gut_ai/pages/food_search_page.dart';
-// import 'package:gut_ai/pages/login_page.dart';
-import 'package:gut_ai/pages/aws_login_example.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
