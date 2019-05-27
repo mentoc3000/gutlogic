@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amazon_cognito_identity_dart/cognito.dart';
@@ -10,78 +9,42 @@ const _awsClientId = '7og2og27lm3tf7mp46759emd9l';
 
 const _identityPoolId = 'us-east-1:0821f23e-a659-4393-8d38-1c40dcefc8b0';
 
-
-/// Extend CognitoStorage with Shared Preferences to persist account
-/// login sessions
-class Storage extends CognitoStorage {
-  SharedPreferences _prefs;
-  Storage(this._prefs);
-
-  @override
-  Future getItem(String key) async {
-    String item;
-    try {
-      item = json.decode(_prefs.getString(key));
-    } catch (e) {
-      return null;
-    }
-    return item;
-  }
-
-  @override
-  Future setItem(String key, value) async {
-    _prefs.setString(key, json.encode(value));
-    return getItem(key);
-  }
-
-  @override
-  Future removeItem(String key) async {
-    final item = getItem(key);
-    if (item != null) {
-      _prefs.remove(key);
-      return item;
-    }
-    return null;
-  }
-
-  @override
-  Future<void> clear() async {
-    _prefs.clear();
-  }
-}
-
-
-class User {
-  String email;
-  String name;
-  String password;
-  bool confirmed = false;
-  bool hasAccess = false;
-
-  User({this.email, this.name});
-
-  /// Decode user from Cognito User Attributes
-  factory User.fromUserAttributes(List<CognitoUserAttribute> attributes) {
-    final user = User();
-    attributes.forEach((attribute) {
-      if (attribute.getName() == 'email') {
-        user.email = attribute.getValue();
-      } else if (attribute.getName() == 'name') {
-        user.name = attribute.getValue();
-      }
-    });
-    return user;
-  }
-}
-
-
 class UserRepository {
+  static CognitoUserPool _userPool =
+      new CognitoUserPool(_awsUserPoolId, _awsClientId);
+
   Future<String> authenticate({
     @required String username,
     @required String password,
   }) async {
-    await Future.delayed(Duration(seconds: 1));
-    return 'token';
+    // await Future.delayed(Duration(seconds: 1));
+    CognitoUser cognitoUser = new CognitoUser(username, _userPool);
+    final authDetails = new AuthenticationDetails(
+      username: username,
+      password: password,
+    );
+    CognitoUserSession session;
+    try {
+      session = await cognitoUser.authenticateUser(authDetails);
+    } on CognitoUserNewPasswordRequiredException catch (e) {
+      // handle New Password challenge
+    } on CognitoUserMfaRequiredException catch (e) {
+      // handle SMS_MFA challenge
+    } on CognitoUserSelectMfaTypeException catch (e) {
+      // handle SELECT_MFA_TYPE challenge
+    } on CognitoUserMfaSetupException catch (e) {
+      // handle MFA_SETUP challenge
+    } on CognitoUserTotpRequiredException catch (e) {
+      // handle SOFTWARE_TOKEN_MFA challenge
+    } on CognitoUserCustomChallengeException catch (e) {
+      // handle CUSTOM_CHALLENGE challenge
+    } on CognitoUserConfirmationNecessaryException catch (e) {
+      // handle User Confirmation Necessary
+    } catch (e) {
+      print(e);
+    }
+    // print(session.getAccessToken().getJwtToken());
+    return session.getAccessToken().getJwtToken();
   }
 
   Future<void> deleteToken() async {
