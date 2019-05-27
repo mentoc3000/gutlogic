@@ -88,10 +88,7 @@ class UserRepository {
     _userPool.storage = storage;
 
     _cognitoUser = await _userPool.getCurrentUser();
-    if (_cognitoUser == null) {
-      return false;
-    }
-    _session = await _cognitoUser.getSession();
+    _session = await _cognitoUser?.getSession();
   }
 
   Future<bool> authenticate({

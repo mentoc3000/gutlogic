@@ -35,14 +35,15 @@ class SimpleBlocDelegate extends BlocDelegate {
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   UserRepository userRepository = UserRepository();
-  userRepository.init();
   runApp(App(userRepository: userRepository));
 }
 
 class App extends StatefulWidget {
   final UserRepository userRepository;
 
-  App({Key key, @required this.userRepository}) : super(key: key);
+  App({Key key, @required this.userRepository}) : super(key: key) {
+    userRepository.init();
+  }
 
   @override
   State<App> createState() => _AppState();
