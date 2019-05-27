@@ -41,9 +41,7 @@ void main() {
 class App extends StatefulWidget {
   final UserRepository userRepository;
 
-  App({Key key, @required this.userRepository}) : super(key: key) {
-    userRepository.init();
-  }
+  App({Key key, @required this.userRepository}) : super(key: key);
 
   @override
   State<App> createState() => _AppState();
@@ -55,6 +53,7 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
+    // _userRepository.init();
     _authenticationBloc = AuthenticationBloc(userRepository: _userRepository);
     _authenticationBloc.dispatch(AppStarted());
     super.initState();

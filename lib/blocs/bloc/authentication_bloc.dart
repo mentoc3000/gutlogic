@@ -22,6 +22,7 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is AppStarted) {
+      await userRepository.init();
       final bool hasAccess = await userRepository.hasAccess();
 
       if (hasAccess) {
