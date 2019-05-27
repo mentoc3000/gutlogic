@@ -35,7 +35,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         );
 
         if (hasAccess) {
-          authenticationBloc.dispatch(LoggingIn());
+          authenticationBloc.dispatch(LoggedIn());
         }
         yield LoginInitial();
       } catch (error) {

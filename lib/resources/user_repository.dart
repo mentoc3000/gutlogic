@@ -99,14 +99,14 @@ class UserRepository {
     @required String password,
   }) async {
     // await Future.delayed(Duration(seconds: 1));
-    CognitoUser cognitoUser = new CognitoUser(username, _userPool);
+    _cognitoUser = new CognitoUser(username, _userPool);
     final authDetails = new AuthenticationDetails(
       username: username,
       password: password,
     );
     bool isConfirmed;
     try {
-      _session = await cognitoUser.authenticateUser(authDetails);
+      _session = await _cognitoUser.authenticateUser(authDetails);
       isConfirmed = true;
     } on CognitoUserNewPasswordRequiredException catch (e) {
       // handle New Password challenge

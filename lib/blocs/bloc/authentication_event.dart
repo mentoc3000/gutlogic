@@ -10,16 +10,16 @@ class AppStarted extends AuthenticationEvent {
   String toString() => 'AppStarted';
 }
 
-class LoggingIn extends AuthenticationEvent {
+class LoggedIn extends AuthenticationEvent {
   // final String token;
 
   // LoggedIn({@required this.token}) : super([token]);
 
   @override
-  String toString() => 'LoggingIn';
+  String toString() => 'LoggedIn';
 }
 
-class LoggingOut extends AuthenticationEvent {
+class LoggedOut extends AuthenticationEvent {
   @override
-  String toString() => 'LoggingOut';
+  String toString() => 'LoggedOut';
 }
