@@ -34,7 +34,9 @@ class SimpleBlocDelegate extends BlocDelegate {
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
-  runApp(App(userRepository: UserRepository()));
+  UserRepository userRepository = UserRepository();
+  userRepository.init();
+  runApp(App(userRepository: userRepository));
 }
 
 class App extends StatefulWidget {
