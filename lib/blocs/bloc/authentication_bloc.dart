@@ -43,5 +43,11 @@ class AuthenticationBloc
       await userRepository.deleteToken();
       yield AuthenticationUnauthenticated();
     }
+
+    if (event is NewUser) {
+      yield AuthenticationLoading();
+      // await userRepository.deleteToken();
+      yield AuthenticationNewUser();
+    }
   }
 }

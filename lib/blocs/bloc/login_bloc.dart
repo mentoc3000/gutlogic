@@ -42,5 +42,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoginFailure(error: error.toString());
       }
     }
+    
+    if (event is LoginPageButtonPressed) {
+      yield LoginLoading();
+      authenticationBloc.dispatch(LoggedOut());
+      yield LoginInitial();
+    }
+    
+    if (event is SignupPageButtonPressed) {
+      yield LoginLoading();
+      authenticationBloc.dispatch(NewUser());
+      yield LoginInitial();
+    }
   }
 }

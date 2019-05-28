@@ -11,15 +11,25 @@ class AppStarted extends AuthenticationEvent {
 }
 
 class LoggedIn extends AuthenticationEvent {
-  // final String token;
-
-  // LoggedIn({@required this.token}) : super([token]);
-
+  // Successfully logged in
   @override
   String toString() => 'LoggedIn';
 }
 
 class LoggedOut extends AuthenticationEvent {
+  // Successfully logged out
   @override
   String toString() => 'LoggedOut';
+}
+
+class Reauthenticate extends AuthenticationEvent {
+  // Return to login page
+  @override
+  String toString() => 'Reauthenticate';
+}
+
+class NewUser extends AuthenticationEvent {
+  // Return to login page
+  @override
+  String toString() => 'NewUser';
 }

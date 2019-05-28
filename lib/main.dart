@@ -9,6 +9,7 @@ import 'blocs/bloc/authentication_state.dart';
 import 'blocs/bloc/authentication_event.dart';
 import 'pages/splash_page.dart';
 import 'pages/login_page.dart';
+import 'pages/signup_page.dart';
 import 'pages/main_tabs.dart';
 import 'package:gut_ai/pages/main_tabs.dart';
 
@@ -81,6 +82,9 @@ class _AppState extends State<App> {
             }
             if (state is AuthenticationUnauthenticated) {
               return LoginPage(userRepository: _userRepository);
+            }
+            if (state is AuthenticationNewUser) {
+              return SignupPage(userRepository: _userRepository);
             }
             if (state is AuthenticationLoading) {
               return LoadingIndicator();

@@ -17,6 +17,16 @@ class AuthenticationUnauthenticated extends AuthenticationState {
   String toString() => 'AuthenticationUnauthenticated';
 }
 
+class AuthenticationUnconfirmed extends AuthenticationState {
+  @override
+  String toString() => 'AuthenticationUnconfirmed';
+}
+
+class AuthenticationNewUser extends AuthenticationState {
+  @override
+  String toString() => 'AuthenticationNewUser';
+}
+
 class AuthenticationLoading extends AuthenticationState {
   @override
   String toString() => 'AuthenticationLoading';
