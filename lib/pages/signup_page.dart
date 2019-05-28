@@ -111,6 +111,11 @@ class _SignupFormState extends State<SignupForm> {
                     state is! LoginLoading ? _onLoginButtonPressed : null,
                 child: Text('Signup'),
               ),
+              RaisedButton(
+                onPressed:
+                    state is! LoginLoading ? _onCancelButtonPressed : null,
+                child: Text('Cancel'),
+              ),
               Container(
                 child:
                     state is LoginLoading ? CircularProgressIndicator() : null,
@@ -133,5 +138,9 @@ class _SignupFormState extends State<SignupForm> {
       username: _usernameController.text,
       password: _passwordController.text,
     ));
+  }
+
+  _onCancelButtonPressed() {
+    _loginBloc.dispatch(LoginPageButtonPressed());
   }
 }

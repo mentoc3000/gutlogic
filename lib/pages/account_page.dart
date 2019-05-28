@@ -68,12 +68,7 @@ class AccountPageState extends State<AccountPage> {
                     'Logout',
                     style: new TextStyle(color: Colors.blueAccent),
                   ),
-                  onTap: () async {
-                    final _userService = new UserService();
-                    await _userService.signOut();
-                    Navigator.of(context, rootNavigator: true)
-                      ..pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
-                  },
+                  onTap: _onLogoutButtonPressed,
                 ),
               ),
             ],
