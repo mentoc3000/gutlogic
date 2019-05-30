@@ -10,7 +10,6 @@ const _awsClientId = '7og2og27lm3tf7mp46759emd9l';
 
 const _identityPoolId = 'us-east-1:0821f23e-a659-4393-8d38-1c40dcefc8b0';
 
-
 /// Extend CognitoStorage with Shared Preferences to persist account
 /// login sessions
 class Storage extends CognitoStorage {
@@ -50,7 +49,6 @@ class Storage extends CognitoStorage {
   }
 }
 
-
 class User {
   String email;
   String name;
@@ -74,7 +72,6 @@ class User {
   }
 }
 
-
 class UserRepository {
   static CognitoUserPool _userPool =
       new CognitoUserPool(_awsUserPoolId, _awsClientId);
@@ -96,7 +93,8 @@ class UserRepository {
     @required String password,
   }) async {
     // await Future.delayed(Duration(seconds: 1));
-    _cognitoUser = new CognitoUser(username, _userPool, storage: _userPool.storage);
+    _cognitoUser =
+        new CognitoUser(username, _userPool, storage: _userPool.storage);
     final authDetails = new AuthenticationDetails(
       username: username,
       password: password,
@@ -137,8 +135,6 @@ class UserRepository {
     return user.hasAccess;
   }
 
-
-
   /// Sign up new user
   Future<bool> signUp(String email, String password, String name) async {
     CognitoUserPoolData data;
@@ -156,16 +152,27 @@ class UserRepository {
     return user.confirmed;
   }
 
-  Future<void> deleteToken() async {
-    /// delete from keystore/keychain
-    await Future.delayed(Duration(seconds: 1));
-    return;
+  /// Confirm user's account with confirmation code sent to email
+  Future<bool> confirmAccount(String email, String confirmationCode) async {
+    _cognitoUser =
+        new CognitoUser(email, _userPool, storage: _userPool.storage);
+
+    return await _cognitoUser.confirmRegistration(confirmationCode);
   }
 
-  Future<void> persistToken(String token) async {
-    /// write to keystore/keychain
-    await Future.delayed(Duration(seconds: 1));
-    return;
+  /// Resend confirmation code to user's email
+  Future<void> resendConfirmationCode(String email) async {
+    _cognitoUser =
+        new CognitoUser(email, _userPool, storage: _userPool.storage);
+    await _cognitoUser.resendConfirmationCode();
+  }
+
+  /// Check if user's current session is valid
+  Future<bool> checkAuthenticated() async {
+    if (_cognitoUser == null || _session == null) {
+      return false;
+    }
+    return _session.isValid();
   }
 
   Future<bool> hasAccess() async {
@@ -176,5 +183,17 @@ class UserRepository {
       return false;
     }
     return true;
+  }
+
+  Future<void> signOut() async {
+    if (credentials != null) {
+      await credentials.resetAwsCredentials();
+    }
+    if (_cognitoUser != null) {
+      await _cognitoUser.signOut();
+    }
+    credentials = null;
+    _cognitoUser = null;
+    _session = null;
   }
 }
