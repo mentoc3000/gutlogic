@@ -12,6 +12,7 @@ import 'pages/login_page.dart';
 import 'pages/signup_page.dart';
 import 'pages/main_tabs.dart';
 import 'package:gut_ai/pages/main_tabs.dart';
+import 'pages/confirmation_page.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
@@ -85,6 +86,9 @@ class _AppState extends State<App> {
             }
             if (state is AuthenticationNewUser) {
               return SignupPage(userRepository: _userRepository);
+            }
+            if (state is AuthenticationUnconfirmed) {
+              return ConfirmationPage(userRepository: _userRepository);
             }
             if (state is AuthenticationLoading) {
               return LoadingIndicator();

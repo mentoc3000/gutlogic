@@ -137,6 +137,25 @@ class UserRepository {
     return user.hasAccess;
   }
 
+
+
+  /// Sign up new user
+  Future<bool> signUp(String email, String password, String name) async {
+    CognitoUserPoolData data;
+    final userAttributes = [
+      new AttributeArg(name: 'name', value: name),
+    ];
+    data =
+        await _userPool.signUp(email, password, userAttributes: userAttributes);
+
+    final user = new User();
+    user.email = email;
+    user.name = name;
+    user.confirmed = data.userConfirmed;
+
+    return user.confirmed;
+  }
+
   Future<void> deleteToken() async {
     /// delete from keystore/keychain
     await Future.delayed(Duration(seconds: 1));

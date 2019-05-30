@@ -8,18 +8,18 @@ import '../blocs/bloc/login_bloc.dart';
 import '../blocs/bloc/login_state.dart';
 import '../blocs/bloc/login_event.dart';
 
-class SignupPage extends StatefulWidget {
+class ConfirmationPage extends StatefulWidget {
   final UserRepository userRepository;
 
-  SignupPage({Key key, @required this.userRepository})
+  ConfirmationPage({Key key, @required this.userRepository})
       : assert(userRepository != null),
         super(key: key);
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<ConfirmationPage> createState() => _ConfirmationPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _ConfirmationPageState extends State<ConfirmationPage> {
   LoginBloc _loginBloc;
   AuthenticationBloc _authenticationBloc;
 
@@ -39,9 +39,9 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Signup'),
+        title: Text('Confirm Account'),
       ),
-      body: SignupForm(
+      body: ConfirmationForm(
         authenticationBloc: _authenticationBloc,
         loginBloc: _loginBloc,
       ),
@@ -55,23 +55,22 @@ class _SignupPageState extends State<SignupPage> {
   }
 }
 
-class SignupForm extends StatefulWidget {
+class ConfirmationForm extends StatefulWidget {
   final LoginBloc loginBloc;
   final AuthenticationBloc authenticationBloc;
 
-  SignupForm({
+  ConfirmationForm({
     Key key,
     @required this.loginBloc,
     @required this.authenticationBloc,
   }) : super(key: key);
 
   @override
-  State<SignupForm> createState() => _SignupFormState();
+  State<ConfirmationForm> createState() => _ConfirmationFormState();
 }
 
-class _SignupFormState extends State<SignupForm> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+class _ConfirmationFormState extends State<ConfirmationForm> {
+  final _confirmationCodeController = TextEditingController();
 
   LoginBloc get _loginBloc => widget.loginBloc;
 
@@ -98,18 +97,13 @@ class _SignupFormState extends State<SignupForm> {
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'username'),
-                controller: _usernameController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'password'),
-                controller: _passwordController,
-                obscureText: true,
+                decoration: InputDecoration(labelText: 'confirmation code'),
+                controller: _confirmationCodeController,
               ),
               RaisedButton(
                 onPressed:
                     state is! LoginLoading ? _onSignupButtonPressed : null,
-                child: Text('Signup'),
+                child: Text('Confirm'),
               ),
               RaisedButton(
                 onPressed:
@@ -134,9 +128,8 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   _onSignupButtonPressed() {
-    _loginBloc.dispatch(SignupButtonPressed(
-      username: _usernameController.text,
-      password: _passwordController.text,
+    _loginBloc.dispatch(ConfirmButtonPressed(
+      confirmationCode: _confirmationCodeController.text,
     ));
   }
 

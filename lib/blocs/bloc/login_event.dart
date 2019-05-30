@@ -43,3 +43,15 @@ class SignupButtonPressed extends LoginEvent {
   String toString() =>
       'SignupButtonPressed { username: $username, password: $password }';
 }
+
+class ConfirmButtonPressed extends LoginEvent {
+  final String confirmationCode;
+
+  ConfirmButtonPressed({
+    @required this.confirmationCode,
+  }) : super([confirmationCode]);
+
+  @override
+  String toString() =>
+      'ConfirmButtonPressed { confirmationCode: $confirmationCode }';
+}

@@ -28,6 +28,16 @@ class Reauthenticate extends AuthenticationEvent {
   String toString() => 'Reauthenticate';
 }
 
+class Confirm extends AuthenticationEvent {
+  @override
+  String toString() => 'Confirm';
+}
+
+class Confirmed extends AuthenticationEvent {
+  @override
+  String toString() => 'Confirmed';
+}
+
 class NewUser extends AuthenticationEvent {
   // Return to login page
   @override

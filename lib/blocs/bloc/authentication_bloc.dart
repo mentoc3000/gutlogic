@@ -49,5 +49,17 @@ class AuthenticationBloc
       // await userRepository.deleteToken();
       yield AuthenticationNewUser();
     }
+
+    if (event is Confirm) {
+      yield AuthenticationLoading();
+      // await userRepository.persistToken(event.token);
+      yield AuthenticationUnconfirmed();
+    }
+
+    if (event is Confirmed) {
+      yield AuthenticationLoading();
+      // await userRepository.persistToken(event.token);
+      yield AuthenticationUnauthenticated();
+    }
   }
 }
