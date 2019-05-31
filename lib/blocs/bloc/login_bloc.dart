@@ -53,8 +53,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         );
 
         if (confirmed) {
-          authenticationBloc.dispatch(Confirm());
+          authenticationBloc.dispatch(Reauthenticate());
         } else {
+          authenticationBloc.dispatch(Confirm());
         }
         yield LoginInitial();
       } catch (error) {
