@@ -63,6 +63,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     }
 
+    if (event is ConfirmButtonPressed) {
+      yield LoginLoading();
+
+      try {
+        final confirmed = await userRepository.confirmAccount(
+          email: event.username,
+          confirmationCode: event.confirmationCode,
+        );
+
+        if (confirmed) {
+          authenticationBloc.dispatch(Reauthenticate());
+        } else {
+          authenticationBloc.dispatch(Confirm());
+        }
+        yield LoginInitial();
+      } catch (error) {
+        yield LoginFailure(error: error.toString());
+      }
+    }
+
     if (event is LoginPageButtonPressed) {
       yield LoginLoading();
       authenticationBloc.dispatch(Reauthenticate());

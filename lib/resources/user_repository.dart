@@ -153,7 +153,7 @@ class UserRepository {
   }
 
   /// Confirm user's account with confirmation code sent to email
-  Future<bool> confirmAccount(String email, String confirmationCode) async {
+  Future<bool> confirmAccount({String email, String confirmationCode}) async {
     _cognitoUser =
         new CognitoUser(email, _userPool, storage: _userPool.storage);
 
