@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import '../../models/medicine.dart';
+import '../models/medicine.dart';
 
 @immutable
 abstract class MedicinesState extends Equatable {

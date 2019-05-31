@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../resources/user_repository.dart';
 
-import '../blocs/bloc/authentication_bloc.dart';
-import '../blocs/bloc/login_bloc.dart';
-import '../blocs/bloc/login_state.dart';
-import '../blocs/bloc/login_event.dart';
+import '../blocs/authentication_bloc.dart';
+import '../blocs/login_bloc.dart';
+import '../blocs/login_state.dart';
+import '../blocs/login_event.dart';
 
 class SignupPage extends StatefulWidget {
   final UserRepository userRepository;

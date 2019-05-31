@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'aws_login_example.dart';
 import '../resources/user_service.dart';
 import '../resources/aws_sig_v4_service.dart';
-import '../blocs/bloc/authentication_bloc.dart';
-import '../blocs/bloc/authentication_event.dart';
+import '../blocs/authentication_bloc.dart';
+import '../blocs/authentication_event.dart';
 
 class AccountPage extends StatefulWidget {
   static String tag = 'account-page';

@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
-import '../../resources/medicine_repository.dart';
+import '../resources/medicine_repository.dart';
 import 'medicines_event.dart';
 import 'medicines_state.dart';
-import '../../models/medicine.dart';
+import '../models/medicine.dart';
 
 class MedicinesBloc extends Bloc<MedicinesEvent, MedicinesState> {
 

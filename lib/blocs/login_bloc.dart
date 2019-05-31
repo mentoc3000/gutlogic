@@ -7,7 +7,7 @@ import 'package:bloc/bloc.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 import 'authentication_bloc.dart';
-import '../../resources/user_repository.dart';
+import '../resources/user_repository.dart';
 import 'authentication_event.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {

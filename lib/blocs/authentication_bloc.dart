@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
-import '../../resources/user_repository.dart';
+import '../resources/user_repository.dart';
 
 import 'authentication_event.dart';
 import 'authentication_state.dart';
