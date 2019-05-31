@@ -50,10 +50,16 @@ class AuthenticationBloc
       yield AuthenticationNewUser();
     }
 
+    if (event is Reauthenticate) {
+      yield AuthenticationLoading();
+      // await userRepository.deleteToken();
+      yield AuthenticationUnauthenticated();
+    }
+
     if (event is Confirm) {
       yield AuthenticationLoading();
       // await userRepository.persistToken(event.token);
-      yield AuthenticationUnconfirmed();
+      yield AuthenticationUnauthenticated();
     }
 
     if (event is Confirmed) {
