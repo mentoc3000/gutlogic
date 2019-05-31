@@ -55,7 +55,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (confirmed) {
           authenticationBloc.dispatch(Reauthenticate());
         } else {
-          authenticationBloc.dispatch(Confirm());
+          authenticationBloc.dispatch(Confirm(username: event.username));
         }
         yield LoginInitial();
       } catch (error) {
@@ -81,7 +81,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (confirmed) {
           authenticationBloc.dispatch(Reauthenticate());
         } else {
-          authenticationBloc.dispatch(Confirm());
+          authenticationBloc.dispatch(Confirm(username: event.username));
         }
         yield LoginInitial();
       } catch (error) {

@@ -88,7 +88,10 @@ class _AppState extends State<App> {
               return SignupPage(userRepository: _userRepository);
             }
             if (state is AuthenticationUnconfirmed) {
-              return ConfirmationPage(userRepository: _userRepository);
+              return ConfirmationPage(
+                username: state.username,
+                userRepository: _userRepository,
+              );
             }
             if (state is AuthenticationLoading) {
               return LoadingIndicator();
@@ -99,6 +102,7 @@ class _AppState extends State<App> {
     );
   }
 }
+
 class LoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(

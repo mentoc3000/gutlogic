@@ -29,6 +29,10 @@ class Reauthenticate extends AuthenticationEvent {
 }
 
 class Confirm extends AuthenticationEvent {
+  final String username;
+
+  Confirm({@required this.username}) : super([username]);
+
   @override
   String toString() => 'Confirm';
 }

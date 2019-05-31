@@ -59,7 +59,7 @@ class AuthenticationBloc
     if (event is Confirm) {
       yield AuthenticationLoading();
       // await userRepository.persistToken(event.token);
-      yield AuthenticationUnconfirmed();
+      yield AuthenticationUnconfirmed(username: event.username);
     }
 
     if (event is Confirmed) {

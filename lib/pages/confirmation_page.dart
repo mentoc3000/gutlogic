@@ -9,10 +9,14 @@ import '../blocs/bloc/login_state.dart';
 import '../blocs/bloc/login_event.dart';
 
 class ConfirmationPage extends StatefulWidget {
+  final String username;
   final UserRepository userRepository;
 
-  ConfirmationPage({Key key, @required this.userRepository})
-      : assert(userRepository != null),
+  ConfirmationPage({
+    Key key,
+    @required this.username,
+    @required this.userRepository,
+  })  : assert(userRepository != null),
         super(key: key);
 
   @override
@@ -23,6 +27,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   LoginBloc _loginBloc;
   AuthenticationBloc _authenticationBloc;
 
+  String get _username => widget.username;
   UserRepository get _userRepository => widget.userRepository;
 
   @override
@@ -42,7 +47,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         title: Text('Confirm Account'),
       ),
       body: ConfirmationForm(
-        username: _userRepository.getCurrentUsername(),
+        username: _username,
         authenticationBloc: _authenticationBloc,
         loginBloc: _loginBloc,
       ),
