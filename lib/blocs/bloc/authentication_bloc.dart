@@ -40,7 +40,7 @@ class AuthenticationBloc
 
     if (event is LoggedOut) {
       yield AuthenticationLoading();
-      await userRepository.deleteToken();
+      await userRepository.signOut();
       yield AuthenticationUnauthenticated();
     }
 

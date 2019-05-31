@@ -136,17 +136,17 @@ class UserRepository {
   }
 
   /// Sign up new user
-  Future<bool> signUp(String email, String password, String name) async {
+  Future<bool> signUp({@required String email, @required String password}) async {
     CognitoUserPoolData data;
-    final userAttributes = [
-      new AttributeArg(name: 'name', value: name),
-    ];
+    // final userAttributes = [
+    //   new AttributeArg(name: 'name', value: name),
+    // ];
     data =
-        await _userPool.signUp(email, password, userAttributes: userAttributes);
+        await _userPool.signUp(email, password);
 
     final user = new User();
     user.email = email;
-    user.name = name;
+    // user.name = name;
     user.confirmed = data.userConfirmed;
 
     return user.confirmed;
@@ -183,6 +183,10 @@ class UserRepository {
       return false;
     }
     return true;
+  }
+
+  String getCurrentUsername() {
+    return _cognitoUser?.username;
   }
 
   Future<void> signOut() async {

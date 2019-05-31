@@ -42,6 +42,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         title: Text('Confirm Account'),
       ),
       body: ConfirmationForm(
+        username: _userRepository.getCurrentUsername(),
         authenticationBloc: _authenticationBloc,
         loginBloc: _loginBloc,
       ),
@@ -56,11 +57,13 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 }
 
 class ConfirmationForm extends StatefulWidget {
+  final String username;
   final LoginBloc loginBloc;
   final AuthenticationBloc authenticationBloc;
 
   ConfirmationForm({
     Key key,
+    @required this.username,
     @required this.loginBloc,
     @required this.authenticationBloc,
   }) : super(key: key);
@@ -72,6 +75,7 @@ class ConfirmationForm extends StatefulWidget {
 class _ConfirmationFormState extends State<ConfirmationForm> {
   final _confirmationCodeController = TextEditingController();
 
+  String get _username => widget.username;
   LoginBloc get _loginBloc => widget.loginBloc;
 
   @override
@@ -129,6 +133,7 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
 
   _onSignupButtonPressed() {
     _loginBloc.dispatch(ConfirmButtonPressed(
+      username: _username,
       confirmationCode: _confirmationCodeController.text,
     ));
   }

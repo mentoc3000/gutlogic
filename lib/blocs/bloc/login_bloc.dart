@@ -47,15 +47,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield LoginLoading();
 
       try {
-        final confirmed = await userRepository.authenticate(
-          username: event.username,
+        final confirmed = await userRepository.signUp(
+          email: event.username,
           password: event.password,
         );
 
         if (confirmed) {
-          
+          authenticationBloc.dispatch(Confirm());
         } else {
-          authenticationBloc.dispatch(Reauthenticate());
         }
         yield LoginInitial();
       } catch (error) {
@@ -63,13 +62,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     }
 
-    
     if (event is LoginPageButtonPressed) {
       yield LoginLoading();
       authenticationBloc.dispatch(Reauthenticate());
       yield LoginInitial();
     }
-    
+
     if (event is SignupPageButtonPressed) {
       yield LoginLoading();
       authenticationBloc.dispatch(NewUser());
