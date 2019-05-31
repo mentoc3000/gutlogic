@@ -63,6 +63,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     }
 
+    if (event is CancelButtonPressed) {
+      yield LoginLoading();
+      authenticationBloc.dispatch(Reauthenticate());
+      yield LoginInitial();
+    }
+
     if (event is ConfirmButtonPressed) {
       yield LoginLoading();
 

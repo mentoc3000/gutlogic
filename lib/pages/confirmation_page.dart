@@ -139,6 +139,6 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
   }
 
   _onCancelButtonPressed() {
-    _loginBloc.dispatch(LoginPageButtonPressed());
+    _loginBloc.dispatch(CancelButtonPressed());
   }
 }

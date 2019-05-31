@@ -141,6 +141,6 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   _onCancelButtonPressed() {
-    _loginBloc.dispatch(LoginPageButtonPressed());
+    _loginBloc.dispatch(CancelButtonPressed());
   }
 }

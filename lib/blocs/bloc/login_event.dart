@@ -29,6 +29,10 @@ class SignupPageButtonPressed extends LoginEvent {
   String toString() => 'SignupPageButtonPressed';
 }
 
+class CancelButtonPressed extends LoginEvent {
+  @override
+  String toString() => 'LoginPageButtonPressed';
+}
 
 class SignupButtonPressed extends LoginEvent {
   final String username;
