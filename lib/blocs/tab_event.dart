@@ -1,27 +1,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'tab_state.dart';
 
 @immutable
 abstract class TabEvent extends Equatable {
   TabEvent([List props = const []]) : super(props);
 }
 
-class DiaryTabPressed extends TabEvent {
-  @override
-  String toString() => 'DiaryTabPressed';
-}
+class UpdateTab extends TabEvent {
+  final AppTab tab;
 
-class SearchTabPressed extends TabEvent {
-  @override
-  String toString() => 'SearchTabPressed';
-}
+  UpdateTab(this.tab) : super([tab]);
 
-class ChatTabPressed extends TabEvent {
   @override
-  String toString() => 'ChatTabPressed';
-}
-
-class AccountTabPressed extends TabEvent {
-  @override
-  String toString() => 'AccountTabPressed';
+  String toString() => 'UpdateTab { tab: $tab }';
 }
