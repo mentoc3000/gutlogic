@@ -6,4 +6,22 @@ abstract class TabState extends Equatable {
   TabState([List props = const []]) : super(props);
 }
 
-class InitialTabState extends TabState {}
+class DiaryTabState extends TabState {
+  @override
+  String toString() => 'DiaryTabState';
+}
+
+class SearchTabState extends TabState {
+  @override
+  String toString() => 'SearchTabState';
+}
+
+class ChatTabState extends TabState {
+  @override
+  String toString() => 'ChatTabState';
+}
+
+class AccountTabState extends TabState {
+  @override
+  String toString() => 'AccountTabState';
+}
