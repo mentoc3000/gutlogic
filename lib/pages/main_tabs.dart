@@ -84,30 +84,35 @@ class _TabbedState extends State<Tabbed> {
   Widget _buildBody(AppTab appTab) {
     Widget body;
     switch (appTab) {
-      case AppTab.diary: {
-        body = DiaryPage();
-      }
-      break;
+      case AppTab.diary:
+        {
+          body = DiaryPage();
+        }
+        break;
 
-      case AppTab.search: {
-        body = FoodSearchPage();
-      }
-      break;
+      case AppTab.search:
+        {
+          body = FoodSearchPage();
+        }
+        break;
 
-      case AppTab.chat: {
-        body = PlaceholderWidget(Colors.red);
-      }
-      break;
+      case AppTab.chat:
+        {
+          body = PlaceholderWidget(Colors.red);
+        }
+        break;
 
-      case AppTab.account: {
-        body = AccountPage();
-      }
-      break;
+      case AppTab.account:
+        {
+          body = AccountPage();
+        }
+        break;
 
-      default: {
-        body = DiaryPage();
-      }
-      break;
+      default:
+        {
+          body = DiaryPage();
+        }
+        break;
     }
     return body;
   }
@@ -188,8 +193,6 @@ class _TabbedState extends State<Tabbed> {
   // }
 }
 
-
-
 class TabSelector extends StatelessWidget {
   final AppTab activeTab;
   final Function(AppTab) onTabSelected;
@@ -202,54 +205,64 @@ class TabSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: AppTab.values.indexOf(activeTab),
-      onTap: (index) => onTabSelected(AppTab.values[index]),
-      items: AppTab.values.map((tab) {
-        BottomNavigationBarItem item;
-        switch (tab) {
-          case (AppTab.diary) : {
-            item = BottomNavigationBarItem(
-              icon: const Icon(Icons.subject),
-              title: Text('Diary'),
-            );
-          }
-          break;
+    return Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: Colors.blue,
+      ),
+      child: BottomNavigationBar(
+        currentIndex: AppTab.values.indexOf(activeTab),
+        onTap: (index) => onTabSelected(AppTab.values[index]),
+        items: AppTab.values.map((tab) {
+          BottomNavigationBarItem item;
+          switch (tab) {
+            case (AppTab.diary):
+              {
+                item = BottomNavigationBarItem(
+                  icon: const Icon(Icons.subject),
+                  title: Text('Diary'),
+                );
+              }
+              break;
 
-          case (AppTab.search) : {
-            item = BottomNavigationBarItem(
-              icon: const Icon(Icons.search),
-              title: Text('Search'),
-            );
-          }
-          break;
+            case (AppTab.search):
+              {
+                item = BottomNavigationBarItem(
+                  icon: const Icon(Icons.search),
+                  title: Text('Search'),
+                );
+              }
+              break;
 
-          case (AppTab.chat) : {
-            item = BottomNavigationBarItem(
-              icon: const Icon(Icons.chat),
-              title: Text('Chat'),
-            );
-          }
-          break;
+            case (AppTab.chat):
+              {
+                item = BottomNavigationBarItem(
+                  icon: const Icon(Icons.chat),
+                  title: Text('Chat'),
+                );
+              }
+              break;
 
-          case (AppTab.account) : {
-            item = BottomNavigationBarItem(
-              icon: const Icon(Icons.person),
-              title: Text('Account'),
-            );
-          }
-          break;
+            case (AppTab.account):
+              {
+                item = BottomNavigationBarItem(
+                  icon: const Icon(Icons.person),
+                  title: Text('Account'),
+                );
+              }
+              break;
 
-          default: {
-            item = BottomNavigationBarItem(
-              icon: const Icon(Icons.error),
-              title: Text('Invalid'),
-            );
+            default:
+              {
+                item = BottomNavigationBarItem(
+                  icon: const Icon(Icons.error),
+                  title: Text('Invalid'),
+                );
+              }
+              break;
           }
-          break;
-        }
-        return item;
-      }).toList(),
+          return item;
+        }).toList(),
+      ),
     );
   }
 }
