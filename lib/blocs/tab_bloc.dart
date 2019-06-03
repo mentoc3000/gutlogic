@@ -5,12 +5,26 @@ import './tab_state.dart';
 
 class TabBloc extends Bloc<TabEvent, TabState> {
   @override
-  TabState get initialState => InitialTabState();
+  TabState get initialState => DiaryTabState();
 
   @override
   Stream<TabState> mapEventToState(
     TabEvent event,
   ) async* {
-    // TODO: Add Logic
+    if (event is DiaryTabPressed) {
+      yield DiaryTabState();
+    }
+
+    if (event is SearchTabPressed) {
+      yield SearchTabState();
+    }
+
+    if (event is ChatTabPressed) {
+      yield ChatTabState();
+    }
+
+    if (event is AccountTabPressed) {
+      yield AccountTabState();
+    }
   }
 }
