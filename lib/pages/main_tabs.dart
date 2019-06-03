@@ -7,6 +7,7 @@ import 'diary_page.dart';
 import '../widgets/placeholder_widget.dart';
 import '../blocs/tab_bloc.dart';
 import '../blocs/tab_state.dart';
+import '../blocs/tab_event.dart';
 
 class Tabbed extends StatefulWidget {
   static String tag = 'tabbed-page';
@@ -71,25 +72,44 @@ class _TabbedState extends State<Tabbed> {
         // TODO: BlocProviderTree can be included here
         return Scaffold(
           body: _buildBody(appTab),
-          bottomNavigationBar: TabSelector,
-        )
+          bottomNavigationBar: TabSelector(
+            activeTab: appTab,
+            onTabSelected: (tab) => _tabBloc.dispatch(UpdateTab(tab)),
+          ),
+        );
       },
     );
   }
 
   Widget _buildBody(AppTab appTab) {
+    Widget body;
     switch (appTab) {
-      case 
+      case AppTab.diary: {
+        body = DiaryPage();
+      }
+      break;
+
+      case AppTab.search: {
+        body = FoodSearchPage();
+      }
+      break;
+
+      case AppTab.chat: {
+        body = PlaceholderWidget(Colors.red);
+      }
+      break;
+
+      case AppTab.account: {
+        body = AccountPage();
+      }
+      break;
+
+      default: {
+        body = DiaryPage();
+      }
+      break;
     }
-    if (appTab is AccountTabState) {
-      return AccountPage();
-    } else if (appTab is SearchTabState) {
-      return FoodSearchPage();
-    } else if (appTab is ChatTabState) {
-      return PlaceholderWidget(Colors.red);
-    } else {
-      return DiaryPage();
-    }
+    return body;
   }
 
   // Widget _buildStack() {
@@ -183,21 +203,52 @@ class TabSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      key: ArchSampleKeys.tabs,
       currentIndex: AppTab.values.indexOf(activeTab),
       onTap: (index) => onTabSelected(AppTab.values[index]),
       items: AppTab.values.map((tab) {
-        return BottomNavigationBarItem(
-          icon: Icon(
-            tab == AppTab.todos ? Icons.list : Icons.show_chart,
-            key: tab == AppTab.todos
-                ? ArchSampleKeys.todoTab
-                : ArchSampleKeys.statsTab,
-          ),
-          title: Text(tab == AppTab.stats
-              ? ArchSampleLocalizations.of(context).stats
-              : ArchSampleLocalizations.of(context).todos),
-        );
+        BottomNavigationBarItem item;
+        switch (tab) {
+          case (AppTab.diary) : {
+            item = BottomNavigationBarItem(
+              icon: const Icon(Icons.subject),
+              title: Text('Diary'),
+            );
+          }
+          break;
+
+          case (AppTab.search) : {
+            item = BottomNavigationBarItem(
+              icon: const Icon(Icons.search),
+              title: Text('Search'),
+            );
+          }
+          break;
+
+          case (AppTab.chat) : {
+            item = BottomNavigationBarItem(
+              icon: const Icon(Icons.chat),
+              title: Text('Chat'),
+            );
+          }
+          break;
+
+          case (AppTab.account) : {
+            item = BottomNavigationBarItem(
+              icon: const Icon(Icons.person),
+              title: Text('Account'),
+            );
+          }
+          break;
+
+          default: {
+            item = BottomNavigationBarItem(
+              icon: const Icon(Icons.error),
+              title: Text('Invalid'),
+            );
+          }
+          break;
+        }
+        return item;
       }).toList(),
     );
   }
