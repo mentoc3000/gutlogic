@@ -20,6 +20,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
+  built_value: ^6.6.0
+  built_collection: ^4.2.2
   collection: ^1.14.11
   intl: ^0.15.7
   datetime_picker_formfield: ^0.1.8
@@ -37,6 +39,7 @@ dev_dependencies:
   mockito: ^4.0.0
   build_runner: ^1.0.0
   json_serializable: ^3.0.0
+  built_value_generator: ^6.6.0
 
 
 # For information on the generic Dart part of this file, see the

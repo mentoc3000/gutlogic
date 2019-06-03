@@ -1,17 +1,14 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
 part 'bowel_movement.g.dart';
 
-@JsonSerializable()
-class BowelMovement extends Equatable {
-  int type;
-  int volume;
+abstract class BowelMovement implements Built<BowelMovement, BowelMovementBuilder>  {
+  static Serializer<BowelMovement> get serializer => _$bowelMovementSerializer;
 
-  BowelMovement({this.type, this.volume});
+  int get type;
+  int get volume;
 
-  factory BowelMovement.fromJson(Map<String, dynamic> json) =>
-      _$BowelMovementFromJson(json);
-
-  Map<String, dynamic> toJson() => _$BowelMovementToJson(this);
+  BowelMovement._();
+  factory BowelMovement([updates(BowelMovementBuilder b)]) = _$BowelMovement;
 }
