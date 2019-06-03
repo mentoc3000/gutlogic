@@ -5,11 +5,6 @@ import 'package:gut_ai/models/serializers.dart';
 
 void main() {
   group('BowelMovement', () {
-    test('constructs empty object', () {
-      BowelMovement bm = BowelMovement();
-      expect(bm.type, null);
-      expect(bm.volume, null);
-    });
 
     test('constructs simple object', () {
       BowelMovement bm = BowelMovement((b) => b
@@ -27,8 +22,8 @@ void main() {
     });
 
     test('is deserializable', () {
-      const String bmJson = "{ 'type': 3, 'volume': 4 }";
-      BowelMovement bm = serializers.deserializeWith(BowelMovement.serializer, json.encode(bmJson));
+      const String bmJson = '{"type":3,"volume":4}';
+      BowelMovement bm = serializers.deserializeWith(BowelMovement.serializer, json.decode(bmJson));
       expect(bm.type, 3);
       expect(bm.volume, 4);
     });
@@ -37,7 +32,7 @@ void main() {
       BowelMovement bm = BowelMovement((b) => b
         ..type = 3
         ..volume = 4);
-      expect(json.encode(serializers.serialize(bm)), "{ 'type': 3, 'volume': 4 }");
+      expect(json.encode(serializers.serialize(bm)), '{"\$":"BowelMovement","type":3,"volume":4}');
     });
   });
 }
