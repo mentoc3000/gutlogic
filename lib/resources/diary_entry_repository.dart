@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dummy_data.dart';
 import '../models/diary_entry.dart';
 
-class DiaryEntryRepository {
+class DiaryEntriesRepository {
 
   List<DiaryEntry> entries;
 
-  DiaryEntryRepository() {
+  DiaryEntriesRepository() {
     entries = [
       Dummy.mealEntries[0],
       Dummy.bowelMovementEntries[0],
