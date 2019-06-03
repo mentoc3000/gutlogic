@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
 import '../resources/medicine_repository.dart';
 import 'medicines_event.dart';

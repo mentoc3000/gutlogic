@@ -28,7 +28,6 @@ class MedicinesLoaded extends MedicinesState {
 
   MedicinesLoaded copyWith({
     List<Medicine> medicines,
-    bool hasReachedMax,
   }) {
     return MedicinesLoaded(
       medicines: medicines ?? this.medicines,

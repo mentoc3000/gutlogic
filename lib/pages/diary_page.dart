@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:collection/collection.dart';
 import '../widgets/diary_tiles.dart';
 import 'meal_entry_page.dart';
 import '../models/diary_entry.dart';

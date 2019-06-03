@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'aws_login_example.dart';
 import '../resources/user_service.dart';
 import '../resources/aws_sig_v4_service.dart';
 import '../blocs/authentication_bloc.dart';

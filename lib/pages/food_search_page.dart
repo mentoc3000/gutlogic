@@ -63,7 +63,7 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
   }
 
   Widget _buildList(BuildContext context) {
-    if (!(_searchText.isEmpty)) {
+    if (_searchText.isNotEmpty) {
       _filteredFoods = new List();
       for (int i = 0; i < _foods.length; i++) {
         if (_foods[i].name
