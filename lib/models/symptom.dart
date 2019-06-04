@@ -1,25 +1,17 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'symptom_type.dart';
 
 part 'symptom.g.dart';
 
-@JsonSerializable()
-class Symptom extends Equatable {
-  SymptomType symptomType;
-  double severity;
+abstract class Symptom implements Built<Symptom, SymptomBuilder> {
+  static Serializer<Symptom> get serializer => _$symptomSerializer;
 
-  Symptom({
-    this.symptomType,
-    this.severity,
-  });
+  SymptomType get symptomType;
+  double get severity;
 
-  factory Symptom.fromJson(Map<String, dynamic> json) =>
-      _$SymptomFromJson(json);
+  Symptom._();
+  factory Symptom([updates(SymptomBuilder b)]) = _$Symptom;
 
-  Map<String, dynamic> toJson() => _$SymptomToJson(this);
-
-  String name() {
-    return this.symptomType.name;
-  }
+  String name() => this.symptomType.name;
 }

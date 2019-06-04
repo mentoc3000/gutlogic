@@ -5,6 +5,7 @@ import 'bowel_movement.dart';
 import 'quantity.dart';
 import 'medicine.dart';
 import 'symptom_type.dart';
+import 'symptom.dart';
 
 part 'serializers.g.dart';
 
@@ -13,6 +14,7 @@ part 'serializers.g.dart';
   Quantity,
   Medicine,
   SymptomType,
+  Symptom,
 ])
 
 final Serializers serializers =
