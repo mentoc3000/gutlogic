@@ -1,21 +1,14 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
 part 'quantity.g.dart';
 
-@JsonSerializable()
-class Quantity extends Equatable {
-  double amount;
-  String unit;
+abstract class Quantity implements Built<Quantity, QuantityBuilder> {
+  static Serializer<Quantity> get serializer => _$quantitySerializer;
 
-  Quantity({this.amount, this.unit});
+  double get amount;
+  String get unit;
 
-  factory Quantity.fromJson(Map<String, dynamic> json) =>
-    _$QuantityFromJson(json);
-
-  Map<String, dynamic> toJson() => _$QuantityToJson(this);  
-
-  String toString() {
-    return amount.toString() + ' ' + unit;
-  }
+  Quantity._();
+  factory Quantity([updates(QuantityBuilder b)]) = _$Quantity;
 }
