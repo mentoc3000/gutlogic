@@ -1,21 +1,16 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'model_interfaces.dart';
 
 part 'medicine.g.dart';
 
-@JsonSerializable()
-class Medicine extends Equatable implements Searchable {
-  String name;
+abstract class Medicine implements Built<Medicine, MedicineBuilder>, Searchable {
+  static Serializer<Medicine> get serializer => _$medicineSerializer;
 
-  Medicine({
-    this.name,
-  });
+  String get name;
 
-  factory Medicine.fromJson(Map<String, dynamic> json) =>
-      _$MedicineFromJson(json);
-
-  Map<String, dynamic> toJson() => _$MedicineToJson(this);
+  Medicine._();
+  factory Medicine([updates(MedicineBuilder b)]) = _$Medicine;
 
   String searchHeading() => name;
 }
