@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/models/quantity.dart';
 import 'package:gut_ai/models/serializers.dart';
 
 void main() {
   group('Quantity', () {
-
     test('constructs simple object', () {
       Quantity quantity = Quantity((b) => b
         ..amount = 3
@@ -22,8 +20,12 @@ void main() {
     });
 
     test('is deserializable', () {
-      const String quantityJson = '{"amount":3.0,"unit":"Cups"}';
-      Quantity quantity = serializers.deserializeWith(Quantity.serializer, json.decode(quantityJson));
+      Map<String, dynamic> quantityJson = {
+        "amount": 3.0,
+        "unit": "Cups",
+      };
+      Quantity quantity =
+          serializers.deserializeWith(Quantity.serializer, quantityJson);
       expect(quantity.amount, 3.0);
       expect(quantity.unit, 'Cups');
     });
@@ -32,7 +34,11 @@ void main() {
       Quantity quantity = Quantity((b) => b
         ..amount = 3
         ..unit = 'Cups');
-      expect(json.encode(serializers.serialize(quantity)), '{"\$":"Quantity","amount":3.0,"unit":"Cups"}');
+      expect(serializers.serialize(quantity), {
+        "\$": "Quantity",
+        "amount": 3.0,
+        "unit": "Cups",
+      });
     });
   });
 }

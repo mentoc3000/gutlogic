@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/models/medicine.dart';
 import 'package:gut_ai/models/serializers.dart';
@@ -16,14 +15,16 @@ void main() {
     });
 
     test('is deserializable', () {
-      const String medicineJson = '{"name":"Pro-8"}';
-      Medicine medicine = serializers.deserializeWith(Medicine.serializer, json.decode(medicineJson));
+      Map<String, dynamic> medicineJson = {"name": "Pro-8"};
+      Medicine medicine =
+          serializers.deserializeWith(Medicine.serializer, medicineJson);
       expect(medicine.name, 'Pro-8');
     });
 
     test('is serializable', () {
       Medicine medicine = Medicine((b) => b..name = 'Pro-8');
-      expect(json.encode(serializers.serialize(medicine)), '{"\$":"Medicine","name":"Pro-8"}');
+      expect(
+          serializers.serialize(medicine), {"\$": "Medicine", "name": "Pro-8"});
     });
 
     test('has a search heading', () {

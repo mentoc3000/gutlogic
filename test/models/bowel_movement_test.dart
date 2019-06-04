@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/models/bowel_movement.dart';
 import 'package:gut_ai/models/serializers.dart';
 
 void main() {
   group('BowelMovement', () {
-
     test('constructs simple object', () {
       BowelMovement bm = BowelMovement((b) => b
         ..type = 3
@@ -22,8 +20,9 @@ void main() {
     });
 
     test('is deserializable', () {
-      const String bmJson = '{"type":3,"volume":4}';
-      BowelMovement bm = serializers.deserializeWith(BowelMovement.serializer, json.decode(bmJson));
+      Map<String, dynamic> bmJson = {"type": 3, "volume": 4};
+      BowelMovement bm =
+          serializers.deserializeWith(BowelMovement.serializer, bmJson);
       expect(bm.type, 3);
       expect(bm.volume, 4);
     });
@@ -32,7 +31,11 @@ void main() {
       BowelMovement bm = BowelMovement((b) => b
         ..type = 3
         ..volume = 4);
-      expect(json.encode(serializers.serialize(bm)), '{"\$":"BowelMovement","type":3,"volume":4}');
+      expect(serializers.serialize(bm), {
+        "\$": "BowelMovement",
+        "type": 3,
+        "volume": 4,
+      });
     });
   });
 }
