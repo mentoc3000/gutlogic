@@ -1,22 +1,16 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:gut_ai/models/model_interfaces.dart';
 
 part 'symptom_type.g.dart';
 
-@JsonSerializable()
-class SymptomType extends Equatable implements Searchable {
+abstract class SymptomType implements Built<SymptomType, SymptomTypeBuilder>, Searchable {
+  static Serializer<SymptomType> get serializer => _$symptomTypeSerializer;
 
-  final String name;
+  String get name;
 
-  SymptomType({this.name});
+  SymptomType._();
+  factory SymptomType([updates(SymptomTypeBuilder b)]) = _$SymptomType;
 
-  factory SymptomType.fromJson(Map<String, dynamic> json) =>
-      _$SymptomTypeFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SymptomTypeToJson(this);
-
-  String searchHeading() {
-    return name;
-  }
+  String searchHeading() => this.name;
 }

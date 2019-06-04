@@ -1,34 +1,34 @@
+import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/models/symptom_type.dart';
+import 'package:gut_ai/models/serializers.dart';
 
 void main() {
   group('SymptomType', () {
-    test('constructs empty object', () {
-      SymptomType symptomType = SymptomType();
-      expect(symptomType.name, null);
-    });
-
     test('constructs simple object', () {
-      SymptomType symptomType = SymptomType(name: 'Gas');
-      expect(symptomType.name, 'Gas');
+      SymptomType symptomType = SymptomType((b) => b..name = 'Pro-8');
+      expect(symptomType.name, 'Pro-8');
     });
 
     test('is equatable', () {
-      final constructSymptomType = () => SymptomType(name: 'Gas');
+      final constructSymptomType = () => SymptomType((b) => b..name = 'Pro-8');
       expect(constructSymptomType(), constructSymptomType());
     });
 
     test('is deserializable', () {
-      const Map<String, dynamic> medicineJson = {
-        'name': 'Gas',
-      };
-      SymptomType symptomType = SymptomType.fromJson(medicineJson);
-      expect(symptomType.name, 'Gas');
+      const String symptomTypeJson = '{"name":"Pro-8"}';
+      SymptomType symptomType = serializers.deserializeWith(SymptomType.serializer, json.decode(symptomTypeJson));
+      expect(symptomType.name, 'Pro-8');
     });
 
     test('is serializable', () {
-      SymptomType symptomType = SymptomType(name: 'Gas');
-      expect(symptomType.toJson(), {'name': 'Gas'});
+      SymptomType symptomType = SymptomType((b) => b..name = 'Pro-8');
+      expect(json.encode(serializers.serialize(symptomType)), '{"\$":"SymptomType","name":"Pro-8"}');
+    });
+
+    test('has a search heading', () {
+      SymptomType symptomType = SymptomType((b) => b..name = 'Pro-8');
+      expect(symptomType.searchHeading(), symptomType.name);
     });
   });
 }

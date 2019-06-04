@@ -4,6 +4,7 @@ import 'package:built_value/standard_json_plugin.dart';
 import 'bowel_movement.dart';
 import 'quantity.dart';
 import 'medicine.dart';
+import 'symptom_type.dart';
 
 part 'serializers.g.dart';
 
@@ -11,6 +12,7 @@ part 'serializers.g.dart';
   BowelMovement,
   Quantity,
   Medicine,
+  SymptomType,
 ])
 
 final Serializers serializers =
