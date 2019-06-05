@@ -1,54 +1,67 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gut_ai/models/serializers.dart';
 import 'package:gut_ai/models/dose.dart';
 import 'package:gut_ai/models/medicine.dart';
 import 'package:gut_ai/models/quantity.dart';
 
 void main() {
   group('Dose', () {
-
     test('constructs simple object', () {
       Medicine medicine = Medicine((b) => b..name = 'Tomato');
-      Quantity quantity = Quantity();
-      Dose dose = Dose(
-        medicine: medicine,
-        quantity: quantity,
-      );
+      Quantity quantity = Quantity((b) => b
+        ..amount = 3.4
+        ..unit = 'Slices');
+      Dose dose = Dose((b) => b
+        ..medicine = medicine.toBuilder()
+        ..quantity = quantity.toBuilder());
       expect(dose.medicine, medicine);
       expect(dose.quantity, quantity);
     });
 
     test('is equatable', () {
-      final constructIngredient = () => Dose(
-            medicine: Medicine(),
-            quantity: Quantity(),
-          );
+      final constructIngredient = () {
+        Medicine medicine = Medicine((b) => b..name = 'Tomato');
+        Quantity quantity = Quantity((b) => b
+          ..amount = 3.4
+          ..unit = 'Slices');
+        Dose dose = Dose((b) => b
+          ..medicine = medicine.toBuilder()
+          ..quantity = quantity.toBuilder());
+        return dose;
+      };
       expect(constructIngredient(), constructIngredient());
     });
 
     test('is deserializable', () {
-      Medicine medicine = Medicine(name: 'Pro-8');
-      Quantity quantity = Quantity(amount: 3, unit: 'Pills');
-      Map<String, dynamic> ingredientJson = {
-        'medicine': medicine.toJson(),
-        'quantity': quantity.toJson(),
+      Medicine medicine = Medicine((b) => b..name = 'Tomato');
+      Quantity quantity = Quantity((b) => b
+        ..amount = 3.4
+        ..unit = 'Slices');
+      Map<String, dynamic> medicineJson = serializers.serialize(medicine);
+      Map<String, dynamic> quantityJson = serializers.serialize(quantity);
+      Map<String, dynamic> doseJson = {
+        'medicine': medicineJson..remove('\$'),
+        'quantity': quantityJson..remove('\$'),
       };
-      Dose dose = Dose.fromJson(ingredientJson);
+      Dose dose = serializers.deserializeWith(Dose.serializer, doseJson);
       expect(dose.medicine, medicine);
       expect(dose.quantity, quantity);
     });
 
     test('is serializable', () {
-      Quantity quantity = Quantity(amount: 1.2);
-      Medicine medicine = Medicine(
-        name: 'Garlic',
-      );
-      Dose dose = Dose(
-            medicine: medicine,
-            quantity: quantity,
-          );
-      expect(dose.toJson(), {
-        'medicine': medicine.toJson(),
-        'quantity': quantity.toJson(),
+      Medicine medicine = Medicine((b) => b..name = 'Tomato');
+      Quantity quantity = Quantity((b) => b
+        ..amount = 3.4
+        ..unit = 'Slices');
+      Dose dose = Dose((b) => b
+        ..medicine = medicine.toBuilder()
+        ..quantity = quantity.toBuilder());
+      Map<String, dynamic> medicineJson = serializers.serialize(medicine);
+      Map<String, dynamic> quantityJson = serializers.serialize(quantity);
+      expect(serializers.serialize(dose), {
+        '\$': 'Dose',
+        'medicine': medicineJson..remove('\$'),
+        'quantity': quantityJson..remove('\$'),
       });
     });
   });

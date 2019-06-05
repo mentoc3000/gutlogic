@@ -10,6 +10,7 @@ import 'meal.dart';
 import 'ingredient.dart';
 import 'irritant.dart';
 import 'food.dart';
+import 'dose.dart';
 
 part 'serializers.g.dart';
 
@@ -23,6 +24,7 @@ part 'serializers.g.dart';
   Ingredient,
   Irritant,
   Food,
+  Dose,
 ])
 
 final Serializers serializers =
