@@ -1,22 +1,17 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/serializer.dart';
 import 'ingredient.dart';
 
 part 'meal.g.dart';
 
-@JsonSerializable()
-class Meal extends Equatable {
-  String name;
+abstract class Meal implements Built<Meal, MealBuilder> {
+  static Serializer<Meal> get serializer => _$mealSerializer;
 
-  @JsonKey(fromJson: ingredientsFromJson)
-  List<Ingredient> ingredients;
+  String get name;
 
-  Meal({this.name, List<Ingredient> ingredients}) {
-    this.ingredients = ingredients ?? [];
-  }
+  BuiltList<Ingredient> get ingredients;
 
-  factory Meal.fromJson(Map<String, dynamic> json) =>
-      _$MealFromJson(json);
-
-  Map<String, dynamic> toJson() => _$MealToJson(this);
+  Meal._();
+  factory Meal([updates(MealBuilder b)]) = _$Meal;
 }

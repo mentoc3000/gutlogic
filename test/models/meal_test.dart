@@ -5,11 +5,6 @@ import 'package:gut_ai/models/food.dart';
 
 void main() {
   group('Meal', () {
-    test('constructs empty object', () {
-      Meal meal = Meal();
-      expect(meal.name, null);
-      expect(meal.ingredients, []);
-    });
 
     test('constructs simple object', () {
       String name = 'meal name';

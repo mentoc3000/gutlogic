@@ -5,11 +5,6 @@ import 'package:gut_ai/models/quantity.dart';
 
 void main() {
   group('Ingredient', () {
-    test('constructs empty object', () {
-      Ingredient ingredient = Ingredient();
-      expect(ingredient.food, null);
-      expect(ingredient.quantity, null);
-    });
 
     test('constructs simple object', () {
       Food food = Food();

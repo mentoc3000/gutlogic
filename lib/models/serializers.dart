@@ -6,6 +6,8 @@ import 'quantity.dart';
 import 'medicine.dart';
 import 'symptom_type.dart';
 import 'symptom.dart';
+import 'meal.dart';
+import 'ingredient.dart';
 
 part 'serializers.g.dart';
 
@@ -15,6 +17,8 @@ part 'serializers.g.dart';
   Medicine,
   SymptomType,
   Symptom,
+  Meal,
+  Ingredient,
 ])
 
 final Serializers serializers =
