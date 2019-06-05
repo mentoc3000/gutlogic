@@ -8,8 +8,6 @@ part 'meal.g.dart';
 abstract class Meal implements Built<Meal, MealBuilder> {
   static Serializer<Meal> get serializer => _$mealSerializer;
 
-  String get name;
-
   BuiltList<Ingredient> get ingredients;
 
   Meal._();

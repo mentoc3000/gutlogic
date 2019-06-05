@@ -1,51 +1,69 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:gut_ai/models/meal.dart';
 import 'package:gut_ai/models/ingredient.dart';
-import 'package:gut_ai/models/food.dart';
+import 'package:gut_ai/models/serializers.dart';
 
 void main() {
   group('Meal', () {
-
     test('constructs simple object', () {
-      String name = 'meal name';
-      List<Ingredient> ingredients = [Ingredient()];
-      Meal meal = Meal(
-        name: name,
-        ingredients: ingredients,
-      );
-      expect(meal.name, name);
+      BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([
+        Ingredient((b) => b
+          ..food.name = 'Fructan'
+          ..quantity.amount = 1.2
+          ..quantity.unit = 'slices'),
+      ]);
+      Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
+      expect(meal.ingredients, ingredients);
+    });
+
+    test('constructs with empty ingredient list', () {
+      BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([]);
+      Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
       expect(meal.ingredients, ingredients);
     });
 
     test('is equatable', () {
-      final constructMeal = () => Meal(
-            name: 'meal name',
-            ingredients: [Ingredient()],
-          );
-      expect(constructMeal(), constructMeal());
+      final constructFood = () {
+        BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([
+          Ingredient((b) => b
+            ..food.name = 'Fructan'
+            ..quantity.amount = 1.2
+            ..quantity.unit = 'slices'),
+        ]);
+        Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
+        return meal;
+      };
+      expect(constructFood(), constructFood());
     });
 
     test('is deserializable', () {
-      String name = 'Breakfast';
-      List<Ingredient> ingredients = [Ingredient(food: Food(name: 'Banana'))];
-      Map<String, dynamic> mealJson = {
-        'name': name,
-        'ingredients': ingredients.map((i) => i.toJson()).toList(),
+      Map<String, dynamic> foodJson = {
+        'ingredients': [
+          {
+            'food': {'name': 'Bread'},
+            'quantity': {'amount': 1.2, 'unit': 'Slices'},
+          },
+        ],
       };
-      Meal meal = Meal.fromJson(mealJson);
-      expect(meal.name, name);
-      expect(meal.ingredients, ingredients);
+      Meal meal = serializers.deserializeWith(Meal.serializer, foodJson);
+      expect(meal.ingredients[0].food.name, 'Bread');
     });
 
     test('is serializable', () {
-      Ingredient ingredient = Ingredient(food: Food(name: 'Pizza'));
-      Meal meal = Meal(
-        name: 'Breakfast',
-        ingredients: [ingredient],
-      );
-      expect(meal.toJson(), {
-        'name': 'Breakfast',
-        'ingredients': [ingredient.toJson()],
+      BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([
+        Ingredient((b) => b
+          ..food.name = 'Fructan'
+          ..quantity.amount = 1.2
+          ..quantity.unit = 'slices'),
+      ]);
+      Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
+      expect(serializers.serialize(meal), {
+        '\$': 'Meal',
+        'ingredients': ingredients.map((i) {
+          Map<String, dynamic> irritantJson = serializers.serialize(i);
+          return irritantJson..remove('\$');
+        }).toList(),
       });
     });
   });
