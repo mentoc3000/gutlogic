@@ -38,7 +38,7 @@ void main() {
     });
 
     test('is deserializable', () {
-      Map<String, dynamic> foodJson = {
+      Map<String, dynamic> mealJson = {
         'ingredients': [
           {
             'food': {'name': 'Bread'},
@@ -46,7 +46,7 @@ void main() {
           },
         ],
       };
-      Meal meal = serializers.deserializeWith(Meal.serializer, foodJson);
+      Meal meal = serializers.deserializeWith(Meal.serializer, mealJson);
       expect(meal.ingredients[0].food.name, 'Bread');
     });
 

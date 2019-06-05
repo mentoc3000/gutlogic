@@ -1,22 +1,16 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'quantity.dart';
 import 'medicine.dart';
 
 part 'dose.g.dart';
 
-@JsonSerializable()
-class Dose extends Equatable {
-  Medicine medicine;
-  Quantity quantity;
+abstract class Dose implements Built<Dose, DoseBuilder> {
+  static Serializer<Dose> get serializer => _$doseSerializer;
 
-  Dose({this.medicine, this.quantity});
+  Medicine get medicine;
+  Quantity get quantity;
 
-  factory Dose.fromJson(Map<String, dynamic> json) => _$DoseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DoseToJson(this);
-}
-
-List<Dose> dosesFromJson(List<Map<String, dynamic>> json) {
-  return json?.map((i) => Dose.fromJson(i))?.toList() ?? [];
+  Dose._();
+  factory Dose([updates(DoseBuilder b)]) = _$Dose;
 }
