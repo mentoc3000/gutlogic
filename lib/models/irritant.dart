@@ -1,24 +1,16 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'model_interfaces.dart';
 
 part 'irritant.g.dart';
 
-@JsonSerializable()
-class Irritant extends Equatable implements Searchable{
-  String name;
+abstract class Irritant implements Built<Irritant, IrritantBuilder>, Searchable {
+  static Serializer<Irritant> get serializer => _$irritantSerializer;
 
-  Irritant({this.name});
+  String get name;
 
-  factory Irritant.fromJson(Map<String, dynamic> json) =>
-      _$IrritantFromJson(json);
-
-  Map<String, dynamic> toJson() => _$IrritantToJson(this);
+  Irritant._();
+  factory Irritant([updates(IrritantBuilder b)]) = _$Irritant;
 
   String searchHeading() => name;
-}
-
-
-List<Irritant> irritantsFromJson(List<Map<String, dynamic>> json) {
-  return json?.map((i) => Irritant.fromJson(i))?.toList() ?? [];
 }

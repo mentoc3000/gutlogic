@@ -1,34 +1,35 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gut_ai/models/irritant.dart';
+import 'package:gut_ai/models/serializers.dart';
 
 void main() {
   group('Irritant', () {
-    test('constructs empty object', () {
-      Irritant irritant = Irritant();
-      expect(irritant.name, null);
-    });
-
     test('constructs simple object', () {
-      Irritant irritant = Irritant(name: 'Fructan');
+      Irritant irritant = Irritant((b) => b..name = 'Fructan');
       expect(irritant.name, 'Fructan');
     });
 
     test('is equatable', () {
-      final constructIrritant = () => Irritant(name: 'Fructan');
-      expect(constructIrritant(), constructIrritant());
+      final constructMedicine = () => Irritant((b) => b..name = 'Fructan');
+      expect(constructMedicine(), constructMedicine());
     });
 
     test('is deserializable', () {
-      const Map<String, dynamic> irritantJson = {
-        'name': 'Fructan',
-      };
-      Irritant irritant = Irritant.fromJson(irritantJson);
+      Map<String, dynamic> irritantJson = {"name": "Fructan"};
+      Irritant irritant =
+          serializers.deserializeWith(Irritant.serializer, irritantJson);
       expect(irritant.name, 'Fructan');
     });
 
     test('is serializable', () {
-      Irritant irritant = Irritant(name: 'Fructan');
-      expect(irritant.toJson(), {'name': 'Fructan'});
+      Irritant irritant = Irritant((b) => b..name = 'Fructan');
+      expect(
+          serializers.serialize(irritant), {"\$": "Irritant", "name": "Fructan"});
+    });
+
+    test('has a search heading', () {
+      Irritant irritant = Irritant((b) => b..name = 'Fructan');
+      expect(irritant.searchHeading(), irritant.name);
     });
   });
 }
