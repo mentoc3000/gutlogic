@@ -39,8 +39,9 @@ void main() {
         ..severity = 2.1);
       Map<String, dynamic> symptomTypeJson = serializers.serialize(symptomType);
       expect(serializers.serialize(symptom), {
-        'symptomType': symptomTypeJson,
-        'severity': 3,
+        "\$": "Symptom",
+        'symptomType': symptomTypeJson..remove('\$'),
+        'severity': symptom.severity,
       });
     });
 
