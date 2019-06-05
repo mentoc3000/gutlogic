@@ -7,7 +7,7 @@ void main() {
   group('Ingredient', () {
 
     test('constructs simple object', () {
-      Food food = Food();
+      Food food = Food((b) => b..name = 'Tomato');
       Quantity quantity = Quantity();
       Ingredient ingredient = Ingredient(
         food: food,

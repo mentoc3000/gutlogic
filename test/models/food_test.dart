@@ -1,62 +1,79 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:gut_ai/models/food.dart';
 import 'package:gut_ai/models/irritant.dart';
+import 'package:gut_ai/models/serializers.dart';
 
 void main() {
   group('Food', () {
-    test('constructs empty object', () {
-      Food food = Food();
-      expect(food.name, null);
-      expect(food.irritants, []);
-    });
-
     test('constructs simple object', () {
-      const name = 'Bread';
-      final List<Irritant> irritants = [
-        Irritant(name: 'Fructan'),
-        Irritant(name: 'Manitol')
-      ];
-      Food food = Food(name: name, irritants: irritants);
-      expect(food.name, name);
+      BuiltList<Irritant> irritants = BuiltList<Irritant>([
+        Irritant((b) => b..name = 'Fructan'),
+        Irritant((b) => b..name = 'Fructose'),
+      ]);
+      Food food = Food((b) => b
+        ..name = 'Bread'
+        ..irritants = irritants.toBuilder());
+      expect(food.name, 'Bread');
       expect(food.irritants, irritants);
     });
 
     test('constructs with empty irritant list', () {
-      const name = 'Bread';
-      Food food = Food(name: name, irritants: []);
-      expect(food.name, name);
-      expect(food.irritants, []);
+      BuiltList<Irritant> irritants = BuiltList<Irritant>([]);
+      Food food = Food((b) => b
+        ..name = 'Bread'
+        ..irritants = irritants.toBuilder());
+      expect(food.name, 'Bread');
+      expect(food.irritants, irritants);
     });
 
     test('is equatable', () {
-      final constructFood = () => Food(
-            name: 'Orange Juice',
-            irritants: [Irritant(name: 'Fructose')],
-          );
+      final constructFood = () {
+        BuiltList<Irritant> irritants = BuiltList<Irritant>([
+          Irritant((b) => b..name = 'Fructan'),
+          Irritant((b) => b..name = 'Fructose'),
+        ]);
+        Food food = Food((b) => b
+          ..name = 'Bread'
+          ..irritants = irritants.toBuilder());
+        return food;
+      };
       expect(constructFood(), constructFood());
     });
 
     test('is deserializable', () {
-      Irritant irritant = Irritant(name: 'Fructan');
       Map<String, dynamic> foodJson = {
         'name': 'Pizza',
-        'irritants': [irritant.toJson()],
+        'irritants': [
+          {'name': 'Bread'},
+        ],
       };
-      Food food = Food.fromJson(foodJson);
+      Food food = serializers.deserializeWith(Food.serializer, foodJson);
       expect(food.name, foodJson['name']);
-      expect(food.irritants, [irritant]);
+      expect(food.irritants[0].name, 'Bread');
     });
 
     test('is serializable', () {
-      Irritant irritant = Irritant(name: 'Fructan');
-      Food food = Food(
-        name: 'Garlic',
-        irritants: [irritant],
-      );
-      expect(food.toJson(), {
-        'name': 'Garlic',
-        'irritants': [irritant.toJson()],
+      BuiltList<Irritant> irritants = BuiltList<Irritant>([
+        Irritant((b) => b..name = 'Fructan'),
+        Irritant((b) => b..name = 'Fructose'),
+      ]);
+      Food food = Food((b) => b
+        ..name = 'Bread'
+        ..irritants = irritants.toBuilder());
+      expect(serializers.serialize(food), {
+        '\$': 'Food',
+        'name': food.name,
+        'irritants': irritants.map((i) {
+          Map<String, dynamic> irritantJson = serializers.serialize(i);
+          return irritantJson..remove('\$');
+        }).toList(),
       });
+    });
+
+    test('has a search heading', () {
+      Food food = Food((b) => b..name = 'Bread');
+      expect(food.searchHeading(), food.name);
     });
   });
 }

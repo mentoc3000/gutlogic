@@ -1,24 +1,19 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/serializer.dart';
 import 'model_interfaces.dart';
 import 'irritant.dart';
 
 part 'food.g.dart';
 
-@JsonSerializable()
-class Food extends Equatable implements Searchable {
-  String name;
+abstract class Food implements Built<Food, FoodBuilder>, Searchable {
+  static Serializer<Food> get serializer => _$foodSerializer;
 
-  @JsonKey(fromJson: irritantsFromJson)
-  List<Irritant> irritants;
+  String get name;
+  BuiltList<Irritant> get irritants;
 
-  Food({this.name, irritants}) {
-    this.irritants = irritants?.cast<Irritant>() ?? [];
-  }
-
-  factory Food.fromJson(Map<String, dynamic> json) => _$FoodFromJson(json);
-
-  Map<String, dynamic> toJson() => _$FoodToJson(this);
+  Food._();
+  factory Food([updates(FoodBuilder b)]) = _$Food;
 
   String searchHeading() => name;
 }
