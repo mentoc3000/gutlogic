@@ -1,5 +1,7 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/serializer.dart';
+import 'package:gut_ai/models/symptom_type.dart';
 import 'bowel_movement.dart';
 import 'symptom.dart';
 import 'meal.dart';
@@ -7,100 +9,78 @@ import 'dose.dart';
 
 part 'diary_entry.g.dart';
 
-class DiaryEntry extends Equatable {
-  DateTime dateTime;
-  String notes;
-
-  DiaryEntry({this.dateTime, String notes}){
-    this.notes = notes ?? '';
-  }
+abstract class DiaryEntry {
+  DateTime get dateTime;
+  String get notes;
 }
 
-@JsonSerializable()
-class MealEntry extends DiaryEntry {
-  Meal meal;
+abstract class MealEntry
+    implements Built<MealEntry, MealEntryBuilder>, DiaryEntry {
+  static Serializer<MealEntry> get serializer => _$mealEntrySerializer;
 
-  MealEntry({
-    DateTime dateTime,
-    Meal meal,
-    String notes,
-  }) : super(
-          dateTime: dateTime,
-          notes: notes,
-        ) {
-    this.meal = meal ?? Meal();
-  }
+  DateTime get dateTime;
+  String get notes;
+  Meal get meal;
 
-  factory MealEntry.newEntry() {
-    return MealEntry(dateTime: DateTime.now(), meal: Meal(name: 'Meal'));
-  }
+  MealEntry._();
+  factory MealEntry([updates(MealEntryBuilder b)]) = _$MealEntry;
 
-  factory MealEntry.fromJson(Map<String, dynamic> json) =>
-      _$MealEntryFromJson(json);
-
-  Map<String, dynamic> toJson() => _$MealEntryToJson(this);
+  factory MealEntry.newEntry() => MealEntry((b) => b
+    ..dateTime = DateTime.now()
+    ..meal = Meal.empty().toBuilder()
+    ..notes = '');
 }
 
-@JsonSerializable()
-class BowelMovementEntry extends DiaryEntry {
-  BowelMovement bowelMovement;
+abstract class BowelMovementEntry
+    implements
+        Built<BowelMovementEntry, BowelMovementEntryBuilder>,
+        DiaryEntry {
+  static Serializer<BowelMovementEntry> get serializer =>
+      _$bowelMovementEntrySerializer;
 
-  BowelMovementEntry({
-    DateTime dateTime,
-    BowelMovement bowelMovement,
-    String notes,
-  }) : super(
-          dateTime: dateTime,
-          notes: notes,
-        ) {
-    this.bowelMovement = bowelMovement ?? BowelMovement();
-  }
+  DateTime get dateTime;
+  String get notes;
+  BowelMovement get bowelMovement;
 
-  factory BowelMovementEntry.fromJson(Map<String, dynamic> json) =>
-      _$BowelMovementEntryFromJson(json);
+  BowelMovementEntry._();
+  factory BowelMovementEntry([updates(BowelMovementEntryBuilder b)]) =
+      _$BowelMovementEntry;
 
-  Map<String, dynamic> toJson() => _$BowelMovementEntryToJson(this);
+  factory BowelMovementEntry.newEntry() => BowelMovementEntry((b) => b
+    ..dateTime = DateTime.now()
+    ..bowelMovement = BowelMovement.startingValue().toBuilder()
+    ..notes = '');
 }
 
-@JsonSerializable()
-class DosesEntry extends DiaryEntry {
-  @JsonKey(fromJson: dosesFromJson)
-  List<Dose> doses;
+abstract class DosesEntry implements Built<DosesEntry, DosesEntryBuilder> {
+  static Serializer<DosesEntry> get serializer => _$dosesEntrySerializer;
 
-  DosesEntry({
-    DateTime dateTime,
-    List<Dose> doses,
-    String notes,
-  }) : super(
-          dateTime: dateTime,
-          notes: notes,
-        ) {
-    this.doses = doses?.cast<Dose>() ?? [];
-  }
+  DateTime get dateTime;
+  String get notes;
+  BuiltList<Dose> get doses;
 
-  factory DosesEntry.fromJson(Map<String, dynamic> json) =>
-      _$DosesEntryFromJson(json);
+  DosesEntry._();
+  factory DosesEntry([updates(DosesEntryBuilder b)]) = _$DosesEntry;
 
-  Map<String, dynamic> toJson() => _$DosesEntryToJson(this);
+  factory DosesEntry.newEntry() => DosesEntry((b) => b
+    ..dateTime = DateTime.now()
+    ..doses = BuiltList<Dose>([]).toBuilder()
+    ..notes = '');
 }
 
-@JsonSerializable()
-class SymptomEntry extends DiaryEntry {
-  Symptom symptom;
+abstract class SymptomEntry implements Built<SymptomEntry, SymptomEntryBuilder> {
+  static Serializer<SymptomEntry> get serializer => _$symptomEntrySerializer;
 
-  SymptomEntry({
-    DateTime dateTime,
-    Symptom symptom,
-    String notes,
-  }) : super(
-          dateTime: dateTime,
-          notes: notes,
-        ) {
-    this.symptom = symptom ?? Symptom();
-  }
+  DateTime get dateTime;
+  String get notes;
+  Symptom get symptom;
 
-  factory SymptomEntry.fromJson(Map<String, dynamic> json) =>
-      _$SymptomEntryFromJson(json);
+  SymptomEntry._();
+  factory SymptomEntry([updates(SymptomEntryBuilder b)]) = _$SymptomEntry;
 
-  Map<String, dynamic> toJson() => _$SymptomEntryToJson(this);
+  factory SymptomEntry.newEntry() => SymptomEntry((b) => b
+    ..dateTime = DateTime.now()
+    ..symptom.symptomType = SymptomType((b) => b.name = '').toBuilder()
+    ..symptom.severity = 5
+    ..notes = '');
 }

@@ -11,6 +11,7 @@ import 'ingredient.dart';
 import 'irritant.dart';
 import 'food.dart';
 import 'dose.dart';
+import 'diary_entry.dart';
 
 part 'serializers.g.dart';
 
@@ -25,6 +26,10 @@ part 'serializers.g.dart';
   Irritant,
   Food,
   Dose,
+  MealEntry,
+  BowelMovementEntry,
+  DosesEntry,
+  SymptomEntry
 ])
 
 final Serializers serializers =
