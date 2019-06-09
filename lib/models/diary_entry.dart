@@ -68,7 +68,8 @@ abstract class DosesEntry implements Built<DosesEntry, DosesEntryBuilder> {
     ..notes = '');
 }
 
-abstract class SymptomEntry implements Built<SymptomEntry, SymptomEntryBuilder> {
+abstract class SymptomEntry
+    implements Built<SymptomEntry, SymptomEntryBuilder> {
   static Serializer<SymptomEntry> get serializer => _$symptomEntrySerializer;
 
   DateTime get dateTime;
