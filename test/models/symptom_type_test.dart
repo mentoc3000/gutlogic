@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:gut_ai/models/symptom_type.dart';
 import 'package:gut_ai/models/serializers.dart';
 

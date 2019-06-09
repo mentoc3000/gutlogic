@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:gut_ai/resources/food_repository.dart';
 import 'package:gut_ai/resources/app_sync_service.dart';

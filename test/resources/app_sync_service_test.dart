@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'user_service_stub.dart';
 import 'package:gut_ai/resources/app_sync_service.dart';
 import 'dart:convert';

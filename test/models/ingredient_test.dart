@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:gut_ai/models/serializers.dart';
 import 'package:gut_ai/models/ingredient.dart';
 import 'package:gut_ai/models/food.dart';
