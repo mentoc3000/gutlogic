@@ -11,7 +11,8 @@ abstract class Meal implements Built<Meal, MealBuilder> {
   BuiltList<Ingredient> get ingredients;
 
   Meal._();
-  factory Meal([updates(MealBuilder b)]) = _$Meal;
-  factory Meal.empty() =>
-      Meal((b) => b..ingredients = BuiltList<Ingredient>([]).toBuilder());
+  factory Meal({BuiltList<Ingredient> ingredients}) = _$Meal._;
+  factory Meal.fromBuilder([updates(MealBuilder b)]) = _$Meal;
+  factory Meal.empty() => Meal.fromBuilder(
+      (b) => b..ingredients = BuiltList<Ingredient>([]).toBuilder());
 }

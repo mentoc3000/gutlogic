@@ -13,13 +13,13 @@ void main() {
           ..quantity.amount = 1.2
           ..quantity.unit = 'slices'),
       ]);
-      Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
+      Meal meal = Meal(ingredients: ingredients);
       expect(meal.ingredients, ingredients);
     });
 
     test('constructs with empty ingredient list', () {
       BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([]);
-      Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
+      Meal meal = Meal.fromBuilder((b) => b..ingredients = ingredients.toBuilder());
       expect(meal.ingredients, ingredients);
     });
 
@@ -31,7 +31,7 @@ void main() {
             ..quantity.amount = 1.2
             ..quantity.unit = 'slices'),
         ]);
-        Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
+        Meal meal = Meal.fromBuilder((b) => b..ingredients = ingredients.toBuilder());
         return meal;
       };
       expect(constructFood(), constructFood());
@@ -57,7 +57,7 @@ void main() {
           ..quantity.amount = 1.2
           ..quantity.unit = 'slices'),
       ]);
-      Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
+      Meal meal = Meal.fromBuilder((b) => b..ingredients = ingredients.toBuilder());
       expect(serializers.serialize(meal), {
         '\$': 'Meal',
         'ingredients': ingredients.map((i) {

@@ -23,9 +23,9 @@ void main() {
           ..quantity.amount = 1.2
           ..quantity.unit = 'slices'),
       ]);
-      Meal meal = Meal((b) => b..ingredients = ingredients.toBuilder());
+      Meal meal = Meal.fromBuilder((b) => b..ingredients = ingredients.toBuilder());
       Map<String,dynamic> mealJson = serializers.serialize(meal);
-      MealEntry mealEntry = MealEntry((b) => b
+      MealEntry mealEntry = MealEntry.fromBuilder((b) => b
         ..dateTime = dateTime
         ..meal = meal.toBuilder()
         ..notes = 'Tasty!');
