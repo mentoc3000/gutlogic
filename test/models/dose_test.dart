@@ -8,7 +8,7 @@ void main() {
   group('Dose', () {
     test('constructs simple object', () {
       Medicine medicine = Medicine((b) => b..name = 'Tomato');
-      Quantity quantity = Quantity((b) => b
+      Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
       Dose dose = Dose((b) => b
@@ -21,7 +21,7 @@ void main() {
     test('is equatable', () {
       final constructIngredient = () {
         Medicine medicine = Medicine((b) => b..name = 'Tomato');
-        Quantity quantity = Quantity((b) => b
+        Quantity quantity = Quantity.fromBuilder((b) => b
           ..amount = 3.4
           ..unit = 'Slices');
         Dose dose = Dose((b) => b
@@ -34,7 +34,7 @@ void main() {
 
     test('is deserializable', () {
       Medicine medicine = Medicine((b) => b..name = 'Tomato');
-      Quantity quantity = Quantity((b) => b
+      Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
       Map<String, dynamic> medicineJson = serializers.serialize(medicine);
@@ -50,7 +50,7 @@ void main() {
 
     test('is serializable', () {
       Medicine medicine = Medicine((b) => b..name = 'Tomato');
-      Quantity quantity = Quantity((b) => b
+      Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
       Dose dose = Dose((b) => b

@@ -10,5 +10,6 @@ abstract class Quantity implements Built<Quantity, QuantityBuilder> {
   String get unit;
 
   Quantity._();
-  factory Quantity([updates(QuantityBuilder b)]) = _$Quantity;
+  factory Quantity({double amount, String unit}) = _$Quantity._;
+  factory Quantity.fromBuilder([updates(QuantityBuilder b)]) = _$Quantity;
 }
