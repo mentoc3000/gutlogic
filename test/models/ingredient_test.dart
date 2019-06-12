@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:test/test.dart';
 import 'package:gut_ai/models/serializers.dart';
 import 'package:gut_ai/models/ingredient.dart';
@@ -7,7 +8,7 @@ import 'package:gut_ai/models/quantity.dart';
 void main() {
   group('Ingredient', () {
     test('constructs simple object', () {
-      Food food = Food(name: 'Tomato');
+      Food food = Food(name: 'Tomato', irritants: BuiltList([]));
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
@@ -18,7 +19,7 @@ void main() {
 
     test('is equatable', () {
       final constructIngredient = () {
-        Food food = Food(name: 'Tomato');
+        Food food = Food(name: 'Tomato', irritants: BuiltList([]));
         Quantity quantity = Quantity.fromBuilder((b) => b
           ..amount = 3.4
           ..unit = 'Slices');
@@ -31,7 +32,7 @@ void main() {
     });
 
     test('is deserializable', () {
-      Food food = Food(name: 'Tomato');
+      Food food = Food(name: 'Tomato', irritants: BuiltList([]));
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
@@ -47,7 +48,7 @@ void main() {
     });
 
     test('is serializable', () {
-      Food food = Food(name: 'Tomato');
+      Food food = Food(name: 'Tomato', irritants: BuiltList([]));
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
