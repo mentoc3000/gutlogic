@@ -12,5 +12,6 @@ abstract class Dose implements Built<Dose, DoseBuilder> {
   Quantity get quantity;
 
   Dose._();
-  factory Dose([updates(DoseBuilder b)]) = _$Dose;
+  factory Dose({Medicine medicine, Quantity quantity}) = _$Dose._;
+  factory Dose.fromBuilder([updates(DoseBuilder b)]) = _$Dose;
 }

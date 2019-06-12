@@ -11,9 +11,7 @@ void main() {
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
-      Dose dose = Dose((b) => b
-        ..medicine = medicine.toBuilder()
-        ..quantity = quantity.toBuilder());
+      Dose dose = Dose(medicine: medicine, quantity: quantity);
       expect(dose.medicine, medicine);
       expect(dose.quantity, quantity);
     });
@@ -24,7 +22,7 @@ void main() {
         Quantity quantity = Quantity.fromBuilder((b) => b
           ..amount = 3.4
           ..unit = 'Slices');
-        Dose dose = Dose((b) => b
+        Dose dose = Dose.fromBuilder((b) => b
           ..medicine = medicine.toBuilder()
           ..quantity = quantity.toBuilder());
         return dose;
@@ -53,7 +51,7 @@ void main() {
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
-      Dose dose = Dose((b) => b
+      Dose dose = Dose.fromBuilder((b) => b
         ..medicine = medicine.toBuilder()
         ..quantity = quantity.toBuilder());
       Map<String, dynamic> medicineJson = serializers.serialize(medicine);
