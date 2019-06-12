@@ -5,12 +5,12 @@ import 'package:gut_ai/models/serializers.dart';
 void main() {
   group('Irritant', () {
     test('constructs simple object', () {
-      Irritant irritant = Irritant((b) => b..name = 'Fructan');
+      Irritant irritant = Irritant(name: 'Fructan');
       expect(irritant.name, 'Fructan');
     });
 
     test('is equatable', () {
-      final constructMedicine = () => Irritant((b) => b..name = 'Fructan');
+      final constructMedicine = () => Irritant.fromBuilder((b) => b..name = 'Fructan');
       expect(constructMedicine(), constructMedicine());
     });
 
@@ -22,13 +22,13 @@ void main() {
     });
 
     test('is serializable', () {
-      Irritant irritant = Irritant((b) => b..name = 'Fructan');
+      Irritant irritant = Irritant.fromBuilder((b) => b..name = 'Fructan');
       expect(
           serializers.serialize(irritant), {"\$": "Irritant", "name": "Fructan"});
     });
 
     test('has a search heading', () {
-      Irritant irritant = Irritant((b) => b..name = 'Fructan');
+      Irritant irritant = Irritant.fromBuilder((b) => b..name = 'Fructan');
       expect(irritant.searchHeading(), irritant.name);
     });
   });

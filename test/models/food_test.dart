@@ -8,8 +8,8 @@ void main() {
   group('Food', () {
     test('constructs simple object', () {
       BuiltList<Irritant> irritants = BuiltList<Irritant>([
-        Irritant((b) => b..name = 'Fructan'),
-        Irritant((b) => b..name = 'Fructose'),
+        Irritant.fromBuilder((b) => b..name = 'Fructan'),
+        Irritant.fromBuilder((b) => b..name = 'Fructose'),
       ]);
       Food food = Food(name: 'Bread', irritants: irritants);
       expect(food.name, 'Bread');
@@ -28,8 +28,8 @@ void main() {
     test('is equatable', () {
       final constructFood = () {
         BuiltList<Irritant> irritants = BuiltList<Irritant>([
-          Irritant((b) => b..name = 'Fructan'),
-          Irritant((b) => b..name = 'Fructose'),
+          Irritant.fromBuilder((b) => b..name = 'Fructan'),
+          Irritant.fromBuilder((b) => b..name = 'Fructose'),
         ]);
         Food food = Food.fromBuilder((b) => b
           ..name = 'Bread'
@@ -53,8 +53,8 @@ void main() {
 
     test('is serializable', () {
       BuiltList<Irritant> irritants = BuiltList<Irritant>([
-        Irritant((b) => b..name = 'Fructan'),
-        Irritant((b) => b..name = 'Fructose'),
+        Irritant.fromBuilder((b) => b..name = 'Fructan'),
+        Irritant.fromBuilder((b) => b..name = 'Fructose'),
       ]);
       Food food = Food.fromBuilder((b) => b
         ..name = 'Bread'

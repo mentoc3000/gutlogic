@@ -10,7 +10,8 @@ abstract class Irritant implements Built<Irritant, IrritantBuilder>, Searchable 
   String get name;
 
   Irritant._();
-  factory Irritant([updates(IrritantBuilder b)]) = _$Irritant;
+  factory Irritant({String name}) = _$Irritant._;
+  factory Irritant.fromBuilder([updates(IrritantBuilder b)]) = _$Irritant;
 
   String searchHeading() => name;
 }
