@@ -10,7 +10,8 @@ abstract class SymptomType implements Built<SymptomType, SymptomTypeBuilder>, Se
   String get name;
 
   SymptomType._();
-  factory SymptomType([updates(SymptomTypeBuilder b)]) = _$SymptomType;
+  factory SymptomType({String name}) = _$SymptomType._;
+  factory SymptomType.fromBuilder([updates(SymptomTypeBuilder b)]) = _$SymptomType;
 
   String searchHeading() => this.name;
 }

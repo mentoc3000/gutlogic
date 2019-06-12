@@ -6,7 +6,7 @@ import 'package:gut_ai/models/serializers.dart';
 void main() {
   group('Symptom', () {
     test('constructs simple object', () {
-      SymptomType symptomType = SymptomType((b) => b..name = 'Gas');
+      SymptomType symptomType = SymptomType.fromBuilder((b) => b..name = 'Gas');
       Symptom symptom = Symptom((b) => b
         ..symptomType = symptomType.toBuilder()
         ..severity = 2.1);
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('is serializable', () {
-      SymptomType symptomType = SymptomType((b) => b..name = 'Gas');
+      SymptomType symptomType = SymptomType.fromBuilder((b) => b..name = 'Gas');
       Symptom symptom = Symptom((b) => b
         ..symptomType = symptomType.toBuilder()
         ..severity = 2.1);
