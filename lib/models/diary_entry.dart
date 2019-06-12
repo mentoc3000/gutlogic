@@ -19,13 +19,15 @@ abstract class MealEntry
   static Serializer<MealEntry> get serializer => _$mealEntrySerializer;
 
   DateTime get dateTime;
-  String get notes;
   Meal get meal;
+  String get notes;
 
   MealEntry._();
-  factory MealEntry([updates(MealEntryBuilder b)]) = _$MealEntry;
+  factory MealEntry({DateTime dateTime, Meal meal, String notes}) =
+      _$MealEntry._;
+  factory MealEntry.fromBuilder([updates(MealEntryBuilder b)]) = _$MealEntry;
 
-  factory MealEntry.newEntry() => MealEntry((b) => b
+  factory MealEntry.newEntry() => MealEntry.fromBuilder((b) => b
     ..dateTime = DateTime.now()
     ..meal = Meal.empty().toBuilder()
     ..notes = '');
@@ -39,30 +41,37 @@ abstract class BowelMovementEntry
       _$bowelMovementEntrySerializer;
 
   DateTime get dateTime;
-  String get notes;
   BowelMovement get bowelMovement;
+  String get notes;
 
   BowelMovementEntry._();
-  factory BowelMovementEntry([updates(BowelMovementEntryBuilder b)]) =
-      _$BowelMovementEntry;
+  factory BowelMovementEntry(
+      {DateTime dateTime,
+      BowelMovement bowelMovement,
+      String notes}) = _$BowelMovementEntry._;
+  factory BowelMovementEntry.fromBuilder(
+      [updates(BowelMovementEntryBuilder b)]) = _$BowelMovementEntry;
 
-  factory BowelMovementEntry.newEntry() => BowelMovementEntry((b) => b
-    ..dateTime = DateTime.now()
-    ..bowelMovement = BowelMovement.startingValue().toBuilder()
-    ..notes = '');
+  factory BowelMovementEntry.newEntry() =>
+      BowelMovementEntry.fromBuilder((b) => b
+        ..dateTime = DateTime.now()
+        ..bowelMovement = BowelMovement.startingValue().toBuilder()
+        ..notes = '');
 }
 
 abstract class DosesEntry implements Built<DosesEntry, DosesEntryBuilder> {
   static Serializer<DosesEntry> get serializer => _$dosesEntrySerializer;
 
   DateTime get dateTime;
-  String get notes;
   BuiltList<Dose> get doses;
+  String get notes;
 
   DosesEntry._();
-  factory DosesEntry([updates(DosesEntryBuilder b)]) = _$DosesEntry;
+  factory DosesEntry({DateTime dateTime, BuiltList<Dose> doses, String notes}) =
+      _$DosesEntry._;
+  factory DosesEntry.fromBuilder([updates(DosesEntryBuilder b)]) = _$DosesEntry;
 
-  factory DosesEntry.newEntry() => DosesEntry((b) => b
+  factory DosesEntry.newEntry() => DosesEntry.fromBuilder((b) => b
     ..dateTime = DateTime.now()
     ..doses = BuiltList<Dose>([]).toBuilder()
     ..notes = '');
@@ -73,13 +82,16 @@ abstract class SymptomEntry
   static Serializer<SymptomEntry> get serializer => _$symptomEntrySerializer;
 
   DateTime get dateTime;
-  String get notes;
   Symptom get symptom;
+  String get notes;
 
   SymptomEntry._();
-  factory SymptomEntry([updates(SymptomEntryBuilder b)]) = _$SymptomEntry;
+  factory SymptomEntry({DateTime dateTime, Symptom symptom, String notes}) =
+      _$SymptomEntry._;
+  factory SymptomEntry.fromBuilder([updates(SymptomEntryBuilder b)]) =
+      _$SymptomEntry;
 
-  factory SymptomEntry.newEntry() => SymptomEntry((b) => b
+  factory SymptomEntry.newEntry() => SymptomEntry.fromBuilder((b) => b
     ..dateTime = DateTime.now()
     ..symptom.symptomType = SymptomType((b) => b.name = '').toBuilder()
     ..symptom.severity = 5
