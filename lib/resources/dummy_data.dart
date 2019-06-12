@@ -1,3 +1,5 @@
+import 'package:built_collection/built_collection.dart';
+
 import '../models/bowel_movement.dart';
 import '../models/diary_entry.dart';
 import '../models/dose.dart';
@@ -13,41 +15,49 @@ import '../models/symptom.dart';
 class Dummy {
   static final _artichoke = Food(
     name: 'Artichoke',
-    irritants: [
+    irritants: BuiltList<Irritant>([
       Irritant(name: 'Fructans'),
       Irritant(name: 'Fructose'),
-    ],
+    ]),
   );
   static final _creamCheese = Food(
     name: 'Cream Cheese',
-    irritants: [
+    irritants: BuiltList<Irritant>([
       Irritant(name: 'Lactose'),
-    ],
+    ]),
   );
-  static final _egg = Food(name: 'Egg', irritants: []);
+  static final _egg = Food(name: 'Egg', irritants: BuiltList<Irritant>([]));
 
   static final foodList = [_artichoke, _creamCheese, _egg];
 
   static List<MealEntry> mealEntries = [
     MealEntry(
-        dateTime: DateTime(2019, 2, 7, 8, 14),
-        meal: Meal(name: "Breakfast", ingredients: [
+      dateTime: DateTime(2019, 2, 7, 8, 14),
+      meal: Meal(
+        ingredients: BuiltList<Ingredient>([
           Ingredient(
-              food: Food(name: "Bread", irritants: [Irritant(name: 'Fructans')]),
+              food: Food(
+                  name: "Bread",
+                  irritants: BuiltList<Irritant>([Irritant(name: 'Fructans')])),
               quantity: Quantity(amount: 1.5, unit: "slices")),
           Ingredient(
-              food: Food(name: "Egg", irritants: []),
+              food: Food(name: "Egg", irritants: BuiltList<Irritant>([])),
               quantity: Quantity(amount: 1, unit: "each")),
           Ingredient(
-              food: Food(name: "Orange Juice", irritants: []),
+              food: Food(
+                  name: "Orange Juice", irritants: BuiltList<Irritant>([])),
               quantity: Quantity(amount: 8, unit: "oz"))
-        ])),
+        ]),
+      ),
+      notes: '',
+    ),
   ];
 
   static List<BowelMovementEntry> bowelMovementEntries = [
     BowelMovementEntry(
       dateTime: DateTime(2019, 2, 6, 18, 31),
       bowelMovement: BowelMovement(type: 4, volume: 2),
+      notes: '',
     )
   ];
 
@@ -55,17 +65,22 @@ class Dummy {
     SymptomEntry(
       dateTime: DateTime(2019, 2, 7, 15, 31),
       symptom: Symptom(symptomType: SymptomType(name: 'Bloating'), severity: 6),
+      notes: '',
     )
   ];
 
   static List<DosesEntry> dosesEntries = [
-    DosesEntry(dateTime: DateTime(2019, 2, 7, 12, 0), doses: [
-      Dose(
-          medicine: Medicine(name: "Pro-8"),
-          quantity: Quantity(amount: 1, unit: 'pill')),
-      Dose(
-          medicine: Medicine(name: "Fiber"),
-          quantity: Quantity(amount: 2, unit: 'Tbsp'))
-    ])
+    DosesEntry(
+      dateTime: DateTime(2019, 2, 7, 12, 0),
+      doses: BuiltList<Dose>([
+        Dose(
+            medicine: Medicine(name: "Pro-8"),
+            quantity: Quantity(amount: 1, unit: 'pill')),
+        Dose(
+            medicine: Medicine(name: "Fiber"),
+            quantity: Quantity(amount: 2, unit: 'Tbsp'))
+      ]),
+      notes: '',
+    )
   ];
 }
