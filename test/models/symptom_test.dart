@@ -7,15 +7,13 @@ void main() {
   group('Symptom', () {
     test('constructs simple object', () {
       SymptomType symptomType = SymptomType.fromBuilder((b) => b..name = 'Gas');
-      Symptom symptom = Symptom((b) => b
-        ..symptomType = symptomType.toBuilder()
-        ..severity = 2.1);
+      Symptom symptom = Symptom(symptomType: symptomType, severity: 2.1);
       expect(symptom.symptomType, symptomType);
       expect(symptom.severity, 2.1);
     });
 
     test('is equatable', () {
-      final constructSymptom = () => Symptom((b) => b
+      final constructSymptom = () => Symptom.fromBuilder((b) => b
         ..symptomType.name = 'Gas'
         ..severity = 3.4);
       expect(constructSymptom(), constructSymptom());
@@ -34,7 +32,7 @@ void main() {
 
     test('is serializable', () {
       SymptomType symptomType = SymptomType.fromBuilder((b) => b..name = 'Gas');
-      Symptom symptom = Symptom((b) => b
+      Symptom symptom = Symptom.fromBuilder((b) => b
         ..symptomType = symptomType.toBuilder()
         ..severity = 2.1);
       Map<String, dynamic> symptomTypeJson = serializers.serialize(symptomType);
@@ -46,7 +44,7 @@ void main() {
     });
 
     test('has a name', () {
-      Symptom symptom = Symptom((b) => b
+      Symptom symptom = Symptom.fromBuilder((b) => b
         ..symptomType.name = 'Gas'
         ..severity = 3.4);
       expect(symptom.name(), 'Gas');

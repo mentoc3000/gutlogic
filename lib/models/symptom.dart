@@ -11,7 +11,8 @@ abstract class Symptom implements Built<Symptom, SymptomBuilder> {
   double get severity;
 
   Symptom._();
-  factory Symptom([updates(SymptomBuilder b)]) = _$Symptom;
+  factory Symptom({SymptomType symptomType, double severity}) = _$Symptom._;
+  factory Symptom.fromBuilder([updates(SymptomBuilder b)]) = _$Symptom;
 
   String name() => this.symptomType.name;
 }
