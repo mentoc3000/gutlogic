@@ -7,7 +7,7 @@ import 'package:gut_ai/models/quantity.dart';
 void main() {
   group('Dose', () {
     test('constructs simple object', () {
-      Medicine medicine = Medicine((b) => b..name = 'Tomato');
+      Medicine medicine = Medicine.fromBuilder((b) => b..name = 'Tomato');
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
@@ -18,7 +18,7 @@ void main() {
 
     test('is equatable', () {
       final constructIngredient = () {
-        Medicine medicine = Medicine((b) => b..name = 'Tomato');
+        Medicine medicine = Medicine.fromBuilder((b) => b..name = 'Tomato');
         Quantity quantity = Quantity.fromBuilder((b) => b
           ..amount = 3.4
           ..unit = 'Slices');
@@ -31,7 +31,7 @@ void main() {
     });
 
     test('is deserializable', () {
-      Medicine medicine = Medicine((b) => b..name = 'Tomato');
+      Medicine medicine = Medicine.fromBuilder((b) => b..name = 'Tomato');
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
@@ -47,7 +47,7 @@ void main() {
     });
 
     test('is serializable', () {
-      Medicine medicine = Medicine((b) => b..name = 'Tomato');
+      Medicine medicine = Medicine.fromBuilder((b) => b..name = 'Tomato');
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
