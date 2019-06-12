@@ -13,7 +13,8 @@ abstract class Ingredient implements Built<Ingredient, IngredientBuilder>, Searc
   Quantity get quantity;
 
   Ingredient._();
-  factory Ingredient([updates(IngredientBuilder b)]) = _$Ingredient;
+  factory Ingredient({Food food, Quantity quantity}) = _$Ingredient._;
+  factory Ingredient.fromBuilder([updates(IngredientBuilder b)]) = _$Ingredient;
 
   String searchHeading() => food.name;
 }

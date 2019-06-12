@@ -18,7 +18,7 @@ void main() {
     test('is serializable', () {
       DateTime dateTime = DateTime.utc(2019, 3, 15, 4, 24, 37);
       BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([
-        Ingredient((b) => b
+        Ingredient.fromBuilder((b) => b
           ..food.name = 'Fructan'
           ..quantity.amount = 1.2
           ..quantity.unit = 'slices'),

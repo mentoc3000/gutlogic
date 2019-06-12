@@ -8,7 +8,7 @@ void main() {
   group('Meal', () {
     test('constructs simple object', () {
       BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([
-        Ingredient((b) => b
+        Ingredient.fromBuilder((b) => b
           ..food.name = 'Fructan'
           ..quantity.amount = 1.2
           ..quantity.unit = 'slices'),
@@ -26,7 +26,7 @@ void main() {
     test('is equatable', () {
       final constructFood = () {
         BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([
-          Ingredient((b) => b
+          Ingredient.fromBuilder((b) => b
             ..food.name = 'Fructan'
             ..quantity.amount = 1.2
             ..quantity.unit = 'slices'),
@@ -52,7 +52,7 @@ void main() {
 
     test('is serializable', () {
       BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([
-        Ingredient((b) => b
+        Ingredient.fromBuilder((b) => b
           ..food.name = 'Fructan'
           ..quantity.amount = 1.2
           ..quantity.unit = 'slices'),

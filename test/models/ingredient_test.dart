@@ -11,9 +11,7 @@ void main() {
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
-      Ingredient ingredient = Ingredient((b) => b
-        ..food = food.toBuilder()
-        ..quantity = quantity.toBuilder());
+      Ingredient ingredient = Ingredient(food: food, quantity: quantity);
       expect(ingredient.food, food);
       expect(ingredient.quantity, quantity);
     });
@@ -24,7 +22,7 @@ void main() {
         Quantity quantity = Quantity.fromBuilder((b) => b
           ..amount = 3.4
           ..unit = 'Slices');
-        Ingredient ingredient = Ingredient((b) => b
+        Ingredient ingredient = Ingredient.fromBuilder((b) => b
           ..food = food.toBuilder()
           ..quantity = quantity.toBuilder());
         return ingredient;
@@ -53,7 +51,7 @@ void main() {
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
-      Ingredient ingredient = Ingredient((b) => b
+      Ingredient ingredient = Ingredient.fromBuilder((b) => b
         ..food = food.toBuilder()
         ..quantity = quantity.toBuilder());
       Map<String, dynamic> foodJson = serializers.serialize(food);
