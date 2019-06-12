@@ -11,8 +11,9 @@ abstract class BowelMovement
   int get volume;
 
   BowelMovement._();
-  factory BowelMovement([updates(BowelMovementBuilder b)]) = _$BowelMovement;
-  factory BowelMovement.startingValue() => BowelMovement((b) => b
+  factory BowelMovement({int type, int volume}) = _$BowelMovement._;
+  factory BowelMovement.fromBuilder([updates(BowelMovementBuilder b)]) = _$BowelMovement;
+  factory BowelMovement.startingValue() => BowelMovement.fromBuilder((b) => b
     ..type = 4
     ..volume = 3);
 }
