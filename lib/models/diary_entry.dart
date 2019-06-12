@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
@@ -23,8 +24,10 @@ abstract class MealEntry
   String get notes;
 
   MealEntry._();
-  factory MealEntry({DateTime dateTime, Meal meal, String notes}) =
-      _$MealEntry._;
+  factory MealEntry(
+      {@required DateTime dateTime,
+      @required Meal meal,
+      @required String notes}) = _$MealEntry._;
   factory MealEntry.fromBuilder([updates(MealEntryBuilder b)]) = _$MealEntry;
 
   factory MealEntry.newEntry() => MealEntry.fromBuilder((b) => b
@@ -46,9 +49,9 @@ abstract class BowelMovementEntry
 
   BowelMovementEntry._();
   factory BowelMovementEntry(
-      {DateTime dateTime,
-      BowelMovement bowelMovement,
-      String notes}) = _$BowelMovementEntry._;
+      {@required DateTime dateTime,
+      @required BowelMovement bowelMovement,
+      @required String notes}) = _$BowelMovementEntry._;
   factory BowelMovementEntry.fromBuilder(
       [updates(BowelMovementEntryBuilder b)]) = _$BowelMovementEntry;
 
@@ -67,8 +70,10 @@ abstract class DosesEntry implements Built<DosesEntry, DosesEntryBuilder> {
   String get notes;
 
   DosesEntry._();
-  factory DosesEntry({DateTime dateTime, BuiltList<Dose> doses, String notes}) =
-      _$DosesEntry._;
+  factory DosesEntry(
+      {@required DateTime dateTime,
+      @required BuiltList<Dose> doses,
+      @required String notes}) = _$DosesEntry._;
   factory DosesEntry.fromBuilder([updates(DosesEntryBuilder b)]) = _$DosesEntry;
 
   factory DosesEntry.newEntry() => DosesEntry.fromBuilder((b) => b
@@ -86,14 +91,17 @@ abstract class SymptomEntry
   String get notes;
 
   SymptomEntry._();
-  factory SymptomEntry({DateTime dateTime, Symptom symptom, String notes}) =
-      _$SymptomEntry._;
+  factory SymptomEntry(
+      {@required DateTime dateTime,
+      @required Symptom symptom,
+      @required String notes}) = _$SymptomEntry._;
   factory SymptomEntry.fromBuilder([updates(SymptomEntryBuilder b)]) =
       _$SymptomEntry;
 
   factory SymptomEntry.newEntry() => SymptomEntry.fromBuilder((b) => b
     ..dateTime = DateTime.now()
-    ..symptom.symptomType = SymptomType((b) => b.name = '').toBuilder()
+    ..symptom.symptomType =
+        SymptomType.fromBuilder((b) => b.name = '').toBuilder()
     ..symptom.severity = 5
     ..notes = '');
 }

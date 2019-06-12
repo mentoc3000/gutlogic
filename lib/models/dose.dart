@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'quantity.dart';
@@ -12,6 +13,7 @@ abstract class Dose implements Built<Dose, DoseBuilder> {
   Quantity get quantity;
 
   Dose._();
-  factory Dose({Medicine medicine, Quantity quantity}) = _$Dose._;
+  factory Dose({@required Medicine medicine, @required Quantity quantity}) =
+      _$Dose._;
   factory Dose.fromBuilder([updates(DoseBuilder b)]) = _$Dose;
 }

@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
@@ -13,7 +14,9 @@ abstract class Food implements Built<Food, FoodBuilder>, Searchable {
   BuiltList<Irritant> get irritants;
 
   Food._();
-  factory Food({String name, BuiltList<Irritant> irritants}) = _$Food._;
+  factory Food(
+      {@required String name,
+      @required BuiltList<Irritant> irritants}) = _$Food._;
   factory Food.fromBuilder([updates(FoodBuilder b)]) => _$Food((b) => b
     ..irritants = BuiltList<Irritant>([]).toBuilder()
     ..update(updates));

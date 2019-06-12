@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -10,6 +11,7 @@ abstract class Quantity implements Built<Quantity, QuantityBuilder> {
   String get unit;
 
   Quantity._();
-  factory Quantity({double amount, String unit}) = _$Quantity._;
+  factory Quantity({@required double amount, @required String unit}) =
+      _$Quantity._;
   factory Quantity.fromBuilder([updates(QuantityBuilder b)]) = _$Quantity;
 }
