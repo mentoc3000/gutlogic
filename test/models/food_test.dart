@@ -11,16 +11,14 @@ void main() {
         Irritant((b) => b..name = 'Fructan'),
         Irritant((b) => b..name = 'Fructose'),
       ]);
-      Food food = Food((b) => b
-        ..name = 'Bread'
-        ..irritants = irritants.toBuilder());
+      Food food = Food(name: 'Bread', irritants: irritants);
       expect(food.name, 'Bread');
       expect(food.irritants, irritants);
     });
 
     test('constructs with empty irritant list', () {
       BuiltList<Irritant> irritants = BuiltList<Irritant>([]);
-      Food food = Food((b) => b
+      Food food = Food.fromBuilder((b) => b
         ..name = 'Bread'
         ..irritants = irritants.toBuilder());
       expect(food.name, 'Bread');
@@ -33,7 +31,7 @@ void main() {
           Irritant((b) => b..name = 'Fructan'),
           Irritant((b) => b..name = 'Fructose'),
         ]);
-        Food food = Food((b) => b
+        Food food = Food.fromBuilder((b) => b
           ..name = 'Bread'
           ..irritants = irritants.toBuilder());
         return food;
@@ -58,7 +56,7 @@ void main() {
         Irritant((b) => b..name = 'Fructan'),
         Irritant((b) => b..name = 'Fructose'),
       ]);
-      Food food = Food((b) => b
+      Food food = Food.fromBuilder((b) => b
         ..name = 'Bread'
         ..irritants = irritants.toBuilder());
       expect(serializers.serialize(food), {
@@ -72,7 +70,7 @@ void main() {
     });
 
     test('has a search heading', () {
-      Food food = Food((b) => b..name = 'Bread');
+      Food food = Food.fromBuilder((b) => b..name = 'Bread');
       expect(food.searchHeading(), food.name);
     });
   });

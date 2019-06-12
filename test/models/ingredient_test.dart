@@ -7,7 +7,7 @@ import 'package:gut_ai/models/quantity.dart';
 void main() {
   group('Ingredient', () {
     test('constructs simple object', () {
-      Food food = Food((b) => b..name = 'Tomato');
+      Food food = Food(name: 'Tomato');
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
@@ -20,7 +20,7 @@ void main() {
 
     test('is equatable', () {
       final constructIngredient = () {
-        Food food = Food((b) => b..name = 'Tomato');
+        Food food = Food(name: 'Tomato');
         Quantity quantity = Quantity.fromBuilder((b) => b
           ..amount = 3.4
           ..unit = 'Slices');
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('is deserializable', () {
-      Food food = Food((b) => b..name = 'Tomato');
+      Food food = Food(name: 'Tomato');
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');
@@ -49,7 +49,7 @@ void main() {
     });
 
     test('is serializable', () {
-      Food food = Food((b) => b..name = 'Tomato');
+      Food food = Food(name: 'Tomato');
       Quantity quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..unit = 'Slices');

@@ -13,7 +13,10 @@ abstract class Food implements Built<Food, FoodBuilder>, Searchable {
   BuiltList<Irritant> get irritants;
 
   Food._();
-  factory Food([updates(FoodBuilder b)]) = _$Food;
+  factory Food({String name, BuiltList<Irritant> irritants}) = _$Food._;
+  factory Food.fromBuilder([updates(FoodBuilder b)]) => _$Food((b) => b
+    ..irritants = BuiltList<Irritant>([]).toBuilder()
+    ..update(updates));
 
   String searchHeading() => name;
 }
