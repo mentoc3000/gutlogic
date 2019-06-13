@@ -10,6 +10,9 @@ part 'food.g.dart';
 abstract class Food implements Built<Food, FoodBuilder>, Searchable {
   static Serializer<Food> get serializer => _$foodSerializer;
 
+  @nullable
+  String get id;
+
   String get name;
 
   @nullable
@@ -17,11 +20,10 @@ abstract class Food implements Built<Food, FoodBuilder>, Searchable {
 
   Food._();
   factory Food(
-      {@required String name,
-      @required BuiltList<Irritant> irritants}) = _$Food._;
-  factory Food.fromBuilder([updates(FoodBuilder b)]) => _$Food((b) => b
-    ..irritants = BuiltList<Irritant>([]).toBuilder()
-    ..update(updates));
+      {String id,
+      @required String name,
+      BuiltList<Irritant> irritants}) = _$Food._;
+  factory Food.fromBuilder([updates(FoodBuilder b)]) = _$Food;
 
   String searchHeading() => name;
 }

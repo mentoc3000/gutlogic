@@ -11,7 +11,8 @@ void main() {
         Irritant.fromBuilder((b) => b..name = 'Fructan'),
         Irritant.fromBuilder((b) => b..name = 'Fructose'),
       ]);
-      Food food = Food(name: 'Bread', irritants: irritants);
+      Food food = Food(id: 'b1', name: 'Bread', irritants: irritants);
+      expect(food.id, 'b1');
       expect(food.name, 'Bread');
       expect(food.irritants, irritants);
     });
@@ -25,9 +26,10 @@ void main() {
       expect(food.irritants, irritants);
     });
 
-    test('constructs with null irritant list', () {
+    test('constructs with null values', () {
       Food food = Food.fromBuilder((b) => b
         ..name = 'Bread');
+      expect(food.id, null);
       expect(food.name, 'Bread');
       expect(food.irritants, null);
     });
