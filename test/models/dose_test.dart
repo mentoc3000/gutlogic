@@ -61,6 +61,10 @@ void main() {
         'medicine': medicineJson..remove('\$'),
         'quantity': quantityJson..remove('\$'),
       });
+      expect(serializers.serializeWith(Dose.serializer, dose), {
+        'medicine': medicineJson..remove('\$'),
+        'quantity': quantityJson..remove('\$'),
+      });
     });
   });
 }

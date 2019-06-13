@@ -62,6 +62,10 @@ void main() {
         'food': foodJson..remove('\$'),
         'quantity': quantityJson..remove('\$'),
       });
+      expect(serializers.serializeWith(Ingredient.serializer, ingredient), {
+        'food': foodJson..remove('\$'),
+        'quantity': quantityJson..remove('\$'),
+      });
     });
   });
 }

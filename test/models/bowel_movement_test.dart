@@ -34,6 +34,10 @@ void main() {
         "type": 3,
         "volume": 4,
       });
+      expect(serializers.serializeWith(BowelMovement.serializer, bm), {
+        "type": 3,
+        "volume": 4,
+      });
     });
   });
 }

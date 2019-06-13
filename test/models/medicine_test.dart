@@ -10,7 +10,8 @@ void main() {
     });
 
     test('is equatable', () {
-      final constructMedicine = () => Medicine.fromBuilder((b) => b..name = 'Pro-8');
+      final constructMedicine =
+          () => Medicine.fromBuilder((b) => b..name = 'Pro-8');
       expect(constructMedicine(), constructMedicine());
     });
 
@@ -25,6 +26,8 @@ void main() {
       Medicine medicine = Medicine.fromBuilder((b) => b..name = 'Pro-8');
       expect(
           serializers.serialize(medicine), {"\$": "Medicine", "name": "Pro-8"});
+      expect(serializers.serializeWith(Medicine.serializer, medicine),
+          {"name": "Pro-8"});
     });
 
     test('has a search heading', () {
