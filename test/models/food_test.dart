@@ -25,6 +25,13 @@ void main() {
       expect(food.irritants, irritants);
     });
 
+    test('constructs with null irritant list', () {
+      Food food = Food.fromBuilder((b) => b
+        ..name = 'Bread');
+      expect(food.name, 'Bread');
+      expect(food.irritants, null);
+    });
+
     test('is equatable', () {
       final constructFood = () {
         BuiltList<Irritant> irritants = BuiltList<Irritant>([

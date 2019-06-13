@@ -11,6 +11,8 @@ abstract class Food implements Built<Food, FoodBuilder>, Searchable {
   static Serializer<Food> get serializer => _$foodSerializer;
 
   String get name;
+
+  @nullable
   BuiltList<Irritant> get irritants;
 
   Food._();
