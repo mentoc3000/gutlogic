@@ -7,6 +7,7 @@ void main() {
     test('constructs simple object', () {
       Medicine medicine = Medicine(name: 'Pro-8');
       expect(medicine.name, 'Pro-8');
+      expect(medicine.id, null);
     });
 
     test('is equatable', () {

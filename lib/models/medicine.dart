@@ -8,10 +8,11 @@ part 'medicine.g.dart';
 abstract class Medicine implements Built<Medicine, MedicineBuilder>, Searchable {
   static Serializer<Medicine> get serializer => _$medicineSerializer;
 
+  @nullable String get id;
   String get name;
 
   Medicine._();
-  factory Medicine({@required String name}) = _$Medicine._;
+  factory Medicine({String id, @required String name}) = _$Medicine._;
   factory Medicine.fromBuilder([updates(MedicineBuilder b)]) = _$Medicine;
 
   String searchHeading() => name;
