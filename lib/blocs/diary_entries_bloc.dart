@@ -6,10 +6,10 @@ import './diary_entries_state.dart';
 import '../resources/diary_entry_repository.dart';
 import '../models/diary_entry.dart';
 
-class DiaryEntryBloc extends Bloc<DiaryEntriesEvent, DiaryEntriesState> {
+class DiaryEntriesBloc extends Bloc<DiaryEntriesEvent, DiaryEntriesState> {
   DiaryEntriesRepository diaryEntriesRepository;
 
-  DiaryEntryBloc({@required this.diaryEntriesRepository});
+  DiaryEntriesBloc({@required this.diaryEntriesRepository});
 
   @override
   DiaryEntriesState get initialState => DiaryEntriesNotLoaded();

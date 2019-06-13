@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import '../widgets/diary_tiles.dart';
 import 'meal_entry_page.dart';
 import '../models/diary_entry.dart';
-import '../blocs/diary_entry_bloc.dart';
+import '../blocs/diary_entries_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class DiaryPage extends StatefulWidget {
@@ -13,12 +13,12 @@ class DiaryPage extends StatefulWidget {
 }
 
 class DiaryPageState extends State<DiaryPage> {
-  final _diaryEntryBloc = DiaryEntryBloc();
+  final _diaryEntriesBloc = DiaryEntriesBloc();
 
   @override
   void dispose() {
     super.dispose();
-    _diaryEntryBloc.dispose();
+    _diaryEntriesBloc.dispose();
   }
 
   Widget buildEntryTile(DiaryEntry entry) {
@@ -69,7 +69,7 @@ class DiaryPageState extends State<DiaryPage> {
 
   @override
   Widget build(BuildContext context) {
-    _diaryEntryBloc.fetchAllDiaryEntries();
+    _diaryEntriesBloc.fetchAllDiaryEntries();
 
     return Scaffold(
         appBar: AppBar(
@@ -82,7 +82,7 @@ class DiaryPageState extends State<DiaryPage> {
               // child: Container(
               //   decoration: BoxDecoration(border: Border.all()),
                 child: StreamBuilder(
-                  stream: _diaryEntryBloc.allFoods,
+                  stream: _diaryEntriesBloc.allFoods,
                   builder: (context, AsyncSnapshot<List<DiaryEntry>> snapshot) {
                     if (!snapshot.hasData) {
                       return Column(
@@ -120,14 +120,14 @@ class DiaryPageState extends State<DiaryPage> {
                 label: 'Food & Drink',
                 onTap: () {
                   MealEntry newMeal = MealEntry.newEntry();
-                  _diaryEntryBloc.addEntry(newMeal);
+                  _diaryEntriesBloc.addEntry(newMeal);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => MealEntryPage(
                                 entry: newMeal,
                                 onUpdate: (_) =>
-                                    _diaryEntryBloc.fetchAllDiaryEntries(),
+                                    _diaryEntriesBloc.fetchAllDiaryEntries(),
                               ),),);
                 },),
             SpeedDialChild(
