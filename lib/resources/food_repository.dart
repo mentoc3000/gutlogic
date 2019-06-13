@@ -2,6 +2,7 @@ import 'dart:async';
 import '../models/food.dart';
 import 'app_sync_service.dart';
 import 'searchable_repository.dart';
+import '../models/serializers.dart';
 
 class FoodRepository implements SearchableRepository{
   final AppSyncService appSyncService;
@@ -14,7 +15,7 @@ class FoodRepository implements SearchableRepository{
     const operation = 'listFoods { items { name } }';
     final response = await appSyncService.query(operationName, operation);
     return AppSyncService.getItems(response, operationName)
-        .map((x) => Food.fromJson(x)).toList();
+        .map((x) => serializers.deserializeWith(Food.serializer, x)).toList();
   }
 
   Future<List<Food>> fetchQuery(String query) async {

@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:gut_ai/resources/food_repository.dart';
 import 'package:gut_ai/resources/app_sync_service.dart';
 import 'package:gut_ai/models/food.dart';
+import 'package:gut_ai/models/serializers.dart';
 
 void main() {
   group('Food Repository', () {
@@ -21,7 +23,7 @@ void main() {
           .thenAnswer((i) => Future(() => expected));
       FoodRepository foodRepository = FoodRepository(appSyncService);
       List<Food> foods = await foodRepository.fetchAll();
-      expect(foods, items.map((x) => Food.fromJson(x)).toList());
+      expect(foods, items.map((x) => serializers.deserializeWith(Food.serializer, x)).toList());
     });
   });
 }
