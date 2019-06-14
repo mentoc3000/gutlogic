@@ -1,16 +1,19 @@
 import 'dart:async';
+import 'package:built_collection/built_collection.dart';
 import '../models/food.dart';
 import 'app_sync_service.dart';
 import 'searchable_repository.dart';
+import 'database_repository.dart';
 import '../models/serializers.dart';
 
-class FoodRepository implements SearchableRepository{
+class FoodRepository extends DatabaseRepository {
   final AppSyncService appSyncService;
 
-  FoodRepository(this.appSyncService);
+  FoodRepository(this.appSyncService) : super();
 
   // Future<List<Food>> fetchAllFoods() => Future(() => Dummy.foodList);
-  Future<List<Food>> fetchAll() async {
+  @override
+  Future<BuiltList<Food>> fetchAll() async {
     const operationName = 'listFoods';
     const operation = 'listFoods { items { name } }';
     final response = await appSyncService.query(operationName, operation);
@@ -18,7 +21,8 @@ class FoodRepository implements SearchableRepository{
         .map((x) => serializers.deserializeWith(Food.serializer, x)).toList();
   }
 
-  Future<List<Food>> fetchQuery(String query) async {
+  @override
+  Future<BuiltList<Food>> fetchQuery(String query) async {
     final allFoods = await fetchAll();
       if (query == '') {
         return allFoods;
