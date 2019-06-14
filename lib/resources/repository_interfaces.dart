@@ -22,15 +22,14 @@ abstract class DatabaseRepository<T extends DatabaseItem>
   DatabaseRepository();
 
 // TODO: throw error if duplicate id
-// TODO: make these functions async
-  void insert(T item) => items = items.rebuild((b) => b..add(item));
+  void insert(T item) async => items = items.rebuild((b) => b..add(item));
 
-  void insertAll(Iterable<T> items) => items.map(this.insert);
+  void insertAll(Iterable<T> items) async => items.map(this.insert);
 
-  void delete(String id) =>
+  void delete(String id) async =>
       items = items.rebuild((b) => b..removeWhere((i) => i.id == id));
 
-  void upsert(T item) => items = items.rebuild((b) => b
+  void upsert(T item) async => items = items.rebuild((b) => b
     ..removeWhere((i) => i.id == item.id)
     ..add(item));
 }
