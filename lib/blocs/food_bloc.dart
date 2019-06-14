@@ -5,10 +5,7 @@ import '../models/food.dart';
 import '../resources/app_sync_service.dart';
 import 'bloc_interfaces.dart';
 
-class FoodBloc extends SearchableBloc{
-
+class FoodBloc extends SearchableBloc<Food,FoodRepository> {
   FoodBloc(AppSyncService appSyncService)
-      : super(repository: FoodRepository(appSyncService));
-
-  Stream<List<Food>> get all => controller.stream.cast();
+      : super(FoodRepository(appSyncService));
 }

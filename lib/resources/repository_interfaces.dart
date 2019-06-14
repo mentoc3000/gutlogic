@@ -17,11 +17,12 @@ abstract class SearchableRepository<T extends Searchable> {
 
 abstract class DatabaseRepository<T extends DatabaseItem>
     extends SearchableRepository<T> {
-  BuiltList<T> items;
+  // BuiltList<T> items;
 
   DatabaseRepository();
 
 // TODO: throw error if duplicate id
+// TODO: make these functions async
   void insert(T item) => items = items.rebuild((b) => b..add(item));
 
   void insertAll(Iterable<T> items) => items.map(this.insert);

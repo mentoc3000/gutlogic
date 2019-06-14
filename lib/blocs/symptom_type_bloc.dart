@@ -4,11 +4,7 @@ import 'dart:async';
 import '../models/symptom_type.dart';
 import 'bloc_interfaces.dart';
 
-class SymptomTypeBloc extends SearchableBloc{
-
-  SymptomTypeBloc()
-      : super(repository: SymptomTypeRepository());
-
-  Stream<List<SymptomType>> get all => controller.stream.cast();
-
+class SymptomTypeBloc
+    extends SearchableBloc<SymptomType, SymptomTypeRepository> {
+  SymptomTypeBloc() : super(SymptomTypeRepository());
 }

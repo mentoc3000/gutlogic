@@ -4,11 +4,6 @@ import 'dart:async';
 import '../models/medicine.dart';
 import 'bloc_interfaces.dart';
 
-class MedicineBloc extends SearchableBloc{
-
-  MedicineBloc()
-      : super(repository: MedicineRepository());
-
-  Stream<List<Medicine>> get all => controller.stream.cast();
-
+class MedicineBloc extends SearchableBloc<Medicine, MedicineRepository> {
+  MedicineBloc() : super(MedicineRepository());
 }

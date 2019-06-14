@@ -1,17 +1,20 @@
+import 'package:meta/meta.dart';
 import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
 import '../resources/repository_interfaces.dart';
 
-abstract class SearchableBloc<T extends Searchable> {
+abstract class SearchableBloc<T extends Searchable,
+    R extends SearchableRepository> {
+  @protected
+  final R repository;
 
-  final SearchableRepository<T> repository;
-
+  @protected
   final controller = StreamController<BuiltList<T>>.broadcast();
 
   Stream<BuiltList<T>> get all => controller.stream;
 
-  SearchableBloc({this.repository});
+  SearchableBloc(this.repository);
 
   void fetchAll() async {
     BuiltList<T> items = await repository.fetchAll();
@@ -26,5 +29,11 @@ abstract class SearchableBloc<T extends Searchable> {
   dispose() {
     controller.close();
   }
-
 }
+
+// abstract class DatabaseBloc<R extends DatabaseRepository,
+//     T extends DatabaseItem> extends SearchableBloc<R, T> {
+//   DatabaseBloc({R repository}) : super(repository);
+
+//   void insert(T item) async {}
+// }
