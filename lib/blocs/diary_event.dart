@@ -3,16 +3,16 @@ import 'package:meta/meta.dart';
 import '../models/diary_entry.dart';
 
 @immutable
-abstract class DiaryEntriesEvent extends Equatable {
-  DiaryEntriesEvent([List props = const []]) : super(props);
+abstract class DiaryEvent extends Equatable {
+  DiaryEvent([List props = const []]) : super(props);
 }
 
-class LoadDiaryEntries extends DiaryEntriesEvent {
+class LoadDiary extends DiaryEvent {
   @override
-  String toString() => 'LoadDiaryEntries';
+  String toString() => 'LoadDiary';
 }
 
-class AddDiaryEntry extends DiaryEntriesEvent {
+class AddDiaryEntry extends DiaryEvent {
   final DiaryEntry diaryEntry;
 
   AddDiaryEntry(this.diaryEntry) : super([diaryEntry]);
@@ -21,7 +21,7 @@ class AddDiaryEntry extends DiaryEntriesEvent {
   String toString() => 'AddDiaryEntry { todo: $diaryEntry }';
 }
 
-class UpdateDiaryEntry extends DiaryEntriesEvent {
+class UpdateDiaryEntry extends DiaryEvent {
   final DiaryEntry updatedDiaryEntry;
 
   UpdateDiaryEntry(this.updatedDiaryEntry) : super([updatedDiaryEntry]);
@@ -30,7 +30,7 @@ class UpdateDiaryEntry extends DiaryEntriesEvent {
   String toString() => 'UpdateDiaryEntry { updatedDiaryEntry: $updatedDiaryEntry }';
 }
 
-class DeleteDiaryEntry extends DiaryEntriesEvent {
+class DeleteDiaryEntry extends DiaryEvent {
   final DiaryEntry diaryEntry;
 
   DeleteDiaryEntry(this.diaryEntry) : super([diaryEntry]);
