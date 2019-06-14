@@ -13,23 +13,23 @@ abstract class SearchableRepository<T> {
     }
     return items..where((f) => f.toString().contains(query));
   }
-
 }
 
-abstract class DatabaseRepository extends SearchableRepository<DatabaseItem>{
-  BuiltList<DatabaseItem> items;
+abstract class DatabaseRepository<T extends DatabaseItem>
+    extends SearchableRepository<T> {
+  BuiltList<T> items;
 
   DatabaseRepository();
 
 // TODO: throw error if duplicate id
-  void insert(DatabaseItem item) => items = items.rebuild((b) => b..add(item));
+  void insert(T item) => items = items.rebuild((b) => b..add(item));
 
-  void insertAll(Iterable<DatabaseItem> items) => items.map(this.insert);
+  void insertAll(Iterable<T> items) => items.map(this.insert);
 
   void delete(String id) =>
       items = items.rebuild((b) => b..removeWhere((i) => i.id == id));
 
-  void upsert(DatabaseItem item) => items = items.rebuild((b) => b
+  void upsert(T item) => items = items.rebuild((b) => b
     ..removeWhere((i) => i.id == item.id)
     ..add(item));
 }

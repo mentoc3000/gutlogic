@@ -6,7 +6,7 @@ import 'searchable_repository.dart';
 import 'repository_interfaces.dart';
 import '../models/serializers.dart';
 
-class FoodRepository extends DatabaseRepository {
+class FoodRepository extends DatabaseRepository<Food> {
   final AppSyncService appSyncService;
 
   FoodRepository(this.appSyncService) : super();
