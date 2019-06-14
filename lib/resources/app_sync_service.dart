@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:built_collection/built_collection.dart';
 import 'package:amazon_cognito_identity_dart/cognito.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -14,7 +15,6 @@ class AppSyncService {
   AppSyncService(this.session);
 
   Future<Map<String, dynamic>> _request(Map<String, dynamic> body) async {
-
     final response = await http.post(
       _endpoint,
       headers: {
@@ -25,17 +25,20 @@ class AppSyncService {
     );
 
     return json.decode(response.body);
-
   }
- 
-  Future<Map<String, dynamic>> query(String operationName, String operation) async {
+
+  Future<Map<String, dynamic>> query(
+      String operationName, String operation) async {
     final query = 'query $operationName { $operation }';
     final body = {'operationName': operationName, 'query': query};
     return await _request(body);
   }
 
-  static List<Map<String, dynamic>> getItems(Map<String, dynamic> parsedJson, String operationName) {
+  static BuiltList<Map<String, dynamic>> getItems(
+      Map<String, dynamic> parsedJson, String operationName) {
     // return parsedJson['data'][operationName]['items'];
-    return (parsedJson['data'][operationName]['items'] as List).cast<Map<String, dynamic>>().toList();
+    return BuiltList<Map<String, dynamic>>(
+        (parsedJson['data'][operationName]['items'] as List)
+            .cast<Map<String, dynamic>>());
   }
 }
