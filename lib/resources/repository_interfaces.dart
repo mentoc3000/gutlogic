@@ -2,7 +2,21 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
 
-abstract class DatabaseRepository {
+abstract class SearchableRepository<T> {
+  BuiltList<T> items;
+
+  Future<BuiltList<T>> fetchAll() async => items;
+
+  Future<BuiltList<T>> fetchQuery(String query) async {
+    if (query == '') {
+      return items;
+    }
+    return items..where((f) => f.toString().contains(query));
+  }
+
+}
+
+abstract class DatabaseRepository extends SearchableRepository<DatabaseItem>{
   BuiltList<DatabaseItem> items;
 
   DatabaseRepository();
@@ -18,13 +32,4 @@ abstract class DatabaseRepository {
   void upsert(DatabaseItem item) => items = items.rebuild((b) => b
     ..removeWhere((i) => i.id == item.id)
     ..add(item));
-
-  Future<BuiltList<DatabaseItem>> fetchAll() async => items;
-
-  Future<BuiltList<DatabaseItem>> fetchQuery(String query) async {
-    if (query == '') {
-      return items;
-    }
-    return items..where((f) => f.toString().contains(query));
-  }
 }
