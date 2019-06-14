@@ -79,6 +79,7 @@ class UserRepository {
   CognitoUserSession _session;
   CognitoCredentials credentials;
 
+  // TODO: remove
   init() async {
     final prefs = await SharedPreferences.getInstance();
     final storage = new Storage(prefs);

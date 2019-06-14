@@ -1,5 +1,7 @@
+import 'package:amazon_cognito_identity_dart/cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gut_ai/resources/app_sync_service.dart';
 import 'account_page.dart';
 import 'food_search_page.dart';
 import 'diary_page.dart';
@@ -7,6 +9,10 @@ import '../widgets/placeholder_widget.dart';
 import '../blocs/tab_bloc.dart';
 import '../blocs/tab_state.dart';
 import '../blocs/tab_event.dart';
+import '../blocs/food_bloc.dart';
+import '../blocs/medicine_bloc.dart';
+import '../blocs/diary_entries_bloc.dart';
+import '../resources/user_service.dart';
 
 class Tabbed extends StatefulWidget {
   static String tag = 'tabbed-page';
@@ -15,27 +21,44 @@ class Tabbed extends StatefulWidget {
 }
 
 class _TabbedState extends State<Tabbed> {
-  TabBloc _tabBloc = TabBloc();
+  TabBloc _tabBloc;
+  FoodBloc _foodBloc;
+  MedicineBloc _medicineBloc;
+  DiaryEntriesBloc _diaryEntriesBloc;
 
   @override
   void initState() {
+    final userService = UserService();
+    final session = userService.getSession();
+    AppSyncService appSyncService = AppSyncService(session);
+    _tabBloc = TabBloc();
+    _foodBloc = FoodBloc(appSyncService);
+    _medicineBloc = MedicineBloc();
+    _diaryEntriesBloc = DiaryEntriesBloc();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(
-      bloc: _tabBloc,
-      builder: (BuildContext context, AppTab appTab) {
-        // TODO: BlocProviderTree can be included here
-        return Scaffold(
-          body: _buildBody(appTab),
-          bottomNavigationBar: TabSelector(
-            activeTab: appTab,
-            onTabSelected: (tab) => _tabBloc.dispatch(UpdateTab(tab)),
-          ),
-        );
-      },
+    return BlocProviderTree(
+      blocProviders: [
+        BlocProvider<FoodBloc>(bloc: _foodBloc),
+        BlocProvider<MedicineBloc>(bloc: _medicineBloc),
+        BlocProvider<DiaryEntriesBloc>(bloc: _diaryEntriesBloc),
+      ],
+      child: BlocBuilder(
+        bloc: _tabBloc,
+        builder: (BuildContext context, AppTab appTab) {
+          // TODO: BlocProviderTree can be included here
+          return Scaffold(
+            body: _buildBody(appTab),
+            bottomNavigationBar: TabSelector(
+              activeTab: appTab,
+              onTabSelected: (tab) => _tabBloc.dispatch(UpdateTab(tab)),
+            ),
+          );
+        },
+      ),
     );
   }
 
