@@ -7,10 +7,11 @@ import 'bowel_movement.dart';
 import 'symptom.dart';
 import 'meal.dart';
 import 'dose.dart';
+import 'model_interfaces.dart';
 
 part 'diary_entry.g.dart';
 
-abstract class DiaryEntry {
+abstract class DiaryEntry implements DatabaseItem {
   String get id;
   DateTime get dateTime;
   String get notes;

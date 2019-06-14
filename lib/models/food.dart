@@ -7,7 +7,7 @@ import 'irritant.dart';
 
 part 'food.g.dart';
 
-abstract class Food implements Built<Food, FoodBuilder>, Searchable {
+abstract class Food implements Built<Food, FoodBuilder>, Searchable, DatabaseItem {
   static Serializer<Food> get serializer => _$foodSerializer;
 
   @nullable

@@ -5,7 +5,7 @@ import 'model_interfaces.dart';
 
 part 'medicine.g.dart';
 
-abstract class Medicine implements Built<Medicine, MedicineBuilder>, Searchable {
+abstract class Medicine implements Built<Medicine, MedicineBuilder>, Searchable, DatabaseItem {
   static Serializer<Medicine> get serializer => _$medicineSerializer;
 
   @nullable String get id;
