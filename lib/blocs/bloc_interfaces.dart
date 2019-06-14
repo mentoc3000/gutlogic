@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
-import '../resources/searchable_repository.dart';
+import '../resources/repository_interfaces.dart';
 
 abstract class GutAiBloc {
 
@@ -12,20 +13,20 @@ abstract class GutAiBloc {
 
 abstract class SearchableBloc extends GutAiBloc {
 
-  final controller = StreamController<List<Searchable>>.broadcast();
+  final controller = StreamController<BuiltList<Searchable>>.broadcast();
 
-  Stream<List<Searchable>> get all => controller.stream;
+  Stream<BuiltList<Searchable>> get all => controller.stream;
 
   SearchableBloc({SearchableRepository repository})
     : super(repository: repository);
 
   void fetchAll() async {
-    List<Searchable> items = await repository.fetchAll();
+    BuiltList<Searchable> items = await repository.fetchAll();
     controller.sink.add(items);
   }
 
   void fetchQuery(String query) async {
-    List<Searchable> items = await repository.fetchQuery(query);
+    BuiltList<Searchable> items = await repository.fetchQuery(query);
     controller.sink.add(items);
   }
 
