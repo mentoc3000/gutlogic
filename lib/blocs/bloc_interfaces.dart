@@ -3,30 +3,23 @@ import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
 import '../resources/repository_interfaces.dart';
 
-abstract class GutAiBloc {
+abstract class SearchableBloc<T extends Searchable> {
 
-  final SearchableRepository repository;
+  final SearchableRepository<T> repository;
 
-  GutAiBloc({this.repository});
+  final controller = StreamController<BuiltList<T>>.broadcast();
 
-}
+  Stream<BuiltList<T>> get all => controller.stream;
 
-abstract class SearchableBloc extends GutAiBloc {
-
-  final controller = StreamController<BuiltList<Searchable>>.broadcast();
-
-  Stream<BuiltList<Searchable>> get all => controller.stream;
-
-  SearchableBloc({SearchableRepository repository})
-    : super(repository: repository);
+  SearchableBloc({this.repository});
 
   void fetchAll() async {
-    BuiltList<Searchable> items = await repository.fetchAll();
+    BuiltList<T> items = await repository.fetchAll();
     controller.sink.add(items);
   }
 
   void fetchQuery(String query) async {
-    BuiltList<Searchable> items = await repository.fetchQuery(query);
+    BuiltList<T> items = await repository.fetchQuery(query);
     controller.sink.add(items);
   }
 
