@@ -1,7 +1,7 @@
 // import 'dart:async';
 import '../models/medicine.dart';
 import 'package:built_collection/built_collection.dart';
-import '../resources/database_repository.dart';
+import 'repository_interfaces.dart';
 
 class MedicineRepository extends DatabaseRepository {
   MedicineRepository() : super() {
