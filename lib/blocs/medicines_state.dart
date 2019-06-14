@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:meta/meta.dart';
 import '../models/medicine.dart';
 
@@ -20,14 +21,14 @@ class MedicinesError extends MedicinesState {
 }
 
 class MedicinesLoaded extends MedicinesState {
-  final List<Medicine> medicines;
+  final BuiltList<Medicine> medicines;
 
   MedicinesLoaded({
     this.medicines,
   }) : super([medicines]);
 
   MedicinesLoaded copyWith({
-    List<Medicine> medicines,
+    BuiltList<Medicine> medicines,
   }) {
     return MedicinesLoaded(
       medicines: medicines ?? this.medicines,

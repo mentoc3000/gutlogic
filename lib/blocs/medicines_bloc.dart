@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:bloc/bloc.dart';
 import '../resources/medicine_repository.dart';
 import 'medicines_event.dart';
@@ -34,7 +35,7 @@ class MedicinesBloc extends Bloc<MedicinesEvent, MedicinesState> {
   ) async* {
     if (event is Fetch) {
       try {
-        List<Medicine> medicines = await medicineRepository.fetchAll();
+        BuiltList<Medicine> medicines = await medicineRepository.fetchAll();
         yield MedicinesLoaded(medicines: medicines);
       } catch (_) {
         yield MedicinesError();
