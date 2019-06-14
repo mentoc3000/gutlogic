@@ -1,26 +1,16 @@
 import 'dart:async';
+import 'package:built_collection/built_collection.dart';
+import 'repository_interfaces.dart';
 import 'dummy_data.dart';
 import '../models/diary_entry.dart';
 
-class DiaryEntriesRepository {
-
-  List<DiaryEntry> entries;
-
+class DiaryEntriesRepository extends DatabaseRepository<DiaryEntry> {
   DiaryEntriesRepository() {
-    entries = [
+    items = BuiltList<DiaryEntry>([
       Dummy.mealEntries[0],
       Dummy.bowelMovementEntries[0],
       Dummy.dosesEntries[0],
       Dummy.symptomEntries[0]
-    ];
+    ]);
   }
-
-  Future<List<DiaryEntry>> fetchAllDiaryEntries() => Future(() => entries);
-
-  void insert(DiaryEntry newEntry) => entries.add(newEntry);
-
-  void insertAll(List<DiaryEntry> newEntries) => entries.addAll(newEntries);
-
-  void delete(DiaryEntry entry) => entries.remove(entry);
-
 }
