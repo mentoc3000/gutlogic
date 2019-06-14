@@ -26,7 +26,7 @@ abstract class SearchableBloc<T extends Searchable,
       try {
         yield SearchableLoading();
         BuiltList<T> items = await repository.fetchAll();
-        yield SearchableLoaded(items);
+        yield SearchableLoaded<T>(items);
       } catch (_) {
         yield SearchableError();
       }
@@ -35,7 +35,7 @@ abstract class SearchableBloc<T extends Searchable,
       try {
         yield SearchableLoading();
         BuiltList<T> items = await repository.fetchQuery(event.query);
-        yield SearchableLoaded(items);
+        yield SearchableLoaded<T>(items);
       } catch (_) {
         yield SearchableError();
       }

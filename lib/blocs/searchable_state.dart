@@ -13,8 +13,8 @@ class SearchableLoading extends SearchableState {
   String toString() => 'SearchableLoading';
 }
 
-class SearchableLoaded extends SearchableState {
-  final BuiltList<Searchable> items;
+class SearchableLoaded<T extends Searchable> extends SearchableState {
+  final BuiltList<T> items;
 
   SearchableLoaded([this.items]) : super([items]);
 
