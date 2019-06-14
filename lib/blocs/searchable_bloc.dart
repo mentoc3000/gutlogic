@@ -24,6 +24,7 @@ abstract class SearchableBloc<T extends Searchable,
   ) async* {
     if (event is FetchAll) {
       try {
+        yield SearchableLoading();
         BuiltList<T> items = await repository.fetchAll();
         yield SearchableLoaded(items);
       } catch (_) {
@@ -32,6 +33,7 @@ abstract class SearchableBloc<T extends Searchable,
     }
     if (event is FetchQuery) {
       try {
+        yield SearchableLoading();
         BuiltList<T> items = await repository.fetchQuery(event.query);
         yield SearchableLoaded(items);
       } catch (_) {
