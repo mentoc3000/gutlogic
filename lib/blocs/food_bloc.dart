@@ -3,7 +3,7 @@ import '../resources/food_repository.dart';
 import 'dart:async';
 import '../models/food.dart';
 import '../resources/app_sync_service.dart';
-import 'bloc_interfaces.dart';
+import 'searchable_bloc.dart';
 
 class FoodBloc extends SearchableBloc<Food,FoodRepository> {
   FoodBloc(AppSyncService appSyncService)

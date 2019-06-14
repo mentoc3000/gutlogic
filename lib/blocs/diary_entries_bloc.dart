@@ -1,4 +1,4 @@
-import 'bloc_interfaces.dart';
+import 'database_bloc.dart';
 import '../models/diary_entry.dart';
 import '../resources/diary_entries_repository.dart';
 
