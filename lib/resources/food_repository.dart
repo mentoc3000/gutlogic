@@ -18,7 +18,7 @@ class FoodRepository extends DatabaseRepository {
     const operation = 'listFoods { items { name } }';
     final response = await appSyncService.query(operationName, operation);
     return AppSyncService.getItems(response, operationName)
-        .map((x) => serializers.deserializeWith(Food.serializer, x)).toList();
+        .map((x) => serializers.deserializeWith(Food.serializer, x));
   }
 
   @override
@@ -27,6 +27,6 @@ class FoodRepository extends DatabaseRepository {
       if (query == '') {
         return allFoods;
       }
-      return allFoods.where((f) => f.name.contains(query)).toList();
+      return allFoods.where((f) => f.name.contains(query));
   }
 }
