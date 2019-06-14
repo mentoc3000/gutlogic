@@ -22,7 +22,7 @@ class SearchableLoaded extends SearchableState {
   String toString() => 'SearchableLoaded { Searchable: ${items.length} }';
 }
 
-class SearchableNotLoaded extends SearchableState {
+class SearchableError extends SearchableState {
   @override
-  String toString() => 'SearchableNotLoaded';
+  String toString() => 'SearchableError';
 }
