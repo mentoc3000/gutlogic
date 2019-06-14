@@ -15,6 +15,7 @@ abstract class DiaryEntry implements DatabaseItem {
   String get id;
   DateTime get dateTime;
   String get notes;
+  String searchHeading();
 }
 
 abstract class MealEntry
@@ -38,6 +39,8 @@ abstract class MealEntry
     ..dateTime = DateTime.now()
     ..meal = Meal.empty().toBuilder()
     ..notes = '');
+
+  String seachHeading() => 'Meal';
 }
 
 abstract class BowelMovementEntry
@@ -66,6 +69,8 @@ abstract class BowelMovementEntry
         ..dateTime = DateTime.now()
         ..bowelMovement = BowelMovement.startingValue().toBuilder()
         ..notes = '');
+
+  String seachHeading() => 'Bowel Movement';
 }
 
 abstract class DosesEntry
@@ -89,6 +94,8 @@ abstract class DosesEntry
     ..dateTime = DateTime.now()
     ..doses = BuiltList<Dose>([]).toBuilder()
     ..notes = '');
+
+  String seachHeading() => 'Medicine';
 }
 
 abstract class SymptomEntry
@@ -115,4 +122,6 @@ abstract class SymptomEntry
         SymptomType.fromBuilder((b) => b.name = '').toBuilder()
     ..symptom.severity = 5
     ..notes = '');
+
+  String seachHeading() => 'Symptom';
 }

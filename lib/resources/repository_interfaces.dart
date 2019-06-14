@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
 
-abstract class SearchableRepository<T> {
+abstract class SearchableRepository<T extends Searchable> {
   BuiltList<T> items;
 
   Future<BuiltList<T>> fetchAll() async => items;
