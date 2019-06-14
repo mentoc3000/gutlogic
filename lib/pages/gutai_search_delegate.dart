@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
 import '../blocs/bloc_interfaces.dart';
 
@@ -62,7 +63,7 @@ class GutAiSearchDelegate extends SearchDelegate {
         //Build the results based on the searchResults stream in the searchBloc
         StreamBuilder(
           stream: searchableBloc.all,
-          builder: (context, AsyncSnapshot<List<Searchable>> snapshot) {
+          builder: (context, AsyncSnapshot<BuiltList<Searchable>> snapshot) {
             if (!snapshot.hasData) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
