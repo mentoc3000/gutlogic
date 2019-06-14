@@ -7,8 +7,6 @@ abstract class DatabaseRepository {
 
   DatabaseRepository();
 
-  Future<BuiltList<DatabaseItem>> fetchAll() => Future(() => items);
-
 // TODO: throw error if duplicate id
   void insert(DatabaseItem item) => items = items.rebuild((b) => b..add(item));
 
@@ -21,4 +19,12 @@ abstract class DatabaseRepository {
     ..removeWhere((i) => i.id == item.id)
     ..add(item));
 
+  Future<BuiltList<DatabaseItem>> fetchAll() async => items;
+
+  Future<BuiltList<DatabaseItem>> fetchQuery(String query) async {
+    if (query == '') {
+      return items;
+    }
+    return items..where((f) => f.toString().contains(query));
+  }
 }
