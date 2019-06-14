@@ -30,13 +30,3 @@ abstract class SearchableBloc<T extends Searchable,
     controller.close();
   }
 }
-
-abstract class DatabaseBloc<T extends DatabaseItem,
-    R extends DatabaseRepository> extends SearchableBloc<T, R> {
-  DatabaseBloc(R repository) : super(repository);
-
-  void insert(T item) async => repository.insert(item);
-  void insertAll(Iterable<T> items) async => repository.insertAll(items);
-  void delete(String id) async => repository.delete(id);
-  void upsert(T item) async => repository.upsert(item);
-}
