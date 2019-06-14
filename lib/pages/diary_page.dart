@@ -120,7 +120,7 @@ class DiaryPageState extends State<DiaryPage> {
                 label: 'Food & Drink',
                 onTap: () {
                   MealEntry newMeal = MealEntry.newEntry();
-                  _diaryEntriesBloc.addEntry(newMeal);
+                  _diaryEntriesBloc.insert(newMeal);
                   Navigator.push(
                       context,
                       MaterialPageRoute(

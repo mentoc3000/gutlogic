@@ -17,10 +17,10 @@ class DiaryEntriesRepository {
 
   Future<List<DiaryEntry>> fetchAllDiaryEntries() => Future(() => entries);
 
-  void addEntry(DiaryEntry newEntry) => entries.add(newEntry);
+  void insert(DiaryEntry newEntry) => entries.add(newEntry);
 
-  void addEntries(List<DiaryEntry> newEntries) => entries.addAll(newEntries);
+  void insertAll(List<DiaryEntry> newEntries) => entries.addAll(newEntries);
 
-  void removeEntry(DiaryEntry entry) => entries.remove(entry);
+  void delete(DiaryEntry entry) => entries.remove(entry);
 
 }
