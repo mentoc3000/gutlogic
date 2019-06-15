@@ -49,7 +49,6 @@ class _TabbedState extends State<Tabbed> {
       child: BlocBuilder(
         bloc: _tabBloc,
         builder: (BuildContext context, AppTab appTab) {
-          // TODO: BlocProviderTree can be included here
           return Scaffold(
             body: _buildBody(appTab),
             bottomNavigationBar: TabSelector(

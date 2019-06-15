@@ -4,7 +4,6 @@ import 'package:built_collection/built_collection.dart';
 import 'package:bloc/bloc.dart';
 import '../models/model_interfaces.dart';
 import '../resources/repository_interfaces.dart';
-import 'searchable_bloc.dart';
 import 'database_state.dart';
 import 'database_event.dart';
 
