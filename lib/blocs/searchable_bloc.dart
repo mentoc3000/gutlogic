@@ -7,39 +7,37 @@ import '../resources/repository_interfaces.dart';
 import 'searchable_state.dart';
 import 'searchable_event.dart';
 
-abstract class SearchableBloc<
-    T extends Searchable,
-    R extends SearchableRepository,
-    E extends SearchableEvent,
-    S extends SearchableState> extends Bloc<E, S> {
+abstract class SearchableBloc<T extends Searchable,
+        R extends SearchableRepository>
+    extends Bloc<SearchableEvent, SearchableState> {
   @protected
   final R repository;
 
   SearchableBloc(this.repository);
 
   @override
-  S get initialState => SearchableLoading() as S;
+  SearchableState get initialState => SearchableLoading();
 
   @override
-  Stream<S> mapEventToState(
+  Stream<SearchableState> mapEventToState(
     SearchableEvent event,
   ) async* {
     if (event is FetchAll) {
       try {
-        yield SearchableLoading() as S;
+        yield SearchableLoading();
         BuiltList<T> items = await repository.fetchAll();
-        yield SearchableLoaded<T>(items) as S;
+        yield SearchableLoaded<T>(items);
       } catch (_) {
-        yield SearchableError() as S;
+        yield SearchableError();
       }
     }
     if (event is FetchQuery) {
       try {
-        yield SearchableLoading() as S;
+        yield SearchableLoading();
         BuiltList<T> items = await repository.fetchQuery(event.query);
-        yield SearchableLoaded<T>(items) as S;
+        yield SearchableLoaded<T>(items);
       } catch (_) {
-        yield SearchableError() as S;
+        yield SearchableError();
       }
     }
   }
