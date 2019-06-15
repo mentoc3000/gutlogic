@@ -13,8 +13,8 @@ class DatabaseLoading extends DatabaseState {
   String toString() => 'DatabaseLoading';
 }
 
-class DatabaseLoaded extends DatabaseState {
-  final BuiltList<DatabaseItem> items;
+class DatabaseLoaded<T extends DatabaseItem> extends DatabaseState {
+  final BuiltList<T> items;
 
   DatabaseLoaded([this.items]) : super([items]);
 
