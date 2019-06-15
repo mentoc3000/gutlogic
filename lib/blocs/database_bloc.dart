@@ -39,7 +39,7 @@ abstract class DatabaseBloc<T extends DatabaseItem,
         yield DatabaseError();
       }
     }
-    if (event is Insert) {
+    if (event is Insert<T>) {
       try {
         repository.insert(event.item);
       } catch (_) {
@@ -53,7 +53,7 @@ abstract class DatabaseBloc<T extends DatabaseItem,
         yield DatabaseError();
       }
     }
-    if (event is Upsert) {
+    if (event is Upsert<T>) {
       try {
         repository.upsert(event.item);
       } catch (_) {

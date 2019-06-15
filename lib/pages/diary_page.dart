@@ -68,7 +68,7 @@ class DiaryPageState extends State<DiaryPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build (BuildContext context) {
     _diaryEntriesBloc.fetchAllDiaryEntries();
 
     return Scaffold(
