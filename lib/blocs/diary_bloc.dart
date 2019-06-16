@@ -4,7 +4,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:meta/meta.dart';
 import './diary_event.dart';
 import './diary_state.dart';
-import '../resources/diary_entries_repository.dart';
+import '../resources/diary_entry_repository.dart';
 import '../models/diary_entry.dart';
 
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {

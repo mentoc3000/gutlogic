@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:built_collection/src/list.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:gut_ai/models/bowel_movement.dart';
+import 'package:gut_ai/models/meal.dart';
 import 'package:gut_ai/models/diary_entry.dart';
 import 'package:gut_ai/resources/diary_entry_repository.dart';
 import 'package:gut_ai/blocs/diary_entry_bloc.dart';
@@ -12,8 +14,16 @@ void main() {
   group('DiaryEntry Bloc', () {
     DiaryEntryBloc foodBloc;
     MockDiaryEntryRepository diaryEntryRepository;
-    DiaryEntry _meal = MealEntry();
-    DiaryEntry _bowelMovement = BowelMovementEntry();
+    DiaryEntry _meal = MealEntry(
+      dateTime: DateTime.now(),
+      meal: Meal(ingredients: BuiltList([])),
+      notes: 'Breakfast',
+    );
+    DiaryEntry _bowelMovement = BowelMovementEntry(
+      dateTime: DateTime.now(),
+      bowelMovement: BowelMovement(volume: 3, type: 4),
+      notes: 'Better than yesterday',
+    );
     BuiltList<DiaryEntry> _allDiaryEntrys = BuiltList([_meal, _bowelMovement]);
 
     setUp(() {
@@ -27,7 +37,7 @@ void main() {
       expect(foodBloc.initialState, DatabaseLoading());
     });
 
-    test('fetches all foods', () {
+    test('fetches all diary entries', () {
       final List<DatabaseState> expected = [
         DatabaseLoading(),
         DatabaseLoaded<DiaryEntry>(_allDiaryEntrys)
