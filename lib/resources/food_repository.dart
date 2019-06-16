@@ -16,16 +16,16 @@ class FoodRepository extends DatabaseRepository<Food> {
     const operationName = 'listFoods';
     const operation = 'listFoods { items { name } }';
     final response = await appSyncService.query(operationName, operation);
-    return AppSyncService.getItems(response, operationName)
-        .map((x) => serializers.deserializeWith(Food.serializer, x));
+    return BuiltList<Food>(AppSyncService.getItems(response, operationName)
+        .map((x) => serializers.deserializeWith(Food.serializer, x)));
   }
 
   @override
   Future<BuiltList<Food>> fetchQuery(String query) async {
     final allFoods = await fetchAll();
-      if (query == '') {
-        return allFoods;
-      }
-      return allFoods.where((f) => f.name.contains(query));
+    if (query == '') {
+      return allFoods;
+    }
+    return BuiltList<Food>(allFoods.where((f) => f.name.contains(query)));
   }
 }
