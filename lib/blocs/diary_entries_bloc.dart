@@ -2,6 +2,8 @@ import 'database_bloc.dart';
 import '../models/diary_entry.dart';
 import '../resources/diary_entries_repository.dart';
 
-class DiaryEntriesBloc extends DatabaseBloc<DiaryEntry, DiaryEntriesRepository> {
-  DiaryEntriesBloc() : super(DiaryEntriesRepository());
+class DiaryEntriesBloc
+    extends DatabaseBloc<DiaryEntry, DiaryEntriesRepository> {
+  DiaryEntriesBloc(DiaryEntriesRepository diaryEntriesRepository)
+      : super(diaryEntriesRepository);
 }

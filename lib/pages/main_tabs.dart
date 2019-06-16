@@ -12,7 +12,12 @@ import '../blocs/tab_event.dart';
 import '../blocs/food_bloc.dart';
 import '../blocs/medicine_bloc.dart';
 import '../blocs/diary_entries_bloc.dart';
+import '../blocs/symptom_type_bloc.dart';
 import '../resources/user_service.dart';
+import '../resources/food_repository.dart';
+import '../resources/medicine_repository.dart';
+import '../resources/symptom_type_repository.dart';
+import '../resources/diary_entries_repository.dart';
 
 class Tabbed extends StatefulWidget {
   static String tag = 'tabbed-page';
@@ -24,6 +29,7 @@ class _TabbedState extends State<Tabbed> {
   TabBloc _tabBloc;
   FoodBloc _foodBloc;
   MedicineBloc _medicineBloc;
+  SymptomTypeBloc _symptomTypeBloc;
   DiaryEntriesBloc _diaryEntriesBloc;
 
   @override
@@ -31,10 +37,21 @@ class _TabbedState extends State<Tabbed> {
     final userService = UserService();
     final session = userService.getSession();
     AppSyncService appSyncService = AppSyncService(session);
+
     _tabBloc = TabBloc();
-    _foodBloc = FoodBloc(appSyncService);
-    _medicineBloc = MedicineBloc();
-    _diaryEntriesBloc = DiaryEntriesBloc();
+
+    FoodRepository foodRepository = FoodRepository(appSyncService);
+    _foodBloc = FoodBloc(foodRepository);
+
+    MedicineRepository medicineRepository = MedicineRepository();
+    _medicineBloc = MedicineBloc(medicineRepository);
+
+    SymptomTypeRepository symptomTypeRepository = SymptomTypeRepository();
+    _symptomTypeBloc = SymptomTypeBloc(symptomTypeRepository);
+
+    DiaryEntriesRepository diaryEntriesRepository = DiaryEntriesRepository();
+    _diaryEntriesBloc = DiaryEntriesBloc(diaryEntriesRepository);
+
     super.initState();
   }
 
@@ -44,6 +61,7 @@ class _TabbedState extends State<Tabbed> {
       blocProviders: [
         BlocProvider<FoodBloc>(bloc: _foodBloc),
         BlocProvider<MedicineBloc>(bloc: _medicineBloc),
+        BlocProvider<SymptomTypeBloc>(bloc: _symptomTypeBloc),
         BlocProvider<DiaryEntriesBloc>(bloc: _diaryEntriesBloc),
       ],
       child: BlocBuilder(
