@@ -11,7 +11,7 @@ void main() {
         {"name": "Probiotic"}
       ];
       MedicineRepository medicineRepository = MedicineRepository();
-      List<Medicine> medicines = await medicineRepository.fetchAll();
+      Iterable<Medicine> medicines = await medicineRepository.fetchAll();
       expect(
         medicines,
         items

@@ -22,7 +22,7 @@ void main() {
       when(appSyncService.query('listFoods', 'listFoods { items { name } }'))
           .thenAnswer((i) => Future(() => expected));
       FoodRepository foodRepository = FoodRepository(appSyncService);
-      List<Food> foods = await foodRepository.fetchAll();
+      Iterable<Food> foods = await foodRepository.fetchAll();
       expect(
         foods,
         items
