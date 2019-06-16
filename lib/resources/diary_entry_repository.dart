@@ -4,8 +4,8 @@ import 'repository_interfaces.dart';
 import 'dummy_data.dart';
 import '../models/diary_entry.dart';
 
-class DiaryEntriesRepository extends DatabaseRepository<DiaryEntry> {
-  DiaryEntriesRepository() {
+class DiaryEntryRepository extends DatabaseRepository<DiaryEntry> {
+  DiaryEntryRepository() {
     items = BuiltList<DiaryEntry>([
       Dummy.mealEntries[0],
       Dummy.bowelMovementEntries[0],

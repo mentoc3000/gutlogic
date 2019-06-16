@@ -8,7 +8,7 @@ import '../resources/diary_entries_repository.dart';
 import '../models/diary_entry.dart';
 
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
-  DiaryEntriesRepository diaryEntriesRepository;
+  DiaryEntryRepository diaryEntriesRepository;
 
   DiaryBloc({@required this.diaryEntriesRepository});
 

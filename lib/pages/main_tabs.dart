@@ -11,7 +11,7 @@ import '../blocs/tab_state.dart';
 import '../blocs/tab_event.dart';
 import '../blocs/food_bloc.dart';
 import '../blocs/medicine_bloc.dart';
-import '../blocs/diary_entries_bloc.dart';
+import '../blocs/diary_entry_bloc.dart';
 import '../blocs/symptom_type_bloc.dart';
 import '../resources/user_service.dart';
 import '../resources/food_repository.dart';
@@ -30,7 +30,7 @@ class _TabbedState extends State<Tabbed> {
   FoodBloc _foodBloc;
   MedicineBloc _medicineBloc;
   SymptomTypeBloc _symptomTypeBloc;
-  DiaryEntriesBloc _diaryEntriesBloc;
+  DiaryEntryBloc _diaryEntriesBloc;
 
   @override
   void initState() {
@@ -49,8 +49,8 @@ class _TabbedState extends State<Tabbed> {
     SymptomTypeRepository symptomTypeRepository = SymptomTypeRepository();
     _symptomTypeBloc = SymptomTypeBloc(symptomTypeRepository);
 
-    DiaryEntriesRepository diaryEntriesRepository = DiaryEntriesRepository();
-    _diaryEntriesBloc = DiaryEntriesBloc(diaryEntriesRepository);
+    DiaryEntryRepository diaryEntriesRepository = DiaryEntryRepository();
+    _diaryEntriesBloc = DiaryEntryBloc(diaryEntriesRepository);
 
     super.initState();
   }
@@ -62,7 +62,7 @@ class _TabbedState extends State<Tabbed> {
         BlocProvider<FoodBloc>(bloc: _foodBloc),
         BlocProvider<MedicineBloc>(bloc: _medicineBloc),
         BlocProvider<SymptomTypeBloc>(bloc: _symptomTypeBloc),
-        BlocProvider<DiaryEntriesBloc>(bloc: _diaryEntriesBloc),
+        BlocProvider<DiaryEntryBloc>(bloc: _diaryEntriesBloc),
       ],
       child: BlocBuilder(
         bloc: _tabBloc,
