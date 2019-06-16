@@ -12,17 +12,17 @@ import 'model_interfaces.dart';
 part 'diary_entry.g.dart';
 
 abstract class DiaryEntry implements DatabaseItem {
-  String get id;
   DateTime get dateTime;
   String get notes;
-  String searchHeading();
 }
 
 abstract class MealEntry
     implements Built<MealEntry, MealEntryBuilder>, DiaryEntry {
   static Serializer<MealEntry> get serializer => _$mealEntrySerializer;
 
-  @nullable String get id;
+  @nullable
+  String get id;
+
   DateTime get dateTime;
   Meal get meal;
   String get notes;
@@ -50,7 +50,9 @@ abstract class BowelMovementEntry
   static Serializer<BowelMovementEntry> get serializer =>
       _$bowelMovementEntrySerializer;
 
-  @nullable String get id;
+  @nullable
+  String get id;
+
   DateTime get dateTime;
   BowelMovement get bowelMovement;
   String get notes;
@@ -77,7 +79,9 @@ abstract class DosesEntry
     implements Built<DosesEntry, DosesEntryBuilder>, DiaryEntry {
   static Serializer<DosesEntry> get serializer => _$dosesEntrySerializer;
 
-  @nullable String get id;
+  @nullable
+  String get id;
+
   DateTime get dateTime;
   BuiltList<Dose> get doses;
   String get notes;
@@ -102,7 +106,9 @@ abstract class SymptomEntry
     implements Built<SymptomEntry, SymptomEntryBuilder>, DiaryEntry {
   static Serializer<SymptomEntry> get serializer => _$symptomEntrySerializer;
 
-  @nullable String get id;
+  @nullable
+  String get id;
+
   DateTime get dateTime;
   Symptom get symptom;
   String get notes;
