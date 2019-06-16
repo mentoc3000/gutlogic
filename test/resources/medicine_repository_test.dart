@@ -1,3 +1,4 @@
+import 'package:built_collection/src/list.dart';
 import 'package:test/test.dart';
 import 'package:gut_ai/resources/medicine_repository.dart';
 import 'package:gut_ai/models/medicine.dart';
@@ -11,7 +12,7 @@ void main() {
         {"name": "Probiotic"}
       ];
       MedicineRepository medicineRepository = MedicineRepository();
-      Iterable<Medicine> medicines = await medicineRepository.fetchAll();
+      BuiltList<Medicine> medicines = await medicineRepository.fetchAll();
       expect(
         medicines,
         items
