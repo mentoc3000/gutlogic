@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
-import '../blocs/bloc_interfaces.dart';
+import '../blocs/searchable_bloc.dart';
 
 class GutAiSearchDelegate extends SearchDelegate {
   SearchableBloc searchableBloc;

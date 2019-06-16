@@ -55,7 +55,7 @@ class _OverallAssessmentCard extends StatelessWidget {
 }
 
 class _IrritantsAssessmentCard extends StatelessWidget {
-  final List<Irritant> irritants;
+  final Iterable<Irritant> irritants;
 
   _IrritantsAssessmentCard({this.irritants});
 
