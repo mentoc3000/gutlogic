@@ -40,7 +40,7 @@ abstract class MealEntry
     ..meal = Meal.empty().toBuilder()
     ..notes = '');
 
-  String seachHeading() => 'Meal';
+  String searchHeading() => 'Meal';
 }
 
 abstract class BowelMovementEntry
@@ -72,7 +72,7 @@ abstract class BowelMovementEntry
         ..bowelMovement = BowelMovement.startingValue().toBuilder()
         ..notes = '');
 
-  String seachHeading() => 'Bowel Movement';
+  String searchHeading() => 'Bowel Movement';
 }
 
 abstract class DosesEntry
@@ -99,7 +99,7 @@ abstract class DosesEntry
     ..doses = BuiltList<Dose>([]).toBuilder()
     ..notes = '');
 
-  String seachHeading() => 'Medicine';
+  String searchHeading() => 'Medicine';
 }
 
 abstract class SymptomEntry
@@ -129,5 +129,5 @@ abstract class SymptomEntry
     ..symptom.severity = 5
     ..notes = '');
 
-  String seachHeading() => 'Symptom';
+  String searchHeading() => 'Symptom';
 }
