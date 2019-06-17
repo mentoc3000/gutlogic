@@ -60,6 +60,28 @@ void main() {
       await untilCalled(diaryEntryRepository.insert(any));
       verify(diaryEntryRepository.insert(meal2));
     });
+
+    test('deletes entry', () async {
+      String id = '12345';
+
+      foodBloc.dispatch(Delete(id));
+
+      await untilCalled(diaryEntryRepository.delete(any));
+      verify(diaryEntryRepository.delete(id));
+    });
+
+    test('upserts entry', () async {
+      DiaryEntry meal2 = MealEntry(
+        dateTime: DateTime.now(),
+        meal: Meal(ingredients: BuiltList([])),
+        notes: 'Lunch',
+      );
+
+      foodBloc.dispatch(Upsert(meal2));
+
+      await untilCalled(diaryEntryRepository.upsert(any));
+      verify(diaryEntryRepository.upsert(meal2));
+    });
   });
 }
 
