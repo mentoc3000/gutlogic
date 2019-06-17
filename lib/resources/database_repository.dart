@@ -1,12 +1,8 @@
-import 'dart:async';
-import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
 import 'searchable_repository.dart';
 
 abstract class DatabaseRepository<T extends DatabaseItem>
     extends SearchableRepository<T> {
-  // BuiltList<T> items;
-
   DatabaseRepository();
 
 // TODO: throw error if duplicate id
