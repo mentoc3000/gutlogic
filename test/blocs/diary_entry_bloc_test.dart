@@ -47,6 +47,24 @@ void main() {
 
       foodBloc.dispatch(FetchAll());
     });
+
+    test('inserts entry', () {
+      DiaryEntry meal2 = MealEntry(
+        dateTime: DateTime.now(),
+        meal: Meal(ingredients: BuiltList([])),
+        notes: 'Lunch',
+      );
+      final List<DatabaseState> expected = [
+        DatabaseLoading(),
+        DatabaseLoaded<DiaryEntry>(
+            _allDiaryEntrys.rebuild((b) => b..add(meal2)))
+      ];
+
+      expectLater(foodBloc.state, emitsInOrder(expected));
+
+      foodBloc.dispatch(Insert(meal2));
+      foodBloc.dispatch(FetchAll());
+    });
   });
 }
 
