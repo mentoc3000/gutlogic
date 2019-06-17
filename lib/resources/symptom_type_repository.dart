@@ -1,6 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import '../models/symptom_type.dart';
-import 'repository_interfaces.dart';
+import 'searchable_repository.dart';
 
 class SymptomTypeRepository extends SearchableRepository<SymptomType> {
   BuiltList<SymptomType> items;

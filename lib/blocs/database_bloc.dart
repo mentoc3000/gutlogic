@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import 'package:bloc/bloc.dart';
 import '../models/model_interfaces.dart';
-import '../resources/repository_interfaces.dart';
+import '../resources/database_repository.dart';
 import 'database_state.dart';
 import 'database_event.dart';
 

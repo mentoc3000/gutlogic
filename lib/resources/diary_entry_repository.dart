@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:built_collection/built_collection.dart';
-import 'repository_interfaces.dart';
+import 'database_repository.dart';
 import 'dummy_data.dart';
 import '../models/diary_entry.dart';
 

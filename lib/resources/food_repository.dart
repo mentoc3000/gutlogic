@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import '../models/food.dart';
 import 'app_sync_service.dart';
-import 'repository_interfaces.dart';
+import 'searchable_repository.dart';
 import '../models/serializers.dart';
 
-class FoodRepository extends DatabaseRepository<Food> {
+class FoodRepository extends SearchableRepository<Food> {
   final AppSyncService appSyncService;
 
   FoodRepository(this.appSyncService) : super();
