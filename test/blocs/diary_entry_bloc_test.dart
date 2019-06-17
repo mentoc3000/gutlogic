@@ -48,22 +48,17 @@ void main() {
       foodBloc.dispatch(FetchAll());
     });
 
-    test('inserts entry', () {
+    test('inserts entry', () async {
       DiaryEntry meal2 = MealEntry(
         dateTime: DateTime.now(),
         meal: Meal(ingredients: BuiltList([])),
         notes: 'Lunch',
       );
-      final List<DatabaseState> expected = [
-        DatabaseLoading(),
-        DatabaseLoaded<DiaryEntry>(
-            _allDiaryEntrys.rebuild((b) => b..add(meal2)))
-      ];
-
-      expectLater(foodBloc.state, emitsInOrder(expected));
 
       foodBloc.dispatch(Insert(meal2));
-      foodBloc.dispatch(FetchAll());
+
+      await untilCalled(diaryEntryRepository.insert(any));
+      verify(diaryEntryRepository.insert(meal2));
     });
   });
 }

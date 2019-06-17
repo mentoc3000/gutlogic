@@ -6,7 +6,9 @@ abstract class DatabaseRepository<T extends DatabaseItem>
   DatabaseRepository();
 
 // TODO: throw error if duplicate id
-  void insert(T item) async => items = items.rebuild((b) => b..add(item));
+  void insert(T item) async {
+    items = items.rebuild((b) => b..add(item));
+  }
 
   void insertAll(Iterable<T> items) async => items.map(this.insert);
 
