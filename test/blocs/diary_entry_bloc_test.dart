@@ -29,7 +29,7 @@ void main() {
     setUp(() {
       diaryEntryRepository = MockDiaryEntryRepository();
       when(diaryEntryRepository.fetchAll())
-          .thenAnswer((i) => Future(() => _allDiaryEntrys));
+          .thenAnswer((i) => Future.value(_allDiaryEntrys));
       foodBloc = DiaryEntryBloc(diaryEntryRepository);
     });
 

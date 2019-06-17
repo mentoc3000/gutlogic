@@ -20,9 +20,9 @@ void main() {
     setUp(() {
       foodRepository = MockFoodRepository();
       when(foodRepository.fetchAll())
-          .thenAnswer((i) => Future(() => _allFoods));
+          .thenAnswer((i) => Future.value(_allFoods));
       when(foodRepository.fetchQuery('Water'))
-          .thenAnswer((i) => Future(() => _justWater));
+          .thenAnswer((i) => Future.value(_justWater));
       foodBloc = FoodBloc(foodRepository);
     });
 

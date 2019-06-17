@@ -10,7 +10,6 @@ class FoodRepository extends SearchableRepository<Food> {
 
   FoodRepository(this.appSyncService) : super();
 
-  // Future<List<Food>> fetchAllFoods() => Future(() => Dummy.foodList);
   @override
   Future<BuiltList<Food>> fetchAll() async {
     const operationName = 'listFoods';
