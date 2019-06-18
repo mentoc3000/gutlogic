@@ -6,6 +6,7 @@ import '../widgets/gutai_card.dart';
 import '../widgets/item_tile.dart';
 import 'dose_entry_page.dart';
 import '../widgets/notes_tile.dart';
+import '../widgets/placeholder_widget.dart';
 
 class DosesEntryPage extends StatefulWidget {
   static String tag = 'medicine-entry-page';
@@ -19,97 +20,102 @@ class DosesEntryPage extends StatefulWidget {
 }
 
 class DosesEntryPageState extends State<DosesEntryPage> {
-  DosesEntry _entry;
-
-  void deleteDose(Dose ingredient) {
-    setState(() {
-      _entry.doses.remove(ingredient);
-    });
-  }
-
-  void newDose() {
-    Dose newDose = Dose();
-    setState(() {
-      _entry.doses.add(newDose);
-    });
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DoseEntryPage(dose: newDose),
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _entry = widget.entry;
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<Widget> doseTiles = _entry.doses.map((i) {
-      return Dismissible(
-        key: ObjectKey(i),
-        child: DoseTile(
-          dose: i,
-          dosesEntry: _entry,
-          onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DoseEntryPage(dose: i),
-                ),
-              ),
-        ),
-        onDismissed: (direction) {
-          if (direction == DismissDirection.endToStart) {
-            deleteDose(i);
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text("${i.medicine.name} removed."),
-              ),
-            );
-          }
-        },
-        background: Container(
-          alignment: Alignment.centerRight,
-          padding: EdgeInsets.only(right: 20.0),
-          color: Colors.red,
-          child: Icon(
-            Icons.delete,
-            color: Colors.white,
-          ),
-        ),
-      );
-    }).toList();
-
-    List<Widget> items = [
-      DatetimeView(date: _entry.dateTime),
-      GutAICard(
-        child: Column(
-          children: [
-            HeaderListTile(
-              heading: 'Doses',
-            )
-          ]..addAll(doseTiles),
-        ),
-      ),
-      NotesTile(notes: _entry.notes),
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Medicine'),
-      ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) =>
-            Padding(padding: EdgeInsets.all(1.0), child: items[index]),
-        padding: EdgeInsets.all(0.0),
-      ),
-      floatingActionButton:
-          FloatingActionButton(child: Icon(Icons.add), onPressed: newDose),
-    );
+    // TODO: implement build
+    return PlaceholderWidget(Colors.blueGrey);
   }
+  // DosesEntry _entry;
+
+  // void deleteDose(Dose ingredient) {
+  //   setState(() {
+  //     _entry.doses.remove(ingredient);
+  //   });
+  // }
+
+  // void newDose() {
+  //   Dose newDose = Dose();
+  //   setState(() {
+  //     _entry.doses.add(newDose);
+  //   });
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => DoseEntryPage(dose: newDose),
+  //     ),
+  //   );
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _entry = widget.entry;
+  // }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   List<Widget> doseTiles = _entry.doses.map((i) {
+  //     return Dismissible(
+  //       key: ObjectKey(i),
+  //       child: DoseTile(
+  //         dose: i,
+  //         dosesEntry: _entry,
+  //         onTap: () => Navigator.push(
+  //               context,
+  //               MaterialPageRoute(
+  //                 builder: (context) => DoseEntryPage(dose: i),
+  //               ),
+  //             ),
+  //       ),
+  //       onDismissed: (direction) {
+  //         if (direction == DismissDirection.endToStart) {
+  //           deleteDose(i);
+  //           Scaffold.of(context).showSnackBar(
+  //             SnackBar(
+  //               content: Text("${i.medicine.name} removed."),
+  //             ),
+  //           );
+  //         }
+  //       },
+  //       background: Container(
+  //         alignment: Alignment.centerRight,
+  //         padding: EdgeInsets.only(right: 20.0),
+  //         color: Colors.red,
+  //         child: Icon(
+  //           Icons.delete,
+  //           color: Colors.white,
+  //         ),
+  //       ),
+  //     );
+  //   }).toList();
+
+  //   List<Widget> items = [
+  //     DatetimeView(date: _entry.dateTime),
+  //     GutAICard(
+  //       child: Column(
+  //         children: [
+  //           HeaderListTile(
+  //             heading: 'Doses',
+  //           )
+  //         ]..addAll(doseTiles),
+  //       ),
+  //     ),
+  //     NotesTile(notes: _entry.notes),
+  //   ];
+
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       centerTitle: true,
+  //       title: Text('Medicine'),
+  //     ),
+  //     body: ListView.builder(
+  //       itemCount: items.length,
+  //       itemBuilder: (context, index) =>
+  //           Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+  //       padding: EdgeInsets.all(0.0),
+  //     ),
+  //     floatingActionButton:
+  //         FloatingActionButton(child: Icon(Icons.add), onPressed: newDose),
+  //   );
+  // }
 }

@@ -38,7 +38,7 @@ class _QuantityViewState extends State<QuantityView> {
                 controller: _amountController,
                 textAlign: TextAlign.center,
                 onChanged: (String amount) {
-                  widget.quantity.amount = double.parse(amount);
+                  // widget.quantity.amount = double.parse(amount);
                 },
               ),
             ),
@@ -50,7 +50,7 @@ class _QuantityViewState extends State<QuantityView> {
                 controller: _unitController,
                 textAlign: TextAlign.center,
                 onChanged: (String unit) {
-                  widget.quantity.unit = unit;
+                  // widget.quantity.unit = unit;
                 },
               ),
             )

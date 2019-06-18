@@ -17,7 +17,7 @@ import '../resources/user_service.dart';
 import '../resources/food_repository.dart';
 import '../resources/medicine_repository.dart';
 import '../resources/symptom_type_repository.dart';
-import '../resources/diary_entries_repository.dart';
+import '../resources/diary_entry_repository.dart';
 
 class Tabbed extends StatefulWidget {
   static String tag = 'tabbed-page';
