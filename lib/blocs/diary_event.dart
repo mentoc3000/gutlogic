@@ -7,8 +7,8 @@ abstract class DiaryEvent extends Equatable {
 }
 
 
-class Fetch extends DiaryEvent {
+class LoadDiary extends DiaryEvent {
   @override
-  String toString() => 'Fetch';
+  String toString() => 'LoadDiary';
 }
 

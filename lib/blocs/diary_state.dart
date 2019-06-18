@@ -10,7 +10,7 @@ abstract class DiaryState extends Equatable {
 
 class InitialDiaryState extends DiaryState {}
 
-class DiaryUninitialized extends DiaryState {
+class DiaryInitial extends DiaryState {
   @override
   String toString() => 'DiarysUninitialized';
 }
@@ -21,18 +21,7 @@ class DiaryError extends DiaryState {
 }
 
 class DiaryLoaded extends DiaryState {
-  final BuiltList<DiaryEntry> diaryEntries;
-
-  DiaryLoaded({this.diaryEntries}) : super([diaryEntries]);
-
-  // DiaryLoaded copyWith({
-  //   BuiltList<DiaryEntry> diaryEntries,
-  // }) {
-  //   return DiaryLoaded(
-  //     diaryEntries: diaryEntries ?? this.diaryEntries,
-  //   );
-  // }
 
   @override
-  String toString() => 'DiaryLoaded { diaryEntries: ${diaryEntries.length} }';
+  String toString() => 'DiaryLoaded';
 }

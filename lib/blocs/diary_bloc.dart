@@ -4,25 +4,26 @@ import 'package:built_collection/built_collection.dart';
 import 'package:meta/meta.dart';
 import './diary_event.dart';
 import './diary_state.dart';
-import '../resources/diary_entry_repository.dart';
+import './diary_entry_bloc.dart';
+import './database_event.dart';
 import '../models/diary_entry.dart';
 
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
-  DiaryEntryRepository diaryEntriesRepository;
+  DiaryEntryBloc diaryEntryBloc;
 
-  DiaryBloc({@required this.diaryEntriesRepository});
+  DiaryBloc({@required this.diaryEntryBloc});
 
   @override
-  DiaryState get initialState => DiaryUninitialized();
+  DiaryState get initialState => DiaryInitial();
 
   @override
   Stream<DiaryState> mapEventToState(
     DiaryEvent event,
   ) async* {
-    if (event is Fetch) {
+    if (event is LoadDiary) {
       try {
-        BuiltList<DiaryEntry> diaryEntries = await diaryEntriesRepository.fetchAll();
-        yield DiaryLoaded(diaryEntries: diaryEntries);
+        diaryEntryBloc.dispatch(FetchAll());
+        yield DiaryLoaded();
       } catch (_) {
         yield DiaryError();
       }

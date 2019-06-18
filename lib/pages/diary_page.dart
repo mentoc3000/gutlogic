@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gut_ai/blocs/diary_bloc.dart';
 import 'package:intl/intl.dart';
 import '../widgets/diary_tiles.dart';
 import 'meal_entry_page.dart';
 import '../models/diary_entry.dart';
 import '../blocs/diary_entry_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import '../blocs/database_state.dart';
+import '../blocs/database_event.dart';
 
 class DiaryPage extends StatefulWidget {
   static String tag = 'diary-page';
@@ -14,12 +17,6 @@ class DiaryPage extends StatefulWidget {
 }
 
 class DiaryPageState extends State<DiaryPage> {
-  @override
-  void dispose() {
-    super.dispose();
-    _diaryEntryBloc.dispose();
-  }
-
   Widget buildEntryTile(DiaryEntry entry) {
     switch (entry.runtimeType) {
       case MealEntry:
@@ -69,66 +66,67 @@ class DiaryPageState extends State<DiaryPage> {
   @override
   Widget build(BuildContext context) {
     final diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
-    _diaryEntryBloc.fetchAllDiaryEntry();
 
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Diary"),
-        ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              // child: Container(
-              //   decoration: BoxDecoration(border: Border.all()),
-              child: StreamBuilder(
-                stream: _diaryEntryBloc.allFoods,
-                builder: (context, AsyncSnapshot<List<DiaryEntry>> snapshot) {
-                  if (!snapshot.hasData) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(child: CircularProgressIndicator()),
-                      ],
-                    );
-                  } else {
-                    List<Widget> tiles = entryToTiles(snapshot.data);
-                    return ListView.separated(
-                      separatorBuilder: (context, index) => Divider(),
-                      itemCount: tiles.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => Padding(
-                            padding: EdgeInsets.all(0.0),
-                            child: tiles[index],
-                          ),
-                      padding: EdgeInsets.all(0.0),
-                    );
-                  }
-                },
-              ),
-              // ),
-            ),
-          ],
-        ),
-        floatingActionButton: DiaryFloatingActionButton(
-          newMealTapped: () {
-            MealEntry newMeal = MealEntry.newEntry();
-            _diaryEntryBloc.insert(newMeal);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MealEntryPage(
-                      entry: newMeal,
-                      onUpdate: (_) => _diaryEntryBloc.fetchAllDiaryEntry(),
-                    ),
-              ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Diary"),
+      ),
+      body: BlocBuilder(
+        bloc: diaryEntryBloc,
+        builder: (BuildContext context, DatabaseState state) {
+          if (state is DatabaseLoading) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: CircularProgressIndicator()),
+              ],
             );
-          },
-          newBowelMovementTapped: () => print('SECOND CHILD'),
-          newMedicinesTapped: () => print('THIRD CHILD'),
-          newSymptomTapped: () => print('FOURTH CHILD'),
-        ));
+          }
+          if (state is DatabaseLoaded<DiaryEntry>) {
+            List<Widget> tiles = entryToTiles(state.items.toList());
+            return ListView.separated(
+              separatorBuilder: (context, index) => Divider(),
+              itemCount: tiles.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) => Padding(
+                    padding: EdgeInsets.all(0.0),
+                    child: tiles[index],
+                  ),
+              padding: EdgeInsets.all(0.0),
+            );
+          }
+          if (state is DatabaseError) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: Text('Error')),
+              ],
+            );
+          }
+        },
+      ),
+      floatingActionButton: DiaryFloatingActionButton(
+        newMealTapped: () {
+          MealEntry newMeal = MealEntry.newEntry();
+          // diaryEntryBloc.insert(newMeal);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MealEntryPage(
+                    entry: newMeal,
+                    // onUpdate: (_) => diaryEntryBloc.fetchAllDiaryEntry(),
+                  ),
+            ),
+          );
+        },
+        newBowelMovementTapped: () => print('SECOND CHILD'),
+        newMedicinesTapped: () => print('THIRD CHILD'),
+        newSymptomTapped: () => print('FOURTH CHILD'),
+      ),
+    );
   }
 }
 
