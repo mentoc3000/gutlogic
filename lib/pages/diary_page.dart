@@ -18,28 +18,29 @@ class DiaryPage extends StatefulWidget {
 
 class DiaryPageState extends State<DiaryPage> {
   Widget buildEntryTile(DiaryEntry entry) {
-    switch (entry.runtimeType) {
-      case MealEntry:
-        return MealEntryListTile(
-          entry: entry,
-          onUpdate: (e) => setState(() => entry = e),
-        );
-      case BowelMovementEntry:
-        return BowelMovementEntryListTile(
-          entry: entry,
-        );
-      case DosesEntry:
-        return DosesEntryListTile(
-          entry: entry,
-        );
-      case SymptomEntry:
-        return SymptomEntryListTile(
-          entry: entry,
-          onSaved: (e) => setState(() => entry = e),
-        );
-      default:
-        return null;
+    if (entry is MealEntry) {
+      return MealEntryListTile(
+        entry: entry,
+        onUpdate: (e) => setState(() => entry = e),
+      );
     }
+    if (entry is BowelMovementEntry) {
+      return BowelMovementEntryListTile(
+        entry: entry,
+      );
+    }
+    if (entry is DosesEntry) {
+      return DosesEntryListTile(
+        entry: entry,
+      );
+    }
+    if (entry is SymptomEntry) {
+      return SymptomEntryListTile(
+        entry: entry,
+        onSaved: (e) => setState(() => entry = e),
+      );
+    }
+    return null;
   }
 
   List<Widget> entryToTiles(List<DiaryEntry> entry) {
@@ -66,6 +67,7 @@ class DiaryPageState extends State<DiaryPage> {
   @override
   Widget build(BuildContext context) {
     final diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
+    diaryEntryBloc.dispatch(FetchAll());
 
     return Scaffold(
       appBar: AppBar(
