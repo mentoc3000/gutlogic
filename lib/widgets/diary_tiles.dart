@@ -158,7 +158,7 @@ class BowelMovementEntryListTile extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => BMEntryPage(
-                    context1: this
+                    context: this
                         .context, // must use this.context to access BlocProvider
                     entry: entry,
                   ),

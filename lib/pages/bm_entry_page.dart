@@ -10,10 +10,10 @@ import '../blocs/database_event.dart';
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
 
-  final BuildContext context1;
+  final BuildContext context;
   final BowelMovementEntry entry;
 
-  BMEntryPage({@required this.context1, this.entry});
+  BMEntryPage({@required this.context, this.entry});
 
   @override
   BMEntryPageState createState() => BMEntryPageState();
@@ -21,14 +21,17 @@ class BMEntryPage extends StatefulWidget {
 
 class BMEntryPageState extends State<BMEntryPage> {
   DiaryEntryBloc diaryEntryBloc;
-  List<Widget> items;
 
   @override
   void initState() {
     super.initState();
 
-    this.diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(widget.context1);
-    this.items = <List<Widget>>[
+    this.diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(widget.context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+     List<Widget> items = <List<Widget>>[
       [
         DatetimeView(date: widget.entry.dateTime),
         BMTypeSliderTile(type: widget.entry.bowelMovement.type),
@@ -36,10 +39,6 @@ class BMEntryPageState extends State<BMEntryPage> {
         NotesTile(notes: widget.entry.notes),
       ],
     ].expand((x) => x).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(primaryColor: Colors.purple),
       child: Scaffold(
