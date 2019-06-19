@@ -143,9 +143,10 @@ class MealEntryListTile extends StatelessWidget {
 }
 
 class BowelMovementEntryListTile extends StatelessWidget {
+  final BuildContext context;
   final BowelMovementEntry entry;
 
-  BowelMovementEntryListTile({this.entry});
+  BowelMovementEntryListTile(this.context, this.entry);
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +158,8 @@ class BowelMovementEntryListTile extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => BMEntryPage(
+                    context1: this
+                        .context, // must use this.context to access BlocProvider
                     entry: entry,
                   ),
             ),

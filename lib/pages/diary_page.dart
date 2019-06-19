@@ -17,7 +17,7 @@ class DiaryPage extends StatefulWidget {
 }
 
 class DiaryPageState extends State<DiaryPage> {
-  Widget buildEntryTile(DiaryEntry entry) {
+  Widget buildEntryTile(BuildContext context, DiaryEntry entry) {
     if (entry is MealEntry) {
       return MealEntryListTile(
         entry: entry,
@@ -25,9 +25,7 @@ class DiaryPageState extends State<DiaryPage> {
       );
     }
     if (entry is BowelMovementEntry) {
-      return BowelMovementEntryListTile(
-        entry: entry,
-      );
+      return BowelMovementEntryListTile(context, entry);
     }
     if (entry is DosesEntry) {
       return DosesEntryListTile(
@@ -43,7 +41,7 @@ class DiaryPageState extends State<DiaryPage> {
     return null;
   }
 
-  List<Widget> entryToTiles(List<DiaryEntry> entry) {
+  List<Widget> entryToTiles(BuildContext context, List<DiaryEntry> entry) {
     if (entry == []) {
       return [];
     }
@@ -58,7 +56,7 @@ class DiaryPageState extends State<DiaryPage> {
               dateFormatter.format(entry[i - 1].dateTime)) {
         tiles.add(DateTile(dateTime: entry[i].dateTime));
       }
-      tiles.add(buildEntryTile(entry[i]));
+      tiles.add(buildEntryTile(context, entry[i]));
     }
 
     return tiles;
@@ -87,7 +85,7 @@ class DiaryPageState extends State<DiaryPage> {
             );
           }
           if (state is DatabaseLoaded<DiaryEntry>) {
-            List<Widget> tiles = entryToTiles(state.items.toList());
+            List<Widget> tiles = entryToTiles(context, state.items.toList());
             return ListView.separated(
               separatorBuilder: (context, index) => Divider(),
               itemCount: tiles.length,

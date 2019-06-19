@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/diary_entry.dart';
 import '../widgets/datetime_view.dart';
 import '../widgets/gutai_card.dart';
 import '../widgets/notes_tile.dart';
+import '../blocs/diary_entry_bloc.dart';
+import '../blocs/database_event.dart';
 
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
 
+  final BuildContext context1;
   final BowelMovementEntry entry;
 
-  BMEntryPage({this.entry});
+  BMEntryPage({@required this.context1, this.entry});
 
   @override
   BMEntryPageState createState() => BMEntryPageState();
 }
 
 class BMEntryPageState extends State<BMEntryPage> {
+  DiaryEntryBloc diaryEntryBloc;
   List<Widget> items;
 
   @override
   void initState() {
     super.initState();
 
+    this.diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(widget.context1);
     this.items = <List<Widget>>[
       [
         DatetimeView(date: widget.entry.dateTime),

@@ -30,7 +30,7 @@ class _TabbedState extends State<Tabbed> {
   FoodBloc _foodBloc;
   MedicineBloc _medicineBloc;
   SymptomTypeBloc _symptomTypeBloc;
-  DiaryEntryBloc _diaryEntriesBloc;
+  DiaryEntryBloc _diaryEntryBloc;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _TabbedState extends State<Tabbed> {
     _symptomTypeBloc = SymptomTypeBloc(symptomTypeRepository);
 
     DiaryEntryRepository diaryEntriesRepository = DiaryEntryRepository();
-    _diaryEntriesBloc = DiaryEntryBloc(diaryEntriesRepository);
+    _diaryEntryBloc = DiaryEntryBloc(diaryEntriesRepository);
 
     super.initState();
   }
@@ -62,7 +62,7 @@ class _TabbedState extends State<Tabbed> {
         BlocProvider<FoodBloc>(bloc: _foodBloc),
         BlocProvider<MedicineBloc>(bloc: _medicineBloc),
         BlocProvider<SymptomTypeBloc>(bloc: _symptomTypeBloc),
-        BlocProvider<DiaryEntryBloc>(bloc: _diaryEntriesBloc),
+        BlocProvider<DiaryEntryBloc>(bloc: _diaryEntryBloc),
       ],
       child: BlocBuilder(
         bloc: _tabBloc,
