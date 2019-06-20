@@ -7,7 +7,7 @@ import '../widgets/notes_tile.dart';
 import '../blocs/diary_entry_bloc.dart';
 import '../blocs/database_event.dart';
 
-class BMEntryPage extends StatefulWidget {
+class BMEntryPage extends StatelessWidget {
   static String tag = 'bm-entry-page';
 
   final BowelMovementEntry entry;
@@ -15,27 +15,26 @@ class BMEntryPage extends StatefulWidget {
   BMEntryPage({this.entry});
 
   @override
-  BMEntryPageState createState() => BMEntryPageState();
-}
-
-class BMEntryPageState extends State<BMEntryPage> {
-  DiaryEntryBloc diaryEntryBloc;
-
-  @override
-  void initState() {
-    super.initState();
-
-  }
-
-  @override
   Widget build(BuildContext context) {
-    this.diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
-     List<Widget> items = <List<Widget>>[
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
+    List<Widget> items = <List<Widget>>[
       [
-        DatetimeView(date: widget.entry.dateTime),
-        BMTypeSliderTile(type: widget.entry.bowelMovement.type),
-        BMVolumeSliderTile(volume: widget.entry.bowelMovement.volume),
-        NotesTile(notes: widget.entry.notes),
+        DatetimeView(
+          date: entry.dateTime,
+        ),
+        BMTypeSliderTile(
+          type: entry.bowelMovement.type,
+          onChanged: (newValue) {
+            final updatedEntry = entry.rebuild((b) => b..bowelMovement.type = newValue);
+            diaryEntryBloc.dispatch(Upsert(updatedEntry));
+          },
+        ),
+        BMVolumeSliderTile(
+          volume: entry.bowelMovement.volume,
+        ),
+        NotesTile(
+          notes: entry.notes,
+        ),
       ],
     ].expand((x) => x).toList();
     return Theme(
@@ -60,6 +59,7 @@ class BMTypeSliderTile extends StatefulWidget {
   final int minimum = 1;
   final int maximum = 8;
   final int type;
+  final void Function(int) onChanged;
   final List<String> descriptions = [
     'Type 1',
     'Type 2',
@@ -71,7 +71,7 @@ class BMTypeSliderTile extends StatefulWidget {
     'Type 8',
   ];
 
-  BMTypeSliderTile({this.type: 5});
+  BMTypeSliderTile({this.type: 5, this.onChanged});
 
   @override
   _BMTypeSliderTileState createState() => _BMTypeSliderTileState();
@@ -102,6 +102,7 @@ class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
             onChanged: (newValue) => setState(() {
                   value = newValue.toInt();
                   description = widget.descriptions[value - 1];
+                  widget.onChanged(value);
                 }),
           ),
           Text(description)
