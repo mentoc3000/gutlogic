@@ -3,17 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'gutai_card.dart';
 
-class DatetimeView extends StatefulWidget {
+class DatetimeView extends StatelessWidget {
   final DateTime date;
   final void Function(DateTime) onChanged;
 
   DatetimeView({this.date, this.onChanged});
 
-  @override
-  _DatetimeViewState createState() => _DatetimeViewState();
-}
-
-class _DatetimeViewState extends State<DatetimeView> {
   // Show some different formats.
   final formats = {
     InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
@@ -22,15 +17,8 @@ class _DatetimeViewState extends State<DatetimeView> {
   };
 
   // Changeable in demo
-  InputType inputType = InputType.both;
-  bool editable = true;
-  DateTime date;
-
-  @override
-  void initState() {
-    super.initState();
-    this.date = widget.date;
-  }
+  final InputType inputType = InputType.both;
+  final bool editable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +26,7 @@ class _DatetimeViewState extends State<DatetimeView> {
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: DateTimePickerFormField(
-          initialValue: widget.date,
+          initialValue: date,
           inputType: inputType,
           format: formats[inputType],
           editable: editable,
@@ -47,18 +35,10 @@ class _DatetimeViewState extends State<DatetimeView> {
             hasFloatingPlaceholder: false,
           ),
           onChanged: (dt) {
-            widget.onChanged(dt);
-            setState(() => date = dt);
+            // onChanged(dt);
           },
         ),
       ),
     );
-  }
-
-  void updateInputType({bool date, bool time}) {
-    date = date ?? inputType != InputType.time;
-    time = time ?? inputType != InputType.date;
-    setState(() => inputType =
-        date ? time ? InputType.both : InputType.date : InputType.time);
   }
 }
