@@ -1,27 +1,15 @@
 import 'package:flutter/material.dart';
 import 'gutai_card.dart';
 
-class NotesTile extends StatefulWidget {
+class NotesTile extends StatelessWidget {
   final String notes;
   final void Function(String) onChanged;
 
   NotesTile({this.notes, this.onChanged});
 
   @override
-  _NotesTileState createState() => _NotesTileState();
-}
-
-class _NotesTileState extends State<NotesTile> {
-  TextEditingController _notesController;
-
-  @override
-  void initState() {
-    super.initState();
-    _notesController = TextEditingController(text: widget.notes);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    TextEditingController notesController = TextEditingController(text: notes);
     return GutAICard(
       child: Padding(
         padding: EdgeInsets.all(16.0),
@@ -31,10 +19,10 @@ class _NotesTileState extends State<NotesTile> {
             Text('Notes'),
             TextField(
               keyboardType: TextInputType.multiline,
-              controller: _notesController,
+              controller: notesController,
               onChanged: (newValue) {
-                  widget.notes.replaceRange(0, null, newValue);
-                  widget.onChanged(newValue);
+                  notes.replaceRange(0, null, newValue);
+                  onChanged(newValue);
               },
               maxLines: null,
             ),
