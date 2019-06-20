@@ -34,9 +34,7 @@ class DatetimeView extends StatelessWidget {
             labelText: 'Date/Time',
             hasFloatingPlaceholder: false,
           ),
-          onChanged: (dt) {
-            // onChanged(dt);
-          },
+          onChanged: onChanged,
         ),
       ),
     );
