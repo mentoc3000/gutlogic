@@ -5,8 +5,9 @@ import 'gutai_card.dart';
 
 class DatetimeView extends StatefulWidget {
   final DateTime date;
+  final void Function(DateTime) onChanged;
 
-  DatetimeView({this.date});
+  DatetimeView({this.date, this.onChanged});
 
   @override
   _DatetimeViewState createState() => _DatetimeViewState();
@@ -42,8 +43,13 @@ class _DatetimeViewState extends State<DatetimeView> {
           format: formats[inputType],
           editable: editable,
           decoration: InputDecoration(
-              labelText: 'Date/Time', hasFloatingPlaceholder: false),
-          onChanged: (dt) => setState(() => date = dt),
+            labelText: 'Date/Time',
+            hasFloatingPlaceholder: false,
+          ),
+          onChanged: (dt) {
+            widget.onChanged(dt);
+            setState(() => date = dt);
+          },
         ),
       ),
     );

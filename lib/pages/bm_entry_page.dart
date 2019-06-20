@@ -21,6 +21,11 @@ class BMEntryPage extends StatelessWidget {
       [
         DatetimeView(
           date: entry.dateTime,
+          onChanged: (newValue) {
+            final updatedEntry =
+                entry.rebuild((b) => b..dateTime = newValue);
+            diaryEntryBloc.dispatch(Upsert(updatedEntry));
+          },
         ),
         BMTypeSliderTile(
           type: entry.bowelMovement.type,
