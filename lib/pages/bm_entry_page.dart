@@ -25,15 +25,26 @@ class BMEntryPage extends StatelessWidget {
         BMTypeSliderTile(
           type: entry.bowelMovement.type,
           onChanged: (newValue) {
-            final updatedEntry = entry.rebuild((b) => b..bowelMovement.type = newValue);
+            final updatedEntry =
+                entry.rebuild((b) => b..bowelMovement.type = newValue);
             diaryEntryBloc.dispatch(Upsert(updatedEntry));
           },
         ),
         BMVolumeSliderTile(
           volume: entry.bowelMovement.volume,
+          onChanged: (newValue) {
+            final updatedEntry =
+                entry.rebuild((b) => b..bowelMovement.volume = newValue);
+            diaryEntryBloc.dispatch(Upsert(updatedEntry));
+          },
         ),
         NotesTile(
           notes: entry.notes,
+          onChanged: (newValue) {
+            final updatedEntry =
+                entry.rebuild((b) => b..notes = newValue);
+            diaryEntryBloc.dispatch(Upsert(updatedEntry));
+          },
         ),
       ],
     ].expand((x) => x).toList();
@@ -116,6 +127,7 @@ class BMVolumeSliderTile extends StatefulWidget {
   final int minimum = 1;
   final int maximum = 5;
   final int volume;
+  final void Function(int) onChanged;
   final List<String> descriptions = [
     'Low Volume',
     'Moderately Low Volume',
@@ -124,7 +136,7 @@ class BMVolumeSliderTile extends StatefulWidget {
     'High Volume',
   ];
 
-  BMVolumeSliderTile({this.volume: 3});
+  BMVolumeSliderTile({this.volume: 3, this.onChanged});
 
   @override
   _BMVolumeSliderTileState createState() => _BMVolumeSliderTileState();
@@ -155,6 +167,7 @@ class _BMVolumeSliderTileState extends State<BMVolumeSliderTile> {
             onChanged: (newValue) => setState(() {
                   value = newValue.toInt();
                   description = widget.descriptions[value - 1];
+                  widget.onChanged(value);
                 }),
           ),
           Text(description)

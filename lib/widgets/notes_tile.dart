@@ -3,8 +3,9 @@ import 'gutai_card.dart';
 
 class NotesTile extends StatefulWidget {
   final String notes;
+  final void Function(String) onChanged;
 
-  NotesTile({this.notes});
+  NotesTile({this.notes, this.onChanged});
 
   @override
   _NotesTileState createState() => _NotesTileState();
@@ -31,8 +32,10 @@ class _NotesTileState extends State<NotesTile> {
             TextField(
               keyboardType: TextInputType.multiline,
               controller: _notesController,
-              onChanged: (newValue) =>
-                  widget.notes.replaceRange(0, null, newValue),
+              onChanged: (newValue) {
+                  widget.notes.replaceRange(0, null, newValue);
+                  widget.onChanged(newValue);
+              },
               maxLines: null,
             ),
           ],
