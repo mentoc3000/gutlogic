@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/diary_entry_bloc.dart';
 import '../models/diary_entry.dart';
 import 'package:intl/intl.dart';
 import '../pages/meal_entry_page.dart';
@@ -143,13 +145,14 @@ class MealEntryListTile extends StatelessWidget {
 }
 
 class BowelMovementEntryListTile extends StatelessWidget {
-  final BuildContext context;
+  // final BuildContext context;
   final BowelMovementEntry entry;
 
-  BowelMovementEntryListTile(this.context, this.entry);
+  BowelMovementEntryListTile(this.entry);
 
   @override
   Widget build(BuildContext context) {
+    // final diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     return DiaryEntryListTile(
       heading: 'Bowel Movement',
       datetime: entry.dateTime,
@@ -158,8 +161,6 @@ class BowelMovementEntryListTile extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => BMEntryPage(
-                    context: this
-                        .context, // must use this.context to access BlocProvider
                     entry: entry,
                   ),
             ),

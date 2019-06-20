@@ -19,6 +19,7 @@ import '../resources/medicine_repository.dart';
 import '../resources/symptom_type_repository.dart';
 import '../resources/diary_entry_repository.dart';
 
+// TODO: change to stateless widget
 class Tabbed extends StatefulWidget {
   static String tag = 'tabbed-page';
   @override
@@ -67,8 +68,15 @@ class _TabbedState extends State<Tabbed> {
       child: BlocBuilder(
         bloc: _tabBloc,
         builder: (BuildContext context, AppTab appTab) {
+          // Scaffold to provide bottomNavigationBar
           return Scaffold(
-            body: _buildBody(appTab),
+            // MaterialApp to provide routing while persisting bottom bar
+            body: MaterialApp(
+              // Scaffold to show body and snackbars correctly
+              home: Scaffold(
+                body: _buildBody(appTab),
+              )
+            ),
             bottomNavigationBar: TabSelector(
               activeTab: appTab,
               onTabSelected: (tab) => _tabBloc.dispatch(UpdateTab(tab)),

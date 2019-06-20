@@ -10,10 +10,9 @@ import '../blocs/database_event.dart';
 class BMEntryPage extends StatefulWidget {
   static String tag = 'bm-entry-page';
 
-  final BuildContext context;
   final BowelMovementEntry entry;
 
-  BMEntryPage({@required this.context, this.entry});
+  BMEntryPage({this.entry});
 
   @override
   BMEntryPageState createState() => BMEntryPageState();
@@ -26,11 +25,11 @@ class BMEntryPageState extends State<BMEntryPage> {
   void initState() {
     super.initState();
 
-    this.diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(widget.context);
   }
 
   @override
   Widget build(BuildContext context) {
+    this.diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
      List<Widget> items = <List<Widget>>[
       [
         DatetimeView(date: widget.entry.dateTime),
