@@ -20,6 +20,15 @@ void main() {
       expect(symptom.severity, 2.1);
     });
 
+    test('rebuild nested object', () {
+      Symptom symptom = Symptom.fromBuilder((b) => b
+        ..symptomType.name = 'Gas'
+        ..severity = 2.1);
+      symptom = symptom.rebuild((b) => b..symptomType.name = 'Gas');
+      expect(symptom.symptomType.name, 'Gas');
+      expect(symptom.severity, 2.1);
+    });
+
     test('is equatable', () {
       final constructSymptom = () => Symptom.fromBuilder((b) => b
         ..symptomType.name = 'Gas'
