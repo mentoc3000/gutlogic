@@ -15,4 +15,5 @@ abstract class Irritant implements Built<Irritant, IrritantBuilder>, Searchable 
   factory Irritant.fromBuilder([updates(IrritantBuilder b)]) = _$Irritant;
 
   String searchHeading() => name;
+  String queryText() => name;
 }

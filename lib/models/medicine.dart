@@ -16,4 +16,5 @@ abstract class Medicine implements Built<Medicine, MedicineBuilder>, Searchable,
   factory Medicine.fromBuilder([updates(MedicineBuilder b)]) = _$Medicine;
 
   String searchHeading() => name;
+  String queryText() => name;
 }

@@ -41,6 +41,11 @@ abstract class MealEntry
     ..notes = '');
 
   String searchHeading() => 'Meal';
+  String queryText() {
+    Iterable<String> textParts =
+        meal.ingredients.map((i) => i.food.name).toList()..add(notes);
+    return textParts.join(' ');
+  }
 }
 
 abstract class BowelMovementEntry
@@ -73,6 +78,7 @@ abstract class BowelMovementEntry
         ..notes = '');
 
   String searchHeading() => 'Bowel Movement';
+  String queryText() => 'Bowel Movement';
 }
 
 abstract class DosesEntry
@@ -100,6 +106,15 @@ abstract class DosesEntry
     ..notes = '');
 
   String searchHeading() => 'Medicine';
+  String queryText() {
+    // return [
+    //   ...doses.map((d) => d.medicine.name),
+    //   notes
+    // ].join(' ');
+    Iterable<String> textParts = doses.map((d) => d.medicine.name).toList()
+      ..add(notes);
+    return textParts.join(' ');
+  }
 }
 
 abstract class SymptomEntry
@@ -131,4 +146,7 @@ abstract class SymptomEntry
     ..notes = '');
 
   String searchHeading() => 'Symptom';
+  String queryText() {
+    return [symptom.symptomType.name, notes].join(' ');
+  }
 }

@@ -13,6 +13,16 @@ void main() {
       expect(names.contains('Constipation'), true);
       expect(names.contains('Bloating'), true);
     });
+
+    test('fetches query', () async {
+      SymptomTypeRepository symptomTypeRepository = SymptomTypeRepository();
+      Iterable<SymptomType> symptomTypes = await symptomTypeRepository.fetchQuery('Gas');
+      expect(symptomTypes.length, 1);
+      List<String> names = symptomTypes.map((t) => t.name).toList();
+      expect(names.contains('Gas'), true);
+      expect(names.contains('Constipation'), false);
+      expect(names.contains('Bloating'), false);
+    });
   });
 }
 

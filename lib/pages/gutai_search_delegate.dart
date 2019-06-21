@@ -25,7 +25,6 @@ class GutAiSearchDelegate<T extends Searchable> extends SearchDelegate {
   }
 
   closeSearch(BuildContext context) {
-    searchableBloc.dispose();
     close(context, null);
   }
 
@@ -39,6 +38,7 @@ class GutAiSearchDelegate<T extends Searchable> extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    print(query);
     searchableBloc.dispatch(FetchQuery(query));
 
     return Column(

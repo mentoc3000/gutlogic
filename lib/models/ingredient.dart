@@ -20,4 +20,5 @@ abstract class Ingredient
   factory Ingredient.fromBuilder([updates(IngredientBuilder b)]) = _$Ingredient;
 
   String searchHeading() => food.name;
+  String queryText() => food.name;
 }

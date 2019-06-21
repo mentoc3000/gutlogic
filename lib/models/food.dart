@@ -26,4 +26,5 @@ abstract class Food implements Built<Food, FoodBuilder>, Searchable, DatabaseIte
   factory Food.fromBuilder([updates(FoodBuilder b)]) = _$Food;
 
   String searchHeading() => name;
+  String queryText() => name;
 }
