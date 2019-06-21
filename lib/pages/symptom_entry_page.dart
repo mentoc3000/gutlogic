@@ -33,11 +33,13 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
   List<Widget> buildItems() {
     DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     return [
-      DatetimeView(date: _symptomEntry.dateTime, onChanged: (dateTime) {
-              _symptomEntry =
-                  _symptomEntry.rebuild((b) => b..dateTime = dateTime);
-              diaryEntryBloc.dispatch(Upsert(_symptomEntry));
-      }),
+      DatetimeView(
+        date: _symptomEntry.dateTime,
+        onChanged: (dateTime) {
+          _symptomEntry = _symptomEntry.rebuild((b) => b..dateTime = dateTime);
+          diaryEntryBloc.dispatch(Upsert(_symptomEntry));
+        },
+      ),
       buildSeveritySlider(),
       NotesTile(notes: _symptomEntry.notes),
     ];
