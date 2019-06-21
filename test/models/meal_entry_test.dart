@@ -20,6 +20,7 @@ void main() {
       expect(mealEntry.id, null);
     });
 
+
     test('is serializable', () {
       DateTime dateTime = DateTime.utc(2019, 3, 15, 4, 24, 37);
       BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([

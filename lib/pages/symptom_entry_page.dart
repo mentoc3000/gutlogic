@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gut_ai/blocs/symptom_type_bloc.dart';
+import 'package:gut_ai/models/symptom_type.dart';
 import '../models/diary_entry.dart';
 import '../widgets/datetime_view.dart';
 import 'gutai_search_delegate.dart';
@@ -30,8 +31,13 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
   }
 
   List<Widget> buildItems() {
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     return [
-      DatetimeView(date: _symptomEntry.dateTime),
+      DatetimeView(date: _symptomEntry.dateTime, onChanged: (dateTime) {
+              _symptomEntry =
+                  _symptomEntry.rebuild((b) => b..dateTime = dateTime);
+              diaryEntryBloc.dispatch(Upsert(_symptomEntry));
+      }),
       buildSeveritySlider(),
       NotesTile(notes: _symptomEntry.notes),
     ];
@@ -39,6 +45,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
 
 // TODO: make severity slider a class
   Widget buildSeveritySlider() {
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     List<SeverityIndicator> severityIndicators = [
       SeverityIndicator(
         image: Image.asset(
@@ -87,13 +94,17 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     return Column(
       children: [
         Slider(
-          min: 0,
-          max: 10,
-          divisions: 11,
-          value: _symptomEntry.symptom.severity,
-          onChanged: (newValue) => null
-              // setState(() => _symptomEntry.symptom.severity = newValue),
-        ),
+            min: 0,
+            max: 10,
+            divisions: 11,
+            value: _symptomEntry.symptom.severity,
+            onChanged: (newValue) {
+              setState(() => _symptomEntry =
+                  _symptomEntry.rebuild((b) => b..symptom.severity = newValue));
+              diaryEntryBloc.dispatch(Upsert(_symptomEntry));
+            }
+            // setState(() => _symptomEntry.symptom.severity = newValue),
+            ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: severityIndicators,
@@ -104,11 +115,12 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
 
   void showFoodSearch(BuildContext context) {
     final symptomTypeBloc = BlocProvider.of<SymptomTypeBloc>(context);
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
 
-    final onSelect = (symptomType) {
-      // this._symptomEntry.symptom.symptomType = symptomType;
-      _symptomEntry =
-          _symptomEntry.rebuild((b) => b..symptom.symptomType = symptomType);
+    final void Function(SymptomType) onSelect = (symptomType) {
+      setState(() => _symptomEntry = _symptomEntry
+          .rebuild((b) => b..symptom.symptomType = symptomType.toBuilder()));
+      diaryEntryBloc.dispatch(Upsert(_symptomEntry));
     };
 
     showSearch(
@@ -122,7 +134,6 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     List<Widget> items = buildItems();
 
     return Scaffold(

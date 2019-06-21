@@ -124,6 +124,7 @@ abstract class SymptomEntry
 
   factory SymptomEntry.newEntry() => SymptomEntry.fromBuilder((b) => b
     ..dateTime = DateTime.now()
+    // TODO: Why does this need to be converted to a builder?
     ..symptom.symptomType =
         SymptomType.fromBuilder((b) => b.name = '').toBuilder()
     ..symptom.severity = 5
