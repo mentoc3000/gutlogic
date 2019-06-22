@@ -4,8 +4,9 @@ import 'gutai_card.dart';
 
 class QuantityView extends StatefulWidget {
   final Quantity quantity;
+  final void Function(Quantity) onChanged;
 
-  QuantityView({this.quantity});
+  QuantityView({this.quantity, this.onChanged});
 
   @override
   _QuantityViewState createState() => _QuantityViewState();
@@ -14,6 +15,7 @@ class QuantityView extends StatefulWidget {
 class _QuantityViewState extends State<QuantityView> {
   TextEditingController _amountController;
   TextEditingController _unitController;
+  Quantity _quantity;
 
   @override
   void initState() {
@@ -21,6 +23,7 @@ class _QuantityViewState extends State<QuantityView> {
     _amountController =
         TextEditingController(text: widget.quantity.amount.toString());
     _unitController = TextEditingController(text: widget.quantity.unit);
+    _quantity = widget.quantity;
   }
 
   @override
@@ -38,7 +41,8 @@ class _QuantityViewState extends State<QuantityView> {
                 controller: _amountController,
                 textAlign: TextAlign.center,
                 onChanged: (String amount) {
-                  // widget.quantity.amount = double.parse(amount);
+                  _quantity = _quantity.rebuild((b) => b..amount = double.parse(amount));
+                  widget.onChanged(_quantity);
                 },
               ),
             ),
@@ -50,7 +54,8 @@ class _QuantityViewState extends State<QuantityView> {
                 controller: _unitController,
                 textAlign: TextAlign.center,
                 onChanged: (String unit) {
-                  // widget.quantity.unit = unit;
+                  _quantity = _quantity.rebuild((b) => b..unit = unit);
+                  widget.onChanged(_quantity);
                 },
               ),
             )

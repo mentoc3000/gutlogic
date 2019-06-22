@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:built_collection/built_collection.dart';
 import '../models/diary_entry.dart';
 import '../widgets/item_tile.dart';
 import 'ingredient_entry_page.dart';
@@ -55,13 +56,12 @@ class MealEntryPageState extends State<MealEntryPage> {
                         ingredient: ingredient,
                         onSave: (newIngredient) {
                           //How to replace ingredient?
-                          // setState(() {
-                            // Replace old ingredient with new ingredient
-                            _entry = _entry.rebuild((b) => b
-                              ..meal.ingredients.map(
-                                  (i) => ingredient == i ? newIngredient : i));
-                          // });
-                          // widget.onUpdate(_entry);
+                          // Replace old ingredient with new ingredient
+                          _entry = _entry.rebuild((b) => b
+                            ..meal.ingredients = BuiltList<Ingredient>(
+                                    _entry.meal.ingredients.map((i) =>
+                                        ingredient == i ? newIngredient : i))
+                                .toBuilder());
                           diaryEntryBloc.dispatch(Upsert(_entry));
                         },
                       ),

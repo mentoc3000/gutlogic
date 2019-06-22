@@ -43,6 +43,9 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     return [
       QuantityView(
         quantity: _quantity,
+        onChanged: (newQuantity) {
+          _quantity = newQuantity;
+        },
       ),
     ];
   }
