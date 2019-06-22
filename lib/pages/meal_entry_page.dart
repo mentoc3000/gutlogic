@@ -46,18 +46,20 @@ class MealEntryPageState extends State<MealEntryPage> {
       return Dismissible(
         key: ObjectKey(i),
         child: IngredientTile(
-            ingredient: i,
-            mealEntry: _entry,
-            onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => IngredientEntryPage(ingredient: i)),
-                )),
+          ingredient: i,
+          mealEntry: _entry,
+          onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => IngredientEntryPage(ingredient: i)),
+              ),
+        ),
         onDismissed: (direction) {
           if (direction == DismissDirection.endToStart) {
             deleteIngredient(i);
             Scaffold.of(context).showSnackBar(
-                SnackBar(content: Text("${i.food.name} removed.")));
+              SnackBar(content: Text("${i.food.name} removed.")),
+            );
           }
         },
         background: Container(
