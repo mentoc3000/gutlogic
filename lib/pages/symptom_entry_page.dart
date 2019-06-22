@@ -6,7 +6,6 @@ import '../models/diary_entry.dart';
 import '../widgets/datetime_view.dart';
 import 'gutai_search_delegate.dart';
 import '../widgets/notes_tile.dart';
-import '../widgets/placeholder_widget.dart';
 import '../blocs/diary_entry_bloc.dart';
 import '../blocs/database_event.dart';
 
@@ -40,8 +39,13 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
           diaryEntryBloc.dispatch(Upsert(_symptomEntry));
         },
       ),
-      buildSeveritySlider(),
-      NotesTile(notes: _symptomEntry.notes),
+      NotesTile(
+        notes: _symptomEntry.notes,
+        onChanged: (notes) {
+          _symptomEntry = _symptomEntry.rebuild((b) => b..notes = notes);
+          diaryEntryBloc.dispatch(Upsert(_symptomEntry));
+        },
+      ),
     ];
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/diary_entry.dart';
 import '../widgets/item_tile.dart';
 import 'ingredient_entry_page.dart';
@@ -7,6 +8,8 @@ import '../models/ingredient.dart';
 import '../widgets/gutai_card.dart';
 import '../widgets/notes_tile.dart';
 import '../widgets/placeholder_widget.dart';
+import '../blocs/diary_entry_bloc.dart';
+import '../blocs/database_event.dart';
 
 class MealEntryPage extends StatefulWidget {
   static String tag = 'meal-entry-page';
@@ -38,6 +41,7 @@ class MealEntryPageState extends State<MealEntryPage> {
 
   @override
   Widget build(BuildContext context) {
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     List<Widget> ingredientTiles = _entry.meal.ingredients.map((i) {
       return Dismissible(
         key: ObjectKey(i),
@@ -69,7 +73,13 @@ class MealEntryPageState extends State<MealEntryPage> {
     }).toList();
 
     List<Widget> items = [
-      DatetimeView(date: _entry.dateTime),
+      DatetimeView(
+        date: _entry.dateTime,
+        onChanged: (dateTime) {
+          _entry = _entry.rebuild((b) => b..dateTime = dateTime);
+          diaryEntryBloc.dispatch(Upsert(_entry));
+        },
+      ),
       GutAICard(
         child: Column(
           children: [
@@ -79,7 +89,13 @@ class MealEntryPageState extends State<MealEntryPage> {
           ]..addAll(ingredientTiles),
         ),
       ),
-      NotesTile(notes: _entry.notes)
+      NotesTile(
+        notes: _entry.notes,
+        onChanged: (notes) {
+          _entry = _entry.rebuild((b) => b..notes = notes);
+          diaryEntryBloc.dispatch(Upsert(_entry));
+        },
+      )
     ];
 
     return Scaffold(
@@ -94,7 +110,8 @@ class MealEntryPageState extends State<MealEntryPage> {
         padding: EdgeInsets.all(0.0),
       ),
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add), onPressed: () {
+          child: Icon(Icons.add),
+          onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
