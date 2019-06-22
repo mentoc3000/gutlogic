@@ -11,7 +11,8 @@ abstract class SearchableRepository<T extends Searchable> {
     if (query == '') {
       return items;
     }
-    return items
-      ..where((f) => f.queryText().toLowerCase().contains(query.toLowerCase()));
+    return items.rebuild((b) => b
+      ..where(
+          (f) => f.queryText().toLowerCase().contains(query.toLowerCase())));
   }
 }
