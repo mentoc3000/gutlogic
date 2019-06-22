@@ -21,96 +21,87 @@ class MealEntryPage extends StatefulWidget {
 }
 
 class MealEntryPageState extends State<MealEntryPage> {
+  MealEntry _entry;
+
+  void deleteIngredient(Ingredient ingredient) {
+    setState(() {
+      _entry = _entry.rebuild((b) => b.meal.ingredients.remove(ingredient));
+    });
+    widget.onUpdate(_entry);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _entry = widget.entry;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return PlaceholderWidget(Colors.orange);
+    List<Widget> ingredientTiles = _entry.meal.ingredients.map((i) {
+      return Dismissible(
+        key: ObjectKey(i),
+        child: IngredientTile(
+            ingredient: i,
+            mealEntry: _entry,
+            onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => IngredientEntryPage(ingredient: i)),
+                )),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart) {
+            deleteIngredient(i);
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text("${i.food.name} removed.")));
+          }
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 20.0),
+          color: Colors.red,
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }).toList();
+
+    List<Widget> items = [
+      DatetimeView(date: _entry.dateTime),
+      GutAICard(
+        child: Column(
+          children: [
+            HeaderListTile(
+              heading: 'Ingredients',
+            )
+          ]..addAll(ingredientTiles),
+        ),
+      ),
+      NotesTile(notes: _entry.notes)
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Meal'),
+      ),
+      body: ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) =>
+            Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+        padding: EdgeInsets.all(0.0),
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add), onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => IngredientEntryPage(),
+              ),
+            );
+          }),
+    );
   }
-  // MealEntry _entry;
-
-  // void deleteIngredient(Ingredient ingredient) {
-  //   setState(() {
-  //     _entry.meal.ingredients.remove(ingredient);
-  //   });
-  //   widget.onUpdate(_entry);
-  // }
-
-  // void addIngredient() {
-  //   Ingredient newIngredient = Ingredient();
-  //   _entry.meal.ingredients.add(newIngredient);
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => IngredientEntryPage(ingredient: newIngredient),
-  //     ),
-  //   );
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _entry = widget.entry;
-  // }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   List<Widget> ingredientTiles = _entry.meal.ingredients.map((i) {
-  //     return Dismissible(
-  //       key: ObjectKey(i),
-  //       child: IngredientTile(
-  //           ingredient: i,
-  //           mealEntry: _entry,
-  //           onTap: () => Navigator.push(
-  //                 context,
-  //                 MaterialPageRoute(
-  //                     builder: (context) => IngredientEntryPage(ingredient: i)),
-  //               )),
-  //       onDismissed: (direction) {
-  //         if (direction == DismissDirection.endToStart) {
-  //           deleteIngredient(i);
-  //           Scaffold.of(context).showSnackBar(
-  //               SnackBar(content: Text("${i.food.name} removed.")));
-  //         }
-  //       },
-  //       background: Container(
-  //         alignment: Alignment.centerRight,
-  //         padding: EdgeInsets.only(right: 20.0),
-  //         color: Colors.red,
-  //         child: Icon(
-  //           Icons.delete,
-  //           color: Colors.white,
-  //         ),
-  //       ),
-  //     );
-  //   }).toList();
-
-  //   List<Widget> items = [
-  //     DatetimeView(date: _entry.dateTime),
-  //     GutAICard(
-  //       child: Column(
-  //         children: [
-  //           HeaderListTile(
-  //             heading: 'Ingredients',
-  //           )
-  //         ]..addAll(ingredientTiles),
-  //       ),
-  //     ),
-  //     NotesTile(notes: _entry.notes)
-  //   ];
-
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       centerTitle: true,
-  //       title: Text(_entry.meal.name ?? 'Meal'),
-  //     ),
-  //     body: ListView.builder(
-  //       itemCount: items.length,
-  //       itemBuilder: (context, index) =>
-  //           Padding(padding: EdgeInsets.all(1.0), child: items[index]),
-  //       padding: EdgeInsets.all(0.0),
-  //     ),
-  //     floatingActionButton: FloatingActionButton(
-  //         child: Icon(Icons.add), onPressed: addIngredient),
-  //   );
-  // }
 }
