@@ -8,7 +8,6 @@ import '../widgets/datetime_view.dart';
 import '../models/ingredient.dart';
 import '../widgets/gutai_card.dart';
 import '../widgets/notes_tile.dart';
-import '../widgets/placeholder_widget.dart';
 import '../blocs/diary_entry_bloc.dart';
 import '../blocs/database_event.dart';
 
