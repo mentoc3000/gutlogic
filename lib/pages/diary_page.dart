@@ -23,7 +23,7 @@ class DiaryPageState extends State<DiaryPage> {
       return MealEntryListTile(
         entry: entry,
         // onUpdate: (e) => setState(() => entry = e),
-        onUpdate: (e) => diaryEntryBloc.dispatch(Upsert(e)),
+        // onUpdate: (e) => diaryEntryBloc.dispatch(Upsert(e)),
       );
     }
     if (entry is BowelMovementEntry) {

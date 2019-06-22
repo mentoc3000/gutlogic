@@ -119,9 +119,8 @@ class DiaryEntryListTile extends StatelessWidget {
 
 class MealEntryListTile extends StatelessWidget {
   final MealEntry entry;
-  final void Function(MealEntry) onUpdate;
 
-  MealEntryListTile({this.entry, this.onUpdate});
+  MealEntryListTile({this.entry});
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +135,6 @@ class MealEntryListTile extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => MealEntryPage(
                     entry: entry,
-                    // onUpdate: onUpdate,
                   ),
             ),
           ),
