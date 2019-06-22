@@ -15,9 +15,8 @@ class MealEntryPage extends StatefulWidget {
   static String tag = 'meal-entry-page';
 
   final MealEntry entry;
-  final void Function(MealEntry) onUpdate;
 
-  MealEntryPage({this.entry, this.onUpdate});
+  MealEntryPage({this.entry});
 
   @override
   MealEntryPageState createState() => MealEntryPageState();
@@ -27,10 +26,11 @@ class MealEntryPageState extends State<MealEntryPage> {
   MealEntry _entry;
 
   void deleteIngredient(Ingredient ingredient) {
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     setState(() {
       _entry = _entry.rebuild((b) => b.meal.ingredients.remove(ingredient));
     });
-    widget.onUpdate(_entry);
+    diaryEntryBloc.dispatch(Upsert(_entry));
   }
 
   @override
@@ -42,23 +42,37 @@ class MealEntryPageState extends State<MealEntryPage> {
   @override
   Widget build(BuildContext context) {
     DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
-    List<Widget> ingredientTiles = _entry.meal.ingredients.map((i) {
+    List<Widget> ingredientTiles = _entry.meal.ingredients.map((ingredient) {
       return Dismissible(
-        key: ObjectKey(i),
+        key: ObjectKey(ingredient),
         child: IngredientTile(
-          ingredient: i,
+          ingredient: ingredient,
           mealEntry: _entry,
           onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => IngredientEntryPage(ingredient: i)),
+                  builder: (context) => IngredientEntryPage(
+                        ingredient: ingredient,
+                        onSave: (newIngredient) {
+                          //How to replace ingredient?
+                          // setState(() {
+                            // Replace old ingredient with new ingredient
+                            _entry = _entry.rebuild((b) => b
+                              ..meal.ingredients.map(
+                                  (i) => ingredient == i ? newIngredient : i));
+                          // });
+                          // widget.onUpdate(_entry);
+                          diaryEntryBloc.dispatch(Upsert(_entry));
+                        },
+                      ),
+                ),
               ),
         ),
         onDismissed: (direction) {
           if (direction == DismissDirection.endToStart) {
-            deleteIngredient(i);
+            deleteIngredient(ingredient);
             Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text("${i.food.name} removed.")),
+              SnackBar(content: Text("${ingredient.food.name} removed.")),
             );
           }
         },

@@ -18,10 +18,12 @@ class DiaryPage extends StatefulWidget {
 
 class DiaryPageState extends State<DiaryPage> {
   Widget buildEntryTile(DiaryEntry entry) {
+    final diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     if (entry is MealEntry) {
       return MealEntryListTile(
         entry: entry,
-        onUpdate: (e) => setState(() => entry = e),
+        // onUpdate: (e) => setState(() => entry = e),
+        onUpdate: (e) => diaryEntryBloc.dispatch(Upsert(e)),
       );
     }
     if (entry is BowelMovementEntry) {
@@ -35,7 +37,8 @@ class DiaryPageState extends State<DiaryPage> {
     if (entry is SymptomEntry) {
       return SymptomEntryListTile(
         entry: entry,
-        onSaved: (e) => setState(() => entry = e),
+        onSaved: (e) => diaryEntryBloc.dispatch(Upsert(e)),
+        // onSaved: (e) => setState(() => entry = e),
       );
     }
     return null;

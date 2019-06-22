@@ -136,7 +136,7 @@ class MealEntryListTile extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => MealEntryPage(
                     entry: entry,
-                    onUpdate: onUpdate,
+                    // onUpdate: onUpdate,
                   ),
             ),
           ),

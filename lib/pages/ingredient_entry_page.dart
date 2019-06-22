@@ -5,12 +5,7 @@ import '../models/food.dart';
 import '../models/quantity.dart';
 import '../widgets/quantity_view.dart';
 import '../blocs/food_bloc.dart';
-import '../resources/app_sync_service.dart';
-import '../resources/user_service.dart';
 import 'gutai_search_delegate.dart';
-import '../widgets/placeholder_widget.dart';
-import '../blocs/diary_entry_bloc.dart';
-import '../blocs/database_event.dart';
 
 class IngredientEntryPage extends StatefulWidget {
   static String tag = 'ingredient-entry-page';
@@ -33,6 +28,15 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     super.initState();
     _food = widget.ingredient.food ?? null;
     _quantity = widget.ingredient.quantity ?? null;
+  }
+
+  @override
+  void dispose() {
+    if (_food != null && _quantity != null) {
+      Ingredient ingredient = Ingredient(food: _food, quantity: _quantity);
+      widget.onSave(ingredient);
+    }
+    super.dispose();
   }
 
   List<Widget> buildItems() {
