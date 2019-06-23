@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gut_ai/blocs/diary_bloc.dart';
 import 'package:intl/intl.dart';
 import '../widgets/diary_tiles.dart';
 import 'meal_entry_page.dart';
