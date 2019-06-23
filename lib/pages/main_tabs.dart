@@ -93,39 +93,27 @@ class _TabbedState extends State<Tabbed> {
   }
 
   Widget _buildBody(AppTab appTab) {
-    Widget body;
-    switch (appTab) {
-      case AppTab.diary:
-        {
-          body = _diaryPage;
-        }
-        break;
-
-      case AppTab.search:
-        {
-          body = _foodSearchPage;
-        }
-        break;
-
-      case AppTab.chat:
-        {
-          body = _chatPage;
-        }
-        break;
-
-      case AppTab.account:
-        {
-          body = _accountPage;
-        }
-        break;
-
-      default:
-        {
-          body = _diaryPage;
-        }
-        break;
-    }
-    return body;
+    // Allow separate navigation within each tab
+    return Stack(
+      children: <Widget>[
+        Offstage(
+          offstage: appTab != AppTab.diary,
+          child: _diaryPage,
+        ),
+        Offstage(
+          offstage: appTab != AppTab.search,
+          child: _foodSearchPage,
+        ),
+        Offstage(
+          offstage: appTab != AppTab.chat,
+          child: _chatPage,
+        ),
+        Offstage(
+          offstage: appTab != AppTab.account,
+          child: _accountPage,
+        ),
+      ],
+    );
   }
 }
 
