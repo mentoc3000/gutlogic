@@ -25,7 +25,6 @@ class DosesEntryPage extends StatefulWidget {
 class DosesEntryPageState extends State<DosesEntryPage> {
   DosesEntry _entry;
 
-
   void deleteDose(Dose dose) {
     DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     setState(() {
@@ -42,25 +41,37 @@ class DosesEntryPageState extends State<DosesEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> doseTiles = _entry.doses.map((i) {
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
+    List<Widget> doseTiles = _entry.doses.map((dose) {
       return Dismissible(
-        key: ObjectKey(i),
+        key: ObjectKey(dose),
         child: DoseTile(
-          dose: i,
+          dose: dose,
           dosesEntry: _entry,
           onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DoseEntryPage(dose: i),
+                  builder: (context) => DoseEntryPage(
+                        dose: dose,
+                        onSave: (newDose) {
+                          //How to replace dose?
+                          // Replace old dose with new dose
+                          _entry = _entry.rebuild((b) => b
+                            ..doses = BuiltList<Dose>(_entry.doses
+                                    .map((d) => dose == d ? newDose : d))
+                                .toBuilder());
+                          diaryEntryBloc.dispatch(Upsert(_entry));
+                        },
+                      ),
                 ),
               ),
         ),
         onDismissed: (direction) {
           if (direction == DismissDirection.endToStart) {
-            deleteDose(i);
+            deleteDose(dose);
             Scaffold.of(context).showSnackBar(
               SnackBar(
-                content: Text("${i.medicine.name} removed."),
+                content: Text("${dose.medicine.name} removed."),
               ),
             );
           }

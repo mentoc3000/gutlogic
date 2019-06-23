@@ -26,8 +26,8 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
   @override
   void initState() {
     super.initState();
-    _food = widget.ingredient.food ?? null;
-    _quantity = widget.ingredient.quantity ?? null;
+    _food = widget.ingredient?.food ?? null;
+    _quantity = widget.ingredient?.quantity ?? null;
   }
 
   @override
