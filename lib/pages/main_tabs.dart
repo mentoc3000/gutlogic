@@ -33,6 +33,11 @@ class _TabbedState extends State<Tabbed> {
   SymptomTypeBloc _symptomTypeBloc;
   DiaryEntryBloc _diaryEntryBloc;
 
+  Widget _diaryPage;
+  Widget _foodSearchPage;
+  Widget _chatPage;
+  Widget _accountPage;
+
   @override
   void initState() {
     final userService = UserService();
@@ -53,6 +58,11 @@ class _TabbedState extends State<Tabbed> {
     DiaryEntryRepository diaryEntriesRepository = DiaryEntryRepository();
     _diaryEntryBloc = DiaryEntryBloc(diaryEntriesRepository);
 
+    _diaryPage = MaterialApp(home: Scaffold(body: DiaryPage()));
+    _foodSearchPage = MaterialApp(home: Scaffold(body: FoodSearchPage()));
+    _chatPage = MaterialApp(home: Scaffold(body: PlaceholderWidget(Colors.red)));
+    _accountPage = MaterialApp(home: Scaffold(body: AccountPage()));
+
     super.initState();
   }
 
@@ -71,12 +81,7 @@ class _TabbedState extends State<Tabbed> {
           // Scaffold to provide bottomNavigationBar
           return Scaffold(
             // MaterialApp to provide routing while persisting bottom bar
-            body: MaterialApp(
-              // Scaffold to show body and snackbars correctly
-              home: Scaffold(
-                body: _buildBody(appTab),
-              )
-            ),
+            body: _buildBody(appTab),
             bottomNavigationBar: TabSelector(
               activeTab: appTab,
               onTabSelected: (tab) => _tabBloc.dispatch(UpdateTab(tab)),
@@ -92,31 +97,31 @@ class _TabbedState extends State<Tabbed> {
     switch (appTab) {
       case AppTab.diary:
         {
-          body = DiaryPage();
+          body = _diaryPage;
         }
         break;
 
       case AppTab.search:
         {
-          body = FoodSearchPage();
+          body = _foodSearchPage;
         }
         break;
 
       case AppTab.chat:
         {
-          body = PlaceholderWidget(Colors.red);
+          body = _chatPage;
         }
         break;
 
       case AppTab.account:
         {
-          body = AccountPage();
+          body = _accountPage;
         }
         break;
 
       default:
         {
-          body = DiaryPage();
+          body = _diaryPage;
         }
         break;
     }
