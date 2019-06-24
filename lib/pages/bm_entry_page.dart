@@ -17,7 +17,7 @@ class BMEntryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
-    List<Widget> items = <List<Widget>>[
+    List<Widget> tiles = <List<Widget>>[
       [
         DatetimeView(
           date: entry.dateTime,
@@ -61,9 +61,9 @@ class BMEntryPage extends StatelessWidget {
           title: Text('Bowel Movement'),
         ),
         body: ListView.builder(
-          itemCount: items.length,
+          itemCount: tiles.length,
           itemBuilder: (context, index) =>
-              Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+              Padding(padding: EdgeInsets.all(1.0), child: tiles[index]),
           padding: EdgeInsets.all(0.0),
         ),
       ),
@@ -76,6 +76,16 @@ class BMTypeSliderTile extends StatefulWidget {
   final int maximum = 8;
   final int type;
   final void Function(int) onChanged;
+
+  BMTypeSliderTile({this.type: 5, this.onChanged});
+
+  @override
+  _BMTypeSliderTileState createState() => _BMTypeSliderTileState();
+}
+
+class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
+  int value;
+  String description;
   final List<String> descriptions = [
     'Type 1',
     'Type 2',
@@ -87,21 +97,11 @@ class BMTypeSliderTile extends StatefulWidget {
     'Type 8',
   ];
 
-  BMTypeSliderTile({this.type: 5, this.onChanged});
-
-  @override
-  _BMTypeSliderTileState createState() => _BMTypeSliderTileState();
-}
-
-class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
-  int value;
-  String description;
-
   @override
   void initState() {
     super.initState();
     this.value = widget.type;
-    this.description = widget.descriptions[widget.type - 1];
+    this.description = descriptions[widget.type - 1];
   }
 
   @override
@@ -117,7 +117,7 @@ class _BMTypeSliderTileState extends State<BMTypeSliderTile> {
             divisions: widget.maximum - widget.minimum,
             onChanged: (newValue) => setState(() {
                   value = newValue.toInt();
-                  description = widget.descriptions[value - 1];
+                  description = descriptions[value - 1];
                   widget.onChanged(value);
                 }),
           ),
@@ -133,13 +133,6 @@ class BMVolumeSliderTile extends StatefulWidget {
   final int maximum = 5;
   final int volume;
   final void Function(int) onChanged;
-  final List<String> descriptions = [
-    'Low Volume',
-    'Moderately Low Volume',
-    'Moderate Volume',
-    'Moderately High Volume',
-    'High Volume',
-  ];
 
   BMVolumeSliderTile({this.volume: 3, this.onChanged});
 
@@ -150,12 +143,19 @@ class BMVolumeSliderTile extends StatefulWidget {
 class _BMVolumeSliderTileState extends State<BMVolumeSliderTile> {
   int value;
   String description;
+  final List<String> descriptions = [
+    'Low Volume',
+    'Moderately Low Volume',
+    'Moderate Volume',
+    'Moderately High Volume',
+    'High Volume',
+  ];
 
   @override
   void initState() {
     super.initState();
     this.value = widget.volume;
-    this.description = widget.descriptions[widget.volume - 1];
+    this.description = descriptions[widget.volume - 1];
   }
 
   @override
@@ -171,7 +171,8 @@ class _BMVolumeSliderTileState extends State<BMVolumeSliderTile> {
             divisions: widget.maximum - widget.minimum,
             onChanged: (newValue) => setState(() {
                   value = newValue.toInt();
-                  description = widget.descriptions[value - 1];
+                  description = descriptions[value - 1];
+                  
                   widget.onChanged(value);
                 }),
           ),
