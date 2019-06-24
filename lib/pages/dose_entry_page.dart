@@ -39,17 +39,6 @@ class DoseEntryPageState extends State<DoseEntryPage> {
     super.dispose();
   }
 
-  List<Widget> buildItems() {
-    return [
-      QuantityView(
-        quantity: _quantity,
-        onChanged: (newQuantity) {
-          _quantity = newQuantity;
-        },
-      ),
-    ];
-  }
-
   void showMedicineSearch(BuildContext context) {
     MedicineBloc medicineBloc = BlocProvider.of<MedicineBloc>(context);
 
@@ -66,7 +55,12 @@ class DoseEntryPageState extends State<DoseEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> items = buildItems();
+    List<Widget> tiles = [
+      QuantityView(
+        quantity: _quantity,
+        onChanged: (newQuantity) => _quantity = newQuantity,
+      ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -82,9 +76,9 @@ class DoseEntryPageState extends State<DoseEntryPage> {
       body: Form(
         child: ListView.separated(
           separatorBuilder: (context, index) => Divider(),
-          itemCount: items.length,
+          itemCount: tiles.length,
           itemBuilder: (context, index) =>
-              Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+              Padding(padding: EdgeInsets.all(1.0), child: tiles[index]),
           padding: EdgeInsets.all(0.0),
         ),
       ),
