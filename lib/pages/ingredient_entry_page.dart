@@ -39,17 +39,6 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
     super.dispose();
   }
 
-  List<Widget> buildItems() {
-    return [
-      QuantityView(
-        quantity: _quantity,
-        onChanged: (newQuantity) {
-          _quantity = newQuantity;
-        },
-      ),
-    ];
-  }
-
   void showFoodSearch(BuildContext context) {
     FoodBloc foodBloc = BlocProvider.of<FoodBloc>(context);
 
@@ -66,7 +55,14 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> items = buildItems();
+    List<Widget> cards = [
+      QuantityView(
+        quantity: _quantity,
+        onChanged: (newQuantity) {
+          _quantity = newQuantity;
+        },
+      ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -82,9 +78,9 @@ class IngredientEntryPageState extends State<IngredientEntryPage> {
       body: Form(
         child: ListView.separated(
           separatorBuilder: (context, index) => Divider(),
-          itemCount: items.length,
+          itemCount: cards.length,
           itemBuilder: (context, index) =>
-              Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+              Padding(padding: EdgeInsets.all(1.0), child: cards[index]),
           padding: EdgeInsets.all(0.0),
         ),
       ),
