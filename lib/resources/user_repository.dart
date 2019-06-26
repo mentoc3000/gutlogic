@@ -79,6 +79,15 @@ class UserRepository {
   CognitoUserSession _session;
   CognitoCredentials credentials;
 
+  init() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storage = new Storage(prefs);
+    _userPool.storage = storage;
+
+    _cognitoUser = await _userPool.getCurrentUser();
+    _session = await _cognitoUser?.getSession();
+  }
+
   Future<bool> authenticate({
     @required String username,
     @required String password,
