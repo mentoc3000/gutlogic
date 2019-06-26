@@ -25,55 +25,59 @@ class DosesEntryPage extends StatefulWidget {
 class DosesEntryPageState extends State<DosesEntryPage> {
   DosesEntry _entry;
 
-  void deleteDose(Dose dose) {
-    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
-    setState(() {
-      _entry = _entry.rebuild((b) => b.doses.remove(dose));
-    });
-    diaryEntryBloc.dispatch(Upsert(_entry));
-  }
-
   @override
   void initState() {
     super.initState();
     _entry = widget.entry;
   }
 
+  void _onSelectDose(Dose dose) {
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DoseEntryPage(
+              dose: dose,
+              onSave: (newDose) {
+                //How to replace dose?
+                // Replace old dose with new dose
+                _entry = _entry.rebuild((b) => b
+                  ..doses = BuiltList<Dose>(
+                          _entry.doses.map((d) => dose == d ? newDose : d))
+                      .toBuilder());
+                diaryEntryBloc.dispatch(Upsert(_entry));
+              },
+            ),
+      ),
+    );
+  }
+
+  void _deleteDose(Dose dose) {
+    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
+    setState(() {
+      _entry = _entry.rebuild((b) => b.doses.remove(dose));
+    });
+    diaryEntryBloc.dispatch(Upsert(_entry));
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text("${dose.medicine.name} removed."),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     List<Widget> doseTiles = _entry.doses.map((dose) {
       return Dismissible(
         key: ObjectKey(dose),
         child: DoseTile(
           dose: dose,
           dosesEntry: _entry,
-          onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DoseEntryPage(
-                        dose: dose,
-                        onSave: (newDose) {
-                          //How to replace dose?
-                          // Replace old dose with new dose
-                          _entry = _entry.rebuild((b) => b
-                            ..doses = BuiltList<Dose>(_entry.doses
-                                    .map((d) => dose == d ? newDose : d))
-                                .toBuilder());
-                          diaryEntryBloc.dispatch(Upsert(_entry));
-                        },
-                      ),
-                ),
-              ),
+          onTap: () => _onSelectDose(dose),
         ),
         onDismissed: (direction) {
           if (direction == DismissDirection.endToStart) {
-            deleteDose(dose);
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text("${dose.medicine.name} removed."),
-              ),
-            );
+            _deleteDose(dose);
           }
         },
         background: Container(
@@ -88,7 +92,7 @@ class DosesEntryPageState extends State<DosesEntryPage> {
       );
     }).toList();
 
-    List<Widget> items = [
+    List<Widget> tiles = [
       DatetimeView(date: _entry.dateTime),
       GutAICard(
         child: Column(
@@ -108,9 +112,9 @@ class DosesEntryPageState extends State<DosesEntryPage> {
         title: Text('Medicine'),
       ),
       body: ListView.builder(
-        itemCount: items.length,
+        itemCount: tiles.length,
         itemBuilder: (context, index) =>
-            Padding(padding: EdgeInsets.all(1.0), child: items[index]),
+            Padding(padding: EdgeInsets.all(1.0), child: tiles[index]),
         padding: EdgeInsets.all(0.0),
       ),
       floatingActionButton:
