@@ -49,29 +49,6 @@ class Storage extends CognitoStorage {
   }
 }
 
-class User {
-  String email;
-  String name;
-  String password;
-  bool confirmed = false;
-  bool hasAccess = false;
-
-  User({this.email, this.name});
-
-  /// Decode user from Cognito User Attributes
-  factory User.fromUserAttributes(List<CognitoUserAttribute> attributes) {
-    final user = User();
-    attributes.forEach((attribute) {
-      if (attribute.getName() == 'email') {
-        user.email = attribute.getValue();
-      } else if (attribute.getName() == 'name') {
-        user.name = attribute.getValue();
-      }
-    });
-    return user;
-  }
-}
-
 class UserRepository {
   static CognitoUserPool _userPool =
       new CognitoUserPool(_awsUserPoolId, _awsClientId);
@@ -127,29 +104,14 @@ class UserRepository {
       return null;
     }
 
-    final attributes = await _cognitoUser.getUserAttributes();
-    final user = new User.fromUserAttributes(attributes);
-    user.confirmed = isConfirmed;
-    user.hasAccess = true;
-
-    return user.hasAccess;
+    return isConfirmed;
   }
 
   /// Sign up new user
-  Future<bool> signUp({@required String email, @required String password}) async {
-    CognitoUserPoolData data;
-    // final userAttributes = [
-    //   new AttributeArg(name: 'name', value: name),
-    // ];
-    data =
-        await _userPool.signUp(email, password);
-
-    final user = new User();
-    user.email = email;
-    // user.name = name;
-    user.confirmed = data.userConfirmed;
-
-    return user.confirmed;
+  Future<bool> signUp(
+      {@required String email, @required String password}) async {
+    CognitoUserPoolData data = await _userPool.signUp(email, password);
+    return data.userConfirmed;
   }
 
   /// Confirm user's account with confirmation code sent to email
