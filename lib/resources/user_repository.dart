@@ -63,6 +63,9 @@ class UserRepository {
 
     _cognitoUser = await _userPool.getCurrentUser();
     session = await _cognitoUser?.getSession();
+
+    credentials = new CognitoCredentials(_identityPoolId, _userPool);
+    await credentials.getAwsCredentials(session.getIdToken().getJwtToken());
   }
 
   Future<bool> authenticate({

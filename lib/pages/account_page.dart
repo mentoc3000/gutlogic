@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../resources/user_service.dart';
+import '../resources/user_repository.dart';
 import '../resources/aws_sig_v4_service.dart';
 import '../blocs/authentication_bloc.dart';
 import '../blocs/authentication_event.dart';
 
 class AccountPage extends StatefulWidget {
   static String tag = 'account-page';
+  final UserRepository userRepository;
+
+  AccountPage({@required this.userRepository});
+
   @override
   AccountPageState createState() => AccountPageState();
 }
@@ -42,8 +46,7 @@ class AccountPageState extends State<AccountPage> {
                   onTap: () async {
 
                     // get session credentials
-                    final _userService = new UserService();
-                    final credentials = await _userService.getCredentials();
+                    final credentials = widget.userRepository.credentials;
                     final sigV4Service = new AwsSigV4Service(credentials);
                     final response = await sigV4Service.apiRequest('GET', '/say-hello');
                     

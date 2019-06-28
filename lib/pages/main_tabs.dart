@@ -12,7 +12,6 @@ import '../blocs/food_bloc.dart';
 import '../blocs/medicine_bloc.dart';
 import '../blocs/diary_entry_bloc.dart';
 import '../blocs/symptom_type_bloc.dart';
-import '../resources/user_service.dart';
 import '../resources/user_repository.dart';
 import '../resources/food_repository.dart';
 import '../resources/medicine_repository.dart';
@@ -61,10 +60,33 @@ class _TabbedState extends State<Tabbed> {
     DiaryEntryRepository diaryEntriesRepository = DiaryEntryRepository();
     _diaryEntryBloc = DiaryEntryBloc(diaryEntriesRepository);
 
-    _diaryPage = MaterialApp(home: Scaffold(body: DiaryPage()));
-    _foodSearchPage = MaterialApp(home: Scaffold(body: FoodSearchPage()));
-    _chatPage = MaterialApp(home: Scaffold(body: PlaceholderWidget(Colors.red)));
-    _accountPage = MaterialApp(home: Scaffold(body: AccountPage()));
+    _diaryPage = MaterialApp(
+      home: Scaffold(
+        body: DiaryPage(),
+      ),
+    );
+
+    _foodSearchPage = MaterialApp(
+      home: Scaffold(
+        body: FoodSearchPage(),
+      ),
+    );
+
+    _chatPage = MaterialApp(
+      home: Scaffold(
+        body: PlaceholderWidget(
+          Colors.red,
+        ),
+      ),
+    );
+
+    _accountPage = MaterialApp(
+      home: Scaffold(
+        body: AccountPage(
+          userRepository: widget.userRepository,
+        ),
+      ),
+    );
 
     super.initState();
   }
