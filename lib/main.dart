@@ -79,7 +79,7 @@ class _AppState extends State<App> {
               return SplashPage();
             }
             if (state is AuthenticationAuthenticated) {
-              return Tabbed();
+              return Tabbed(userRepository: _userRepository);
             }
             if (state is AuthenticationUnauthenticated) {
               return LoginPage(userRepository: _userRepository);

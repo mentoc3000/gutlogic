@@ -13,6 +13,7 @@ import '../blocs/medicine_bloc.dart';
 import '../blocs/diary_entry_bloc.dart';
 import '../blocs/symptom_type_bloc.dart';
 import '../resources/user_service.dart';
+import '../resources/user_repository.dart';
 import '../resources/food_repository.dart';
 import '../resources/medicine_repository.dart';
 import '../resources/symptom_type_repository.dart';
@@ -20,6 +21,10 @@ import '../resources/diary_entry_repository.dart';
 
 // TODO: change to stateless widget
 class Tabbed extends StatefulWidget {
+  final UserRepository userRepository;
+
+  Tabbed({@required this.userRepository});
+
   static String tag = 'tabbed-page';
   @override
   _TabbedState createState() => _TabbedState();
