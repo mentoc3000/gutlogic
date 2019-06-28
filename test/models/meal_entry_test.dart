@@ -9,14 +9,14 @@ void main() {
   group('Diary Entry', () {
     test('initial datetime is now', () {
       DateTime before = DateTime.now();
-      MealEntry mealEntry = MealEntry.newEntry();
+      MealEntry mealEntry = MealEntry.newEntry('', '');
       DateTime after = DateTime.now();
       expect(mealEntry.dateTime.isBefore(after), true);
       expect(mealEntry.dateTime.isAfter(before), true);
     });
 
     test('default id is null', () {
-      MealEntry mealEntry = MealEntry.newEntry();
+      MealEntry mealEntry = MealEntry.newEntry('', '');
       expect(mealEntry.id, null);
     });
 
