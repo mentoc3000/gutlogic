@@ -44,8 +44,7 @@ class _TabbedState extends State<Tabbed> {
 
   @override
   void initState() {
-    final userService = UserService();
-    final session = userService.getSession();
+    final session = widget.userRepository.session;
     AppSyncService appSyncService = AppSyncService(session);
 
     _tabBloc = TabBloc();

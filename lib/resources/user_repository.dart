@@ -53,7 +53,7 @@ class UserRepository {
   static CognitoUserPool _userPool =
       new CognitoUserPool(_awsUserPoolId, _awsClientId);
   CognitoUser _cognitoUser;
-  CognitoUserSession _session;
+  CognitoUserSession session;
   CognitoCredentials credentials;
 
   init() async {
@@ -62,7 +62,7 @@ class UserRepository {
     _userPool.storage = storage;
 
     _cognitoUser = await _userPool.getCurrentUser();
-    _session = await _cognitoUser?.getSession();
+    session = await _cognitoUser?.getSession();
   }
 
   Future<bool> authenticate({
@@ -78,7 +78,7 @@ class UserRepository {
     );
     bool isConfirmed;
     try {
-      _session = await _cognitoUser.authenticateUser(authDetails);
+      session = await _cognitoUser.authenticateUser(authDetails);
       isConfirmed = true;
     } on CognitoUserNewPasswordRequiredException catch (e) {
       // handle New Password challenge
@@ -100,7 +100,7 @@ class UserRepository {
     }
     // print(session.getAccessToken().getJwtToken());
     // return _session.getAccessToken().getJwtToken();
-    if (!_session.isValid()) {
+    if (!session.isValid()) {
       return null;
     }
 
@@ -131,17 +131,17 @@ class UserRepository {
 
   /// Check if user's current session is valid
   Future<bool> checkAuthenticated() async {
-    if (_cognitoUser == null || _session == null) {
+    if (_cognitoUser == null || session == null) {
       return false;
     }
-    return _session.isValid();
+    return session.isValid();
   }
 
   Future<bool> hasAccess() async {
-    if (_cognitoUser == null || _session == null) {
+    if (_cognitoUser == null || session == null) {
       return false;
     }
-    if (!_session.isValid()) {
+    if (!session.isValid()) {
       return false;
     }
     return true;
@@ -160,6 +160,6 @@ class UserRepository {
     }
     credentials = null;
     _cognitoUser = null;
-    _session = null;
+    session = null;
   }
 }
