@@ -15,13 +15,9 @@ void main() {
       expect(mealEntry.dateTime.isAfter(before), true);
     });
 
-    test('default id is null', () {
-      MealEntry mealEntry = MealEntry.newEntry('', '');
-      expect(mealEntry.id, null);
-    });
-
-
     test('is serializable', () {
+      String id = 'id';
+      String userId = 'userId';
       DateTime dateTime = DateTime.utc(2019, 3, 15, 4, 24, 37);
       BuiltList<Ingredient> ingredients = BuiltList<Ingredient>([
         Ingredient.fromBuilder((b) => b
@@ -32,11 +28,19 @@ void main() {
       Meal meal = Meal.fromBuilder((b) => b..ingredients = ingredients.toBuilder());
       Map<String,dynamic> mealJson = serializers.serialize(meal);
       MealEntry mealEntry = MealEntry.fromBuilder((b) => b
+        ..id = id
+        ..userId = userId
+        ..creationDate = dateTime
+        ..modificationDate = dateTime
         ..dateTime = dateTime
         ..meal = meal.toBuilder()
         ..notes = 'Tasty!');
       expect(serializers.serialize(mealEntry), {
         '\$': 'MealEntry',
+        'id': id,
+        'userId': userId,
+        'creationDate': dateTime.microsecondsSinceEpoch,
+        'modificationDate': dateTime.microsecondsSinceEpoch,
         'dateTime': dateTime.microsecondsSinceEpoch,
         'meal': mealJson..remove('\$'),
         'notes': mealEntry.notes,
@@ -44,8 +48,14 @@ void main() {
     });
 
     test('is deserializable', () {
+      String id = 'id';
+      String userId = 'userId';
       DateTime dateTime = DateTime.utc(2019, 3, 15, 4, 24, 37);
       Map<String, dynamic> mealEntryJson = {
+        'id': id,
+        'userId': userId,
+        'creationDate': dateTime.microsecondsSinceEpoch,
+        'modificationDate': dateTime.microsecondsSinceEpoch,
         'dateTime': dateTime.microsecondsSinceEpoch,
         'meal': {
           'ingredients': [

@@ -50,7 +50,7 @@ abstract class MealEntry
           ..id = id
           ..userId = userId
           ..creationDate = now
-          ..creationDate = now
+          ..modificationDate = now
           ..dateTime = now
           ..meal = Meal.empty().toBuilder()
           ..notes = '';
