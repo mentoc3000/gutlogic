@@ -15,7 +15,7 @@ abstract class DatabaseRepository<T extends DatabaseItem>
   void delete(String id) async =>
       items = items.rebuild((b) => b..removeWhere((i) => i.id == id));
 
-  void upsert(T item) async => items = items.rebuild((b) => b
+  void update(T item) async => items = items.rebuild((b) => b
     ..removeWhere((i) => i.id == item.id)
     ..add(item));
 }

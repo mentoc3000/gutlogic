@@ -77,10 +77,10 @@ void main() {
         notes: 'Lunch',
       );
 
-      foodBloc.dispatch(Upsert(meal2));
+      foodBloc.dispatch(Update(meal2));
 
-      await untilCalled(diaryEntryRepository.upsert(any));
-      verify(diaryEntryRepository.upsert(meal2));
+      await untilCalled(diaryEntryRepository.update(any));
+      verify(diaryEntryRepository.update(meal2));
     });
   });
 }

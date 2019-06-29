@@ -40,10 +40,10 @@ class Delete extends DatabaseEvent {
   String toString() => 'Delete { id: $id }';
 }
 
-class Upsert<T extends DatabaseItem> extends DatabaseEvent {
+class Update<T extends DatabaseItem> extends DatabaseEvent {
   final T item;
 
-  Upsert(this.item) : super([item]);
+  Update(this.item) : super([item]);
 
   @override
   String toString() => 'Upsert { item: $item }';

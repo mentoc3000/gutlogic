@@ -30,7 +30,7 @@ class MealEntryPageState extends State<MealEntryPage> {
     setState(() {
       _entry = _entry.rebuild((b) => b.meal.ingredients.remove(ingredient));
     });
-    diaryEntryBloc.dispatch(Upsert(_entry));
+    diaryEntryBloc.dispatch(Update(_entry));
   }
 
   @override
@@ -61,7 +61,7 @@ class MealEntryPageState extends State<MealEntryPage> {
                                     _entry.meal.ingredients.map((i) =>
                                         ingredient == i ? newIngredient : i))
                                 .toBuilder());
-                          diaryEntryBloc.dispatch(Upsert(_entry));
+                          diaryEntryBloc.dispatch(Update(_entry));
                         },
                       ),
                 ),
@@ -92,7 +92,7 @@ class MealEntryPageState extends State<MealEntryPage> {
         date: _entry.dateTime,
         onChanged: (dateTime) {
           _entry = _entry.rebuild((b) => b..dateTime = dateTime);
-          diaryEntryBloc.dispatch(Upsert(_entry));
+          diaryEntryBloc.dispatch(Update(_entry));
         },
       ),
       GutAICard(
@@ -108,7 +108,7 @@ class MealEntryPageState extends State<MealEntryPage> {
         notes: _entry.notes,
         onChanged: (notes) {
           _entry = _entry.rebuild((b) => b..notes = notes);
-          diaryEntryBloc.dispatch(Upsert(_entry));
+          diaryEntryBloc.dispatch(Update(_entry));
         },
       )
     ];

@@ -36,14 +36,14 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
         date: _symptomEntry.dateTime,
         onChanged: (dateTime) {
           _symptomEntry = _symptomEntry.rebuild((b) => b..dateTime = dateTime);
-          diaryEntryBloc.dispatch(Upsert(_symptomEntry));
+          diaryEntryBloc.dispatch(Update(_symptomEntry));
         },
       ),
       NotesTile(
         notes: _symptomEntry.notes,
         onChanged: (notes) {
           _symptomEntry = _symptomEntry.rebuild((b) => b..notes = notes);
-          diaryEntryBloc.dispatch(Upsert(_symptomEntry));
+          diaryEntryBloc.dispatch(Update(_symptomEntry));
         },
       ),
     ];
@@ -107,7 +107,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
             onChanged: (newValue) {
               setState(() => _symptomEntry =
                   _symptomEntry.rebuild((b) => b..symptom.severity = newValue));
-              diaryEntryBloc.dispatch(Upsert(_symptomEntry));
+              diaryEntryBloc.dispatch(Update(_symptomEntry));
             }
             // setState(() => _symptomEntry.symptom.severity = newValue),
             ),
@@ -126,7 +126,7 @@ class SymptomEntryPageState extends State<SymptomEntryPage> {
     final void Function(SymptomType) onSelect = (symptomType) {
       setState(() => _symptomEntry = _symptomEntry
           .rebuild((b) => b..symptom.symptomType = symptomType.toBuilder()));
-      diaryEntryBloc.dispatch(Upsert(_symptomEntry));
+      diaryEntryBloc.dispatch(Update(_symptomEntry));
     };
 
     showSearch(

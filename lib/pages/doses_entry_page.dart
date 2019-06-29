@@ -45,7 +45,7 @@ class DosesEntryPageState extends State<DosesEntryPage> {
                   ..doses = BuiltList<Dose>(
                           _entry.doses.map((d) => dose == d ? newDose : d))
                       .toBuilder());
-                diaryEntryBloc.dispatch(Upsert(_entry));
+                diaryEntryBloc.dispatch(Update(_entry));
               },
             ),
       ),
@@ -57,7 +57,7 @@ class DosesEntryPageState extends State<DosesEntryPage> {
     setState(() {
       _entry = _entry.rebuild((b) => b.doses.remove(dose));
     });
-    diaryEntryBloc.dispatch(Upsert(_entry));
+    diaryEntryBloc.dispatch(Update(_entry));
     Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text("${dose.medicine.name} removed."),

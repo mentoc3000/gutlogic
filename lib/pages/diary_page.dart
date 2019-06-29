@@ -36,7 +36,7 @@ class DiaryPageState extends State<DiaryPage> {
     if (entry is SymptomEntry) {
       return SymptomEntryListTile(
         entry: entry,
-        onSaved: (e) => diaryEntryBloc.dispatch(Upsert(e)),
+        onSaved: (e) => diaryEntryBloc.dispatch(Update(e)),
         // onSaved: (e) => setState(() => entry = e),
       );
     }

@@ -53,9 +53,9 @@ abstract class DatabaseBloc<T extends DatabaseItem,
         yield DatabaseError();
       }
     }
-    if (event is Upsert<T>) {
+    if (event is Update<T>) {
       try {
-        repository.upsert(event.item);
+        repository.update(event.item);
       } catch (_) {
         yield DatabaseError();
       }

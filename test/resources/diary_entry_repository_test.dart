@@ -46,7 +46,7 @@ void main() {
         ..bowelMovement.type = 3
         ..bowelMovement.volume = 4
         ..notes = '');
-      diaryEntryRepository.upsert(newBM);
+      diaryEntryRepository.update(newBM);
       BuiltList<DiaryEntry> diaryEntries =
           await diaryEntryRepository.fetchAll();
       expect(diaryEntries.contains(newBM), true);
@@ -61,7 +61,7 @@ void main() {
         ..notes = '');
       diaryEntryRepository.insert(bm);
       BowelMovementEntry newBM = bm.rebuild((b) => b..notes = 'Bad');
-      diaryEntryRepository.upsert(newBM);
+      diaryEntryRepository.update(newBM);
       BuiltList<DiaryEntry> diaryEntries =
           await diaryEntryRepository.fetchAll();
       expect(diaryEntries.contains(bm), false);

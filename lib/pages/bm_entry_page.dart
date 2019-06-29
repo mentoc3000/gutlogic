@@ -24,7 +24,7 @@ class BMEntryPage extends StatelessWidget {
           onChanged: (newValue) {
             final updatedEntry =
                 entry.rebuild((b) => b..dateTime = newValue);
-            diaryEntryBloc.dispatch(Upsert(updatedEntry));
+            diaryEntryBloc.dispatch(Update(updatedEntry));
           },
         ),
         BMTypeSliderTile(
@@ -32,7 +32,7 @@ class BMEntryPage extends StatelessWidget {
           onChanged: (newValue) {
             final updatedEntry =
                 entry.rebuild((b) => b..bowelMovement.type = newValue);
-            diaryEntryBloc.dispatch(Upsert(updatedEntry));
+            diaryEntryBloc.dispatch(Update(updatedEntry));
           },
         ),
         BMVolumeSliderTile(
@@ -40,7 +40,7 @@ class BMEntryPage extends StatelessWidget {
           onChanged: (newValue) {
             final updatedEntry =
                 entry.rebuild((b) => b..bowelMovement.volume = newValue);
-            diaryEntryBloc.dispatch(Upsert(updatedEntry));
+            diaryEntryBloc.dispatch(Update(updatedEntry));
           },
         ),
         NotesTile(
@@ -48,7 +48,7 @@ class BMEntryPage extends StatelessWidget {
           onChanged: (newValue) {
             final updatedEntry =
                 entry.rebuild((b) => b..notes = newValue);
-            diaryEntryBloc.dispatch(Upsert(updatedEntry));
+            diaryEntryBloc.dispatch(Update(updatedEntry));
           },
         ),
       ],
