@@ -98,7 +98,7 @@ abstract class BowelMovementEntry
           ..id = id
           ..userId = userId
           ..creationDate = now
-          ..creationDate = now
+          ..modificationDate = now
           ..dateTime = now
           ..bowelMovement = BowelMovement.startingValue().toBuilder()
           ..notes = '';
@@ -138,7 +138,7 @@ abstract class DosesEntry
           ..id = id
           ..userId = userId
           ..creationDate = now
-          ..creationDate = now
+          ..modificationDate = now
           ..dateTime = now
           ..doses = BuiltList<Dose>([]).toBuilder()
           ..notes = '';
@@ -183,7 +183,7 @@ abstract class SymptomEntry
           ..id = id
           ..userId = userId
           ..creationDate = now
-          ..creationDate = now
+          ..modificationDate = now
           ..dateTime = now
           // TODO: Why does this need to be converted to a builder?
           ..symptom.symptomType =
