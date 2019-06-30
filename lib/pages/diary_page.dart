@@ -8,6 +8,11 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../blocs/database_state.dart';
 import '../blocs/database_event.dart';
 
+import '../pages/meal_entry_page.dart';
+import '../pages/bm_entry_page.dart';
+import '../pages/symptom_entry_page.dart';
+import '../pages/doses_entry_page.dart';
+
 class DiaryPage extends StatefulWidget {
   static String tag = 'diary-page';
   @override
@@ -180,14 +185,6 @@ class DiaryFloatingActionButton extends StatelessWidget {
     );
   }
 }
-
-import 'package:flutter/material.dart';
-import '../models/diary_entry.dart';
-import 'package:intl/intl.dart';
-import '../pages/meal_entry_page.dart';
-import '../pages/bm_entry_page.dart';
-import '../pages/symptom_entry_page.dart';
-import '../pages/doses_entry_page.dart';
 
 class DiaryEntryListTile extends StatelessWidget {
   final String heading;
