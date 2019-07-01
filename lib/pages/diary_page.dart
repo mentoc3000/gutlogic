@@ -160,6 +160,7 @@ class DiaryFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     return SpeedDial(
       animatedIcon: AnimatedIcons.menu_close,
       // child: Icon(Icons.add),
@@ -169,10 +170,11 @@ class DiaryFloatingActionButton extends StatelessWidget {
           backgroundColor: Colors.blue,
           label: 'Food & Drink',
           onTap: () {
+            // TODO: This process should not be done in a UI class
             IdService idService = IdService(userRepository);
             MealEntry newMeal =
                 MealEntry.newEntry(idService.getId(), idService.getUserId());
-            // diaryEntryBloc.insert(newMeal);
+            diaryEntryBloc.dispatch(Insert(newMeal));
             Navigator.push(
               context,
               MaterialPageRoute(
