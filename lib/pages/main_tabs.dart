@@ -17,6 +17,7 @@ import '../resources/food_repository.dart';
 import '../resources/medicine_repository.dart';
 import '../resources/symptom_type_repository.dart';
 import '../resources/diary_entry_repository.dart';
+import '../resources/id_service.dart';
 
 // TODO: change to stateless widget
 class Tabbed extends StatefulWidget {
@@ -45,6 +46,7 @@ class _TabbedState extends State<Tabbed> {
   void initState() {
     final session = widget.userRepository.session;
     AppSyncService appSyncService = AppSyncService(session);
+    IdService idService = IdService(widget.userRepository);
 
     _tabBloc = TabBloc();
 
@@ -58,7 +60,7 @@ class _TabbedState extends State<Tabbed> {
     _symptomTypeBloc = SymptomTypeBloc(symptomTypeRepository);
 
     DiaryEntryRepository diaryEntriesRepository = DiaryEntryRepository();
-    _diaryEntryBloc = DiaryEntryBloc(diaryEntriesRepository);
+    _diaryEntryBloc = DiaryEntryBloc(diaryEntriesRepository, idService);
 
     _diaryPage = MaterialApp(
       home: Scaffold(
