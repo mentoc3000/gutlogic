@@ -62,7 +62,9 @@ class _TabbedState extends State<Tabbed> {
 
     _diaryPage = MaterialApp(
       home: Scaffold(
-        body: DiaryPage(),
+        body: DiaryPage(
+          userRepository: widget.userRepository,
+        ),
       ),
     );
 

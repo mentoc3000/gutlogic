@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gut_ai/resources/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'meal_entry_page.dart';
 import '../models/diary_entry.dart';
@@ -7,6 +8,7 @@ import '../blocs/diary_entry_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../blocs/database_state.dart';
 import '../blocs/database_event.dart';
+import '../resources/id_service.dart';
 
 import '../pages/meal_entry_page.dart';
 import '../pages/bm_entry_page.dart';
@@ -15,6 +17,10 @@ import '../pages/doses_entry_page.dart';
 
 class DiaryPage extends StatefulWidget {
   static String tag = 'diary-page';
+  final UserRepository userRepository;
+
+  DiaryPage({this.userRepository});
+
   @override
   DiaryPageState createState() => DiaryPageState();
 }
@@ -142,12 +148,16 @@ class DiaryPageState extends State<DiaryPage> {
           }
         },
       ),
-      floatingActionButton: DiaryFloatingActionButton(),
+      floatingActionButton: DiaryFloatingActionButton(widget.userRepository),
     );
   }
 }
 
 class DiaryFloatingActionButton extends StatelessWidget {
+  final UserRepository userRepository;
+
+  DiaryFloatingActionButton(this.userRepository);
+
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
@@ -159,17 +169,19 @@ class DiaryFloatingActionButton extends StatelessWidget {
           backgroundColor: Colors.blue,
           label: 'Food & Drink',
           onTap: () {
-          MealEntry newMeal = MealEntry.newEntry();
-          // diaryEntryBloc.insert(newMeal);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MealEntryPage(
-                    entry: newMeal,
-                  ),
-            ),
-          );
-        },
+            IdService idService = IdService(userRepository);
+            MealEntry newMeal =
+                MealEntry.newEntry(idService.getId(), idService.getUserId());
+            // diaryEntryBloc.insert(newMeal);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MealEntryPage(
+                      entry: newMeal,
+                    ),
+              ),
+            );
+          },
         ),
         SpeedDialChild(
           child: Icon(Icons.arrow_drop_up),
