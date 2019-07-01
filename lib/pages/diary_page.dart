@@ -170,10 +170,7 @@ class DiaryFloatingActionButton extends StatelessWidget {
           backgroundColor: Colors.blue,
           label: 'Food & Drink',
           onTap: () {
-            // TODO: This process should not be done in a UI class
-            IdService idService = IdService(userRepository);
-            MealEntry newMeal =
-                MealEntry.newEntry(idService.getId(), idService.getUserId());
+            MealEntry newMeal = diaryEntryBloc.newMealEntry();
             diaryEntryBloc.dispatch(Insert(newMeal));
             Navigator.push(
               context,
