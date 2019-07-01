@@ -25,23 +25,51 @@ class DiaryPageState extends State<DiaryPage> {
     if (entry is MealEntry) {
       return MealEntryListTile(
         entry: entry,
-        // onUpdate: (e) => setState(() => entry = e),
-        // onUpdate: (e) => diaryEntryBloc.dispatch(Upsert(e)),
+        onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MealEntryPage(
+                      entry: entry,
+                    ),
+              ),
+            ),
       );
     }
     if (entry is BowelMovementEntry) {
-      return BowelMovementEntryListTile(entry);
+      return BowelMovementEntryListTile(
+        entry: entry,
+        onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BMEntryPage(
+                      entry: entry,
+                    ),
+              ),
+            ),
+      );
     }
     if (entry is DosesEntry) {
       return DosesEntryListTile(
         entry: entry,
+        onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DosesEntryPage(
+                      entry: entry,
+                    ),
+              ),
+            ),
       );
     }
     if (entry is SymptomEntry) {
       return SymptomEntryListTile(
         entry: entry,
-        onSaved: (e) => diaryEntryBloc.dispatch(Update(e)),
-        // onSaved: (e) => setState(() => entry = e),
+        onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SymptomEntryPage(entry: entry),
+              ),
+            ),
       );
     }
     return null;
@@ -297,8 +325,9 @@ class DiaryEntryListTile extends StatelessWidget {
 
 class MealEntryListTile extends StatelessWidget {
   final MealEntry entry;
+  final void Function() onTap;
 
-  MealEntryListTile({this.entry});
+  MealEntryListTile({this.entry, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -307,24 +336,16 @@ class MealEntryListTile extends StatelessWidget {
       subheadings: entry.meal.ingredients.map((e) => e.food.name),
       datetime: entry.dateTime,
       barColor: Colors.blue,
-      // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
-      onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MealEntryPage(
-                    entry: entry,
-                  ),
-            ),
-          ),
+      onTap: onTap,
     );
   }
 }
 
 class BowelMovementEntryListTile extends StatelessWidget {
-  // final BuildContext context;
   final BowelMovementEntry entry;
+  final void Function() onTap;
 
-  BowelMovementEntryListTile(this.entry);
+  BowelMovementEntryListTile({this.entry, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -333,22 +354,16 @@ class BowelMovementEntryListTile extends StatelessWidget {
       heading: 'Bowel Movement',
       datetime: entry.dateTime,
       barColor: Colors.purple,
-      onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BMEntryPage(
-                    entry: entry,
-                  ),
-            ),
-          ),
+      onTap: onTap,
     );
   }
 }
 
 class DosesEntryListTile extends StatelessWidget {
   final DosesEntry entry;
+  final void Function() onTap;
 
-  DosesEntryListTile({this.entry});
+  DosesEntryListTile({this.entry, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -357,23 +372,16 @@ class DosesEntryListTile extends StatelessWidget {
       subheadings: entry.doses.map((d) => d.medicine.name),
       datetime: entry.dateTime,
       barColor: Colors.orange,
-      onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DosesEntryPage(
-                    entry: entry,
-                  ),
-            ),
-          ),
+      onTap: onTap,
     );
   }
 }
 
 class SymptomEntryListTile extends StatelessWidget {
   final SymptomEntry entry;
-  final void Function(SymptomEntry) onSaved;
+  final void Function() onTap;
 
-  SymptomEntryListTile({this.entry, this.onSaved});
+  SymptomEntryListTile({this.entry, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -383,12 +391,7 @@ class SymptomEntryListTile extends StatelessWidget {
       datetime: entry.dateTime,
       barColor: Colors.red,
       // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealEntryPage(entry: entry))),
-      onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SymptomEntryPage(entry: entry),
-            ),
-          ),
+      onTap: onTap,
     );
   }
 }
