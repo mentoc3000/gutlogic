@@ -142,43 +142,12 @@ class DiaryPageState extends State<DiaryPage> {
           }
         },
       ),
-      floatingActionButton: DiaryFloatingActionButton(
-        newMealTapped: () {
-          MealEntry newMeal = MealEntry.newEntry();
-          // diaryEntryBloc.insert(newMeal);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MealEntryPage(
-                    entry: newMeal,
-                    // onUpdate: (_) => diaryEntryBloc.fetchAllDiaryEntry(),
-                  ),
-            ),
-          );
-        },
-        newBowelMovementTapped: () => print('SECOND CHILD'),
-        newMedicinesTapped: () => print('THIRD CHILD'),
-        newSymptomTapped: () => print('FOURTH CHILD'),
-      ),
+      floatingActionButton: DiaryFloatingActionButton(),
     );
   }
 }
 
-typedef _Action = void Function();
-
 class DiaryFloatingActionButton extends StatelessWidget {
-  final _Action newMealTapped;
-  final _Action newBowelMovementTapped;
-  final _Action newMedicinesTapped;
-  final _Action newSymptomTapped;
-
-  DiaryFloatingActionButton({
-    this.newMealTapped,
-    this.newBowelMovementTapped,
-    this.newMedicinesTapped,
-    this.newSymptomTapped,
-  });
-
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
@@ -189,25 +158,36 @@ class DiaryFloatingActionButton extends StatelessWidget {
           child: Icon(Icons.fastfood),
           backgroundColor: Colors.blue,
           label: 'Food & Drink',
-          onTap: newMealTapped,
+          onTap: () {
+          MealEntry newMeal = MealEntry.newEntry();
+          // diaryEntryBloc.insert(newMeal);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MealEntryPage(
+                    entry: newMeal,
+                  ),
+            ),
+          );
+        },
         ),
         SpeedDialChild(
           child: Icon(Icons.arrow_drop_up),
           backgroundColor: Colors.purple,
           label: 'Bowel Movement',
-          onTap: newBowelMovementTapped,
+          onTap: () => print('SECOND CHILD'),
         ),
         SpeedDialChild(
           child: Icon(Icons.face),
           backgroundColor: Colors.red,
           label: 'Symptom',
-          onTap: newMedicinesTapped,
+          onTap: () => print('THIRD CHILD'),
         ),
         SpeedDialChild(
           child: Icon(Icons.pause_circle_outline),
           backgroundColor: Colors.orange,
           label: 'Medicine',
-          onTap: newSymptomTapped,
+          onTap: () => print('FOURTH CHILD'),
         ),
       ],
     );
