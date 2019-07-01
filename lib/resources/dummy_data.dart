@@ -33,6 +33,9 @@ class Dummy {
   static List<MealEntry> mealEntries = [
     MealEntry(
       id: 'Dummy001',
+      userId: 'jp.sheehan2@gmail.com',
+      creationDate: DateTime(2019, 2, 7, 8, 14),
+      modificationDate: DateTime(2019, 2, 7, 8, 14),
       dateTime: DateTime(2019, 2, 7, 8, 14),
       meal: Meal(
         ingredients: BuiltList<Ingredient>([
@@ -57,6 +60,9 @@ class Dummy {
   static List<BowelMovementEntry> bowelMovementEntries = [
     BowelMovementEntry(
       id: 'Dummy002',
+      userId: 'jp.sheehan2@gmail.com',
+      creationDate: DateTime(2019, 2, 7, 8, 14),
+      modificationDate: DateTime(2019, 2, 7, 8, 14),
       dateTime: DateTime(2019, 2, 6, 18, 31),
       bowelMovement: BowelMovement(type: 4, volume: 2),
       notes: '',
@@ -66,6 +72,9 @@ class Dummy {
   static List<SymptomEntry> symptomEntries = [
     SymptomEntry(
       id: 'Dummy003',
+      userId: 'jp.sheehan2@gmail.com',
+      creationDate: DateTime(2019, 2, 7, 8, 14),
+      modificationDate: DateTime(2019, 2, 7, 8, 14),
       dateTime: DateTime(2019, 2, 7, 15, 31),
       symptom: Symptom(symptomType: SymptomType(name: 'Bloating'), severity: 6),
       notes: '',
@@ -75,6 +84,9 @@ class Dummy {
   static List<DosesEntry> dosesEntries = [
     DosesEntry(
       id: 'Dummy004',
+      userId: 'jp.sheehan2@gmail.com',
+      creationDate: DateTime(2019, 2, 7, 8, 14),
+      modificationDate: DateTime(2019, 2, 7, 8, 14),
       dateTime: DateTime(2019, 2, 7, 12, 0),
       doses: BuiltList<Dose>([
         Dose(
