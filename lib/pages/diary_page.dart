@@ -82,6 +82,7 @@ class DiaryPageState extends State<DiaryPage> {
   }
 
   List<Widget> entryToTiles(List<DiaryEntry> entry) {
+    final diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     if (entry == []) {
       return [];
     }
@@ -96,7 +97,25 @@ class DiaryPageState extends State<DiaryPage> {
               dateFormatter.format(entry[i - 1].dateTime)) {
         tiles.add(DateTile(dateTime: entry[i].dateTime));
       }
-      tiles.add(buildEntryTile(entry[i]));
+      tiles.add(Dismissible(
+        key: ObjectKey(entry[i]),
+        child: buildEntryTile(entry[i]),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart) {
+            diaryEntryBloc.dispatch(Delete(entry[i].id));
+            diaryEntryBloc.dispatch(FetchAll());
+          }
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 20.0),
+          color: Colors.red,
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
+      ));
     }
 
     return tiles;
@@ -187,7 +206,8 @@ class DiaryFloatingActionButton extends StatelessWidget {
           backgroundColor: Colors.purple,
           label: 'Bowel Movement',
           onTap: () {
-            BowelMovementEntry newBowelMovementEntry = diaryEntryBloc.newBowelMovementEntry();
+            BowelMovementEntry newBowelMovementEntry =
+                diaryEntryBloc.newBowelMovementEntry();
             diaryEntryBloc.dispatch(Insert(newBowelMovementEntry));
             Navigator.push(
               context,
