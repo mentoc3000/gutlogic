@@ -21,6 +21,7 @@ class FoodRepository extends SearchableRepository<Food> {
 
   @override
   Future<BuiltList<Food>> fetchQuery(String query) async {
+    // TODO: Use GraphQL query to filter on server side
     final allFoods = await fetchAll();
     if (query == '') {
       return allFoods;
