@@ -170,13 +170,13 @@ class DiaryFloatingActionButton extends StatelessWidget {
           backgroundColor: Colors.blue,
           label: 'Food & Drink',
           onTap: () {
-            MealEntry newMeal = diaryEntryBloc.newMealEntry();
-            diaryEntryBloc.dispatch(Insert(newMeal));
+            MealEntry newMealEntry = diaryEntryBloc.newMealEntry();
+            diaryEntryBloc.dispatch(Insert(newMealEntry));
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => MealEntryPage(
-                      entry: newMeal,
+                      entry: newMealEntry,
                     ),
               ),
             );
@@ -186,19 +186,52 @@ class DiaryFloatingActionButton extends StatelessWidget {
           child: Icon(Icons.arrow_drop_up),
           backgroundColor: Colors.purple,
           label: 'Bowel Movement',
-          onTap: () => print('SECOND CHILD'),
+          onTap: () {
+            BowelMovementEntry newBowelMovementEntry = diaryEntryBloc.newBowelMovementEntry();
+            diaryEntryBloc.dispatch(Insert(newBowelMovementEntry));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BMEntryPage(
+                      entry: newBowelMovementEntry,
+                    ),
+              ),
+            );
+          },
         ),
         SpeedDialChild(
           child: Icon(Icons.face),
           backgroundColor: Colors.red,
           label: 'Symptom',
-          onTap: () => print('THIRD CHILD'),
+          onTap: () {
+            SymptomEntry newSymptomEntry = diaryEntryBloc.newSymptomEntry();
+            diaryEntryBloc.dispatch(Insert(newSymptomEntry));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SymptomEntryPage(
+                      entry: newSymptomEntry,
+                    ),
+              ),
+            );
+          },
         ),
         SpeedDialChild(
           child: Icon(Icons.pause_circle_outline),
           backgroundColor: Colors.orange,
           label: 'Medicine',
-          onTap: () => print('FOURTH CHILD'),
+          onTap: () {
+            DosesEntry newDosesEntry = diaryEntryBloc.newDosesEntry();
+            diaryEntryBloc.dispatch(Insert(newDosesEntry));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DosesEntryPage(
+                      entry: newDosesEntry,
+                    ),
+              ),
+            );
+          },
         ),
       ],
     );
