@@ -20,10 +20,13 @@ class _QuantityViewState extends State<QuantityView> {
   @override
   void initState() {
     super.initState();
-    _amountController =
-        TextEditingController(text: widget.quantity.amount.toString());
-    _unitController = TextEditingController(text: widget.quantity.unit);
     _quantity = widget.quantity;
+    if (_quantity == null) {
+      _quantity = Quantity(amount: 0, unit: '');
+    }
+    _amountController =
+        TextEditingController(text: _quantity.amount.toString());
+    _unitController = TextEditingController(text: _quantity.unit);
   }
 
   @override

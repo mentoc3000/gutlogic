@@ -130,7 +130,10 @@ class MealEntryPageState extends State<MealEntryPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => IngredientEntryPage(),
+                builder: (context) => IngredientEntryPage(
+                      onSave: (newIngredient) => _entry = _entry.rebuild(
+                          (b) => b..meal.ingredients.add(newIngredient)),
+                    ),
               ),
             );
           }),
