@@ -21,7 +21,6 @@ class DiaryPage extends StatefulWidget {
 
 class DiaryPageState extends State<DiaryPage> {
   Widget buildEntryTile(DiaryEntry entry) {
-    final diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     if (entry is MealEntry) {
       return MealEntryListTile(
         entry: entry,
