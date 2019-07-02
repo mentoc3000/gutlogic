@@ -35,7 +35,7 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('shows entry', (WidgetTester tester) async {
+    testWidgets('shows meal entry', (WidgetTester tester) async {
       when(diaryEntryBloc.currentState).thenAnswer(
           (_) => DatabaseLoaded<DiaryEntry>(BuiltList<DiaryEntry>([
             MealEntry(
