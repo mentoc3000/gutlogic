@@ -25,6 +25,7 @@ class FoodRepository extends SearchableRepository<Food> {
     if (query == '') {
       return allFoods;
     }
-    return BuiltList<Food>(allFoods.where((f) => f.name.contains(query)));
+    return BuiltList<Food>(allFoods.where(
+        (f) => f.queryText().toLowerCase().contains(query.toLowerCase())));
   }
 }
