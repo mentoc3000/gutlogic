@@ -1,5 +1,3 @@
-import 'package:gut_ai/models/meal.dart';
-
 import 'database_bloc.dart';
 import '../models/diary_entry.dart';
 import '../resources/diary_entry_repository.dart';
