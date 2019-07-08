@@ -21,12 +21,10 @@ class FoodRepository extends SearchableRepository<Food> {
 
   @override
   Future<BuiltList<Food>> fetchQuery(String query) async {
-    // TODO: Use GraphQL query to filter on server side
-    final allFoods = await fetchAll();
-    if (query == '') {
-      return allFoods;
-    }
-    return BuiltList<Food>(allFoods.where(
-        (f) => f.queryText().toLowerCase().contains(query.toLowerCase())));
+    const operationName = 'listFoods';
+    String operation = 'listFoods(filter: {name: {contains: "$query"}}) { items { name } }';
+    final response = await appSyncService.query(operationName, operation);
+    return BuiltList<Food>(AppSyncService.getItems(response, operationName)
+        .map((x) => serializers.deserializeWith(Food.serializer, x)));
   }
 }

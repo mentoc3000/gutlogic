@@ -15,38 +15,60 @@ void main() {
           name
         }
       }''';
-      Map<String, dynamic> foodList = await appSyncService.query(operationName, operation);
+      Map<String, dynamic> foodList =
+          await appSyncService.query(operationName, operation);
       Map<String, dynamic> expected = {
         'data': {
           'listFoods': {
             'items': [
-              {"name":"Orange Juice"},
-              {"name":"Egg"},
-              {"name":"Cream Cheese"},
-              {"name":"Tomato"},
-              {"name":"Bread"}
+              {"name": "Orange Juice"},
+              {"name": "Egg"},
+              {"name": "Cream Cheese"},
+              {"name": "Tomato"},
+              {"name": "Bread"}
             ]
           }
         }
       };
       expect(foodList, expected);
-
+    });
+    test('lists queried foods', () async {
+      final userService = UserServiceStub();
+      final session = await userService.getSession();
+      final appSyncService = AppSyncService(session);
+      final operationName = 'listFoods';
+      final operation = '''listFoods(filter:{name: {contains: "re"}}) {
+        items {
+          name
+        }
+      }''';
+      Map<String, dynamic> foodList =
+          await appSyncService.query(operationName, operation);
+      Map<String, dynamic> expected = {
+        'data': {
+          'listFoods': {
+            'items': [
+              {"name": "Cream Cheese"},
+              {"name": "Bread"}
+            ]
+          }
+        }
+      };
+      expect(foodList, expected);
     });
 
     test('extracts list of items', () {
       const operationName = 'listFoods';
       const items = [
-              {"name":"Orange Juice"},
-              {"name":"Egg"},
-              {"name":"Cream Cheese"},
-              {"name":"Tomato"},
-              {"name":"Bread"}
-            ];
+        {"name": "Orange Juice"},
+        {"name": "Egg"},
+        {"name": "Cream Cheese"},
+        {"name": "Tomato"},
+        {"name": "Bread"}
+      ];
       Map<String, dynamic> response = {
         'data': {
-          operationName: {
-            'items': items
-          }
+          operationName: {'items': items}
         }
       };
       Map<String, dynamic> parsedJson = json.decode(json.encode(response));
