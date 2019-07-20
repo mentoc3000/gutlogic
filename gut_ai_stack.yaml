@@ -1,4 +1,38 @@
 AWSTemplateFormatVersion: 2010-09-09
 Resources:
-  HelloBucket:
-    Type: 'AWS::S3::Bucket'
+  GutAITable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: pk
+          AttributeType: S
+        - 
+          AttributeName: sk
+          AttributeType: S
+      KeySchema: 
+        - 
+          AttributeName: pk
+          KeyType: HASH
+        - 
+          AttributeName: sk
+          KeyType: RANGE
+      BillingMode: PROVISIONED
+      # GlobalSecondaryIndexes: 
+      #   - GlobalSecondaryIndex
+      # LocalSecondaryIndexes: 
+      #   - LocalSecondaryIndex
+      # PointInTimeRecoverySpecification: 
+      #   PointInTimeRecoverySpecification
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      # SSESpecification: 
+      #   SSESpecification
+      # StreamSpecification: 
+      #   StreamSpecification
+      TableName: GutAITable
+      # Tags: 
+      #   - Tag
+      # TimeToLiveSpecification: 
+      #   TimeToLiveSpecification
