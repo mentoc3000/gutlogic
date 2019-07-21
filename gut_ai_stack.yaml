@@ -1,5 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
+
+
 Resources:
+
   GutAITable:
     Type: AWS::DynamoDB::Table
     Properties: 
@@ -18,21 +21,22 @@ Resources:
           AttributeName: sk
           KeyType: RANGE
       BillingMode: PROVISIONED
-      # GlobalSecondaryIndexes: 
-      #   - GlobalSecondaryIndex
-      # LocalSecondaryIndexes: 
-      #   - LocalSecondaryIndex
-      # PointInTimeRecoverySpecification: 
-      #   PointInTimeRecoverySpecification
       ProvisionedThroughput: 
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      # SSESpecification: 
-      #   SSESpecification
-      # StreamSpecification: 
-      #   StreamSpecification
       TableName: GutAITable
-      # Tags: 
-      #   - Tag
-      # TimeToLiveSpecification: 
-      #   TimeToLiveSpecification
+
+
+  AppSyncAPI:
+    Type: AWS::AppSync::GraphQLApi
+    Properties: 
+      AuthenticationType: API_KEY
+      Name: AppSyncAPI
+
+  
+  GraphQLSchema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DefinitionS3Location: schema.graphql
+

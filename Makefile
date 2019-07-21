@@ -1,5 +1,5 @@
 
-PROJECT_NAME ?= gut_ai
+PROJECT_NAME ?= gut-ai
 ENV ?= dev
 
 AWS_CF_BUCKET_NAME ?= cf-templates-ingot-us-east-1
