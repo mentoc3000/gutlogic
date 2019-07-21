@@ -71,7 +71,7 @@ Resources:
     Type: AWS::AppSync::GraphQLApi
     Properties: 
       AuthenticationType: API_KEY
-      Name: AppSyncAPI
+      Name: GutAIAppSync
 
   
   GraphQLSchema:
@@ -99,7 +99,7 @@ Outputs:
     Value: !Ref GutAITable
   GraphQLApiEndpoint:
     Description: The URL to the GraphQL Endpoint
-    Value: !GetAtt AppSyncApi.GraphQLUrl
+    Value: !GetAtt AppSyncAPI.GraphQLUrl
   GraphQLApiId:
     Description: The API ID of the GraphQL API
-    Value: !GetAtt AppSyncApi.ApiId
+    Value: !GetAtt AppSyncAPI.ApiId
