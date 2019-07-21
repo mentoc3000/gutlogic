@@ -21,7 +21,7 @@ deploy:
 	@ aws cloudformation deploy \
 		--template-file $(FILE_PACKAGE) \
 		--region $(AWS_REGION) \
-		--capabilities CAPABILITY_IAM \
+		--capabilities CAPABILITY_NAMED_IAM \
 		--stack-name $(AWS_STACK_NAME) \
 		--force-upload \
 		--parameter-overrides \
