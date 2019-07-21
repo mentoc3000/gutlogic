@@ -29,6 +29,7 @@ deploy:
 			ParamSchema="$(SCHEMA)" \
 			ParamKeyExpiration=$(EXPIRATION) \
 			ParamENV=$(ENV)
+			
 create:
 	@ make package
 	@ make deploy
