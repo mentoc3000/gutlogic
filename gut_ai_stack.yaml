@@ -40,3 +40,15 @@ Resources:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DefinitionS3Location: schema.graphql
 
+
+  AppSyncDataSource:
+    Type: AWS::AppSync::DataSource    
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      Name: GutAITable
+      Description: The Gut AI DynamoDB table in us-east-1
+      Type: AMAZON_DYNAMODB
+      ServiceRoleArn: "arn:aws:iam::YOUR_ACCOUNT_ID:role/AppSyncTutorialAmazonDynamoDBRole"
+      DynamoDBConfig:
+        AwsRegion: "us-east-1"
+        TableName: GutAITable
