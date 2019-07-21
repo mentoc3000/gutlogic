@@ -35,6 +35,11 @@ describe:
 			--region $(AWS_REGION) \
 			--stack-name $(AWS_STACK_NAME)
 
+describe-events:
+	@ aws cloudformation describe-stack-events \
+			--region $(AWS_REGION) \
+			--stack-name $(AWS_STACK_NAME)
+
 outputs:
 	@ make describe \
 		| jq -r '.Stacks[0].Outputs'
