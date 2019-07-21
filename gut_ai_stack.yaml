@@ -27,6 +27,46 @@ Resources:
       TableName: GutAITable
 
 
+
+
+  DynamoDBRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: gut-ai-appsync-dynamodb-role
+      ManagedPolicyArns:
+        - Ref: AppSyncDynamoDBPolicy
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - appsync.amazonaws.com
+    DependsOn:
+      - AppSyncDynamoDBPolicy
+
+  AppSyncDynamoDBPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Managed policy to allow AWS AppSync to access the tables created by this template.
+      Path: /appsync/
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:UpdateItem
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+            Resource: !Join [ "", [ !GetAtt GutAITable.Arn, "*" ] ]
+
   AppSyncAPI:
     Type: AWS::AppSync::GraphQLApi
     Properties: 
@@ -48,7 +88,7 @@ Resources:
       Name: GutAITable
       Description: The Gut AI DynamoDB table in us-east-1
       Type: AMAZON_DYNAMODB
-      ServiceRoleArn: "arn:aws:iam::YOUR_ACCOUNT_ID:role/AppSyncTutorialAmazonDynamoDBRole"
+      ServiceRoleArn: !GetAtt DynamoDBRole.Arn
       DynamoDBConfig:
-        AwsRegion: "us-east-1"
-        TableName: GutAITable
+        TableName: !Ref GutAITable
+        AwsRegion: !Sub ${AWS::Region}
