@@ -92,3 +92,14 @@ Resources:
       DynamoDBConfig:
         TableName: !Ref GutAITable
         AwsRegion: !Sub ${AWS::Region}
+
+Outputs:
+  GutAITableName:
+    Description: The name of the DynamoDB Table
+    Value: !Ref GutAITable
+  GraphQLApiEndpoint:
+    Description: The URL to the GraphQL Endpoint
+    Value: !GetAtt AppSyncApi.GraphQLUrl
+  GraphQLApiId:
+    Description: The API ID of the GraphQL API
+    Value: !GetAtt AppSyncApi.ApiId
