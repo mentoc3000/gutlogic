@@ -93,6 +93,95 @@ Resources:
         TableName: !Ref GutAITable
         AwsRegion: !Sub ${AWS::Region}
 
+
+  AppSyncAllNotesQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: allNotes
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplate: |
+        {
+          "version": "2017-02-28",
+          "operation": "Query",
+          "query": {
+            "expression": "UserId = :id",
+            "expressionValues": {
+              ":id": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+            }
+          }
+        },
+        "limit": $util.defaultIfNull(${ctx.args.limit}, 20),
+        "nextToken": $util.toJson(${ctx.args.nextToken})
+      ResponseMappingTemplate: |
+        {
+          "notes": $util.toJson($ctx.result.items),
+          "nextToken": $util.toJson(${ctx.args.nextToken})
+        }
+
+  AppSyncGetNoteQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: getNote
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplate: |
+        {
+          "version": "2012-02-28",
+          "operation": "GetItem",
+          "key": {
+            "NoteId": $util.dynamodb.toDynamoDBJson($ctx.args.NoteId),
+            "UserId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+          }
+        }
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncSaveNoteMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: saveNote
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplate: |
+        {
+          "version": "2012-02-28",
+          "operation": "PutItem",
+          "key": {
+            "NoteId": $util.dynamodb.toDynamoDBJson($ctx.args.NoteId),
+            "UserId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+          },
+          "attributeValues": {
+            "title": $util.dynamodb.toDynamoDBJson($ctx.args.title),
+            "content": $util.dynamodb.toDynamoDBJson($ctx.args.content)
+          }
+        }
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncDeleteNoteMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: deleteNote
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplate: |
+        {
+          "version": "2012-02-28",
+          "operation": "DeleteItem",
+          "key": {
+            "NoteId": $util.dynamodb.toDynamoDBJson($ctx.args.NoteId),
+            "UserId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+          }
+        }
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
 Outputs:
   GutAITableName:
     Description: The name of the DynamoDB Table
