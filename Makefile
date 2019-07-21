@@ -29,6 +29,16 @@ deploy:
 			ParamSchema="$(SCHEMA)" \
 			ParamKeyExpiration=$(EXPIRATION) \
 			ParamENV=$(ENV)
+create:
+	@ make package
+	@ make deploy
+
+delete:
+	@ aws cloudformation delete-stack --stack-name $(AWS_STACK_NAME)
+
+restart:
+	@ make delete
+	@ make create
 
 describe:
 	@ aws cloudformation describe-stacks \
