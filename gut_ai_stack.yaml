@@ -121,24 +121,16 @@ Resources:
   #         "nextToken": $util.toJson(${ctx.args.nextToken})
   #       }
 
-  # AppSyncGetNoteQueryResolver:
-  #   Type: "AWS::AppSync::Resolver"
-  #   DependsOn: GraphQLSchema
-  #   Properties:
-  #     ApiId: !GetAtt AppSyncAPI.ApiId
-  #     TypeName: Query
-  #     FieldName: getNote
-  #     DataSourceName: !GetAtt AppSyncDataSource.Name
-  #     RequestMappingTemplate: |
-  #       {
-  #         "version": "2017-02-28",
-  #         "operation": "GetItem",
-  #         "key": {
-  #           "NoteId": $util.dynamodb.toDynamoDBJson($ctx.args.NoteId),
-  #           "UserId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
-  #         }
-  #       }
-  #     ResponseMappingTemplate: "$util.toJson($ctx.result)"
+  AppSyncGetFoodQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: getFood
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/getFoodRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
   AppSyncCreateFoodMutationResolver:
     Type: "AWS::AppSync::Resolver"
