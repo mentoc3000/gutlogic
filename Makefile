@@ -37,10 +37,6 @@ create:
 delete:
 	@ aws cloudformation delete-stack --stack-name $(AWS_STACK_NAME)
 
-restart:
-	@ make delete
-	@ make create
-
 describe:
 	@ aws cloudformation describe-stacks \
 			--region $(AWS_REGION) \
