@@ -1,7 +1,7 @@
 
 type Note {
-    name: String!
-    entry: String
+    nameId: String!
+    entryId: String
     content: String
 }
 type PaginatedNotes {
@@ -10,11 +10,11 @@ type PaginatedNotes {
 }
 type Query {
     allNotes(limit: Int, nextToken: String): PaginatedNotes!
-    getNote(name: String!): Note
+    getNote(nameId: String!): Note
 }
 type Mutation {
-    saveNote(name: String!, entry: String!, content: String!): Note
-    deleteNote(name: String!): Note
+    saveNote(nameId: String!, entryId: String!, content: String!): Note
+    deleteNote(nameId: String!): Note
 }
 type Schema {
     query: Query
