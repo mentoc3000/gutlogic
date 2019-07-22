@@ -1,22 +1,113 @@
 
-type Note {
+type Food {
     nameId: String!
-    entryId: String
-    content: String
+    entryId: String!
+    name: String
 }
-type PaginatedNotes {
-    notes: [Note!]!
+
+type PaginatedFoods {
+    Foods: [Food]
     nextToken: String
 }
+
+input CreateFoodInput {
+    name: String!
+}
+
+input UpdateFoodInput {
+    nameId: String!
+    entryId: String!
+    name: String!
+}
+
+input DeleteFoodInput {
+    nameId: String!
+    entryId: String!
+}
+
+type Subscription {
+	onCreateFood(id: ID, name: String): Food
+		@aws_subscribe(mutations: ["createFood"])
+	onUpdateFood(id: ID, name: String): Food
+		@aws_subscribe(mutations: ["updateFood"])
+	onDeleteFood(id: ID, name: String): Food
+		@aws_subscribe(mutations: ["deleteFood"])
+}
+
 type Query {
-    allNotes(limit: Int, nextToken: String): PaginatedNotes!
-    getNote(nameId: String!): Note
+    getFood(nameId: String!, entryId: String!): Food
+    listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
 }
+
 type Mutation {
-    saveNote(nameId: String!, entryId: String!, content: String!): Note
-    deleteNote(nameId: String!): Note
+    createFood(input: CreateFoodInput!): Food
+    updateFood(input: UpdateFoodInput): Food
+    deleteFood(input: DeleteFoodInput): Food
 }
+
 type Schema {
     query: Query
     mutation: Mutation
+}
+
+
+input TableBooleanFilterInput {
+	ne: Boolean
+	eq: Boolean
+}
+
+input TableFloatFilterInput {
+	ne: Float
+	eq: Float
+	le: Float
+	lt: Float
+	ge: Float
+	gt: Float
+	contains: Float
+	notContains: Float
+	between: [Float]
+}
+
+input TableFoodFilterInput {
+	nameId: TableStringFilterInput
+	entryId: TableStringFilterInput
+	name: TableStringFilterInput
+}
+
+input TableIDFilterInput {
+	ne: ID
+	eq: ID
+	le: ID
+	lt: ID
+	ge: ID
+	gt: ID
+	contains: ID
+	notContains: ID
+	between: [ID]
+	beginsWith: ID
+}
+
+input TableIntFilterInput {
+	ne: Int
+	eq: Int
+	le: Int
+	lt: Int
+	ge: Int
+	gt: Int
+	contains: Int
+	notContains: Int
+	between: [Int]
+}
+
+input TableStringFilterInput {
+	ne: String
+	eq: String
+	le: String
+	lt: String
+	ge: String
+	gt: String
+	contains: String
+	notContains: String
+	between: [String]
+	beginsWith: String
 }
