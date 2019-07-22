@@ -94,32 +94,16 @@ Resources:
         AwsRegion: !Sub ${AWS::Region}
 
 
-  # AppSyncAllNotesQueryResolver:
-  #   Type: "AWS::AppSync::Resolver"
-  #   DependsOn: GraphQLSchema
-  #   Properties:
-  #     ApiId: !GetAtt AppSyncAPI.ApiId
-  #     TypeName: Query
-  #     FieldName: allNotes
-  #     DataSourceName: !GetAtt AppSyncDataSource.Name
-  #     RequestMappingTemplate: |
-  #       {
-  #         "version": "2017-02-28",
-  #         "operation": "Query",
-  #         "query": {
-  #           "expression": "UserId = :id",
-  #           "expressionValues": {
-  #             ":id": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
-  #           }
-  #         }
-  #       },
-  #       "limit": $util.defaultIfNull(${ctx.args.limit}, 20),
-  #       "nextToken": $util.toJson(${ctx.args.nextToken})
-  #     ResponseMappingTemplate: |
-  #       {
-  #         "notes": $util.toJson($ctx.result.items),
-  #         "nextToken": $util.toJson(${ctx.args.nextToken})
-  #       }
+  AppSyncListFoodsQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: listFoods
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/listFoodsRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($context.result)"
 
   AppSyncGetFoodQueryResolver:
     Type: "AWS::AppSync::Resolver"
