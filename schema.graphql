@@ -26,12 +26,12 @@ input DeleteFoodInput {
     entryId: String!
 }
 
-extend type Query {
+type Query {
     getFood(nameId: String!, entryId: String!): Food
     listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
 }
 
-extend type Mutation {
+type Mutation {
     createFood(input: CreateFoodInput!): Food
     updateFood(input: UpdateFoodInput): Food
     deleteFood(input: DeleteFoodInput): Food
