@@ -151,6 +151,17 @@ Resources:
       RequestMappingTemplateS3Location: resolver/createFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+  AppSyncUpdateFoodMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: updateFood
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/updateFoodRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
   # AppSyncDeleteNoteMutationResolver:
   #   Type: "AWS::AppSync::Resolver"
   #   DependsOn: GraphQLSchema
