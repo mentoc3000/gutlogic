@@ -162,24 +162,16 @@ Resources:
       RequestMappingTemplateS3Location: resolver/updateFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-  # AppSyncDeleteNoteMutationResolver:
-  #   Type: "AWS::AppSync::Resolver"
-  #   DependsOn: GraphQLSchema
-  #   Properties:
-  #     ApiId: !GetAtt AppSyncAPI.ApiId
-  #     TypeName: Mutation
-  #     FieldName: deleteNote
-  #     DataSourceName: !GetAtt AppSyncDataSource.Name
-  #     RequestMappingTemplate: |
-  #       {
-  #         "version": "2017-02-28",
-  #         "operation": "DeleteItem",
-  #         "key": {
-  #           "NoteId": $util.dynamodb.toDynamoDBJson($ctx.args.NoteId),
-  #           "UserId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
-  #         }
-  #       }
-  #     ResponseMappingTemplate: "$util.toJson($ctx.result)"
+  AppSyncDeleteFoodMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: deleteFood
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/deleteFoodRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
 Outputs:
   GutAITableName:
