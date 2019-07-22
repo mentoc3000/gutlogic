@@ -1,4 +1,4 @@
-
+# FOOD
 
 type Food {
     nameId: String!
@@ -10,6 +10,34 @@ type PaginatedFoods {
     Foods: [Food]
     nextToken: String
 }
+
+input CreateFoodInput {
+    name: String!
+}
+
+input UpdateFoodInput {
+    nameId: String!
+    entryId: String!
+    name: String!
+}
+
+input DeleteFoodInput {
+    nameId: String!
+    entryId: String!
+}
+
+extend type Query {
+    getFood(nameId: String!, entryId: String!): Food
+    listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
+}
+
+extend type Mutation {
+    createFood(input: CreateFoodInput!): Food
+    updateFood(input: UpdateFoodInput): Food
+    deleteFood(input: DeleteFoodInput): Food
+}
+
+# GENERIC
 
 input TableBooleanFilterInput {
 	ne: Boolean
@@ -70,41 +98,6 @@ input TableStringFilterInput {
 	notContains: String
 	between: [String]
 	beginsWith: String
-}
-
-input CreateFoodInput {
-    name: String!
-}
-
-input UpdateFoodInput {
-    nameId: String!
-    entryId: String!
-    name: String!
-}
-
-input DeleteFoodInput {
-    nameId: String!
-    entryId: String!
-}
-
-type Subscription {
-	onCreateFood(id: ID, name: String): Food
-		@aws_subscribe(mutations: ["createFood"])
-	onUpdateFood(id: ID, name: String): Food
-		@aws_subscribe(mutations: ["updateFood"])
-	onDeleteFood(id: ID, name: String): Food
-		@aws_subscribe(mutations: ["deleteFood"])
-}
-
-type Query {
-    getFood(nameId: String!, entryId: String!): Food
-    listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
-}
-
-type Mutation {
-    createFood(input: CreateFoodInput!): Food
-    updateFood(input: UpdateFoodInput): Food
-    deleteFood(input: DeleteFoodInput): Food
 }
 
 type Schema {
