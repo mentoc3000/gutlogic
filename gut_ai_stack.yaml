@@ -131,7 +131,7 @@ Resources:
       DataSourceName: !GetAtt AppSyncDataSource.Name
       RequestMappingTemplate: |
         {
-          "version": "2012-02-28",
+          "version": "2017-02-28",
           "operation": "GetItem",
           "key": {
             "NoteId": $util.dynamodb.toDynamoDBJson($ctx.args.NoteId),
@@ -150,7 +150,7 @@ Resources:
       DataSourceName: !GetAtt AppSyncDataSource.Name
       RequestMappingTemplate: |
         {
-          "version": "2012-02-28",
+          "version": "2017-02-28",
           "operation": "PutItem",
           "key": {
             "NoteId": $util.dynamodb.toDynamoDBJson($ctx.args.NoteId),
@@ -173,7 +173,7 @@ Resources:
       DataSourceName: !GetAtt AppSyncDataSource.Name
       RequestMappingTemplate: |
         {
-          "version": "2012-02-28",
+          "version": "2017-02-28",
           "operation": "DeleteItem",
           "key": {
             "NoteId": $util.dynamodb.toDynamoDBJson($ctx.args.NoteId),
