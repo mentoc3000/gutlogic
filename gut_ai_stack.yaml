@@ -8,17 +8,17 @@ Resources:
     Properties: 
       AttributeDefinitions: 
         - 
-          AttributeName: pk
+          AttributeName: name
           AttributeType: S
         - 
-          AttributeName: sk
+          AttributeName: entry
           AttributeType: S
       KeySchema: 
         - 
-          AttributeName: pk
+          AttributeName: name
           KeyType: HASH
         - 
-          AttributeName: sk
+          AttributeName: entry
           KeyType: RANGE
       BillingMode: PROVISIONED
       ProvisionedThroughput: 
