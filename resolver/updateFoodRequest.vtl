@@ -2,8 +2,8 @@
   "version": "2017-02-28",
   "operation": "UpdateItem",
   "key": {
-    "nameId": $util.dynamodb.toDynamoDBJson("food#${ctx.args.input.name}"),
-    "entryId": $util.dynamodb.toDynamoDBJson($util.autoId()),
+    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.args.input.nameId}),
+    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.args.input.entryId}),
   },
 
   ## Set up some space to keep track of things we're updating **
