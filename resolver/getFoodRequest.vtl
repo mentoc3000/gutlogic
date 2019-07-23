@@ -3,6 +3,6 @@
   "operation": "GetItem",
   "key": {
     "nameId": $util.dynamodb.toDynamoDBJson("food#${ctx.args.input.name}"),
-    "entryId": $util.dynamodb.toDynamoDBJson("${util.autoId()}"),
+    "entryId": $util.dynamodb.toDynamoDBJson($util.autoId()),
   },
 }
