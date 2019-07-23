@@ -3,6 +3,6 @@
   "operation": "GetItem",
   "key": {
     "nameId": $util.dynamodb.toDynamoDBJson(${ctx.args.input.nameId}),
-    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.args.input.entryId}),
+    "entryId": $util.dynamodb.toDynamoDBJson(${ctx.args.input.entryId}),
   },
 }
