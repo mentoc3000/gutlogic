@@ -7,7 +7,7 @@ type Food {
 }
 
 type PaginatedFoods {
-    Foods: [Food]
+    items: [Food]
     nextToken: String
 }
 
