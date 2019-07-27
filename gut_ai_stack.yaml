@@ -93,6 +93,7 @@ Resources:
         TableName: !Ref GutAITable
         AwsRegion: !Sub ${AWS::Region}
 
+# Food Resolvers
 
   AppSyncListFoodsQueryResolver:
     Type: "AWS::AppSync::Resolver"
@@ -102,7 +103,7 @@ Resources:
       TypeName: Query
       FieldName: listFoods
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/listFoodsRequest.vtl
+      RequestMappingTemplateS3Location: resolver/food/listFoodsRequest.vtl
       ResponseMappingTemplate: "$util.toJson($context.result)"
 
   AppSyncGetFoodQueryResolver:
@@ -113,7 +114,7 @@ Resources:
       TypeName: Query
       FieldName: getFood
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/getFoodRequest.vtl
+      RequestMappingTemplateS3Location: resolver/food/getFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
   AppSyncCreateFoodMutationResolver:
@@ -124,7 +125,7 @@ Resources:
       TypeName: Mutation
       FieldName: createFood
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/createFoodRequest.vtl
+      RequestMappingTemplateS3Location: resolver/food/createFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
   AppSyncUpdateFoodMutationResolver:
@@ -135,7 +136,7 @@ Resources:
       TypeName: Mutation
       FieldName: updateFood
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/updateFoodRequest.vtl
+      RequestMappingTemplateS3Location: resolver/food/updateFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
   AppSyncDeleteFoodMutationResolver:
@@ -146,7 +147,7 @@ Resources:
       TypeName: Mutation
       FieldName: deleteFood
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/deleteFoodRequest.vtl
+      RequestMappingTemplateS3Location: resolver/food/deleteFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
 Outputs:
