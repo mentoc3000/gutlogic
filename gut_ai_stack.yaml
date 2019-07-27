@@ -152,17 +152,6 @@ Resources:
 
 # Meal Entry Resolvers
 
-  AppSyncListMealEntriesQueryResolver:
-    Type: "AWS::AppSync::Resolver"
-    DependsOn: GraphQLSchema
-    Properties:
-      ApiId: !GetAtt AppSyncAPI.ApiId
-      TypeName: Query
-      FieldName: listMealEntries
-      DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/mealEntry/listMealEntriesRequest.vtl
-      ResponseMappingTemplate: "$util.toJson($context.result)"
-
   AppSyncGetMealEntryQueryResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
