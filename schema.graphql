@@ -93,7 +93,44 @@ input UpdateMealEntryInput {
 
 # BOWEL MOVEMENT ENTRY
 
+type BowelMovementEntry implements DiaryEntry{
+    nameId: String!
+    entryId: String!
+    creationDate: String
+	modificationDate: String
+	datetime: String!
+	bowelMovement: BowelMovement
+	notes: String
+}
 
+type BowelMovement {
+	type: Int
+	volume: Int
+}
+
+input CreateBowelMovementEntryInput {
+    userId: String!
+    creationDate: String
+	modificationDate: String
+	datetime: String!
+	bowelMovement: BowelMovementInput
+	notes: String
+}
+
+input UpdateBowelMovementEntryInput {
+    nameId: String!
+    entryId: String!
+    creationDate: String
+	modificationDate: String
+	datetime: String!
+	bowelMovement: BowelMovementInput
+	notes: String
+}
+
+input BowelMovementInput {
+	type: Int
+	volume: Int
+}
 
 # GENERIC
 
@@ -172,6 +209,7 @@ type Query {
     getFood(nameId: String!, entryId: String!): Food
     listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
     getMealEntry(nameId: String!, entryId: String!): MealEntry
+    getBowelMovementEntry(nameId: String!, entryId: String!): BowelMovementEntry
 }
 
 type Mutation {
@@ -181,6 +219,9 @@ type Mutation {
     createMealEntry(input: CreateMealEntryInput!): MealEntry
     updateMealEntry(input: UpdateMealEntryInput!): MealEntry
     deleteMealEntry(input: GutAiIdInput!): MealEntry
+    createBowelMovementEntry(input: CreateBowelMovementEntryInput!): BowelMovementEntry
+    updateBowelMovementEntry(input: UpdateBowelMovementEntryInput!): BowelMovementEntry
+    deleteBowelMovementEntry(input: GutAiIdInput!): BowelMovementEntry
 }
 
 type Schema {
