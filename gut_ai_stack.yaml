@@ -152,6 +152,28 @@ Resources:
 
 # Meal Entry Resolvers
 
+  AppSyncListMealEntriesQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: listMealEntries
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/mealEntry/listMealEntriesRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($context.result)"
+
+  AppSyncGetMealEntryQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: getMealEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/mealEntry/getMealEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
   AppSyncCreateMealEntryMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
@@ -161,6 +183,28 @@ Resources:
       FieldName: createMealEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
       RequestMappingTemplateS3Location: resolver/mealEntry/createMealEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncUpdateMealEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: updateMealEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/mealEntry/updateMealEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncDeleteMealEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: deleteMealEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/mealEntry/deleteMealEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
 Outputs:
