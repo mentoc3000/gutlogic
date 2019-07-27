@@ -21,23 +21,75 @@ input UpdateFoodInput {
     name: String!
 }
 
-input DeleteFoodInput {
+# MEAL ENTRY
+
+type MealEntry {
     nameId: String!
     entryId: String!
+    creationDate: String
+	modificationDate: String
+	datetime: String!
+	meal: Meal
+	notes: String
 }
 
-type Query {
-    getFood(nameId: String!, entryId: String!): Food
-    listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
+type Meal {
+	ingredients: [Ingredient]
 }
 
-type Mutation {
-    createFood(input: CreateFoodInput!): Food
-    updateFood(input: UpdateFoodInput!): Food
-    deleteFood(input: DeleteFoodInput!): Food
+type Ingredient {
+	foodId: GutAiId
+	quantity: Quantity
+}
+
+type Quantity {
+	amount: Float
+	unit: String
+}
+
+input CreateMealEntryInput {
+    creationDate: String
+	modificationDate: String
+	datetime: String
+	meal: MealInput
+	notes: String
+}
+
+input MealInput {
+	ingredients: [IngredientInput]
+}
+
+input IngredientInput {
+	foodId: GutAiIdInput
+	quantity: QuantityInput
+}
+
+input QuantityInput {
+	amount: Float
+	unit: String
+}
+
+input UpdateMealEntryInput {
+    nameId: String!
+    entryId: String!
+    creationDate: String
+	modificationDate: String
+	datetime: String
+	meal: MealInput
+	notes: String
 }
 
 # GENERIC
+
+type GutAiId {
+	nameId: String!
+	entryId: String!
+}
+
+input GutAiIdInput {
+	nameId: String!
+	entryId: String!
+}
 
 input TableBooleanFilterInput {
 	ne: Boolean
@@ -98,6 +150,21 @@ input TableStringFilterInput {
 	notContains: String
 	between: [String]
 	beginsWith: String
+}
+
+type Query {
+    getFood(nameId: String!, entryId: String!): Food
+    listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
+    getMealEntry(nameId: String!, entryId: String!): MealEntry
+}
+
+type Mutation {
+    createFood(input: CreateFoodInput!): Food
+    updateFood(input: UpdateFoodInput!): Food
+    deleteFood(input: GutAiIdInput!): Food
+    createMealEntry(input: CreateMealEntryInput!): MealEntry
+    updateMealEntry(input: UpdateMealEntryInput!): MealEntry
+    deleteMealEntry(input: GutAiIdInput!): MealEntry
 }
 
 type Schema {
