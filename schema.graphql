@@ -34,7 +34,7 @@ type MealEntry {
 }
 
 type Meal {
-	ingredients: [Ingredient]
+	ingredients: [Ingredient!]
 }
 
 type Ingredient {
@@ -50,7 +50,7 @@ type Quantity {
 input CreateMealEntryInput {
     creationDate: String
 	modificationDate: String
-	datetime: String
+	datetime: String!
 	meal: MealInput
 	notes: String
 }
