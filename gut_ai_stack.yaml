@@ -150,6 +150,19 @@ Resources:
       RequestMappingTemplateS3Location: resolver/food/deleteFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+# Meal Entry Resolvers
+
+  AppSyncCreateMealEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: createMealEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/mealEntry/createMealEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
 Outputs:
   GutAITableName:
     Description: The name of the DynamoDB Table
