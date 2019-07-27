@@ -21,9 +21,20 @@ input UpdateFoodInput {
     name: String!
 }
 
+# DIARY ENTRY
+
+interface DiaryEntry {
+    nameId: String!
+    entryId: String!
+    creationDate: String
+	modificationDate: String
+	datetime: String!
+	notes: String
+}
+
 # MEAL ENTRY
 
-type MealEntry {
+type MealEntry implements DiaryEntry{
     nameId: String!
     entryId: String!
     creationDate: String
@@ -79,6 +90,10 @@ input UpdateMealEntryInput {
 	meal: MealInput
 	notes: String
 }
+
+# BOWEL MOVEMENT ENTRY
+
+
 
 # GENERIC
 
