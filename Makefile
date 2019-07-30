@@ -57,6 +57,10 @@ describe-errors:
 		| jq '.' \
 		| less
 
+describe-error:
+	@ make describe-errors \
+		| jq '.[0]' 
+
 outputs:
 	@ make describe \
 		| jq -r '.Stacks[0].Outputs'
