@@ -40,12 +40,22 @@ delete:
 describe:
 	@ aws cloudformation describe-stacks \
 			--region $(AWS_REGION) \
-			--stack-name $(AWS_STACK_NAME)
+			--stack-name $(AWS_STACK_NAME) \
+		| jq '.' \
+		| less
 
 describe-events:
 	@ aws cloudformation describe-stack-events \
 			--region $(AWS_REGION) \
-			--stack-name $(AWS_STACK_NAME)
+			--stack-name $(AWS_STACK_NAME) \
+		| jq '.' \
+		| less
+
+describe-errors:
+	@ make describe-events \
+		| jq -c '[ .StackEvents[] | select(.ResourceStatus | contains("UPDATE_FAILED")) ]' \
+		| jq '.' \
+		| less
 
 outputs:
 	@ make describe \
