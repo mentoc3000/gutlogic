@@ -49,7 +49,7 @@ type Meal {
 }
 
 type Ingredient {
-	foodId: GutAiId
+	food: Food
 	quantity: Quantity
 }
 

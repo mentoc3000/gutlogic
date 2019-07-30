@@ -47,6 +47,24 @@ Resources:
     DependsOn:
       - AppSyncDynamoDBPolicy
 
+  CloudWatchRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: gut-ai-cloudwatch-role
+      ManagedPolicyArns:
+        - Ref: AWSAppSyncPushToCloudWatchLogsRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - appsync.amazonaws.com
+    DependsOn:
+      - AWSAppSyncPushToCloudWatchLogsRole
+
   AppSyncDynamoDBPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -67,11 +85,29 @@ Resources:
               - dynamodb:BatchWriteItem
             Resource: !Join [ "", [ !GetAtt GutAITable.Arn, "*" ] ]
 
+  AWSAppSyncPushToCloudWatchLogsRole:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Managed policy to allow AWS AppSync to push to CloudWatch Logs.
+      Path: /appsync/
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: !Join [ "", [ !GetAtt GutAITable.Arn, "*" ] ]
+
   AppSyncAPI:
     Type: AWS::AppSync::GraphQLApi
     Properties: 
       AuthenticationType: API_KEY
       Name: GutAIAppSync
+      LogConfig:
+        CloudWatchLogsRoleArn: !GetAtt CloudWatchRole.Arn
+        FieldLogLevel: ERROR
 
   
   GraphQLSchema:
@@ -194,6 +230,17 @@ Resources:
       FieldName: deleteMealEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
       RequestMappingTemplateS3Location: resolver/mealEntry/deleteMealEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncFoodIngredientResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Ingredient
+      FieldName: food
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/mealEntry/getFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
 # Bowel Movement Entry Resolvers
