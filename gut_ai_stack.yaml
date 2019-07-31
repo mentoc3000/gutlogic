@@ -98,7 +98,7 @@ Resources:
               - logs:CreateLogGroup
               - logs:CreateLogStream
               - logs:PutLogEvents
-            Resource: !Join [ "", [ !GetAtt GutAITable.Arn, "*" ] ]
+            Resource: "*"
 
   AppSyncAPI:
     Type: AWS::AppSync::GraphQLApi
@@ -107,7 +107,7 @@ Resources:
       Name: GutAIAppSync
       LogConfig:
         CloudWatchLogsRoleArn: !GetAtt CloudWatchRole.Arn
-        FieldLogLevel: ERROR
+        FieldLogLevel: ALL
 
   
   GraphQLSchema:
