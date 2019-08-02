@@ -21,6 +21,12 @@ input UpdateFoodInput {
     name: String!
 }
 
+input TableFoodFilterInput {
+	nameId: TableStringFilterInput
+	entryId: TableStringFilterInput
+	name: TableStringFilterInput
+}
+
 # DIARY ENTRY
 
 interface DiaryEntry {
@@ -159,12 +165,6 @@ input TableFloatFilterInput {
 	contains: Float
 	notContains: Float
 	between: [Float]
-}
-
-input TableFoodFilterInput {
-	nameId: TableStringFilterInput
-	entryId: TableStringFilterInput
-	name: TableStringFilterInput
 }
 
 input TableIDFilterInput {
