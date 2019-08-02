@@ -34,7 +34,7 @@ interface DiaryEntry {
     entryId: String!
     creationDate: String
 	modificationDate: String
-	datetime: String!
+	datetime: AWSDateTime!
 	notes: String
 }
 
@@ -45,7 +45,7 @@ type MealEntry implements DiaryEntry{
     entryId: String!
     creationDate: String
 	modificationDate: String
-	datetime: String!
+	datetime: AWSDateTime!
 	meal: Meal
 	notes: String
 }
@@ -68,7 +68,7 @@ input CreateMealEntryInput {
     userId: String!
     creationDate: String
 	modificationDate: String
-	datetime: String!
+	datetime: AWSDateTime!
 	meal: MealInput
 	notes: String
 }
@@ -92,7 +92,7 @@ input UpdateMealEntryInput {
     entryId: String!
     creationDate: String
 	modificationDate: String
-	datetime: String
+	datetime: AWSDateTime
 	meal: MealInput
 	notes: String
 }
@@ -104,7 +104,7 @@ type BowelMovementEntry implements DiaryEntry{
     entryId: String!
     creationDate: String
 	modificationDate: String
-	datetime: String!
+	datetime: AWSDateTime!
 	bowelMovement: BowelMovement
 	notes: String
 }
@@ -118,7 +118,7 @@ input CreateBowelMovementEntryInput {
     userId: String!
     creationDate: String
 	modificationDate: String
-	datetime: String!
+	datetime: AWSDateTime!
 	bowelMovement: BowelMovementInput
 	notes: String
 }
@@ -128,7 +128,7 @@ input UpdateBowelMovementEntryInput {
     entryId: String!
     creationDate: String
 	modificationDate: String
-	datetime: String!
+	datetime: AWSDateTime!
 	bowelMovement: BowelMovementInput
 	notes: String
 }
