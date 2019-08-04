@@ -188,6 +188,17 @@ Resources:
 
 # Diary Entry Resolvers
 
+  AppSyncListDiaryEntriesQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: listDiaryEntries
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/listDiaryEntriesRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($context.result)"
+
   AppSyncGetDiaryEntryQueryResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema

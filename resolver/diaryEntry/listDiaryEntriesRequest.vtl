@@ -1,16 +1,15 @@
 {
   "version": "2017-02-28",
-  "operation": "Scan",
+  "operation": "Query",
 
-  #set($nameIdFilter = {"beginsWith": "diaryEntry#"})
-  #if($ctx.args.filter)
-    #set($filter = $ctx.args.filter)
-    #set($filter.nameId = $nameIdFilter)
-  #else
-    #set($filter = {"nameId": $nameIdFilter})
-  #end
-  #set($filter.nameId = {"eq": $ctx.args.userId})
-  "filter": $util.transform.toDynamoDBFilterExpression($filter),
+  "query" : {
+    "expression": "nameId = :userId",
+    "expressionValues" : {
+      ":userId" : { "S" : $ctx.args.userId }
+    }
+  },
+  
+  "filter": #if($context.args.filter) $util.transform.toDynamoDBFilterExpression($ctx.args.filter) #else null #end,
 
   "limit": $util.defaultIfNull($ctx.args.limit, 20),
   "nextToken": $util.toJson($util.defaultIfNullOrEmpty($ctx.args.nextToken, null)),

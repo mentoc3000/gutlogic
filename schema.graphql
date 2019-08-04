@@ -40,6 +40,11 @@ type DiaryEntry {
 	notes: String
 }
 
+type PaginatedDiaryEntries {
+    items: [DiaryEntry]
+    nextToken: String
+}
+
 input CreateDiaryEntryInput {
     userId: String!
     creationDate: String
@@ -59,6 +64,10 @@ input UpdateDiaryEntryInput {
 	meal: MealInput
 	bowelMovement: BowelMovementInput
 	notes: String
+}
+
+input TableDiaryEntryFilterInput {
+	datetime: TableStringFilterInput
 }
 
 # MEAL ENTRY
@@ -174,6 +183,7 @@ type Query {
     getFood(nameId: String!, entryId: String!): Food
     listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
     getDiaryEntry(nameId: String!, entryId: String!): DiaryEntry
+    listDiaryEntries(userId: String!, filter: TableDiaryEntryFilterInput, limit: Int, nextToken: String): PaginatedDiaryEntries!
 }
 
 type Mutation {
