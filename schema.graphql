@@ -67,7 +67,7 @@ input UpdateDiaryEntryInput {
 }
 
 input TableDiaryEntryFilterInput {
-	datetime: TableStringFilterInput
+	datetime: TableAWSDateTimeFilterInput
 }
 
 # MEAL ENTRY
@@ -177,6 +177,16 @@ input TableStringFilterInput {
 	notContains: String
 	between: [String]
 	beginsWith: String
+}
+
+input TableAWSDateTimeFilterInput {
+	ne: AWSDateTime
+	eq: AWSDateTime
+	le: AWSDateTime
+	lt: AWSDateTime
+	ge: AWSDateTime
+	gt: AWSDateTime
+	between: [AWSDateTime]
 }
 
 type Query {
