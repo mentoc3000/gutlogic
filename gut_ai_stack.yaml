@@ -186,6 +186,19 @@ Resources:
       RequestMappingTemplateS3Location: resolver/food/deleteFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+# Diary Entry Resolvers
+
+  # AppSyncListDiaryEntriesQueryResolver:
+  #   Type: "AWS::AppSync::Resolver"
+  #   DependsOn: GraphQLSchema
+  #   Properties:
+  #     ApiId: !GetAtt AppSyncAPI.ApiId
+  #     TypeName: Query
+  #     FieldName: listDiaryEntries
+  #     DataSourceName: !GetAtt AppSyncDataSource.Name
+  #     RequestMappingTemplateS3Location: resolver/diaryEntries/listDiaryEntriesRequest.vtl
+  #     ResponseMappingTemplate: resolver/diaryEntries/listDiaryEntriesResponse.vtl
+
 # Meal Entry Resolvers
 
   AppSyncGetMealEntryQueryResolver:

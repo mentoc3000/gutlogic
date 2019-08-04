@@ -29,7 +29,9 @@ input TableFoodFilterInput {
 
 # DIARY ENTRY
 
-interface DiaryEntry {
+# union DiaryEntry = MealEntry | BowelMovementEntry
+
+interface DiaryEntryInterface {
     nameId: String!
     entryId: String!
     creationDate: String
@@ -38,9 +40,18 @@ interface DiaryEntry {
 	notes: String
 }
 
+# input TableDiaryEntryFilterInput {
+# 	datetime: TableStringFilterInput
+# }
+
+# type PaginatedDiaryEntries {
+#     items: [DiaryEntry]
+#     nextToken: String
+# }
+
 # MEAL ENTRY
 
-type MealEntry implements DiaryEntry{
+type MealEntry implements DiaryEntryInterface {
     nameId: String!
     entryId: String!
     creationDate: String
@@ -99,7 +110,7 @@ input UpdateMealEntryInput {
 
 # BOWEL MOVEMENT ENTRY
 
-type BowelMovementEntry implements DiaryEntry{
+type BowelMovementEntry implements DiaryEntryInterface {
     nameId: String!
     entryId: String!
     creationDate: String
@@ -208,6 +219,7 @@ input TableStringFilterInput {
 type Query {
     getFood(nameId: String!, entryId: String!): Food
     listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
+    # listDiaryEntries(userId: String!, filter: TableDiaryEntryFilterInput, limit: Int, nextToken: String): PaginatedDiaryEntries!
     getMealEntry(nameId: String!, entryId: String!): MealEntry
     getBowelMovementEntry(nameId: String!, entryId: String!): BowelMovementEntry
 }
