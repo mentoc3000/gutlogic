@@ -27,6 +27,35 @@ input TableFoodFilterInput {
 	name: TableStringFilterInput
 }
 
+# MEDICINE
+
+type Medicine {
+    nameId: String!
+    entryId: String!
+    name: String
+}
+
+type PaginatedMedicines {
+    items: [Medicine]
+    nextToken: String
+}
+
+input CreateMedicineInput {
+    name: String!
+}
+
+input UpdateMedicineInput {
+    nameId: String!
+    entryId: String!
+    name: String!
+}
+
+input TableMedicineFilterInput {
+	nameId: TableStringFilterInput
+	entryId: TableStringFilterInput
+	name: TableStringFilterInput
+}
+
 # DIARY ENTRY
 
 type DiaryEntry {
@@ -192,6 +221,8 @@ input TableAWSDateTimeFilterInput {
 type Query {
     getFood(nameId: String!, entryId: String!): Food
     listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
+    getMedicine(nameId: String!, entryId: String!): Medicine
+    listMedicines(filter: TableMedicineFilterInput, limit: Int, nextToken: String): PaginatedMedicines!
     getDiaryEntry(nameId: String!, entryId: String!): DiaryEntry
     listDiaryEntries(userId: String!, filter: TableDiaryEntryFilterInput, limit: Int, nextToken: String): PaginatedDiaryEntries!
 }
@@ -200,6 +231,9 @@ type Mutation {
     createFood(input: CreateFoodInput!): Food
     updateFood(input: UpdateFoodInput!): Food
     deleteFood(input: GutAiIdInput!): Food
+    createMedicine(input: CreateMedicineInput!): Medicine
+    updateMedicine(input: UpdateMedicineInput!): Medicine
+    deleteMedicine(input: GutAiIdInput!): Medicine
     createDiaryEntry(input: CreateDiaryEntryInput!): DiaryEntry
     updateDiaryEntry(input: UpdateDiaryEntryInput!): DiaryEntry
     deleteDiaryEntry(input: GutAiIdInput!): DiaryEntry
