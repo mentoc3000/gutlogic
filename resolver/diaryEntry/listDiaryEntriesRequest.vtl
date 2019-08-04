@@ -5,7 +5,7 @@
   "query" : {
     "expression": "nameId = :userId",
     "expressionValues" : {
-      ":userId" : { "S" : $ctx.args.userId }
+      ":userId" : { "S" : "${ctx.args.userId}" }
     }
   },
   
