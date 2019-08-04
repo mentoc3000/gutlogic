@@ -2,14 +2,8 @@
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
-    "nameId": $util.dynamodb.toDynamoDBJson("food#${ctx.args.input.name}"),
+    "nameId": $util.dynamodb.toDynamoDBJson("food"),
     "entryId": $util.dynamodb.toDynamoDBJson($util.autoId()),
   },
   "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args.input),
-  "condition": {
-    "expression": "attribute_not_exists(#entryId)",
-    "expressionNames": {
-      "#entryId": "entryId",
-    },
-  },
 }
