@@ -29,37 +29,39 @@ input TableFoodFilterInput {
 
 # DIARY ENTRY
 
-# union DiaryEntry = MealEntry | BowelMovementEntry
-
-interface DiaryEntryInterface {
-    nameId: String!
-    entryId: String!
-    creationDate: String
-	modificationDate: String
-	datetime: AWSDateTime!
-	notes: String
-}
-
-# input TableDiaryEntryFilterInput {
-# 	datetime: TableStringFilterInput
-# }
-
-# type PaginatedDiaryEntries {
-#     items: [DiaryEntry]
-#     nextToken: String
-# }
-
-# MEAL ENTRY
-
-type MealEntry implements DiaryEntryInterface {
+type DiaryEntry {
     nameId: String!
     entryId: String!
     creationDate: String
 	modificationDate: String
 	datetime: AWSDateTime!
 	meal: Meal
+	bowelMovement: BowelMovement
 	notes: String
 }
+
+input CreateDiaryEntryInput {
+    userId: String!
+    creationDate: String
+	modificationDate: String
+	datetime: AWSDateTime!
+	meal: MealInput
+	bowelMovement: BowelMovementInput
+	notes: String
+}
+
+input UpdateDiaryEntryInput {
+    nameId: String!
+    entryId: String!
+    creationDate: String
+	modificationDate: String
+	datetime: AWSDateTime
+	meal: MealInput
+	bowelMovement: BowelMovementInput
+	notes: String
+}
+
+# MEAL ENTRY
 
 type Meal {
 	ingredients: [Ingredient!]
@@ -73,15 +75,6 @@ type Ingredient {
 type Quantity {
 	amount: Float
 	unit: String
-}
-
-input CreateMealEntryInput {
-    userId: String!
-    creationDate: String
-	modificationDate: String
-	datetime: AWSDateTime!
-	meal: MealInput
-	notes: String
 }
 
 input MealInput {
@@ -98,50 +91,11 @@ input QuantityInput {
 	unit: String
 }
 
-input UpdateMealEntryInput {
-    nameId: String!
-    entryId: String!
-    creationDate: String
-	modificationDate: String
-	datetime: AWSDateTime
-	meal: MealInput
-	notes: String
-}
-
 # BOWEL MOVEMENT ENTRY
-
-type BowelMovementEntry implements DiaryEntryInterface {
-    nameId: String!
-    entryId: String!
-    creationDate: String
-	modificationDate: String
-	datetime: AWSDateTime!
-	bowelMovement: BowelMovement
-	notes: String
-}
 
 type BowelMovement {
 	type: Int
 	volume: Int
-}
-
-input CreateBowelMovementEntryInput {
-    userId: String!
-    creationDate: String
-	modificationDate: String
-	datetime: AWSDateTime!
-	bowelMovement: BowelMovementInput
-	notes: String
-}
-
-input UpdateBowelMovementEntryInput {
-    nameId: String!
-    entryId: String!
-    creationDate: String
-	modificationDate: String
-	datetime: AWSDateTime!
-	bowelMovement: BowelMovementInput
-	notes: String
 }
 
 input BowelMovementInput {
@@ -219,21 +173,16 @@ input TableStringFilterInput {
 type Query {
     getFood(nameId: String!, entryId: String!): Food
     listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
-    # listDiaryEntries(userId: String!, filter: TableDiaryEntryFilterInput, limit: Int, nextToken: String): PaginatedDiaryEntries!
-    getMealEntry(nameId: String!, entryId: String!): MealEntry
-    getBowelMovementEntry(nameId: String!, entryId: String!): BowelMovementEntry
+    getDiaryEntry(nameId: String!, entryId: String!): DiaryEntry
 }
 
 type Mutation {
     createFood(input: CreateFoodInput!): Food
     updateFood(input: UpdateFoodInput!): Food
     deleteFood(input: GutAiIdInput!): Food
-    createMealEntry(input: CreateMealEntryInput!): MealEntry
-    updateMealEntry(input: UpdateMealEntryInput!): MealEntry
-    deleteMealEntry(input: GutAiIdInput!): MealEntry
-    createBowelMovementEntry(input: CreateBowelMovementEntryInput!): BowelMovementEntry
-    updateBowelMovementEntry(input: UpdateBowelMovementEntryInput!): BowelMovementEntry
-    deleteBowelMovementEntry(input: GutAiIdInput!): BowelMovementEntry
+    createDiaryEntry(input: CreateDiaryEntryInput!): DiaryEntry
+    updateDiaryEntry(input: UpdateDiaryEntryInput!): DiaryEntry
+    deleteDiaryEntry(input: GutAiIdInput!): DiaryEntry
 }
 
 type Schema {

@@ -188,61 +188,48 @@ Resources:
 
 # Diary Entry Resolvers
 
-  # AppSyncListDiaryEntriesQueryResolver:
-  #   Type: "AWS::AppSync::Resolver"
-  #   DependsOn: GraphQLSchema
-  #   Properties:
-  #     ApiId: !GetAtt AppSyncAPI.ApiId
-  #     TypeName: Query
-  #     FieldName: listDiaryEntries
-  #     DataSourceName: !GetAtt AppSyncDataSource.Name
-  #     RequestMappingTemplateS3Location: resolver/diaryEntries/listDiaryEntriesRequest.vtl
-  #     ResponseMappingTemplate: resolver/diaryEntries/listDiaryEntriesResponse.vtl
-
-# Meal Entry Resolvers
-
-  AppSyncGetMealEntryQueryResolver:
+  AppSyncGetDiaryEntryQueryResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Query
-      FieldName: getMealEntry
+      FieldName: getDiaryEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/mealEntry/getMealEntryRequest.vtl
+      RequestMappingTemplateS3Location: resolver/diaryEntry/getDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-  AppSyncCreateMealEntryMutationResolver:
+  AppSyncCreateDiaryEntryMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Mutation
-      FieldName: createMealEntry
+      FieldName: createDiaryEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/mealEntry/createMealEntryRequest.vtl
+      RequestMappingTemplateS3Location: resolver/diaryEntry/createDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-  AppSyncUpdateMealEntryMutationResolver:
+  AppSyncUpdateDiaryEntryMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Mutation
-      FieldName: updateMealEntry
+      FieldName: updateDiaryEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/mealEntry/updateMealEntryRequest.vtl
+      RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-  AppSyncDeleteMealEntryMutationResolver:
+  AppSyncDeleteDiaryEntryMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Mutation
-      FieldName: deleteMealEntry
+      FieldName: deleteDiaryEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/mealEntry/deleteMealEntryRequest.vtl
+      RequestMappingTemplateS3Location: resolver/diaryEntry/deleteDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
   AppSyncFoodIngredientResolver:
@@ -253,53 +240,7 @@ Resources:
       TypeName: Ingredient
       FieldName: food
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/mealEntry/getFoodRequest.vtl
-      ResponseMappingTemplate: "$util.toJson($ctx.result)"
-
-# Bowel Movement Entry Resolvers
-
-  AppSyncGetBowelMovementEntryQueryResolver:
-    Type: "AWS::AppSync::Resolver"
-    DependsOn: GraphQLSchema
-    Properties:
-      ApiId: !GetAtt AppSyncAPI.ApiId
-      TypeName: Query
-      FieldName: getBowelMovementEntry
-      DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/bowelMovementEntry/getBowelMovementEntryRequest.vtl
-      ResponseMappingTemplate: "$util.toJson($ctx.result)"
-
-  AppSyncCreateBowelMovementEntryMutationResolver:
-    Type: "AWS::AppSync::Resolver"
-    DependsOn: GraphQLSchema
-    Properties:
-      ApiId: !GetAtt AppSyncAPI.ApiId
-      TypeName: Mutation
-      FieldName: createBowelMovementEntry
-      DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/bowelMovementEntry/createBowelMovementEntryRequest.vtl
-      ResponseMappingTemplate: "$util.toJson($ctx.result)"
-
-  AppSyncUpdateBowelMovementEntryMutationResolver:
-    Type: "AWS::AppSync::Resolver"
-    DependsOn: GraphQLSchema
-    Properties:
-      ApiId: !GetAtt AppSyncAPI.ApiId
-      TypeName: Mutation
-      FieldName: updateBowelMovementEntry
-      DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/bowelMovementEntry/updateBowelMovementEntryRequest.vtl
-      ResponseMappingTemplate: "$util.toJson($ctx.result)"
-
-  AppSyncDeleteBowelMovementEntryMutationResolver:
-    Type: "AWS::AppSync::Resolver"
-    DependsOn: GraphQLSchema
-    Properties:
-      ApiId: !GetAtt AppSyncAPI.ApiId
-      TypeName: Mutation
-      FieldName: deleteBowelMovementEntry
-      DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/bowelMovementEntry/deleteBowelMovementEntryRequest.vtl
+      RequestMappingTemplateS3Location: resolver/diaryEntry/getFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
 Outputs:
