@@ -32,8 +32,8 @@ input TableFoodFilterInput {
 type DiaryEntry {
     nameId: String!
     entryId: String!
-    creationDate: String
-	modificationDate: String
+    creationDate: AWSDateTime
+	modificationDate: AWSDateTime
 	datetime: AWSDateTime!
 	meal: Meal
 	bowelMovement: BowelMovement
@@ -47,8 +47,8 @@ type PaginatedDiaryEntries {
 
 input CreateDiaryEntryInput {
     userId: String!
-    creationDate: String
-	modificationDate: String
+    creationDate: AWSDateTime
+	modificationDate: AWSDateTime
 	datetime: AWSDateTime!
 	meal: MealInput
 	bowelMovement: BowelMovementInput
@@ -58,8 +58,8 @@ input CreateDiaryEntryInput {
 input UpdateDiaryEntryInput {
     nameId: String!
     entryId: String!
-    creationDate: String
-	modificationDate: String
+    creationDate: AWSDateTime
+	modificationDate: AWSDateTime
 	datetime: AWSDateTime
 	meal: MealInput
 	bowelMovement: BowelMovementInput
