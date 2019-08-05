@@ -67,6 +67,7 @@ type DiaryEntry {
 	meal: Meal
 	bowelMovement: BowelMovement
 	doses: [Dose]
+	symptom: Symptom
 	notes: String
 }
 
@@ -83,6 +84,7 @@ input CreateDiaryEntryInput {
 	meal: MealInput
 	bowelMovement: BowelMovementInput
 	doses: [DoseInput]
+	symptom: SymptomInput
 	notes: String
 }
 
@@ -95,6 +97,7 @@ input UpdateDiaryEntryInput {
 	meal: MealInput
 	bowelMovement: BowelMovementInput
 	doses: [DoseInput]
+	symptom: SymptomInput
 	notes: String
 }
 
@@ -154,6 +157,26 @@ type Dose {
 input DoseInput {
 	medicineId: GutAiIdInput
 	quantity: QuantityInput
+}
+
+# SYMPTOM
+
+type Symptom {
+	symptomType: SymptomType
+	severity: Float
+}
+
+input SymptomInput {
+	symptomType: SymptomTypeInput
+	severity: Float
+}
+
+type SymptomType {
+	name: String
+}
+
+input SymptomTypeInput {
+	name: String
 }
 
 # GENERIC
