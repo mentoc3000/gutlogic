@@ -3,11 +3,11 @@
 type Food {
     nameId: String!
     entryId: String!
-    name: String
+    name: String!
 }
 
 type PaginatedFoods {
-    items: [Food]
+    items: [Food!]
     nextToken: String
 }
 
@@ -32,11 +32,11 @@ input TableFoodFilterInput {
 type Medicine {
     nameId: String!
     entryId: String!
-    name: String
+    name: String!
 }
 
 type PaginatedMedicines {
-    items: [Medicine]
+    items: [Medicine!]
     nextToken: String
 }
 
@@ -47,7 +47,7 @@ input CreateMedicineInput {
 input UpdateMedicineInput {
     nameId: String!
     entryId: String!
-    name: String!
+    name: String
 }
 
 input TableMedicineFilterInput {
@@ -61,29 +61,29 @@ input TableMedicineFilterInput {
 type DiaryEntry {
     nameId: String!
     entryId: String!
-    creationDate: AWSDateTime
-	modificationDate: AWSDateTime
+    creationDate: AWSDateTime!
+	modificationDate: AWSDateTime!
 	datetime: AWSDateTime!
 	meal: Meal
 	bowelMovement: BowelMovement
-	doses: [Dose]
+	doses: [Dose!]
 	symptom: Symptom
 	notes: String
 }
 
 type PaginatedDiaryEntries {
-    items: [DiaryEntry]
+    items: [DiaryEntry!]
     nextToken: String
 }
 
 input CreateDiaryEntryInput {
     userId: String!
-    creationDate: AWSDateTime
-	modificationDate: AWSDateTime
+    creationDate: AWSDateTime!
+	modificationDate: AWSDateTime!
 	datetime: AWSDateTime!
 	meal: MealInput
 	bowelMovement: BowelMovementInput
-	doses: [DoseInput]
+	doses: [DoseInput!]
 	symptom: SymptomInput
 	notes: String
 }
@@ -91,12 +91,12 @@ input CreateDiaryEntryInput {
 input UpdateDiaryEntryInput {
     nameId: String!
     entryId: String!
-    creationDate: AWSDateTime
-	modificationDate: AWSDateTime
-	datetime: AWSDateTime
+    creationDate: AWSDateTime!
+	modificationDate: AWSDateTime!
+	datetime: AWSDateTime!
 	meal: MealInput
 	bowelMovement: BowelMovementInput
-	doses: [DoseInput]
+	doses: [DoseInput!]
 	symptom: SymptomInput
 	notes: String
 }
@@ -112,71 +112,71 @@ type Meal {
 }
 
 type Ingredient {
-	food: Food
-	quantity: Quantity
+	food: Food!
+	quantity: Quantity!
 }
 
 type Quantity {
-	amount: Float
-	unit: String
+	amount: Float!
+	unit: String!
 }
 
 input MealInput {
-	ingredients: [IngredientInput]
+	ingredients: [IngredientInput!]
 }
 
 input IngredientInput {
-	foodId: GutAiIdInput
-	quantity: QuantityInput
+	foodId: GutAiIdInput!
+	quantity: QuantityInput!
 }
 
 input QuantityInput {
-	amount: Float
-	unit: String
+	amount: Float!
+	unit: String!
 }
 
 # BOWEL MOVEMENT ENTRY
 
 type BowelMovement {
-	type: Int
-	volume: Int
+	type: Int!
+	volume: Int!
 }
 
 input BowelMovementInput {
-	type: Int
-	volume: Int
+	type: Int!
+	volume: Int!
 }
 
 # DOSES ENTRY
 
 type Dose {
-	medicine: Medicine
-	quantity: Quantity
+	medicine: Medicine!
+	quantity: Quantity!
 }
 
 input DoseInput {
-	medicineId: GutAiIdInput
-	quantity: QuantityInput
+	medicineId: GutAiIdInput!
+	quantity: QuantityInput!
 }
 
 # SYMPTOM
 
 type Symptom {
-	symptomType: SymptomType
-	severity: Float
+	symptomType: SymptomType!
+	severity: Float!
 }
 
 input SymptomInput {
-	symptomType: SymptomTypeInput
-	severity: Float
+	symptomType: SymptomTypeInput!
+	severity: Float!
 }
 
 type SymptomType {
-	name: String
+	name: String!
 }
 
 input SymptomTypeInput {
-	name: String
+	name: String!
 }
 
 # GENERIC
