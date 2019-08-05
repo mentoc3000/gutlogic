@@ -66,6 +66,7 @@ type DiaryEntry {
 	datetime: AWSDateTime!
 	meal: Meal
 	bowelMovement: BowelMovement
+	doses: [Dose]
 	notes: String
 }
 
@@ -81,6 +82,7 @@ input CreateDiaryEntryInput {
 	datetime: AWSDateTime!
 	meal: MealInput
 	bowelMovement: BowelMovementInput
+	doses: [DoseInput]
 	notes: String
 }
 
@@ -92,6 +94,7 @@ input UpdateDiaryEntryInput {
 	datetime: AWSDateTime
 	meal: MealInput
 	bowelMovement: BowelMovementInput
+	doses: [DoseInput]
 	notes: String
 }
 
@@ -139,6 +142,18 @@ type BowelMovement {
 input BowelMovementInput {
 	type: Int
 	volume: Int
+}
+
+# DOSES ENTRY
+
+type Dose {
+	medicine: Medicine
+	quantity: Quantity
+}
+
+input DoseInput {
+	medicineId: GutAiIdInput
+	quantity: QuantityInput
 }
 
 # GENERIC
