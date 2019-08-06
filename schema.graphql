@@ -18,13 +18,53 @@ input CreateFoodInput {
 input UpdateFoodInput {
     nameId: String!
     entryId: String!
-    name: String!
+    name: String
 }
 
 input TableFoodFilterInput {
 	nameId: TableStringFilterInput
 	entryId: TableStringFilterInput
 	name: TableStringFilterInput
+}
+
+# INGREDIENT
+
+type Ingredient {
+    nameId: String!
+    entryId: String!
+	meal: Meal!
+	food: Food!
+	quantity: Quantity!
+}
+
+type Ingredients {
+    items: [Ingredient!]
+}
+
+type Quantity {
+	amount: Float!
+	unit: String!
+}
+
+input CreateIngredientInput {
+    ingredient: IngredientInput
+}
+
+input UpdateIngredientInput {
+    nameId: String!
+    entryId: String!
+    ingredient: IngredientInput
+}
+
+input IngredientInput {
+	mealId: GutAiIdInput!
+	foodId: GutAiIdInput!
+	quantity: QuantityInput!
+}
+
+input QuantityInput {
+	amount: Float!
+	unit: String!
 }
 
 # MEDICINE
@@ -111,28 +151,8 @@ type Meal {
 	ingredients: [Ingredient!]
 }
 
-type Ingredient {
-	food: Food!
-	quantity: Quantity!
-}
-
-type Quantity {
-	amount: Float!
-	unit: String!
-}
-
 input MealInput {
 	ingredients: [IngredientInput!]
-}
-
-input IngredientInput {
-	foodId: GutAiIdInput!
-	quantity: QuantityInput!
-}
-
-input QuantityInput {
-	amount: Float!
-	unit: String!
 }
 
 # BOWEL MOVEMENT ENTRY
@@ -267,6 +287,8 @@ input TableAWSDateTimeFilterInput {
 type Query {
     getFood(nameId: String!, entryId: String!): Food
     listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
+    getIngredient(nameId: String!, entryId: String!): Ingredient
+    listIngredients(filter: TableIngredientFilterInput): Ingredients
     getMedicine(nameId: String!, entryId: String!): Medicine
     listMedicines(filter: TableMedicineFilterInput, limit: Int, nextToken: String): PaginatedMedicines!
     getDiaryEntry(nameId: String!, entryId: String!): DiaryEntry
@@ -277,6 +299,9 @@ type Mutation {
     createFood(input: CreateFoodInput!): Food
     updateFood(input: UpdateFoodInput!): Food
     deleteFood(input: GutAiIdInput!): Food
+    createIngredient(input: CreateIngredientInput!): Ingredient
+    updateIngredient(input: UpdateIngredientInput!): Ingredient
+    deleteIngredient(input: GutAiIdInput!): Ingredient
     createMedicine(input: CreateMedicineInput!): Medicine
     updateMedicine(input: UpdateMedicineInput!): Medicine
     deleteMedicine(input: GutAiIdInput!): Medicine

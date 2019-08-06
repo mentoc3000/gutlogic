@@ -186,6 +186,63 @@ Resources:
       RequestMappingTemplateS3Location: resolver/food/deleteFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+# Ingredient Resolvers
+
+  AppSyncListIngredientsQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: listIngredients
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/ingredient/listIngredientsRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($context.result)"
+
+  AppSyncGetIngredientQueryResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Query
+      FieldName: getIngredient
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/ingredient/getIngredientRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncCreateIngredientMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: createIngredient
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/ingredient/createIngredientRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncUpdateIngredientMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: updateIngredient
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/ingredient/updateIngredientRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncDeleteIngredientMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: deleteIngredient
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/ingredient/deleteIngredientRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
 # Medicine Resolvers
 
   AppSyncListMedicinesQueryResolver:
