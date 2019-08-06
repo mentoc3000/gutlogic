@@ -32,7 +32,7 @@ input TableFoodFilterInput {
 type Ingredient {
     nameId: String!
     entryId: String!
-	meal: Meal!
+	mealEntry: MealEntry!
 	food: Food!
 	quantity: Quantity!
 }
@@ -57,7 +57,7 @@ input UpdateIngredientInput {
 }
 
 input IngredientInput {
-	mealId: GutAiIdInput!
+	mealEntryId: GutAiIdInput!
 	foodId: GutAiIdInput!
 	quantity: QuantityInput!
 }
@@ -94,6 +94,30 @@ input TableMedicineFilterInput {
 	nameId: TableStringFilterInput
 	entryId: TableStringFilterInput
 	name: TableStringFilterInput
+}
+
+# DOSE
+
+type Dose {
+	dosesEntry: Doses!
+	medicine: Medicine!
+	quantity: Quantity!
+}
+
+input DoseInput {
+	dosesEntryId: GutAiIdInput!
+	medicineId: GutAiIdInput!
+	quantity: QuantityInput!
+}
+
+input CreateDoseInput {
+    dose: DoseInput!
+}
+
+input UpdateDoseInput {
+    nameId: String!
+    entryId: String!
+    dose: DoseInput
 }
 
 # DIARY ENTRY
@@ -175,16 +199,6 @@ type Doses {
 
 input DosesInput {
 	doses: [DoseInput!]
-}
-
-type Dose {
-	medicine: Medicine!
-	quantity: Quantity!
-}
-
-input DoseInput {
-	medicineId: GutAiIdInput!
-	quantity: QuantityInput!
 }
 
 # SYMPTOM
