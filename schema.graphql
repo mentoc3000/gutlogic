@@ -71,8 +71,6 @@ type DiaryEntry {
 	notes: String
 }
 
-union Entry = Meal | BowelMovement | 
-
 type PaginatedDiaryEntries {
     items: [DiaryEntry!]
     nextToken: String
