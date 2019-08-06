@@ -243,6 +243,17 @@ Resources:
       RequestMappingTemplateS3Location: resolver/ingredient/deleteIngredientRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+  AppSyncFoodIngredientResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Ingredient
+      FieldName: food
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/ingredient/getFoodRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
 # Medicine Resolvers
 
   AppSyncListMedicinesQueryResolver:
@@ -355,17 +366,6 @@ Resources:
       FieldName: deleteDiaryEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
       RequestMappingTemplateS3Location: resolver/diaryEntry/deleteDiaryEntryRequest.vtl
-      ResponseMappingTemplate: "$util.toJson($ctx.result)"
-
-  AppSyncFoodIngredientResolver:
-    Type: "AWS::AppSync::Resolver"
-    DependsOn: GraphQLSchema
-    Properties:
-      ApiId: !GetAtt AppSyncAPI.ApiId
-      TypeName: Ingredient
-      FieldName: food
-      DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/diaryEntry/getFoodRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
 Outputs:
