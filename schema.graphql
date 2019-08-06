@@ -66,10 +66,12 @@ type DiaryEntry {
 	datetime: AWSDateTime!
 	meal: Meal
 	bowelMovement: BowelMovement
-	doses: [Dose!]
+	doses: Doses
 	symptom: Symptom
 	notes: String
 }
+
+union Entry = Meal | BowelMovement | 
 
 type PaginatedDiaryEntries {
     items: [DiaryEntry!]
@@ -83,7 +85,7 @@ input CreateDiaryEntryInput {
 	datetime: AWSDateTime!
 	meal: MealInput
 	bowelMovement: BowelMovementInput
-	doses: [DoseInput!]
+	doses: DosesInput
 	symptom: SymptomInput
 	notes: String
 }
@@ -96,7 +98,7 @@ input UpdateDiaryEntryInput {
 	datetime: AWSDateTime!
 	meal: MealInput
 	bowelMovement: BowelMovementInput
-	doses: [DoseInput!]
+	doses: DosesInput
 	symptom: SymptomInput
 	notes: String
 }
@@ -148,6 +150,14 @@ input BowelMovementInput {
 }
 
 # DOSES ENTRY
+
+type Doses {
+	doses: [Dose!]
+}
+
+input DosesInput {
+	doses: [DoseInput!]
+}
 
 type Dose {
 	medicine: Medicine!
