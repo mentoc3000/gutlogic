@@ -10,6 +10,8 @@ CF_TEMPLATE = gut_ai_stack.yaml
 GRAPHQL_SCHEMA_FILE = schema.graphql
 FILE_PACKAGE = package.yaml
 
+.PHONY: test
+
 package:
 	@ aws cloudformation package \
 		--template-file $(CF_TEMPLATE) \
@@ -60,6 +62,9 @@ describe-errors:
 describe-error:
 	@ make describe-errors \
 		| jq '.[0]' 
+
+test:
+	@ ./node_modules/mocha/bin/mocha
 
 outputs:
 	@ make describe \
