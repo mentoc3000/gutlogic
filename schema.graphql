@@ -47,7 +47,8 @@ type Quantity {
 }
 
 input CreateIngredientInput {
-    ingredient: IngredientInput
+	userId: String!
+    ingredient: IngredientInput!
 }
 
 input UpdateIngredientInput {
@@ -111,6 +112,7 @@ input DoseInput {
 }
 
 input CreateDoseInput {
+	userId: String!
     dose: DoseInput!
 }
 
