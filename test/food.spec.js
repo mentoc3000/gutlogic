@@ -26,13 +26,6 @@ const jwtToken = 'xxxxxxxx';
 
 // If you want to use AWS...
 const AWS = require('aws-sdk');
-AWS.config.update({
-    region: aws_exports.REGION,
-    credentials: new AWS.Credentials({
-        accessKeyId: aws_exports.AWS_ACCESS_KEY_ID,
-        secretAccessKey: aws_exports.AWS_SECRET_ACCESS_KEY
-    })
-});
 const credentials = AWS.config.credentials;
 
 
