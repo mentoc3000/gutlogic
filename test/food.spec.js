@@ -15,8 +15,8 @@ const AWSAppSyncClient = require('aws-appsync').default;
 
 const url = aws_exports.ENDPOINT;
 const region = aws_exports.REGION;
-const type = AUTH_TYPE.AWS_IAM;
-// const type = AUTH_TYPE.API_KEY
+// const type = AUTH_TYPE.AWS_IAM;
+const type = AUTH_TYPE.API_KEY
 // const type = AUTH_TYPE.AMAZON_COGNITO_USER_POOLS
 
 // If you want to use API key-based auth
@@ -35,7 +35,8 @@ const client = new AWSAppSyncClient({
     region: region,
     auth: {
         type: type,
-        credentials: credentials,
+        // credentials: credentials,
+        apiKey: apiKey,
     }
     //disableOffline: true      //Uncomment for AWS Lambda
 });
@@ -47,19 +48,16 @@ const gql = require('graphql-tag');
 describe('Food database', function () {
     it('should add a food', async function () {
         const query = gql(`
-        query AllPosts {
-        allPost {
-            __typename
-            id
-            title
-            content
-            author
-            version
+        query CreateFood {
+        createFood (name: "Orange") {
+            nameId
+            entryId
+            name
         }
         }`);
 
         await client.hydrated();
         const result = await client.query({query: query});
-        expect(true).to.be.true; 
+        expect(result.name).to.equal('Orange'); 
     });
 });
