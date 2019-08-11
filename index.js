@@ -8,7 +8,7 @@ require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 // Require exports file with endpoint and auth info
-const aws_exports = require('./aws-exports').default;
+const aws_exports = require('./test/aws-exports').default;
 
 // Require AppSync module
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
