@@ -37,27 +37,38 @@ const client = new AWSAppSyncClient({
         type: type,
         // credentials: credentials,
         apiKey: apiKey,
-    }
-    //disableOffline: true      //Uncomment for AWS Lambda
+    },
+    // disableOffline: true      //Uncomment for AWS Lambda
 });
+console.log(client);
 
 // Import gql helper and craft a GraphQL query
 const gql = require('graphql-tag');
 
 
 describe('Food database', function () {
+    // this.timeout(10000); 
     it('should add a food', async function () {
         const query = gql(`
-        query CreateFood {
-        createFood (name: "Orange") {
-            nameId
-            entryId
-            name
+        query ListFoods {
+        listFoods {
+            itmes {
+                nameId
+                entryId
+                name
+            }
+            nextToken
         }
         }`);
 
         await client.hydrated();
-        const result = await client.query({query: query});
+        console.log('Starting query');
+        const result = await client.query({
+            query: query,
+            fetchPolicy: 'network-only',
+        });
+        console.log('Completed query');
+        console.log(result);
         expect(result.name).to.equal('Orange'); 
     });
 });
