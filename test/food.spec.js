@@ -8,6 +8,7 @@ require('isomorphic-fetch');
 
 // Require exports file with endpoint and auth info
 const aws_exports = require('./aws-exports').default;
+console.log(aws_exports);
 
 // Require AppSync module
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
@@ -40,7 +41,6 @@ const client = new AWSAppSyncClient({
     },
     // disableOffline: true      //Uncomment for AWS Lambda
 });
-console.log(client);
 
 // Import gql helper and craft a GraphQL query
 const gql = require('graphql-tag');
