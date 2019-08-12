@@ -3,12 +3,31 @@ const chai = require('chai');
 var expect = chai.expect;
 
 global.WebSocket = require('ws');
+global.window = global.window || {
+    setTimeout: setTimeout,
+    clearTimeout: clearTimeout,
+    WebSocket: global.WebSocket,
+    ArrayBuffer: global.ArrayBuffer,
+    addEventListener: function () { },
+    navigator: { onLine: true }
+};
+global.localStorage = {
+    store: {},
+    getItem: function (key) {
+        return this.store[key]
+    },
+    setItem: function (key, value) {
+        this.store[key] = value
+    },
+    removeItem: function (key) {
+        delete this.store[key]
+    }
+};
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 // Require exports file with endpoint and auth info
 const aws_exports = require('./aws-exports').default;
-console.log(aws_exports);
 
 // Require AppSync module
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
@@ -39,7 +58,7 @@ const client = new AWSAppSyncClient({
         // credentials: credentials,
         apiKey: apiKey,
     },
-    // disableOffline: true      //Uncomment for AWS Lambda
+    disableOffline: true      //Uncomment for AWS Lambda
 });
 
 // Import gql helper and craft a GraphQL query
@@ -52,7 +71,7 @@ describe('Food database', function () {
         const query = gql(`
         query ListFoods {
         listFoods {
-            itmes {
+            items {
                 nameId
                 entryId
                 name
@@ -62,13 +81,13 @@ describe('Food database', function () {
         }`);
 
         await client.hydrated();
-        console.log('Starting query');
         const result = await client.query({
             query: query,
             fetchPolicy: 'network-only',
         });
-        console.log('Completed query');
-        console.log(result);
-        expect(result.name).to.equal('Orange'); 
+        const data = result.data.listFoods;
+        expect(data.__typename).to.equal('PaginatedFoods');
+        expect(data.nextToken).to.be.null;
+        expect(data.items.length).to.equal(2);
     });
 });
