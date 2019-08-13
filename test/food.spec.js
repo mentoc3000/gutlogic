@@ -11,7 +11,54 @@ const client = require('./aws-exports').client;
 const gql = require('graphql-tag');
 
 
+
+const clearFoodDb = async () => {
+
+    const listFoods = gql(`
+    query ListFoods {
+    listFoods {
+        items {
+            nameId
+            entryId
+            name
+        }
+        nextToken
+    }
+    }`);
+
+    await client.hydrated();
+    const result = await client.query({
+        query: listFoods,
+        fetchPolicy: 'network-only',
+    });
+    
+    result.data.listFoods.items.forEach(item => {
+
+        const deleteFood = gql(`
+        mutation DeleteFood($input: GutAiIdInput!) {
+        deleteFood(input: $input) {
+            nameId
+            entryId
+        }
+        }`);
+
+        const result = client.mutate({
+            mutation: deleteFood,
+            variables: {
+                input: {
+                    nameId: item.nameId,
+                    entryId: item.entryId,
+                }
+            },
+            fetchPolicy: 'no-cache',
+        });            
+    });
+
+}
+
 describe('Food database', function () {
+    before('clear food database', clearFoodDb);
+
     it('should get all foods', async function () {
         const query = gql(`
         query ListFoods {
@@ -214,46 +261,5 @@ describe('Food database', function () {
         expect(data.name).to.equal(newName);
     });
 
-    after('Clear food database', async () => {
-        const listFoods = gql(`
-        query ListFoods {
-        listFoods {
-            items {
-                nameId
-                entryId
-                name
-            }
-            nextToken
-        }
-        }`);
-
-        await client.hydrated();
-        const result = await client.query({
-            query: listFoods,
-            fetchPolicy: 'network-only',
-        });
-        
-        result.data.listFoods.items.forEach(item => {
-
-            const deleteFood = gql(`
-            mutation DeleteFood($input: GutAiIdInput!) {
-            deleteFood(input: $input) {
-                nameId
-                entryId
-            }
-            }`);
-    
-            const result = client.mutate({
-                mutation: deleteFood,
-                variables: {
-                    input: {
-                        nameId: item.nameId,
-                        entryId: item.entryId,
-                    }
-                },
-                fetchPolicy: 'no-cache',
-            });            
-        });
-
-    });
+    after('clear food database', clearFoodDb);
 });
