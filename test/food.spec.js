@@ -50,7 +50,6 @@ const clearFoodDb = async () => {
                     entryId: item.entryId,
                 }
             },
-            fetchPolicy: 'no-cache',
         });
     });
 
@@ -75,7 +74,6 @@ describe('Food database', () => {
         await client.hydrated();
         const result = await client.query({
             query: query,
-            fetchPolicy: 'network-only',
         });
         const data = result.data.listFoods;
         expect(data.__typename).to.equal('PaginatedFoods');
@@ -100,7 +98,6 @@ describe('Food database', () => {
                     name: 'Bacon',
                 }
             },
-            fetchPolicy: 'no-cache',
         });
         const data = result.data.createFood;
         expect(data.__typename).to.equal('Food');
@@ -128,7 +125,6 @@ describe('Food database', () => {
                     name: name,
                 }
             },
-            fetchPolicy: 'no-cache',
         });
         const createData = createResult.data.createFood;
         expect(createData.nameId).to.be.string;
@@ -150,7 +146,6 @@ describe('Food database', () => {
                 nameId: nameId,
                 entryId: entryId,
             },
-            fetchPolicy: 'network-only',
         });
         const getData = getResult.data.getFood;
         expect(getData.__typename).to.equal('Food');
@@ -177,7 +172,6 @@ describe('Food database', () => {
                     name: name,
                 }
             },
-            fetchPolicy: 'no-cache',
         });
         const createData = createResult.data.createFood;
         expect(createData.nameId).to.be.string;
@@ -201,7 +195,6 @@ describe('Food database', () => {
                     entryId: entryId,
                 }
             },
-            fetchPolicy: 'no-cache',
         });
         const data = result.data.deleteFood;
         expect(data.__typename).to.equal('Food');
@@ -229,7 +222,6 @@ describe('Food database', () => {
                     name: name,
                 }
             },
-            fetchPolicy: 'no-cache',
         });
         const createData = createResult.data.createFood;
         expect(createData.nameId).to.be.string;
@@ -255,7 +247,6 @@ describe('Food database', () => {
                     name: newName,
                 }
             },
-            fetchPolicy: 'no-cache',
         });
         const data = result.data.updateFood;
         expect(data.name).to.equal(newName);

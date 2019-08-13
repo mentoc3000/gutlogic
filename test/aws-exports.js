@@ -67,18 +67,18 @@ const client = new AWSAppSyncClient(
         },
         disableOffline: true,
     },     //Uncomment for AWS Lambda
-    // {
-    //     defaultOptions: {
-    //         query: {
-    //             fetchPolicy: 'network-only',
-    //             errorPolicy: 'all',
-    //         },
-    //         mutate: {
-    //             fetchPolicy: 'no-cache',
-    //             errorPolicy: 'all',
-    //         }
-    //     },
-    // }
+    {
+        defaultOptions: {
+            query: {
+                fetchPolicy: 'network-only',
+                // errorPolicy: 'all',
+            },
+            mutate: {
+                fetchPolicy: 'no-cache',
+                // errorPolicy: 'all',
+            }
+        },
+    }
 );
 
 exports.client = client;
