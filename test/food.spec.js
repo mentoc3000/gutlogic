@@ -232,6 +232,58 @@ describe('Food database', function () {
         expect(data.entryId).to.equal(entryId);
     });
 
+    it('should update a food', async () => {
+        const createFood = gql(`
+        mutation CreateFood($input: CreateFoodInput!) {
+        createFood(input: $input) {
+            nameId
+            entryId
+            name
+        }
+        }`);
+
+        const name = 'Orange Juice';
+
+        await client.hydrated();
+        const createResult = await client.mutate({
+            mutation: createFood,
+            variables: {
+                input: {
+                    name: name,
+                }
+            },
+            fetchPolicy: 'no-cache',
+        });
+        const createData = createResult.data.createFood;
+        expect(createData.nameId).to.be.string;
+        const nameId = createData.nameId;
+        const entryId = createData.entryId;
+
+        const updateFood = gql(`
+        mutation UpdateFood($input: UpdateFoodInput!) {
+        updateFood(input: $input) {
+            nameId
+            entryId
+        }
+        }`);
+
+        const newName = 'Mimosa'
+
+        const result = await client.mutate({
+            mutation: updateFood,
+            variables: {
+                input: {
+                    nameId: nameId,
+                    entryId: entryId,
+                    name: newName,
+                }
+            },
+            fetchPolicy: 'no-cache',
+        });
+        const data = result.data.updateFood;
+        expect(data.name).to.equal(newName);
+    });
+
     after('Clear food database', async () => {
         const listFoods = gql(`
         query ListFoods {
