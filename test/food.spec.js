@@ -221,7 +221,7 @@ describe('Food database', function () {
             variables: {
                 input: {
                     nameId: nameId,
-                    entryId, entryId,
+                    entryId: entryId,
                 }
             },
             fetchPolicy: 'no-cache',
@@ -232,28 +232,46 @@ describe('Food database', function () {
         expect(data.entryId).to.equal(entryId);
     });
 
-    // after(async () => {
-    //     const listFoods = gql(`
-    //     query ListFoods {
-    //     listFoods {
-    //         items {
-    //             nameId
-    //             entryId
-    //             name
-    //         }
-    //         nextToken
-    //     }
-    //     }`);
+    after('Clear food database', async () => {
+        const listFoods = gql(`
+        query ListFoods {
+        listFoods {
+            items {
+                nameId
+                entryId
+                name
+            }
+            nextToken
+        }
+        }`);
 
-    //     await client.hydrated();
-    //     const result = await client.query({
-    //         query: listFoods,
-    //         fetchPolicy: 'network-only',
-    //     });
+        await client.hydrated();
+        const result = await client.query({
+            query: listFoods,
+            fetchPolicy: 'network-only',
+        });
         
-    //     result.data.listFoods.items.forEach(item => {
-            
-    //     });
+        result.data.listFoods.items.forEach(item => {
 
-    // });
+            const deleteFood = gql(`
+            mutation DeleteFood($input: GutAiIdInput!) {
+            deleteFood(input: $input) {
+                nameId
+                entryId
+            }
+            }`);
+    
+            const result = client.mutate({
+                mutation: deleteFood,
+                variables: {
+                    input: {
+                        nameId: item.nameId,
+                        entryId: item.entryId,
+                    }
+                },
+                fetchPolicy: 'no-cache',
+            });            
+        });
+
+    });
 });
