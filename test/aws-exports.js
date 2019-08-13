@@ -32,6 +32,7 @@ global.localStorage = {
         delete this.store[key]
     }
 };
+
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
@@ -66,7 +67,7 @@ const client = new AWSAppSyncClient(
             apiKey: apiKey,
         },
         disableOffline: true,
-    },     //Uncomment for AWS Lambda
+    },     
     {
         defaultOptions: {
             query: {
