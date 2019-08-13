@@ -1,4 +1,6 @@
 const chai = require('chai');
+const assertArrays = require('chai-arrays');
+chai.use(assertArrays);
 
 var expect = chai.expect;
 
@@ -100,7 +102,7 @@ describe('Food database', function () {
         });
         const data = result.data.listFoods;
         expect(data.__typename).to.equal('PaginatedFoods');
-        expect(data.items.length).to.be.greaterThan(0);
+        expect(data.items).to.be.array();
     });
 
     it('should create a food', async () => {
