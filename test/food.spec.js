@@ -179,4 +179,81 @@ describe('Food database', function () {
         expect(getData.__typename).to.equal('Food');
         expect(getData.name).to.equal(name);
     });
+
+    it('should delete a food', async () => {
+        const createFood = gql(`
+        mutation CreateFood($input: CreateFoodInput!) {
+        createFood(input: $input) {
+            nameId
+            entryId
+            name
+        }
+        }`);
+
+        const name = 'Sausage';
+
+        await client.hydrated();
+        const createResult = await client.mutate({
+            mutation: createFood,
+            variables: {
+                input: {
+                    name: name,
+                }
+            },
+            fetchPolicy: 'no-cache',
+        });
+        const createData = createResult.data.createFood;
+        expect(createData.nameId).to.be.string;
+        const nameId = createData.nameId;
+        const entryId = createData.entryId;
+
+        const deleteFood = gql(`
+        mutation DeleteFood($input: GutAiIdInput!) {
+        deleteFood(input: $input) {
+            nameId
+            entryId
+        }
+        }`);
+
+        await client.hydrated();
+        const result = await client.mutate({
+            mutation: deleteFood,
+            variables: {
+                input: {
+                    nameId: nameId,
+                    entryId, entryId,
+                }
+            },
+            fetchPolicy: 'no-cache',
+        });
+        const data = result.data.deleteFood;
+        expect(data.__typename).to.equal('Food');
+        expect(data.nameId).to.equal(nameId);
+        expect(data.entryId).to.equal(entryId);
+    });
+
+    // after(async () => {
+    //     const listFoods = gql(`
+    //     query ListFoods {
+    //     listFoods {
+    //         items {
+    //             nameId
+    //             entryId
+    //             name
+    //         }
+    //         nextToken
+    //     }
+    //     }`);
+
+    //     await client.hydrated();
+    //     const result = await client.query({
+    //         query: listFoods,
+    //         fetchPolicy: 'network-only',
+    //     });
+        
+    //     result.data.listFoods.items.forEach(item => {
+            
+    //     });
+
+    // });
 });
