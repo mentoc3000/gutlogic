@@ -50,24 +50,37 @@ const credentials = AWS.config.credentials;
 
 
 // Set up Apollo client
-const client = new AWSAppSyncClient({
-    url: url,
-    region: region,
-    auth: {
-        type: type,
-        // credentials: credentials,
-        apiKey: apiKey,
-    },
-    disableOffline: true      //Uncomment for AWS Lambda
-});
+const client = new AWSAppSyncClient(
+    {
+        url: url,
+        region: region,
+        auth: {
+            type: type,
+            // credentials: credentials,
+            apiKey: apiKey,
+        },
+        disableOffline: true,
+    },     //Uncomment for AWS Lambda
+    // {
+    //     defaultOptions: {
+    //         query: {
+    //             fetchPolicy: 'network-only',
+    //             errorPolicy: 'all',
+    //         },
+    //         mutate: {
+    //             fetchPolicy: 'no-cache',
+    //             errorPolicy: 'all',
+    //         }
+    //     },
+    // }
+);
 
 // Import gql helper and craft a GraphQL query
 const gql = require('graphql-tag');
 
 
 describe('Food database', function () {
-    // this.timeout(10000); 
-    it('should add a food', async function () {
+    it('should get all foods', async function () {
         const query = gql(`
         query ListFoods {
         listFoods {
@@ -88,6 +101,32 @@ describe('Food database', function () {
         const data = result.data.listFoods;
         expect(data.__typename).to.equal('PaginatedFoods');
         expect(data.nextToken).to.be.null;
-        expect(data.items.length).to.equal(2);
+        expect(data.items.length).to.be.greaterThan(0);
     });
+
+    it('should create a food', async () => {
+        const mutation = gql(`
+        mutation CreateFood($input: CreateFoodInput!) {
+        createFood(input: $input) {
+            nameId
+            entryId
+            name
+        }
+        }`);
+
+        await client.hydrated();
+        const result = await client.mutate({
+            mutation: mutation,
+            variables: {
+                input: {
+                    name: 'Bacon',
+                }
+            },
+            fetchPolicy: 'no-cache',
+        });
+        const data = result.data.createFood;
+        expect(data.__typename).to.equal('Food');
+        expect(data.name).to.equal('Bacon');
+        expect(data.nameId).to.equal('food');
+    })
 });
