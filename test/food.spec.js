@@ -31,7 +31,7 @@ const clearFoodDb = async () => {
         query: listFoods,
         fetchPolicy: 'network-only',
     });
-    
+
     result.data.listFoods.items.forEach(item => {
 
         const deleteFood = gql(`
@@ -51,15 +51,15 @@ const clearFoodDb = async () => {
                 }
             },
             fetchPolicy: 'no-cache',
-        });            
+        });
     });
 
 }
 
-describe('Food database', function () {
+describe('Food database', () => {
     before('clear food database', clearFoodDb);
 
-    it('should get all foods', async function () {
+    it('should get all foods', async () => {
         const query = gql(`
         query ListFoods {
         listFoods {
