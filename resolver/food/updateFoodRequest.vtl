@@ -76,9 +76,10 @@
   },
 
   "condition": {
-    "expression": "attribute_exists(#id)",
+    "expression": "attribute_exists(#nameId) AND attribute_exists(#entryId)",
     "expressionNames": {
-      "#id": "id",
+      "#nameId": "nameId",
+      "#entryId": "entryId",
     },
   }
 }
