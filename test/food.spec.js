@@ -100,7 +100,6 @@ describe('Food database', function () {
         });
         const data = result.data.listFoods;
         expect(data.__typename).to.equal('PaginatedFoods');
-        expect(data.nextToken).to.be.null;
         expect(data.items.length).to.be.greaterThan(0);
     });
 
