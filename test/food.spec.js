@@ -105,7 +105,7 @@ describe('Food database', function () {
     });
 
     it('should create a food', async () => {
-        const mutation = gql(`
+        const createFood = gql(`
         mutation CreateFood($input: CreateFoodInput!) {
         createFood(input: $input) {
             nameId
@@ -116,7 +116,7 @@ describe('Food database', function () {
 
         await client.hydrated();
         const result = await client.mutate({
-            mutation: mutation,
+            mutation: createFood,
             variables: {
                 input: {
                     name: 'Bacon',
@@ -128,5 +128,54 @@ describe('Food database', function () {
         expect(data.__typename).to.equal('Food');
         expect(data.name).to.equal('Bacon');
         expect(data.nameId).to.equal('food');
-    })
+    });
+
+    it('should get a food', async () => {
+        const createFood = gql(`
+        mutation CreateFood($input: CreateFoodInput!) {
+        createFood(input: $input) {
+            nameId
+            entryId
+            name
+        }
+        }`);
+
+        const name = 'Bacon';
+
+        await client.hydrated();
+        const createResult = await client.mutate({
+            mutation: createFood,
+            variables: {
+                input: {
+                    name: name,
+                }
+            },
+            fetchPolicy: 'no-cache',
+        });
+        const createData = createResult.data.createFood;
+        expect(createData.nameId).to.be.string;
+        const nameId = createData.nameId;
+        const entryId = createData.entryId;
+
+        const getFood = gql(`
+        query getFood($nameId: String!, $entryId: String!) {
+        getFood(nameId: $nameId, entryId: $entryId) {
+            nameId
+            entryId
+            name
+        }
+        }`);
+
+        const getResult = await client.query({
+            query: getFood,
+            variables: {
+                nameId: nameId,
+                entryId: entryId,
+            },
+            fetchPolicy: 'network-only',
+        });
+        const getData = getResult.data.getFood;
+        expect(getData.__typename).to.equal('Food');
+        expect(getData.name).to.equal(name);
+    });
 });
