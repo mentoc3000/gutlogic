@@ -126,6 +126,10 @@ input UpdateDoseInput {
     dose: DoseInput
 }
 
+input TableDoseFilterInput {
+	dosesEntryId: GutAiIdInput!
+}
+
 # DIARY ENTRY
 
 type DiaryEntry {
