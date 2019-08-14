@@ -165,7 +165,12 @@ describe('Food database', () => {
     });
 
     describe('deleteFood', () => {
-        it('should delete a food', async () => {
+
+        let nameId;
+        let entryId;
+        const name = 'Bacon';
+
+        beforeEach('create a food', async () => {
             const createFood = gql(`
                 mutation CreateFood($input: CreateFoodInput!) {
                 createFood(input: $input) {
@@ -174,8 +179,6 @@ describe('Food database', () => {
                     name
                 }
                 }`);
-
-            const name = 'Sausage';
 
             await client.hydrated();
             const createResult = await client.mutate({
@@ -187,9 +190,11 @@ describe('Food database', () => {
                 },
             });
             const createData = createResult.data.createFood;
-            expect(createData.nameId).to.be.string;
-            const nameId = createData.nameId;
-            const entryId = createData.entryId;
+            nameId = createData.nameId;
+            entryId = createData.entryId;
+        });
+
+        it('should delete a food', async () => {
 
             const deleteFood = gql(`
                 mutation DeleteFood($input: GutAiIdInput!) {
@@ -217,7 +222,12 @@ describe('Food database', () => {
     });
 
     describe('updateFood', () => {
-        it('should update a food', async () => {
+
+        let nameId;
+        let entryId;
+        const name = 'Bacon';
+
+        beforeEach('create a food', async () => {
             const createFood = gql(`
                 mutation CreateFood($input: CreateFoodInput!) {
                 createFood(input: $input) {
@@ -226,8 +236,6 @@ describe('Food database', () => {
                     name
                 }
                 }`);
-
-            const name = 'Orange Juice';
 
             await client.hydrated();
             const createResult = await client.mutate({
@@ -239,9 +247,11 @@ describe('Food database', () => {
                 },
             });
             const createData = createResult.data.createFood;
-            expect(createData.nameId).to.be.string;
-            const nameId = createData.nameId;
-            const entryId = createData.entryId;
+            nameId = createData.nameId;
+            entryId = createData.entryId;
+        });
+
+        it('should update a food', async () => {
 
             const updateFood = gql(`
                 mutation UpdateFood($input: UpdateFoodInput!) {
