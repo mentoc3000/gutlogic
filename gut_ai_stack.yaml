@@ -385,21 +385,21 @@ Resources:
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Dose
-      FieldName: meal
+      FieldName: dosesEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
       RequestMappingTemplateS3Location: resolver/dose/getDosesEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-  # AppSyncDoseMedicineResolver:
-  #   Type: "AWS::AppSync::Resolver"
-  #   DependsOn: GraphQLSchema
-  #   Properties:
-  #     ApiId: !GetAtt AppSyncAPI.ApiId
-  #     TypeName: Dose
-  #     FieldName: food
-  #     DataSourceName: !GetAtt AppSyncDataSource.Name
-  #     RequestMappingTemplateS3Location: resolver/dose/getMedicineRequest.vtl
-  #     ResponseMappingTemplate: "$util.toJson($ctx.result)"
+  AppSyncDoseMedicineResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Dose
+      FieldName: medicine
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/dose/getMedicineRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
 # Diary Entry Resolvers
 

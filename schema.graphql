@@ -104,7 +104,7 @@ input TableMedicineFilterInput {
 # DOSE
 
 type Dose {
-	dosesEntry: Doses!
+	dosesEntry: DiaryEntry!
 	medicine: Medicine!
 	quantity: Quantity!
 }
