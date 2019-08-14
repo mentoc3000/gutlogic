@@ -73,29 +73,7 @@ describe('Food database', () => {
         let entryId;
         const name = 'Bacon';
 
-        before('create a food', async () => {
-            const createFood = gql(`
-                mutation CreateFood($input: CreateFoodInput!) {
-                createFood(input: $input) {
-                    nameId
-                    entryId
-                    name
-                }
-                }`);
-
-            await client.hydrated();
-            const createResult = await client.mutate({
-                mutation: createFood,
-                variables: {
-                    input: {
-                        name: name,
-                    }
-                },
-            });
-            const createData = createResult.data.createFood;
-            nameId = createData.nameId;
-            entryId = createData.entryId;
-        });
+        before('create a food', async () => [nameId, entryId] = await createFood(name));
 
         it('should get a food', async () => {
 
@@ -127,29 +105,7 @@ describe('Food database', () => {
         let entryId;
         const name = 'Bacon';
 
-        beforeEach('create a food', async () => {
-            const createFood = gql(`
-                mutation CreateFood($input: CreateFoodInput!) {
-                createFood(input: $input) {
-                    nameId
-                    entryId
-                    name
-                }
-                }`);
-
-            await client.hydrated();
-            const createResult = await client.mutate({
-                mutation: createFood,
-                variables: {
-                    input: {
-                        name: name,
-                    }
-                },
-            });
-            const createData = createResult.data.createFood;
-            nameId = createData.nameId;
-            entryId = createData.entryId;
-        });
+        beforeEach('create a food', async () => [nameId, entryId] = await createFood(name));
 
         it('should delete a food', async () => {
 
@@ -184,29 +140,7 @@ describe('Food database', () => {
         let entryId;
         const name = 'Bacon';
 
-        beforeEach('create a food', async () => {
-            const createFood = gql(`
-                mutation CreateFood($input: CreateFoodInput!) {
-                createFood(input: $input) {
-                    nameId
-                    entryId
-                    name
-                }
-                }`);
-
-            await client.hydrated();
-            const createResult = await client.mutate({
-                mutation: createFood,
-                variables: {
-                    input: {
-                        name: name,
-                    }
-                },
-            });
-            const createData = createResult.data.createFood;
-            nameId = createData.nameId;
-            entryId = createData.entryId;
-        });
+        beforeEach('create a food', async () => [nameId, entryId] = await createFood(name));
 
         it('should update a food', async () => {
 
@@ -280,4 +214,29 @@ async function clearFoodDb() {
         });
     });
 
+}
+
+async function createFood(name) {
+    const createFood = gql(`
+        mutation CreateFood($input: CreateFoodInput!) {
+        createFood(input: $input) {
+            nameId
+            entryId
+            name
+        }
+        }`);
+
+    await client.hydrated();
+    const createResult = await client.mutate({
+        mutation: createFood,
+        variables: {
+            input: {
+                name: name,
+            }
+        },
+    });
+    const createData = createResult.data.createFood;
+    const nameId = createData.nameId;
+    const entryId = createData.entryId;
+    return [nameId, entryId];
 }
