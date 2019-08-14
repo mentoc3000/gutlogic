@@ -12,49 +12,6 @@ const gql = require('graphql-tag');
 
 
 
-const clearFoodDb = async () => {
-
-    const listFoods = gql(`
-    query ListFoods {
-    listFoods {
-        items {
-            nameId
-            entryId
-            name
-        }
-        nextToken
-    }
-    }`);
-
-    await client.hydrated();
-    const result = await client.query({
-        query: listFoods,
-        fetchPolicy: 'network-only',
-    });
-
-    result.data.listFoods.items.forEach(item => {
-
-        const deleteFood = gql(`
-        mutation DeleteFood($input: GutAiIdInput!) {
-        deleteFood(input: $input) {
-            nameId
-            entryId
-        }
-        }`);
-
-        const result = client.mutate({
-            mutation: deleteFood,
-            variables: {
-                input: {
-                    nameId: item.nameId,
-                    entryId: item.entryId,
-                }
-            },
-        });
-    });
-
-}
-
 describe('Food database', () => {
     before('clear food database', clearFoodDb);
 
@@ -281,3 +238,46 @@ describe('Food database', () => {
 
     after('clear food database', clearFoodDb);
 });
+
+async function clearFoodDb() {
+
+    const listFoods = gql(`
+    query ListFoods {
+    listFoods {
+        items {
+            nameId
+            entryId
+            name
+        }
+        nextToken
+    }
+    }`);
+
+    await client.hydrated();
+    const result = await client.query({
+        query: listFoods,
+        fetchPolicy: 'network-only',
+    });
+
+    result.data.listFoods.items.forEach(item => {
+
+        const deleteFood = gql(`
+        mutation DeleteFood($input: GutAiIdInput!) {
+        deleteFood(input: $input) {
+            nameId
+            entryId
+        }
+        }`);
+
+        const result = client.mutate({
+            mutation: deleteFood,
+            variables: {
+                input: {
+                    nameId: item.nameId,
+                    entryId: item.entryId,
+                }
+            },
+        });
+    });
+
+}
