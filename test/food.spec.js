@@ -111,7 +111,12 @@ describe('Food database', () => {
     });
 
     describe('getFood', () => {
-        it('should get a food', async () => {
+
+        let nameId;
+        let entryId;
+        const name = 'Bacon';
+
+        before('create a food', async () => {
             const createFood = gql(`
                 mutation CreateFood($input: CreateFoodInput!) {
                 createFood(input: $input) {
@@ -120,8 +125,6 @@ describe('Food database', () => {
                     name
                 }
                 }`);
-
-            const name = 'Bacon';
 
             await client.hydrated();
             const createResult = await client.mutate({
@@ -133,9 +136,11 @@ describe('Food database', () => {
                 },
             });
             const createData = createResult.data.createFood;
-            expect(createData.nameId).to.be.string;
-            const nameId = createData.nameId;
-            const entryId = createData.entryId;
+            nameId = createData.nameId;
+            entryId = createData.entryId;
+        });
+
+        it('should get a food', async () => {
 
             const getFood = gql(`
                 query getFood($nameId: String!, $entryId: String!) {
