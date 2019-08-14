@@ -3,7 +3,7 @@
   "operation": "Query",
 
   "query" : {
-    "expression": "nameId = :userId",
+    "expression": "nameId = :userId AND entryId BEGINS_WITH diaryEntry",
     "expressionValues" : {
       ":userId" : { "S" : "${ctx.args.userId}" }
     }

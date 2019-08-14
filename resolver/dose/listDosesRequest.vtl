@@ -3,9 +3,10 @@
   "operation": "Query",
 
   "query" : {
-    "expression": "nameId = :food",
+    "expression": "nameId = :userId AND entryId BEGINS_WITH :dose",
     "expressionValues" : {
-      ":food" : { "S" : "food" }
+      ":userId" : { "S" : "${ctx.args.userId}" },
+      ":dose" : { "S" : "dose" },
     }
   },
 

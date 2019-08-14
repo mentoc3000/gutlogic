@@ -3,7 +3,7 @@
   "operation": "PutItem",
   "key": {
     "nameId": $util.dynamodb.toDynamoDBJson(${ctx.args.input.userId}),
-    "entryId": $util.dynamodb.toDynamoDBJson("diaryEntry#${ctx.args.input.datetime}#${util.autoId()}"),
+    "entryId": $util.dynamodb.toDynamoDBJson("diaryEntry#${util.autoId()}"),
   },
   "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args.input),
   "condition": {
