@@ -32,7 +32,7 @@ input TableFoodFilterInput {
 type Ingredient {
     nameId: String!
     entryId: String!
-	mealEntry: MealEntry!
+	mealEntry: DiaryEntry!
 	food: Food!
 	quantity: Quantity!
 }
@@ -61,6 +61,10 @@ input IngredientInput {
 	mealEntryId: GutAiIdInput!
 	foodId: GutAiIdInput!
 	quantity: QuantityInput!
+}
+
+input TableIngredientFilterInput {
+	mealEntryId: GutAiIdInput!
 }
 
 input QuantityInput {
