@@ -1,345 +1,358 @@
 # FOOD
 
 type Food {
-    nameId: String!
-    entryId: String!
-    name: String!
+  nameId: String!
+  entryId: String!
+  name: String!
 }
 
 type PaginatedFoods {
-    items: [Food!]
-    nextToken: String
+  items: [Food!]
+  nextToken: String
 }
 
 input CreateFoodInput {
-    name: String!
+  name: String!
 }
 
 input UpdateFoodInput {
-    nameId: String!
-    entryId: String!
-    name: String
+  nameId: String!
+  entryId: String!
+  name: String
 }
 
 input TableFoodFilterInput {
-	nameId: TableStringFilterInput
-	entryId: TableStringFilterInput
-	name: TableStringFilterInput
+  nameId: TableStringFilterInput
+  entryId: TableStringFilterInput
+  name: TableStringFilterInput
 }
 
 # INGREDIENT
 
 type Ingredient {
-    nameId: String!
-    entryId: String!
-	mealEntry: DiaryEntry!
-	food: Food!
-	quantity: Quantity!
+  nameId: String!
+  entryId: String!
+  mealEntry: DiaryEntry!
+  food: Food!
+  quantity: Quantity!
 }
 
 type Ingredients {
-    items: [Ingredient!]
+  items: [Ingredient!]
 }
 
 type Quantity {
-	amount: Float!
-	unit: String!
+  amount: Float!
+  unit: String!
 }
 
 input CreateIngredientInput {
-	userId: String!
-    ingredient: IngredientInput!
+  userId: String!
+  ingredient: IngredientInput!
 }
 
 input UpdateIngredientInput {
-    nameId: String!
-    entryId: String!
-    ingredient: IngredientInput
+  nameId: String!
+  entryId: String!
+  ingredient: IngredientInput
 }
 
 input IngredientInput {
-	mealEntryId: GutAiIdInput!
-	foodId: GutAiIdInput!
-	quantity: QuantityInput!
+  mealEntryId: GutAiIdInput!
+  foodId: GutAiIdInput!
+  quantity: QuantityInput!
 }
 
 input TableIngredientFilterInput {
-	mealEntryId: GutAiIdInput!
+  mealEntryId: GutAiIdInput!
 }
 
 input QuantityInput {
-	amount: Float!
-	unit: String!
+  amount: Float!
+  unit: String!
 }
 
 # MEDICINE
 
 type Medicine {
-    nameId: String!
-    entryId: String!
-    name: String!
+  nameId: String!
+  entryId: String!
+  name: String!
 }
 
 type PaginatedMedicines {
-    items: [Medicine!]
-    nextToken: String
+  items: [Medicine!]
+  nextToken: String
 }
 
 input CreateMedicineInput {
-    name: String!
+  name: String!
 }
 
 input UpdateMedicineInput {
-    nameId: String!
-    entryId: String!
-    name: String
+  nameId: String!
+  entryId: String!
+  name: String
 }
 
 input TableMedicineFilterInput {
-	nameId: TableStringFilterInput
-	entryId: TableStringFilterInput
-	name: TableStringFilterInput
+  nameId: TableStringFilterInput
+  entryId: TableStringFilterInput
+  name: TableStringFilterInput
 }
 
 # DOSE
 
 type Dose {
-	dosesEntry: DiaryEntry!
-	medicine: Medicine!
-	quantity: Quantity!
+  dosesEntry: DiaryEntry!
+  medicine: Medicine!
+  quantity: Quantity!
 }
 
 input DoseInput {
-	dosesEntryId: GutAiIdInput!
-	medicineId: GutAiIdInput!
-	quantity: QuantityInput!
+  dosesEntryId: GutAiIdInput!
+  medicineId: GutAiIdInput!
+  quantity: QuantityInput!
 }
 
 input CreateDoseInput {
-	userId: String!
-    dose: DoseInput!
+  userId: String!
+  dose: DoseInput!
 }
 
 input UpdateDoseInput {
-    nameId: String!
-    entryId: String!
-    dose: DoseInput
+  nameId: String!
+  entryId: String!
+  dose: DoseInput
 }
 
 input TableDoseFilterInput {
-	dosesEntryId: GutAiIdInput!
+  dosesEntryId: GutAiIdInput!
 }
 
 # DIARY ENTRY
 
 type DiaryEntry {
-    nameId: String!
-    entryId: String!
-    creationDate: AWSDateTime!
-	modificationDate: AWSDateTime!
-	datetime: AWSDateTime!
-	meal: Meal
-	bowelMovement: BowelMovement
-	doses: Doses
-	symptom: Symptom
-	notes: String
+  nameId: String!
+  entryId: String!
+  creationDate: AWSDateTime!
+  modificationDate: AWSDateTime!
+  datetime: AWSDateTime!
+  meal: Meal
+  bowelMovement: BowelMovement
+  doses: Doses
+  symptom: Symptom
+  notes: String
 }
 
 type PaginatedDiaryEntries {
-    items: [DiaryEntry!]
-    nextToken: String
+  items: [DiaryEntry!]
+  nextToken: String
 }
 
 input CreateDiaryEntryInput {
-    userId: String!
-    creationDate: AWSDateTime!
-	modificationDate: AWSDateTime!
-	datetime: AWSDateTime!
-	meal: MealInput
-	bowelMovement: BowelMovementInput
-	doses: DosesInput
-	symptom: SymptomInput
-	notes: String
+  userId: String!
+  creationDate: AWSDateTime!
+  modificationDate: AWSDateTime!
+  datetime: AWSDateTime!
+  meal: MealInput
+  bowelMovement: BowelMovementInput
+  doses: DosesInput
+  symptom: SymptomInput
+  notes: String
 }
 
 input UpdateDiaryEntryInput {
-    nameId: String!
-    entryId: String!
-    creationDate: AWSDateTime!
-	modificationDate: AWSDateTime!
-	datetime: AWSDateTime!
-	meal: MealInput
-	bowelMovement: BowelMovementInput
-	doses: DosesInput
-	symptom: SymptomInput
-	notes: String
+  nameId: String!
+  entryId: String!
+  creationDate: AWSDateTime!
+  modificationDate: AWSDateTime!
+  datetime: AWSDateTime!
+  meal: MealInput
+  bowelMovement: BowelMovementInput
+  doses: DosesInput
+  symptom: SymptomInput
+  notes: String
 }
 
 input TableDiaryEntryFilterInput {
-	datetime: TableAWSDateTimeFilterInput
+  datetime: TableAWSDateTimeFilterInput
 }
 
 # MEAL ENTRY
 
 type Meal {
-	ingredients: [Ingredient!]
+  ingredients: [Ingredient!]
 }
 
 input MealInput {
-	ingredients: [IngredientInput!]
+  ingredients: [IngredientInput!]
 }
 
 # BOWEL MOVEMENT ENTRY
 
 type BowelMovement {
-	type: Int!
-	volume: Int!
+  type: Int!
+  volume: Int!
 }
 
 input BowelMovementInput {
-	type: Int!
-	volume: Int!
+  type: Int!
+  volume: Int!
 }
 
 # DOSES ENTRY
 
 type Doses {
-	doses: [Dose!]
+  doses: [Dose!]
 }
 
 input DosesInput {
-	doses: [DoseInput!]
+  doses: [DoseInput!]
 }
 
 # SYMPTOM
 
 type Symptom {
-	symptomType: SymptomType!
-	severity: Float!
+  symptomType: SymptomType!
+  severity: Float!
 }
 
 input SymptomInput {
-	symptomType: SymptomTypeInput!
-	severity: Float!
+  symptomType: SymptomTypeInput!
+  severity: Float!
 }
 
 type SymptomType {
-	name: String!
+  name: String!
 }
 
 input SymptomTypeInput {
-	name: String!
+  name: String!
 }
 
 # GENERIC
 
 type GutAiId {
-	nameId: String!
-	entryId: String!
+  nameId: String!
+  entryId: String!
 }
 
 input GutAiIdInput {
-	nameId: String!
-	entryId: String!
+  nameId: String!
+  entryId: String!
 }
 
 input TableBooleanFilterInput {
-	ne: Boolean
-	eq: Boolean
+  ne: Boolean
+  eq: Boolean
 }
 
 input TableFloatFilterInput {
-	ne: Float
-	eq: Float
-	le: Float
-	lt: Float
-	ge: Float
-	gt: Float
-	contains: Float
-	notContains: Float
-	between: [Float]
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  contains: Float
+  notContains: Float
+  between: [Float]
 }
 
 input TableIDFilterInput {
-	ne: ID
-	eq: ID
-	le: ID
-	lt: ID
-	ge: ID
-	gt: ID
-	contains: ID
-	notContains: ID
-	between: [ID]
-	beginsWith: ID
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
 }
 
 input TableIntFilterInput {
-	ne: Int
-	eq: Int
-	le: Int
-	lt: Int
-	ge: Int
-	gt: Int
-	contains: Int
-	notContains: Int
-	between: [Int]
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  contains: Int
+  notContains: Int
+  between: [Int]
 }
 
 input TableStringFilterInput {
-	ne: String
-	eq: String
-	le: String
-	lt: String
-	ge: String
-	gt: String
-	contains: String
-	notContains: String
-	between: [String]
-	beginsWith: String
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
 }
 
 input TableAWSDateTimeFilterInput {
-	ne: AWSDateTime
-	eq: AWSDateTime
-	le: AWSDateTime
-	lt: AWSDateTime
-	ge: AWSDateTime
-	gt: AWSDateTime
-	between: [AWSDateTime]
+  ne: AWSDateTime
+  eq: AWSDateTime
+  le: AWSDateTime
+  lt: AWSDateTime
+  ge: AWSDateTime
+  gt: AWSDateTime
+  between: [AWSDateTime]
 }
 
 type Query {
-    getFood(nameId: String!, entryId: String!): Food
-    listFoods(filter: TableFoodFilterInput, limit: Int, nextToken: String): PaginatedFoods!
-    getIngredient(nameId: String!, entryId: String!): Ingredient
-    listIngredients(filter: TableIngredientFilterInput): Ingredients
-    getMedicine(nameId: String!, entryId: String!): Medicine
-    listMedicines(filter: TableMedicineFilterInput, limit: Int, nextToken: String): PaginatedMedicines!
-    getDose(nameId: String!, entryId: String!): Dose
-    listDoses(filter: TableDoseFilterInput): Doses
-    getDiaryEntry(nameId: String!, entryId: String!): DiaryEntry
-    listDiaryEntries(userId: String!, filter: TableDiaryEntryFilterInput, limit: Int, nextToken: String): PaginatedDiaryEntries!
+  getFood(nameId: String!, entryId: String!): Food
+  listFoods(
+    filter: TableFoodFilterInput
+    limit: Int
+    nextToken: String
+  ): PaginatedFoods!
+  getIngredient(nameId: String!, entryId: String!): Ingredient
+  listIngredients(filter: TableIngredientFilterInput): Ingredients
+  getMedicine(nameId: String!, entryId: String!): Medicine
+  listMedicines(
+    filter: TableMedicineFilterInput
+    limit: Int
+    nextToken: String
+  ): PaginatedMedicines!
+  getDose(nameId: String!, entryId: String!): Dose
+  listDoses(filter: TableDoseFilterInput): Doses
+  getDiaryEntry(nameId: String!, entryId: String!): DiaryEntry
+  listDiaryEntries(
+    userId: String!
+    filter: TableDiaryEntryFilterInput
+    limit: Int
+    nextToken: String
+  ): PaginatedDiaryEntries!
 }
 
 type Mutation {
-    createFood(input: CreateFoodInput!): Food
-    updateFood(input: UpdateFoodInput!): Food
-    deleteFood(input: GutAiIdInput!): Food
-    createIngredient(input: CreateIngredientInput!): Ingredient
-    updateIngredient(input: UpdateIngredientInput!): Ingredient
-    deleteIngredient(input: GutAiIdInput!): Ingredient
-    createMedicine(input: CreateMedicineInput!): Medicine
-    updateMedicine(input: UpdateMedicineInput!): Medicine
-    deleteMedicine(input: GutAiIdInput!): Medicine
-    createDose(input: CreateDoseInput!): Dose
-    updateDose(input: UpdateDoseInput!): Dose
-    deleteDose(input: GutAiIdInput!): Dose
-    createDiaryEntry(input: CreateDiaryEntryInput!): DiaryEntry
-    updateDiaryEntry(input: UpdateDiaryEntryInput!): DiaryEntry
-    deleteDiaryEntry(input: GutAiIdInput!): DiaryEntry
+  createFood(input: CreateFoodInput!): Food
+  updateFood(input: UpdateFoodInput!): Food
+  deleteFood(input: GutAiIdInput!): Food
+  createIngredient(input: CreateIngredientInput!): Ingredient
+  updateIngredient(input: UpdateIngredientInput!): Ingredient
+  deleteIngredient(input: GutAiIdInput!): Ingredient
+  createMedicine(input: CreateMedicineInput!): Medicine
+  updateMedicine(input: UpdateMedicineInput!): Medicine
+  deleteMedicine(input: GutAiIdInput!): Medicine
+  createDose(input: CreateDoseInput!): Dose
+  updateDose(input: UpdateDoseInput!): Dose
+  deleteDose(input: GutAiIdInput!): Dose
+  createDiaryEntry(input: CreateDiaryEntryInput!): DiaryEntry
+  updateDiaryEntry(input: UpdateDiaryEntryInput!): DiaryEntry
+  deleteDiaryEntry(input: GutAiIdInput!): DiaryEntry
 }
 
 type Schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
