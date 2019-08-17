@@ -6,4 +6,10 @@
     "entryId": $util.dynamodb.toDynamoDBJson($util.autoId()),
   },
   "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args.input),
+  "condition": {
+    "expression": "attribute_not_exists(#entryId)",
+    "expressionNames": {
+      "#entryId": "entryId",
+    },
+  },
 }
