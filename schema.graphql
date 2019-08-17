@@ -102,26 +102,26 @@ input TableMedicineFilterInput {
 # DOSE
 
 type Dose {
+  nameId: String!
+  entryId: String!
   dosesEntry: DiaryEntry!
   medicine: Medicine!
   quantity: Quantity!
 }
 
-input DoseInput {
+input CreateDoseInput {
+  userId: String!
   dosesEntryId: GutAiIdInput!
   medicineId: GutAiIdInput!
   quantity: QuantityInput!
 }
 
-input CreateDoseInput {
-  userId: String!
-  dose: DoseInput!
-}
-
 input UpdateDoseInput {
   nameId: String!
   entryId: String!
-  dose: DoseInput
+  dosesEntryId: GutAiIdInput
+  medicineId: GutAiIdInput
+  quantity: QuantityInput
 }
 
 input TableDoseFilterInput {
@@ -202,11 +202,11 @@ input BowelMovementInput {
 # DOSES ENTRY
 
 type Doses {
-  doses: [Dose!]
+  items: [Dose!]
 }
 
 input DosesInput {
-  doses: [DoseInput!]
+  doses: [GutAiIdInput!]
 }
 
 # SYMPTOM
