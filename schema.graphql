@@ -48,19 +48,17 @@ type Quantity {
 
 input CreateIngredientInput {
   userId: String!
-  ingredient: IngredientInput!
+  mealEntryId: GutAiIdInput!
+  foodId: GutAiIdInput!
+  quantity: QuantityInput!
 }
 
 input UpdateIngredientInput {
   nameId: String!
   entryId: String!
-  ingredient: IngredientInput
-}
-
-input IngredientInput {
-  mealEntryId: GutAiIdInput!
-  foodId: GutAiIdInput!
-  quantity: QuantityInput!
+  mealEntryId: GutAiIdInput
+  foodId: GutAiIdInput
+  quantity: QuantityInput
 }
 
 input TableIngredientFilterInput {
@@ -186,7 +184,7 @@ type Meal {
 }
 
 input MealInput {
-  ingredients: [IngredientInput!]
+  ingredients: [GutAiIdInput!]
 }
 
 # BOWEL MOVEMENT ENTRY
