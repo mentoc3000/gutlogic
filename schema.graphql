@@ -348,7 +348,7 @@ type Mutation {
   createDiaryEntry(input: CreateDiaryEntryInput!): DiaryEntry
   updateDiaryEntry(input: UpdateDiaryEntryInput!): DiaryEntry
   deleteDiaryEntry(input: GutAiIdInput!): DiaryEntry
-  deleteItem(input: GutAiIdInput!): GutAiIdInput
+  deleteItem(input: GutAiIdInput!): GutAiId
 }
 
 type Schema {

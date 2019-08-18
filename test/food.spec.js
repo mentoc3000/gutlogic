@@ -2,74 +2,12 @@ const chai = require('chai');
 const gql = require('graphql-tag');
 const assertArrays = require('chai-arrays');
 const { client } = require('./aws-exports');
+const dummyDb = require('./dummyDb');
 
 chai.use(assertArrays);
 const { expect } = chai;
 
-const clearFoodDb = async () => {
-  const listFoods = gql(`
-    query ListFoods {
-    listFoods {
-        items {
-            nameId
-            entryId
-            name
-        }
-        nextToken
-    }
-    }`);
-
-  await client.hydrated();
-  const result = await client.query({
-    query: listFoods,
-    fetchPolicy: 'network-only',
-  });
-
-  await result.data.listFoods.items.forEach(async item => {
-    const deleteFood = gql(`
-      mutation DeleteFood($input: GutAiIdInput!) {
-      deleteFood(input: $input) {
-          nameId
-          entryId
-      }
-      }`);
-
-    await client.mutate({
-      mutation: deleteFood,
-      variables: {
-        input: {
-          nameId: item.nameId,
-          entryId: item.entryId,
-        },
-      },
-    });
-  });
-};
-
-const createFood = async name => {
-  const mutation = gql(`
-        mutation CreateFood($input: CreateFoodInput!) {
-        createFood(input: $input) {
-            nameId
-            entryId
-            name
-        }
-        }`);
-
-  await client.hydrated();
-  const createResult = await client.mutate({
-    mutation,
-    variables: {
-      input: { name },
-    },
-  });
-  const createData = createResult.data.createFood;
-  return [createData.nameId, createData.entryId];
-};
-
 describe('Food database', () => {
-  before('clear food database', clearFoodDb);
-
   describe('listFoods', () => {
     it('should get all foods', async () => {
       const query = gql(`
@@ -125,7 +63,7 @@ describe('Food database', () => {
     const name = 'Bacon';
 
     before('create a food', async () => {
-      [nameId, entryId] = await createFood(name);
+      [nameId, entryId] = await dummyDb.createFood(name);
     });
 
     it('should get a food', async () => {
@@ -154,7 +92,7 @@ describe('Food database', () => {
     const name = 'Bacon';
 
     beforeEach('create a food', async () => {
-      [nameId, entryId] = await createFood(name);
+      [nameId, entryId] = await dummyDb.createFood(name);
     });
 
     it('should delete a food', async () => {
@@ -186,7 +124,7 @@ describe('Food database', () => {
     const name = 'Bacon';
 
     beforeEach('create a food', async () => {
-      [nameId, entryId] = await createFood(name);
+      [nameId, entryId] = await dummyDb.createFood(name);
     });
 
     it('should update a food', async () => {
@@ -216,5 +154,5 @@ describe('Food database', () => {
     });
   });
 
-  after('clear food database', clearFoodDb);
+  after('clear food database', dummyDb.clearItems);
 });
