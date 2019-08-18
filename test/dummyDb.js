@@ -76,6 +76,35 @@ const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
   return [createData.nameId, createData.entryId];
 };
 
+const createMealEntry = async (userId, ingredientIds, datetime) => {
+  const mutation = gql(`
+        mutation CreateIngredient($input: CreateIngredientInput!) {
+        createIngredient(input: $input) {
+            nameId
+            entryId
+        }
+        }`);
+
+  await client.hydrated();
+  const createResult = await client.mutate({
+    mutation,
+    variables: {
+      input: {
+        userId,
+        creationDate: datetime,
+        modificationDate: datetime,
+        datetime,
+        meal: {
+          ingredients: ingredientIds,
+        },
+      },
+    },
+  });
+  const createData = createResult.data.createIngredient;
+  createdIds.push(createData);
+  return [createData.nameId, createData.entryId];
+};
+
 const createMedicine = async name => {
   const mutation = gql(`
         mutation CreateMedicine($input: CreateMedicineInput!) {
@@ -148,5 +177,6 @@ module.exports = {
   createFood,
   createIngredient,
   createMedicine,
+  deleteItem,
   clearItems,
 };

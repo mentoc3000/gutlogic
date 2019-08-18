@@ -48,7 +48,7 @@ const type = AUTH_TYPE.API_KEY;
 // const type = AUTH_TYPE.AMAZON_COGNITO_USER_POOLS
 
 // If you want to use API key-based auth
-const apiKey = 'da2-dq2yiriyi5aa3du5nlineuwjom';
+const apiKey = 'da2-igqxcerzkvfbdphselnomynzvq';
 // If you want to use a jwtToken from Amazon Cognito identity:
 // const jwtToken = 'xxxxxxxx';
 
