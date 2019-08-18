@@ -120,7 +120,27 @@ const deleteItem = async (nameId, entryId) => {
 };
 
 const clearItems = async () => {
-  createdIds.forEach(async x => deleteItem(x.nameId, x.entryId));
+  const mutation = gql(`
+        mutation DeleteItem($input: GutAiIdInput!) {
+        deleteItem(input: $input) {
+            nameId
+            entryId
+        }
+        }`);
+
+  await client.hydrated();
+  createdIds.forEach(async id => {
+    client.mutate({
+      mutation,
+      variables: {
+        input: {
+          nameId: id.nameId,
+          entryId: id.entryId,
+        },
+      },
+    });
+  });
+  createdIds = [];
 };
 
 module.exports = {
