@@ -1,6 +1,8 @@
-'use strict';
+// const AWS = require('aws-sdk');
+global.WebSocket = require('ws');
+
 Object.defineProperty(exports, '__esModule', { value: true });
-var config = {
+const config = {
   AWS_ACCESS_KEY_ID: 'AKIATH7OL72IGRLR2YYS',
   AWS_SECRET_ACCESS_KEY: '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',
   HOST: 'tfdivmprjfd2phwlwdalzzpk2u.appsync-api.us-east-1.amazonaws.com',
@@ -8,27 +10,26 @@ var config = {
   PATH: '/graphql',
   ENDPOINT: '',
 };
-config.ENDPOINT = 'https://' + config.HOST + config.PATH;
+config.ENDPOINT = `https://${config.HOST}${config.PATH}`;
 exports.default = config;
 
-global.WebSocket = require('ws');
 global.window = global.window || {
-  setTimeout: setTimeout,
-  clearTimeout: clearTimeout,
+  setTimeout,
+  clearTimeout,
   WebSocket: global.WebSocket,
   ArrayBuffer: global.ArrayBuffer,
-  addEventListener: function() {},
+  addEventListener() {},
   navigator: { onLine: true },
 };
 global.localStorage = {
   store: {},
-  getItem: function(key) {
+  getItem(key) {
     return this.store[key];
   },
-  setItem: function(key, value) {
+  setItem(key, value) {
     this.store[key] = value;
   },
-  removeItem: function(key) {
+  removeItem(key) {
     delete this.store[key];
   },
 };
@@ -37,7 +38,7 @@ require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 // Require AppSync module
-const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
+const { AUTH_TYPE } = require('aws-appsync/lib/link/auth-link');
 const AWSAppSyncClient = require('aws-appsync').default;
 
 const url = config.ENDPOINT;
@@ -49,21 +50,20 @@ const type = AUTH_TYPE.API_KEY;
 // If you want to use API key-based auth
 const apiKey = 'da2-dq2yiriyi5aa3du5nlineuwjom';
 // If you want to use a jwtToken from Amazon Cognito identity:
-const jwtToken = 'xxxxxxxx';
+// const jwtToken = 'xxxxxxxx';
 
 // If you want to use AWS...
-const AWS = require('aws-sdk');
-const credentials = AWS.config.credentials;
+// const { credentials } = AWS.config;
 
 // Set up Apollo client
 const client = new AWSAppSyncClient(
   {
-    url: url,
-    region: region,
+    url,
+    region,
     auth: {
-      type: type,
+      type,
       // credentials: credentials,
-      apiKey: apiKey,
+      apiKey,
     },
     disableOffline: true,
   },
