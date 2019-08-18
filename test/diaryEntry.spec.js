@@ -98,20 +98,12 @@ describe('DiaryEntry database', () => {
     });
   });
 
-  describe.skip('getDiaryEntry', () => {
-    let nameId;
-    let entryId;
-    const amount = 2.4;
-    const unit = 'cups';
+  describe('getDiaryEntry', () => {
+    let id;
+    const datetime = '2019-07-02T12:43:00Z';
 
     before('create a diary entry', async () => {
-      [nameId, entryId] = await dummyDb.createDiaryEntry(
-        userId,
-        mealEntryId,
-        foodId,
-        amount,
-        unit
-      );
+      id = await dummyDb.createMealEntry(userId, datetime);
     });
 
     it('should get a diary entry', async () => {
@@ -120,29 +112,25 @@ describe('DiaryEntry database', () => {
         getDiaryEntry(nameId: $nameId, entryId: $entryId) {
             nameId
             entryId
-            quantity { amount, unit }
         }
         }`);
 
       const getResult = await client.query({
         query: getDiaryEntry,
-        variables: { nameId, entryId },
+        variables: id,
       });
       const getData = getResult.data.getDiaryEntry;
       expect(getData.__typename).to.equal('DiaryEntry');
-      expect(getData.quantity.amount).to.equal(amount);
-      expect(getData.quantity.unit).to.equal(unit);
     });
   });
 
   describe.skip('deleteDiaryEntry', () => {
-    let nameId;
-    let entryId;
+    let id;
     const amount = 2.4;
     const unit = 'cups';
 
     beforeEach('create a diary entry', async () => {
-      [nameId, entryId] = await dummyDb.createDiaryEntry(
+      id = await dummyDb.createDiaryEntry(
         userId,
         mealEntryId,
         foodId,
@@ -175,13 +163,12 @@ describe('DiaryEntry database', () => {
   });
 
   describe.skip('updateDiaryEntry', () => {
-    let nameId;
-    let entryId;
+    let id;
     const amount = 2.4;
     const unit = 'cups';
 
     beforeEach('create a diary entry', async () => {
-      [nameId, entryId] = await dummyDb.createDiaryEntry(
+      id = await dummyDb.createDiaryEntry(
         userId,
         mealEntryId,
         foodId,

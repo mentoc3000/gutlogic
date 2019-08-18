@@ -85,10 +85,10 @@ const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
   };
 };
 
-const createMealEntry = async (userId, ingredientIds, datetime) => {
+const createMealEntry = async (userId, datetime) => {
   const mutation = gql(`
-        mutation CreateIngredient($input: CreateIngredientInput!) {
-        createIngredient(input: $input) {
+        mutation CreateDiaryEntry($input: CreateDiaryEntryInput!) {
+        createDiaryEntry(input: $input) {
             nameId
             entryId
         }
@@ -104,12 +104,12 @@ const createMealEntry = async (userId, ingredientIds, datetime) => {
         modificationDate: datetime,
         datetime,
         meal: {
-          ingredients: ingredientIds,
+          ingredients: [],
         },
       },
     },
   });
-  const createData = createResult.data.createIngredient;
+  const createData = createResult.data.createDiaryEntry;
   createdIds.push(createData);
   return {
     nameId: createData.nameId,
@@ -191,6 +191,7 @@ module.exports = {
   createDose,
   createFood,
   createIngredient,
+  createMealEntry,
   createMedicine,
   deleteItem,
   clearItems,
