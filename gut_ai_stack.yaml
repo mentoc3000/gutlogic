@@ -460,15 +460,15 @@ Resources:
 
   # General
 
-  AppSyncDeleteMutationResolver:
+  AppSyncDeleteItemMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Mutation
-      FieldName: delete
+      FieldName: deleteItem
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/deleteRequest.vtl
+      RequestMappingTemplateS3Location: resolver/deleteItemRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
 Outputs:
