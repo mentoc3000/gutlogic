@@ -3,9 +3,10 @@
   "operation": "Query",
 
   "query" : {
-    "expression": "nameId = :userId AND begins_with(entryId, diaryEntry)",
+    "expression": "nameId = :userId AND begins_with(entryId, :diaryEntry)",
     "expressionValues" : {
-      ":userId" : { "S" : "${ctx.args.userId}" }
+      ":userId" : { "S" : "${ctx.args.userId}" },
+      ":diaryEntry" : { "S" : "diaryEntry" }
     }
   },
   
