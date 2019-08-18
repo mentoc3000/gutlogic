@@ -2,72 +2,10 @@ const chai = require('chai');
 const gql = require('graphql-tag');
 const assertArrays = require('chai-arrays');
 const { client } = require('./aws-exports');
+const dummyDb = require('./dummyDb');
 
 chai.use(assertArrays);
 const { expect } = chai;
-
-const clearDoseDb = async () => {
-  const listDoses = gql(`
-    query ListDoses {
-    listDoses {
-        items {
-            nameId
-            entryId
-        }
-    }
-    }`);
-
-  await client.hydrated();
-  const result = await client.query({
-    query: listDoses,
-    fetchPolicy: 'network-only',
-  });
-
-  await result.data.listDoses.items.forEach(async item => {
-    const deleteDose = gql(`
-      mutation DeleteDose($input: GutAiIdInput!) {
-      deleteDose(input: $input) {
-          nameId
-          entryId
-      }
-      }`);
-
-    await client.mutate({
-      mutation: deleteDose,
-      variables: {
-        input: {
-          nameId: item.nameId,
-          entryId: item.entryId,
-        },
-      },
-    });
-  });
-};
-
-const createDose = async (userId, dosesEntryId, medicineId, amount, unit) => {
-  const mutation = gql(`
-        mutation CreateDose($input: CreateDoseInput!) {
-        createDose(input: $input) {
-            nameId
-            entryId
-        }
-        }`);
-
-  await client.hydrated();
-  const createResult = await client.mutate({
-    mutation,
-    variables: {
-      input: {
-        userId,
-        dosesEntryId,
-        medicineId,
-        quantity: { amount, unit },
-      },
-    },
-  });
-  const createData = createResult.data.createDose;
-  return [createData.nameId, createData.entryId];
-};
 
 describe('Dose database', () => {
   const userId = 'fakeuserid';
@@ -79,8 +17,6 @@ describe('Dose database', () => {
     nameId: 'food',
     entryId: 'entry',
   };
-
-  before('clear dose database', clearDoseDb);
 
   describe('listDoses', () => {
     it('should get all doses', async () => {
@@ -143,7 +79,7 @@ describe('Dose database', () => {
     const unit = 'cups';
 
     before('create a dose', async () => {
-      [nameId, entryId] = await createDose(
+      [nameId, entryId] = await dummyDb.createDose(
         userId,
         dosesEntryId,
         medicineId,
@@ -180,7 +116,7 @@ describe('Dose database', () => {
     const unit = 'cups';
 
     beforeEach('create a dose', async () => {
-      [nameId, entryId] = await createDose(
+      [nameId, entryId] = await dummyDb.createDose(
         userId,
         dosesEntryId,
         medicineId,
@@ -219,7 +155,7 @@ describe('Dose database', () => {
     const unit = 'cups';
 
     beforeEach('create a dose', async () => {
-      [nameId, entryId] = await createDose(
+      [nameId, entryId] = await dummyDb.createDose(
         userId,
         dosesEntryId,
         medicineId,
@@ -255,5 +191,5 @@ describe('Dose database', () => {
     });
   });
 
-  // after('clear dose database', clearDoseDb);
+  after('clear dose database', dummyDb.clearItems);
 });

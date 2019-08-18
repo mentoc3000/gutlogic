@@ -2,74 +2,12 @@ const chai = require('chai');
 const gql = require('graphql-tag');
 const assertArrays = require('chai-arrays');
 const { client } = require('./aws-exports');
+const dummyDb = require('./dummyDb');
 
 chai.use(assertArrays);
 const { expect } = chai;
 
-const clearMedicineDb = async () => {
-  const listMedicines = gql(`
-    query ListMedicines {
-    listMedicines {
-        items {
-            nameId
-            entryId
-            name
-        }
-        nextToken
-    }
-    }`);
-
-  await client.hydrated();
-  const result = await client.query({
-    query: listMedicines,
-    fetchPolicy: 'network-only',
-  });
-
-  await result.data.listMedicines.items.forEach(async item => {
-    const deleteMedicine = gql(`
-      mutation DeleteMedicine($input: GutAiIdInput!) {
-      deleteMedicine(input: $input) {
-          nameId
-          entryId
-      }
-      }`);
-
-    await client.mutate({
-      mutation: deleteMedicine,
-      variables: {
-        input: {
-          nameId: item.nameId,
-          entryId: item.entryId,
-        },
-      },
-    });
-  });
-};
-
-const createMedicine = async name => {
-  const mutation = gql(`
-        mutation CreateMedicine($input: CreateMedicineInput!) {
-        createMedicine(input: $input) {
-            nameId
-            entryId
-            name
-        }
-        }`);
-
-  await client.hydrated();
-  const createResult = await client.mutate({
-    mutation,
-    variables: {
-      input: { name },
-    },
-  });
-  const createData = createResult.data.createMedicine;
-  return [createData.nameId, createData.entryId];
-};
-
 describe('Medicine database', () => {
-  before('clear medicine database', clearMedicineDb);
-
   describe('listMedicines', () => {
     it('should get all medicines', async () => {
       const query = gql(`
@@ -125,7 +63,7 @@ describe('Medicine database', () => {
     const name = 'Bacon';
 
     before('create a medicine', async () => {
-      [nameId, entryId] = await createMedicine(name);
+      [nameId, entryId] = await dummyDb.createMedicine(name);
     });
 
     it('should get a medicine', async () => {
@@ -154,7 +92,7 @@ describe('Medicine database', () => {
     const name = 'Bacon';
 
     beforeEach('create a medicine', async () => {
-      [nameId, entryId] = await createMedicine(name);
+      [nameId, entryId] = await dummyDb.createMedicine(name);
     });
 
     it('should delete a medicine', async () => {
@@ -186,7 +124,7 @@ describe('Medicine database', () => {
     const name = 'Bacon';
 
     beforeEach('create a medicine', async () => {
-      [nameId, entryId] = await createMedicine(name);
+      [nameId, entryId] = await dummyDb.createMedicine(name);
     });
 
     it('should update a medicine', async () => {
@@ -216,5 +154,5 @@ describe('Medicine database', () => {
     });
   });
 
-  after('clear medicine database', clearMedicineDb);
+  after('clear medicine database', dummyDb.clearItems);
 });

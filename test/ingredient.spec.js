@@ -2,72 +2,10 @@ const chai = require('chai');
 const gql = require('graphql-tag');
 const assertArrays = require('chai-arrays');
 const { client } = require('./aws-exports');
+const dummyDb = require('./dummyDb');
 
 chai.use(assertArrays);
 const { expect } = chai;
-
-const clearIngredientDb = async () => {
-  const listIngredients = gql(`
-    query ListIngredients {
-    listIngredients {
-        items {
-            nameId
-            entryId
-        }
-    }
-    }`);
-
-  await client.hydrated();
-  const result = await client.query({
-    query: listIngredients,
-    fetchPolicy: 'network-only',
-  });
-
-  await result.data.listIngredients.items.forEach(async item => {
-    const deleteIngredient = gql(`
-      mutation DeleteIngredient($input: GutAiIdInput!) {
-      deleteIngredient(input: $input) {
-          nameId
-          entryId
-      }
-      }`);
-
-    await client.mutate({
-      mutation: deleteIngredient,
-      variables: {
-        input: {
-          nameId: item.nameId,
-          entryId: item.entryId,
-        },
-      },
-    });
-  });
-};
-
-const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
-  const mutation = gql(`
-        mutation CreateIngredient($input: CreateIngredientInput!) {
-        createIngredient(input: $input) {
-            nameId
-            entryId
-        }
-        }`);
-
-  await client.hydrated();
-  const createResult = await client.mutate({
-    mutation,
-    variables: {
-      input: {
-        userId,
-        mealEntryId,
-        foodId,
-        quantity: { amount, unit },
-      },
-    },
-  });
-  const createData = createResult.data.createIngredient;
-  return [createData.nameId, createData.entryId];
-};
 
 describe('Ingredient database', () => {
   const userId = 'fakeuserid';
@@ -79,8 +17,6 @@ describe('Ingredient database', () => {
     nameId: 'food',
     entryId: 'entry',
   };
-
-  before('clear ingredient database', clearIngredientDb);
 
   describe('listIngredients', () => {
     it('should get all ingredients', async () => {
@@ -143,7 +79,7 @@ describe('Ingredient database', () => {
     const unit = 'cups';
 
     before('create a ingredient', async () => {
-      [nameId, entryId] = await createIngredient(
+      [nameId, entryId] = await dummyDb.createIngredient(
         userId,
         mealEntryId,
         foodId,
@@ -180,7 +116,7 @@ describe('Ingredient database', () => {
     const unit = 'cups';
 
     beforeEach('create a ingredient', async () => {
-      [nameId, entryId] = await createIngredient(
+      [nameId, entryId] = await dummyDb.createIngredient(
         userId,
         mealEntryId,
         foodId,
@@ -219,7 +155,7 @@ describe('Ingredient database', () => {
     const unit = 'cups';
 
     beforeEach('create a ingredient', async () => {
-      [nameId, entryId] = await createIngredient(
+      [nameId, entryId] = await dummyDb.createIngredient(
         userId,
         mealEntryId,
         foodId,
@@ -255,5 +191,5 @@ describe('Ingredient database', () => {
     });
   });
 
-  // after('clear ingredient database', clearIngredientDb);
+  after('clear ingredient database', dummyDb.clearItems);
 });
