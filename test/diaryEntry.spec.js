@@ -124,19 +124,12 @@ describe('DiaryEntry database', () => {
     });
   });
 
-  describe.skip('deleteDiaryEntry', () => {
+  describe('deleteDiaryEntry', () => {
     let id;
-    const amount = 2.4;
-    const unit = 'cups';
+    const datetime = '2019-07-02T12:43:00Z';
 
     beforeEach('create a diary entry', async () => {
-      id = await dummyDb.createDiaryEntry(
-        userId,
-        mealEntryId,
-        foodId,
-        amount,
-        unit
-      );
+      id = await dummyDb.createMealEntry(userId, datetime);
     });
 
     it('should delete a diary entry', async () => {
@@ -152,29 +145,22 @@ describe('DiaryEntry database', () => {
       const result = await client.mutate({
         mutation: deleteDiaryEntry,
         variables: {
-          input: { nameId, entryId },
+          input: id,
         },
       });
       const data = result.data.deleteDiaryEntry;
       expect(data.__typename).to.equal('DiaryEntry');
-      expect(data.nameId).to.equal(nameId);
-      expect(data.entryId).to.equal(entryId);
+      expect(data.nameId).to.equal(id.nameId);
+      expect(data.entryId).to.equal(id.entryId);
     });
   });
 
-  describe.skip('updateDiaryEntry', () => {
+  describe('updateDiaryEntry', () => {
     let id;
-    const amount = 2.4;
-    const unit = 'cups';
+    const datetime = '2019-07-02T12:43:00Z';
 
     beforeEach('create a diary entry', async () => {
-      id = await dummyDb.createDiaryEntry(
-        userId,
-        mealEntryId,
-        foodId,
-        amount,
-        unit
-      );
+      id = await dummyDb.createMealEntry(userId, datetime);
     });
 
     it('should update a diary entry', async () => {
@@ -183,24 +169,23 @@ describe('DiaryEntry database', () => {
         updateDiaryEntry(input: $input) {
             nameId
             entryId
-            quantity { amount, unit }
+            datetime
         }
         }`);
 
-      const quantity = {
-        amount: 1.2,
-        unit: 'Tbps',
-      };
-
+      const newDatetime = '2019-08-02T12:43:00Z';
       const result = await client.mutate({
         mutation: updateDiaryEntry,
         variables: {
-          input: { nameId, entryId, quantity },
+          input: {
+            nameId: id.nameId,
+            entryId: id.entryId,
+            datetime: newDatetime,
+          },
         },
       });
       const data = result.data.updateDiaryEntry;
-      expect(data.quantity.amount).to.equal(quantity.amount);
-      expect(data.quantity.unit).to.equal(quantity.unit);
+      expect(data.datetime).to.equal(newDatetime);
     });
   });
 

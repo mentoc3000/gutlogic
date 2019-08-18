@@ -163,9 +163,9 @@ input CreateDiaryEntryInput {
 input UpdateDiaryEntryInput {
   nameId: String!
   entryId: String!
-  creationDate: AWSDateTime!
-  modificationDate: AWSDateTime!
-  datetime: AWSDateTime!
+  creationDate: AWSDateTime
+  modificationDate: AWSDateTime
+  datetime: AWSDateTime
   meal: MealInput
   bowelMovement: BowelMovementInput
   doses: DosesInput
