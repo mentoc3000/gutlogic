@@ -26,6 +26,7 @@ const createDose = async (userId, dosesEntryId, medicineId, amount, unit) => {
   });
   const createData = createResult.data.createDose;
   createdIds.push(createData);
+  // TODO: replace list return with object return
   return [createData.nameId, createData.entryId];
 };
 

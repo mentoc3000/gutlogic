@@ -33,18 +33,15 @@ describe('DiaryEntry database', () => {
     });
   });
 
-  describe.skip('createDiaryEntry', () => {
-    it('should create a diary entry', async () => {
-      const quantity = {
-        amount: 0.3,
-        unit: 'each',
-      };
+  describe('createDiaryEntry', () => {
+    it('should create a meal entry', async () => {
+      const datetime = '2019-07-02T12:43:00Z';
       const mutation = gql(`
         mutation CreateDiaryEntry($input: CreateDiaryEntryInput!) {
         createDiaryEntry(input: $input) {
             nameId
             entryId
-            quantity { amount, unit }
+            meal { ingredients { entryId }}
         }
         }`);
 
@@ -54,16 +51,50 @@ describe('DiaryEntry database', () => {
         variables: {
           input: {
             userId,
-            mealEntryId,
-            foodId,
-            quantity,
+            creationDate: datetime,
+            modificationDate: datetime,
+            datetime,
+            meal: {
+              ingredients: [],
+            },
           },
         },
       });
       const data = result.data.createDiaryEntry;
       expect(data.__typename).to.equal('DiaryEntry');
-      expect(data.quantity.amount).to.equal(quantity.amount);
-      expect(data.quantity.unit).to.equal(quantity.unit);
+      expect(data.meal.ingredients).to.be.array();
+    });
+
+    it('should create a bowel movement entry', async () => {
+      const datetime = '2019-07-02T12:43:00Z';
+      const mutation = gql(`
+        mutation CreateDiaryEntry($input: CreateDiaryEntryInput!) {
+        createDiaryEntry(input: $input) {
+            nameId
+            entryId
+            bowelMovement { volume }
+        }
+        }`);
+
+      await client.hydrated();
+      const result = await client.mutate({
+        mutation,
+        variables: {
+          input: {
+            userId,
+            creationDate: datetime,
+            modificationDate: datetime,
+            datetime,
+            bowelMovement: {
+              type: 3,
+              volume: 4,
+            },
+          },
+        },
+      });
+      const data = result.data.createDiaryEntry;
+      expect(data.__typename).to.equal('DiaryEntry');
+      expect(data.bowelMovement.volume).to.equal(4);
     });
   });
 
