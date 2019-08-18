@@ -458,6 +458,19 @@ Resources:
       RequestMappingTemplateS3Location: resolver/diaryEntry/deleteDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+  # General
+
+  AppSyncDeleteMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: delete
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/deleteRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
 Outputs:
   GutAITableName:
     Description: The name of the DynamoDB Table
