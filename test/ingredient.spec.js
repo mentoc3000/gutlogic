@@ -73,13 +73,12 @@ describe('Ingredient database', () => {
   });
 
   describe('getIngredient', () => {
-    let nameId;
-    let entryId;
+    let id;
     const amount = 2.4;
     const unit = 'cups';
 
     before('create a ingredient', async () => {
-      [nameId, entryId] = await dummyDb.createIngredient(
+      id = await dummyDb.createIngredient(
         userId,
         mealEntryId,
         foodId,
@@ -100,7 +99,7 @@ describe('Ingredient database', () => {
 
       const getResult = await client.query({
         query: getIngredient,
-        variables: { nameId, entryId },
+        variables: id,
       });
       const getData = getResult.data.getIngredient;
       expect(getData.__typename).to.equal('Ingredient');
@@ -110,13 +109,12 @@ describe('Ingredient database', () => {
   });
 
   describe('deleteIngredient', () => {
-    let nameId;
-    let entryId;
+    let id;
     const amount = 2.4;
     const unit = 'cups';
 
     beforeEach('create a ingredient', async () => {
-      [nameId, entryId] = await dummyDb.createIngredient(
+      id = await dummyDb.createIngredient(
         userId,
         mealEntryId,
         foodId,
@@ -138,24 +136,23 @@ describe('Ingredient database', () => {
       const result = await client.mutate({
         mutation: deleteIngredient,
         variables: {
-          input: { nameId, entryId },
+          input: id,
         },
       });
       const data = result.data.deleteIngredient;
       expect(data.__typename).to.equal('Ingredient');
-      expect(data.nameId).to.equal(nameId);
-      expect(data.entryId).to.equal(entryId);
+      expect(data.nameId).to.equal(id.nameId);
+      expect(data.entryId).to.equal(id.entryId);
     });
   });
 
   describe('updateIngredient', () => {
-    let nameId;
-    let entryId;
+    let id;
     const amount = 2.4;
     const unit = 'cups';
 
     beforeEach('create a ingredient', async () => {
-      [nameId, entryId] = await dummyDb.createIngredient(
+      id = await dummyDb.createIngredient(
         userId,
         mealEntryId,
         foodId,
@@ -182,7 +179,11 @@ describe('Ingredient database', () => {
       const result = await client.mutate({
         mutation: updateIngredient,
         variables: {
-          input: { nameId, entryId, quantity },
+          input: {
+            nameId: id.nameId,
+            entryId: id.entryId,
+            quantity,
+          },
         },
       });
       const data = result.data.updateIngredient;

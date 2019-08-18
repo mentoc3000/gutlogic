@@ -58,12 +58,11 @@ describe('Food database', () => {
   });
 
   describe('getFood', () => {
-    let nameId;
-    let entryId;
+    let id;
     const name = 'Bacon';
 
     before('create a food', async () => {
-      [nameId, entryId] = await dummyDb.createFood(name);
+      id = await dummyDb.createFood(name);
     });
 
     it('should get a food', async () => {
@@ -78,7 +77,7 @@ describe('Food database', () => {
 
       const getResult = await client.query({
         query: getFood,
-        variables: { nameId, entryId },
+        variables: id,
       });
       const getData = getResult.data.getFood;
       expect(getData.__typename).to.equal('Food');
@@ -87,12 +86,11 @@ describe('Food database', () => {
   });
 
   describe('deleteFood', () => {
-    let nameId;
-    let entryId;
+    let id;
     const name = 'Bacon';
 
     beforeEach('create a food', async () => {
-      [nameId, entryId] = await dummyDb.createFood(name);
+      id = await dummyDb.createFood(name);
     });
 
     it('should delete a food', async () => {
@@ -108,23 +106,22 @@ describe('Food database', () => {
       const result = await client.mutate({
         mutation: deleteFood,
         variables: {
-          input: { nameId, entryId },
+          input: id,
         },
       });
       const data = result.data.deleteFood;
       expect(data.__typename).to.equal('Food');
-      expect(data.nameId).to.equal(nameId);
-      expect(data.entryId).to.equal(entryId);
+      expect(data.nameId).to.equal(id.nameId);
+      expect(data.entryId).to.equal(id.entryId);
     });
   });
 
   describe('updateFood', () => {
-    let nameId;
-    let entryId;
+    let id;
     const name = 'Bacon';
 
     beforeEach('create a food', async () => {
-      [nameId, entryId] = await dummyDb.createFood(name);
+      id = await dummyDb.createFood(name);
     });
 
     it('should update a food', async () => {
@@ -143,8 +140,8 @@ describe('Food database', () => {
         mutation: updateFood,
         variables: {
           input: {
-            nameId,
-            entryId,
+            nameId: id.nameId,
+            entryId: id.entryId,
             name: newName,
           },
         },

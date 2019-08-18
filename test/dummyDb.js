@@ -26,8 +26,10 @@ const createDose = async (userId, dosesEntryId, medicineId, amount, unit) => {
   });
   const createData = createResult.data.createDose;
   createdIds.push(createData);
-  // TODO: replace list return with object return
-  return [createData.nameId, createData.entryId];
+  return {
+    nameId: createData.nameId,
+    entryId: createData.entryId,
+  };
 };
 
 const createFood = async name => {
@@ -48,7 +50,10 @@ const createFood = async name => {
   });
   const createData = createResult.data.createFood;
   createdIds.push(createData);
-  return [createData.nameId, createData.entryId];
+  return {
+    nameId: createData.nameId,
+    entryId: createData.entryId,
+  };
 };
 
 const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
@@ -74,7 +79,10 @@ const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
   });
   const createData = createResult.data.createIngredient;
   createdIds.push(createData);
-  return [createData.nameId, createData.entryId];
+  return {
+    nameId: createData.nameId,
+    entryId: createData.entryId,
+  };
 };
 
 const createMealEntry = async (userId, ingredientIds, datetime) => {
@@ -103,7 +111,10 @@ const createMealEntry = async (userId, ingredientIds, datetime) => {
   });
   const createData = createResult.data.createIngredient;
   createdIds.push(createData);
-  return [createData.nameId, createData.entryId];
+  return {
+    nameId: createData.nameId,
+    entryId: createData.entryId,
+  };
 };
 
 const createMedicine = async name => {
@@ -124,7 +135,10 @@ const createMedicine = async name => {
   });
   const createData = createResult.data.createMedicine;
   createdIds.push(createData);
-  return [createData.nameId, createData.entryId];
+  return {
+    nameId: createData.nameId,
+    entryId: createData.entryId,
+  };
 };
 
 const deleteItem = async (nameId, entryId) => {

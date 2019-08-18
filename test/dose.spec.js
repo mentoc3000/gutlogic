@@ -73,13 +73,12 @@ describe('Dose database', () => {
   });
 
   describe('getDose', () => {
-    let nameId;
-    let entryId;
+    let id;
     const amount = 2.4;
     const unit = 'cups';
 
     before('create a dose', async () => {
-      [nameId, entryId] = await dummyDb.createDose(
+      id = await dummyDb.createDose(
         userId,
         dosesEntryId,
         medicineId,
@@ -100,7 +99,7 @@ describe('Dose database', () => {
 
       const getResult = await client.query({
         query: getDose,
-        variables: { nameId, entryId },
+        variables: id,
       });
       const getData = getResult.data.getDose;
       expect(getData.__typename).to.equal('Dose');
@@ -110,13 +109,12 @@ describe('Dose database', () => {
   });
 
   describe('deleteDose', () => {
-    let nameId;
-    let entryId;
+    let id;
     const amount = 2.4;
     const unit = 'cups';
 
     beforeEach('create a dose', async () => {
-      [nameId, entryId] = await dummyDb.createDose(
+      id = await dummyDb.createDose(
         userId,
         dosesEntryId,
         medicineId,
@@ -138,24 +136,23 @@ describe('Dose database', () => {
       const result = await client.mutate({
         mutation: deleteDose,
         variables: {
-          input: { nameId, entryId },
+          input: id,
         },
       });
       const data = result.data.deleteDose;
       expect(data.__typename).to.equal('Dose');
-      expect(data.nameId).to.equal(nameId);
-      expect(data.entryId).to.equal(entryId);
+      expect(data.nameId).to.equal(id.nameId);
+      expect(data.entryId).to.equal(id.entryId);
     });
   });
 
   describe('updateDose', () => {
-    let nameId;
-    let entryId;
+    let id;
     const amount = 2.4;
     const unit = 'cups';
 
     beforeEach('create a dose', async () => {
-      [nameId, entryId] = await dummyDb.createDose(
+      id = await dummyDb.createDose(
         userId,
         dosesEntryId,
         medicineId,
@@ -182,7 +179,11 @@ describe('Dose database', () => {
       const result = await client.mutate({
         mutation: updateDose,
         variables: {
-          input: { nameId, entryId, quantity },
+          input: {
+            nameId: id.nameId,
+            entryId: id.entryId,
+            quantity,
+          },
         },
       });
       const data = result.data.updateDose;

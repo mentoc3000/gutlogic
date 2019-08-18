@@ -58,12 +58,11 @@ describe('Medicine database', () => {
   });
 
   describe('getMedicine', () => {
-    let nameId;
-    let entryId;
+    let id;
     const name = 'Bacon';
 
     before('create a medicine', async () => {
-      [nameId, entryId] = await dummyDb.createMedicine(name);
+      id = await dummyDb.createMedicine(name);
     });
 
     it('should get a medicine', async () => {
@@ -78,7 +77,7 @@ describe('Medicine database', () => {
 
       const getResult = await client.query({
         query: getMedicine,
-        variables: { nameId, entryId },
+        variables: id,
       });
       const getData = getResult.data.getMedicine;
       expect(getData.__typename).to.equal('Medicine');
@@ -87,12 +86,11 @@ describe('Medicine database', () => {
   });
 
   describe('deleteMedicine', () => {
-    let nameId;
-    let entryId;
+    let id;
     const name = 'Bacon';
 
     beforeEach('create a medicine', async () => {
-      [nameId, entryId] = await dummyDb.createMedicine(name);
+      id = await dummyDb.createMedicine(name);
     });
 
     it('should delete a medicine', async () => {
@@ -108,23 +106,22 @@ describe('Medicine database', () => {
       const result = await client.mutate({
         mutation: deleteMedicine,
         variables: {
-          input: { nameId, entryId },
+          input: id,
         },
       });
       const data = result.data.deleteMedicine;
       expect(data.__typename).to.equal('Medicine');
-      expect(data.nameId).to.equal(nameId);
-      expect(data.entryId).to.equal(entryId);
+      expect(data.nameId).to.equal(id.nameId);
+      expect(data.entryId).to.equal(id.entryId);
     });
   });
 
   describe('updateMedicine', () => {
-    let nameId;
-    let entryId;
+    let id;
     const name = 'Bacon';
 
     beforeEach('create a medicine', async () => {
-      [nameId, entryId] = await dummyDb.createMedicine(name);
+      id = await dummyDb.createMedicine(name);
     });
 
     it('should update a medicine', async () => {
@@ -143,8 +140,8 @@ describe('Medicine database', () => {
         mutation: updateMedicine,
         variables: {
           input: {
-            nameId,
-            entryId,
+            nameId: id.nameId,
+            entryId: id.entryId,
             name: newName,
           },
         },
