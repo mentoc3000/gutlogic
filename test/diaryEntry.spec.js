@@ -196,11 +196,11 @@ describe('DiaryEntry database', () => {
     let id;
     const datetime = '2019-07-02T12:43:00Z';
 
-    beforeEach('create a diary entry', async () => {
+    beforeEach('create a meal entry', async () => {
       id = await dummyDb.createMealEntry(userId, datetime);
     });
 
-    it('should update a diary entry', async () => {
+    it('should update a meal entry', async () => {
       const updateDiaryEntry = gql(`
         mutation UpdateDiaryEntry($input: UpdateDiaryEntryInput!) {
         updateDiaryEntry(input: $input) {

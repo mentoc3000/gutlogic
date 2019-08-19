@@ -471,16 +471,16 @@ Resources:
       RequestMappingTemplateS3Location: resolver/diaryEntry/createMealEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-  # AppSyncUpdateMealEntryMutationResolver:
-  #   Type: "AWS::AppSync::Resolver"
-  #   DependsOn: GraphQLSchema
-  #   Properties:
-  #     ApiId: !GetAtt AppSyncAPI.ApiId
-  #     TypeName: Mutation
-  #     FieldName: updateMealEntry
-  #     DataSourceName: !GetAtt AppSyncDataSource.Name
-  #     RequestMappingTemplateS3Location: resolver/diaryEntry/updateMealEntryRequest.vtl
-  #     ResponseMappingTemplate: "$util.toJson($ctx.result)"
+  AppSyncUpdateMealEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: updateMealEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
   # General
 
