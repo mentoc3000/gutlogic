@@ -160,6 +160,12 @@ input CreateDiaryEntryInput {
   notes: String
 }
 
+input CreateMealEntryInput {
+  userId: String!
+  creationDate: AWSDateTime!
+  datetime: AWSDateTime!
+}
+
 input UpdateDiaryEntryInput {
   nameId: String!
   entryId: String!
@@ -170,6 +176,16 @@ input UpdateDiaryEntryInput {
   bowelMovement: BowelMovementInput
   doses: DosesInput
   symptom: SymptomInput
+  notes: String
+}
+
+input UpdateMealEntryInput {
+  nameId: String!
+  entryId: String!
+  creationDate: AWSDateTime
+  modificationDate: AWSDateTime
+  datetime: AWSDateTime
+  meal: MealInput
   notes: String
 }
 
@@ -348,6 +364,8 @@ type Mutation {
   createDiaryEntry(input: CreateDiaryEntryInput!): DiaryEntry
   updateDiaryEntry(input: UpdateDiaryEntryInput!): DiaryEntry
   deleteDiaryEntry(input: GutAiIdInput!): DiaryEntry
+  createMealEntry(input: CreateMealEntryInput!): DiaryEntry
+  updateMealEntry(input: UpdateMealEntryInput!): DiaryEntry
   deleteItem(input: GutAiIdInput!): GutAiId
 }
 

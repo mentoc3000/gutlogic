@@ -458,6 +458,30 @@ Resources:
       RequestMappingTemplateS3Location: resolver/diaryEntry/deleteDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+# Meal Entry Resolvers
+
+  AppSyncCreateMealEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: createMealEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/createMealEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  # AppSyncUpdateMealEntryMutationResolver:
+  #   Type: "AWS::AppSync::Resolver"
+  #   DependsOn: GraphQLSchema
+  #   Properties:
+  #     ApiId: !GetAtt AppSyncAPI.ApiId
+  #     TypeName: Mutation
+  #     FieldName: updateMealEntry
+  #     DataSourceName: !GetAtt AppSyncDataSource.Name
+  #     RequestMappingTemplateS3Location: resolver/diaryEntry/updateMealEntryRequest.vtl
+  #     ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
   # General
 
   AppSyncDeleteItemMutationResolver:
