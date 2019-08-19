@@ -482,6 +482,30 @@ Resources:
       RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+# BowelMovement Entry Resolvers
+
+  AppSyncCreateBowelMovementEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: createBowelMovementEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/createBowelMovementEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncUpdateBowelMovementEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: updateBowelMovementEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
   # General
 
   AppSyncDeleteItemMutationResolver:

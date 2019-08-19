@@ -166,6 +166,13 @@ input CreateMealEntryInput {
   datetime: AWSDateTime!
 }
 
+input CreateBowelMovementEntryInput {
+  userId: String!
+  creationDate: AWSDateTime!
+  datetime: AWSDateTime!
+  bowelMovement: BowelMovementInput!
+}
+
 input UpdateDiaryEntryInput {
   nameId: String!
   entryId: String!
@@ -186,6 +193,16 @@ input UpdateMealEntryInput {
   modificationDate: AWSDateTime
   datetime: AWSDateTime
   meal: MealInput
+  notes: String
+}
+
+input UpdateBowelMovementEntryInput {
+  nameId: String!
+  entryId: String!
+  creationDate: AWSDateTime
+  modificationDate: AWSDateTime
+  datetime: AWSDateTime
+  bowelMovement: BowelMovementInput
   notes: String
 }
 
@@ -329,16 +346,20 @@ type Query {
     limit: Int
     nextToken: String
   ): PaginatedFoods!
+
   getIngredient(nameId: String!, entryId: String!): Ingredient
   listIngredients(filter: TableIngredientFilterInput): Ingredients
+
   getMedicine(nameId: String!, entryId: String!): Medicine
   listMedicines(
     filter: TableMedicineFilterInput
     limit: Int
     nextToken: String
   ): PaginatedMedicines!
+
   getDose(nameId: String!, entryId: String!): Dose
   listDoses(filter: TableDoseFilterInput): Doses
+
   getDiaryEntry(nameId: String!, entryId: String!): DiaryEntry
   listDiaryEntries(
     userId: String!
@@ -352,20 +373,29 @@ type Mutation {
   createFood(input: CreateFoodInput!): Food
   updateFood(input: UpdateFoodInput!): Food
   deleteFood(input: GutAiIdInput!): Food
+
   createIngredient(input: CreateIngredientInput!): Ingredient
   updateIngredient(input: UpdateIngredientInput!): Ingredient
   deleteIngredient(input: GutAiIdInput!): Ingredient
+
   createMedicine(input: CreateMedicineInput!): Medicine
   updateMedicine(input: UpdateMedicineInput!): Medicine
   deleteMedicine(input: GutAiIdInput!): Medicine
+
   createDose(input: CreateDoseInput!): Dose
   updateDose(input: UpdateDoseInput!): Dose
   deleteDose(input: GutAiIdInput!): Dose
+
   createDiaryEntry(input: CreateDiaryEntryInput!): DiaryEntry
   updateDiaryEntry(input: UpdateDiaryEntryInput!): DiaryEntry
   deleteDiaryEntry(input: GutAiIdInput!): DiaryEntry
+
   createMealEntry(input: CreateMealEntryInput!): DiaryEntry
   updateMealEntry(input: UpdateMealEntryInput!): DiaryEntry
+  
+  createBowelMovementEntry(input: CreateBowelMovementEntryInput!): DiaryEntry
+  updateBowelMovementEntry(input: UpdateBowelMovementEntryInput!): DiaryEntry
+  
   deleteItem(input: GutAiIdInput!): GutAiId
 }
 
