@@ -77,12 +77,14 @@ describe('Ingredient database', () => {
     const amount = 2.4;
     const unit = 'cups';
     const foodName = 'Flour';
+    const datetime = '2019-07-02T12:43:00Z';
 
     before('create a ingredient', async () => {
+      const mealEntryId2 = await dummyDb.createMealEntry('userid', datetime);
       const foodId2 = await dummyDb.createFood(foodName);
       id = await dummyDb.createIngredient(
         userId,
-        mealEntryId,
+        mealEntryId2,
         foodId2,
         amount,
         unit
@@ -125,6 +127,24 @@ describe('Ingredient database', () => {
       });
       const getData = getResult.data.getIngredient;
       expect(getData.food.name).to.equal(foodName);
+    });
+
+    it("should get an ingredient's meal entry", async () => {
+      const getIngredient = gql(`
+        query getIngredient($nameId: String!, $entryId: String!) {
+        getIngredient(nameId: $nameId, entryId: $entryId) {
+            nameId
+            entryId
+            mealEntry { datetime }
+        }
+        }`);
+
+      const getResult = await client.query({
+        query: getIngredient,
+        variables: id,
+      });
+      const getData = getResult.data.getIngredient;
+      expect(getData.mealEntry.datetime).to.equal(datetime);
     });
   });
 
