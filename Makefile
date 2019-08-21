@@ -63,8 +63,14 @@ describe-error:
 	@ make describe-errors \
 		| jq '.[0]' 
 
-test:
-	@ ./node_modules/mocha/bin/mocha
+ifndef spec
+specfile = 
+else
+specfile = "./test/$(spec).spec.js"
+endif
+
+test: 
+	@ ./node_modules/mocha/bin/mocha $(specfile)
 
 outputs:
 	@ make describe \
