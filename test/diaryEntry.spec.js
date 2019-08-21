@@ -176,6 +176,42 @@ describe('DiaryEntry database', () => {
     });
   });
 
+  describe('createDosesEntry', () => {
+    it('should create a doses entry', async () => {
+      const creationDatetime = '2019-07-02T12:40:00Z';
+      const datetime = '2019-07-02T12:43:00Z';
+      const mutation = gql(`
+        mutation CreateDosesEntry($input: CreateDosesEntryInput!) {
+        createDosesEntry(input: $input) {
+            nameId
+            entryId
+            creationDate
+            modificationDate
+            datetime
+            doses { items { medicine { name } } }
+        }
+        }`);
+
+      await client.hydrated();
+      const result = await client.mutate({
+        mutation,
+        variables: {
+          input: {
+            userId,
+            creationDate: creationDatetime,
+            datetime,
+          },
+        },
+      });
+      const data = result.data.createDosesEntry;
+      expect(data.__typename).to.equal('DiaryEntry');
+      expect(data.doses.items).to.be.array();
+      expect(data.datetime).to.equal(datetime);
+      expect(data.creationDate).to.equal(creationDatetime);
+      expect(data.modificationDate).to.equal(data.creationDate);
+    });
+  });
+
   describe('getDiaryEntry', () => {
     let id;
     const datetime = '2019-07-02T12:43:00Z';
