@@ -9,7 +9,7 @@
   #set( $init = $ctx.args.input )
 
   ## Initialize meal with empty ingredients list
-  #set( $init.doses = { "items" : [] } )
+  #set( $init.dosage = { "doses" : [] } )
 
   ## Initialize modification date to be same as creation date
   #set( $init.modificationDate = ${ctx.args.input.creationDate} )

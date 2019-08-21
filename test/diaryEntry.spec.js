@@ -176,19 +176,19 @@ describe('DiaryEntry database', () => {
     });
   });
 
-  describe('createDosesEntry', () => {
-    it('should create a doses entry', async () => {
+  describe('createDosageEntry', () => {
+    it('should create a dosage entry', async () => {
       const creationDatetime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
       const mutation = gql(`
-        mutation CreateDosesEntry($input: CreateDosesEntryInput!) {
-        createDosesEntry(input: $input) {
+        mutation CreateDosageEntry($input: CreateDosageEntryInput!) {
+        createDosageEntry(input: $input) {
             nameId
             entryId
             creationDate
             modificationDate
             datetime
-            doses { items { medicine { name } } }
+            dosage { doses { medicine { name } } }
         }
         }`);
 
@@ -203,9 +203,9 @@ describe('DiaryEntry database', () => {
           },
         },
       });
-      const data = result.data.createDosesEntry;
+      const data = result.data.createDosageEntry;
       expect(data.__typename).to.equal('DiaryEntry');
-      expect(data.doses.items).to.be.array();
+      expect(data.dosage.doses).to.be.array();
       expect(data.datetime).to.equal(datetime);
       expect(data.creationDate).to.equal(creationDatetime);
       expect(data.modificationDate).to.equal(data.creationDate);

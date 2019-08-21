@@ -9,7 +9,7 @@ const { expect } = chai;
 
 describe('Dose database', () => {
   const userId = 'fakeuserid';
-  const dosesEntryId = {
+  const dosageEntryId = {
     nameId: 'meal',
     entryId: 'entry',
   };
@@ -59,7 +59,7 @@ describe('Dose database', () => {
         variables: {
           input: {
             userId,
-            dosesEntryId,
+            dosageEntryId,
             medicineId,
             quantity,
           },
@@ -74,13 +74,17 @@ describe('Dose database', () => {
 
   describe('getDose', () => {
     let id;
-    const amount = 2.4;
-    const unit = 'cups';
+    const amount = 3;
+    const unit = 'pills';
+    const medicineName = 'Pro-8';
+    const datetime = '2019-07-02T12:43:00Z';
 
     before('create a dose', async () => {
+      const medicineId2 = dummyDb.createMedicine(medicineName);
+      const dosageEntryId2 = dummyDb.createDosesEntry(userId, datetime);
       id = await dummyDb.createDose(
         userId,
-        dosesEntryId,
+        dosageEntryId,
         medicineId,
         amount,
         unit
@@ -106,17 +110,53 @@ describe('Dose database', () => {
       expect(getData.quantity.amount).to.equal(amount);
       expect(getData.quantity.unit).to.equal(unit);
     });
+
+    it("should get a dose's medicine", async () => {
+      const getDose = gql(`
+        query getDose($nameId: String!, $entryId: String!) {
+        getDose(nameId: $nameId, entryId: $entryId) {
+            nameId
+            entryId
+            medicine { name }
+        }
+        }`);
+
+      const getResult = await client.query({
+        query: getDose,
+        variables: id,
+      });
+      const getData = getResult.data.getDose;
+      expect(getData.medicine.name).to.equal(medicineName);
+    });
+
+    it("should get a dose's diary entry", async () => {
+      const getDose = gql(`
+        query getDose($nameId: String!, $entryId: String!) {
+        getDose(nameId: $nameId, entryId: $entryId) {
+            nameId
+            entryId
+            dosesEntry { datetime }
+        }
+        }`);
+
+      const getResult = await client.query({
+        query: getDose,
+        variables: id,
+      });
+      const getData = getResult.data.getDose;
+      expect(getData.dosesEntry.datetime).to.equal(datetime);
+    });
   });
 
   describe('deleteDose', () => {
     let id;
-    const amount = 2.4;
-    const unit = 'cups';
+    const amount = 3;
+    const unit = 'pills';
 
     beforeEach('create a dose', async () => {
       id = await dummyDb.createDose(
         userId,
-        dosesEntryId,
+        dosageEntryId,
         medicineId,
         amount,
         unit
@@ -148,13 +188,13 @@ describe('Dose database', () => {
 
   describe('updateDose', () => {
     let id;
-    const amount = 2.4;
-    const unit = 'cups';
+    const amount = 3;
+    const unit = 'pills';
 
     beforeEach('create a dose', async () => {
       id = await dummyDb.createDose(
         userId,
-        dosesEntryId,
+        dosageEntryId,
         medicineId,
         amount,
         unit

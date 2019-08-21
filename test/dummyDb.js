@@ -85,6 +85,38 @@ const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
   };
 };
 
+const createDosageEntry = async (userId, datetime) => {
+  const mutation = gql(`
+        mutation CreateDiaryEntry($input: CreateDiaryEntryInput!) {
+        createDiaryEntry(input: $input) {
+            nameId
+            entryId
+        }
+        }`);
+
+  await client.hydrated();
+  const createResult = await client.mutate({
+    mutation,
+    variables: {
+      input: {
+        userId,
+        creationDate: datetime,
+        modificationDate: datetime,
+        datetime,
+        dosage: {
+          doses: [],
+        },
+      },
+    },
+  });
+  const createData = createResult.data.createDiaryEntry;
+  createdIds.push(createData);
+  return {
+    nameId: createData.nameId,
+    entryId: createData.entryId,
+  };
+};
+
 const createMealEntry = async (userId, datetime) => {
   const mutation = gql(`
         mutation CreateDiaryEntry($input: CreateDiaryEntryInput!) {
@@ -189,6 +221,7 @@ const clearItems = async () => {
 
 module.exports = {
   createDose,
+  createDosageEntry,
   createFood,
   createIngredient,
   createMealEntry,
