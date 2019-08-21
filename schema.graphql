@@ -104,14 +104,18 @@ input TableMedicineFilterInput {
 type Dose {
   nameId: String!
   entryId: String!
-  dosesEntry: DiaryEntry!
+  dosageEntry: DiaryEntry!
   medicine: Medicine!
   quantity: Quantity!
 }
 
+type Doses {
+  items: [Dose!]
+}
+
 input CreateDoseInput {
   userId: String!
-  dosesEntryId: GutAiIdInput!
+  dosageEntryId: GutAiIdInput!
   medicineId: GutAiIdInput!
   quantity: QuantityInput!
 }
@@ -119,13 +123,13 @@ input CreateDoseInput {
 input UpdateDoseInput {
   nameId: String!
   entryId: String!
-  dosesEntryId: GutAiIdInput
+  dosageEntryId: GutAiIdInput
   medicineId: GutAiIdInput
   quantity: QuantityInput
 }
 
 input TableDoseFilterInput {
-  dosesEntryId: GutAiIdInput!
+  dosageEntryId: GutAiIdInput!
 }
 
 # DIARY ENTRY
@@ -138,7 +142,7 @@ type DiaryEntry {
   datetime: AWSDateTime!
   meal: Meal
   bowelMovement: BowelMovement
-  doses: Doses
+  dosage: Dosage
   symptom: Symptom
   notes: String
 }
@@ -155,7 +159,7 @@ input CreateDiaryEntryInput {
   datetime: AWSDateTime!
   meal: MealInput
   bowelMovement: BowelMovementInput
-  doses: DosesInput
+  dosage: DosageInput
   symptom: SymptomInput
   notes: String
 }
@@ -173,7 +177,7 @@ input CreateBowelMovementEntryInput {
   bowelMovement: BowelMovementInput!
 }
 
-input CreateDosesEntryInput {
+input CreateDosageEntryInput {
   userId: String!
   creationDate: AWSDateTime!
   datetime: AWSDateTime!
@@ -187,7 +191,7 @@ input UpdateDiaryEntryInput {
   datetime: AWSDateTime
   meal: MealInput
   bowelMovement: BowelMovementInput
-  doses: DosesInput
+  dosage: DosageInput
   symptom: SymptomInput
   notes: String
 }
@@ -212,13 +216,13 @@ input UpdateBowelMovementEntryInput {
   notes: String
 }
 
-input UpdateDosesEntryInput {
+input UpdateDosageEntryInput {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
   modificationDate: AWSDateTime
   datetime: AWSDateTime
-  doses: DosesInput
+  dosage: DosageInput
   notes: String
 }
 
@@ -248,13 +252,13 @@ input BowelMovementInput {
   volume: Int!
 }
 
-# DOSES ENTRY
+# DOSAGE ENTRY
 
-type Doses {
-  items: [Dose!]
+type Dosage {
+  doses: [Dose!]
 }
 
-input DosesInput {
+input DosageInput {
   doses: [GutAiIdInput!]
 }
 
@@ -412,8 +416,8 @@ type Mutation {
   createBowelMovementEntry(input: CreateBowelMovementEntryInput!): DiaryEntry
   updateBowelMovementEntry(input: UpdateBowelMovementEntryInput!): DiaryEntry
   
-  createDosesEntry(input: CreateDosesEntryInput!): DiaryEntry
-  updateDosesEntry(input: UpdateDosesEntryInput!): DiaryEntry
+  createDosageEntry(input: CreateDosageEntryInput!): DiaryEntry
+  updateDosageEntry(input: UpdateDosageEntryInput!): DiaryEntry
   
   deleteItem(input: GutAiIdInput!): GutAiId
 }

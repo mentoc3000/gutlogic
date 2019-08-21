@@ -379,15 +379,15 @@ Resources:
       RequestMappingTemplateS3Location: resolver/dose/deleteDoseRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-  AppSyncDoseDosesEntryResolver:
+  AppSyncDoseDosageEntryResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Dose
-      FieldName: dosesEntry
+      FieldName: dosageEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/dose/getDosesEntryRequest.vtl
+      RequestMappingTemplateS3Location: resolver/dose/getDosageEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
   AppSyncDoseMedicineResolver:
@@ -506,26 +506,26 @@ Resources:
       RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-# Doses Entry Resolvers
+# Dosage Entry Resolvers
 
-  AppSyncCreateDosesEntryMutationResolver:
+  AppSyncCreateDosageEntryMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Mutation
-      FieldName: createDosesEntry
+      FieldName: createDosageEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
-      RequestMappingTemplateS3Location: resolver/diaryEntry/createDosesEntryRequest.vtl
+      RequestMappingTemplateS3Location: resolver/diaryEntry/createDosageEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
-  AppSyncUpdateDosesEntryMutationResolver:
+  AppSyncUpdateDosageEntryMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Mutation
-      FieldName: updateDosesEntry
+      FieldName: updateDosageEntry
       DataSourceName: !GetAtt AppSyncDataSource.Name
       RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
