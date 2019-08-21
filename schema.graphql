@@ -173,6 +173,12 @@ input CreateBowelMovementEntryInput {
   bowelMovement: BowelMovementInput!
 }
 
+input CreateDosesEntryInput {
+  userId: String!
+  creationDate: AWSDateTime!
+  datetime: AWSDateTime!
+}
+
 input UpdateDiaryEntryInput {
   nameId: String!
   entryId: String!
@@ -203,6 +209,16 @@ input UpdateBowelMovementEntryInput {
   modificationDate: AWSDateTime
   datetime: AWSDateTime
   bowelMovement: BowelMovementInput
+  notes: String
+}
+
+input UpdateDosesEntryInput {
+  nameId: String!
+  entryId: String!
+  creationDate: AWSDateTime
+  modificationDate: AWSDateTime
+  datetime: AWSDateTime
+  doses: DosesInput
   notes: String
 }
 
@@ -395,6 +411,9 @@ type Mutation {
   
   createBowelMovementEntry(input: CreateBowelMovementEntryInput!): DiaryEntry
   updateBowelMovementEntry(input: UpdateBowelMovementEntryInput!): DiaryEntry
+  
+  createDosesEntry(input: CreateDosesEntryInput!): DiaryEntry
+  updateDosesEntry(input: UpdateDosesEntryInput!): DiaryEntry
   
   deleteItem(input: GutAiIdInput!): GutAiId
 }

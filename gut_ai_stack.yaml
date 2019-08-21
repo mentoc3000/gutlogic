@@ -506,6 +506,30 @@ Resources:
       RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+# Doses Entry Resolvers
+
+  AppSyncCreateDosesEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: createDosesEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/createDosesEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncUpdateDosesEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: updateDosesEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
   # General
 
   AppSyncDeleteItemMutationResolver:

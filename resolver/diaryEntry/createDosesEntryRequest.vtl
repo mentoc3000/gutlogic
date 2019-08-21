@@ -1,0 +1,24 @@
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.args.input.userId}),
+    "entryId": $util.dynamodb.toDynamoDBJson("diaryEntry#${util.autoId()}"),
+  },
+
+  #set( $init = $ctx.args.input )
+
+  ## Initialize meal with empty ingredients list
+  #set( $init.doses = { "items" : [] } )
+
+  ## Initialize modification date to be same as creation date
+  #set( $init.modificationDate = ${ctx.args.input.creationDate} )
+
+  "attributeValues": $util.dynamodb.toMapValuesJson($init),
+  "condition": {
+    "expression": "attribute_not_exists(#entryId)",
+    "expressionNames": {
+      "#entryId": "entryId",
+    },
+  },
+}
