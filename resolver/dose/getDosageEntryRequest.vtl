@@ -2,7 +2,7 @@
   "version": "2017-02-28",
   "operation": "GetItem",
   "key": {
-    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.source.dosesEntryId.nameId}),
-    "entryId": $util.dynamodb.toDynamoDBJson(${ctx.source.dosesEntryId.entryId}),
+    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.source.dosageEntryId.nameId}),
+    "entryId": $util.dynamodb.toDynamoDBJson(${ctx.source.dosageEntryId.entryId}),
   },
 }

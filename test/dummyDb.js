@@ -3,7 +3,7 @@ const { client } = require('./aws-exports');
 
 let createdIds = [];
 
-const createDose = async (userId, dosesEntryId, medicineId, amount, unit) => {
+const createDose = async (userId, dosageEntryId, medicineId, amount, unit) => {
   const mutation = gql(`
         mutation CreateDose($input: CreateDoseInput!) {
         createDose(input: $input) {
@@ -18,7 +18,7 @@ const createDose = async (userId, dosesEntryId, medicineId, amount, unit) => {
     variables: {
       input: {
         userId,
-        dosesEntryId,
+        dosageEntryId,
         medicineId,
         quantity: { amount, unit },
       },

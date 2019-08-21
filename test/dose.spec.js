@@ -81,11 +81,11 @@ describe('Dose database', () => {
 
     before('create a dose', async () => {
       const medicineId2 = dummyDb.createMedicine(medicineName);
-      const dosageEntryId2 = dummyDb.createDosesEntry(userId, datetime);
+      const dosageEntryId2 = dummyDb.createDosageEntry(userId, datetime);
       id = await dummyDb.createDose(
         userId,
-        dosageEntryId,
-        medicineId,
+        dosageEntryId2,
+        medicineId2,
         amount,
         unit
       );
