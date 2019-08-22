@@ -233,7 +233,7 @@ input UpdateDosageEntryInput {
   notes: String
 }
 
-input UpdateDiaryEntryInput {
+input UpdateSymptomEntryInput {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime

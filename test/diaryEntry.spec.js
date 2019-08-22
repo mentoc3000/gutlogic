@@ -212,6 +212,50 @@ describe('DiaryEntry database', () => {
     });
   });
 
+  describe('createSymptomEntry', () => {
+    it('should create a symptom entry', async () => {
+      const creationDatetime = '2019-07-02T12:40:00Z';
+      const datetime = '2019-07-02T12:43:00Z';
+      const mutation = gql(`
+        mutation CreateSymptomEntry($input: CreateSymptomEntryInput!) {
+        createSymptomEntry(input: $input) {
+            nameId
+            entryId
+            creationDate
+            modificationDate
+            datetime
+            symptom { 
+              symptomType { name }
+              severity
+             }
+        }
+        }`);
+
+      await client.hydrated();
+      const result = await client.mutate({
+        mutation,
+        variables: {
+          input: {
+            userId,
+            creationDate: creationDatetime,
+            datetime,
+            symptom: {
+              symptomType: { name: 'Gas' },
+              severity: 4.3,
+            },
+          },
+        },
+      });
+      const data = result.data.createSymptomEntry;
+      expect(data.__typename).to.equal('DiaryEntry');
+      expect(data.datetime).to.equal(datetime);
+      expect(data.creationDate).to.equal(creationDatetime);
+      expect(data.modificationDate).to.equal(data.creationDate);
+      expect(data.symptom.symptomType.name).to.equal('Gas');
+      expect(data.symptom.severity).to.equal(4.3);
+    });
+  });
+
   describe('getDiaryEntry', () => {
     let id;
     const datetime = '2019-07-02T12:43:00Z';
