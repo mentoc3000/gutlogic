@@ -80,8 +80,8 @@ describe('Dose database', () => {
     const datetime = '2019-07-02T12:43:00Z';
 
     before('create a dose', async () => {
-      const medicineId2 = dummyDb.createMedicine(medicineName);
-      const dosageEntryId2 = dummyDb.createDosageEntry(userId, datetime);
+      const medicineId2 = await dummyDb.createMedicine(medicineName);
+      const dosageEntryId2 = await dummyDb.createDosageEntry(userId, datetime);
       id = await dummyDb.createDose(
         userId,
         dosageEntryId2,
@@ -135,7 +135,7 @@ describe('Dose database', () => {
         getDose(nameId: $nameId, entryId: $entryId) {
             nameId
             entryId
-            dosesEntry { datetime }
+            dosageEntry { datetime }
         }
         }`);
 
@@ -144,7 +144,7 @@ describe('Dose database', () => {
         variables: id,
       });
       const getData = getResult.data.getDose;
-      expect(getData.dosesEntry.datetime).to.equal(datetime);
+      expect(getData.dosageEntry.datetime).to.equal(datetime);
     });
   });
 
