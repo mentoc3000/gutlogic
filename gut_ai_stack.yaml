@@ -530,6 +530,30 @@ Resources:
       RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+# Symptom Entry Resolvers
+
+  AppSyncCreateSymptomEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: createSymptomEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/createSymptomEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncUpdateSymptomEntryMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: updateSymptomEntry
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplateS3Location: resolver/diaryEntry/updateDiaryEntryRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
   # General
 
   AppSyncDeleteItemMutationResolver:
