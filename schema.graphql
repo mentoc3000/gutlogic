@@ -194,7 +194,7 @@ input UpdateDiaryEntryInput {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
-  modificationDate: AWSDateTime
+  modificationDate: AWSDateTime!
   datetime: AWSDateTime
   meal: MealInput
   bowelMovement: BowelMovementInput
@@ -207,7 +207,7 @@ input UpdateMealEntryInput {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
-  modificationDate: AWSDateTime
+  modificationDate: AWSDateTime!
   datetime: AWSDateTime
   meal: MealInput
   notes: String
@@ -217,7 +217,7 @@ input UpdateBowelMovementEntryInput {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
-  modificationDate: AWSDateTime
+  modificationDate: AWSDateTime!
   datetime: AWSDateTime
   bowelMovement: BowelMovementInput
   notes: String
@@ -227,7 +227,7 @@ input UpdateDosageEntryInput {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
-  modificationDate: AWSDateTime
+  modificationDate: AWSDateTime!
   datetime: AWSDateTime
   dosage: DosageInput
   notes: String
@@ -237,7 +237,7 @@ input UpdateSymptomEntryInput {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
-  modificationDate: AWSDateTime
+  modificationDate: AWSDateTime!
   datetime: AWSDateTime
   symptom: SymptomInput
   notes: String

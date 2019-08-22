@@ -327,6 +327,7 @@ describe('DiaryEntry database', () => {
         updateDiaryEntry(input: $input) {
             nameId
             entryId
+            modificationDate
             datetime
         }
         }`);
@@ -339,11 +340,13 @@ describe('DiaryEntry database', () => {
             nameId: id.nameId,
             entryId: id.entryId,
             datetime: newDatetime,
+            modificationDate: newDatetime,
           },
         },
       });
       const data = result.data.updateDiaryEntry;
       expect(data.datetime).to.equal(newDatetime);
+      expect(data.modificationDate).to.equal(newDatetime);
     });
   });
 
