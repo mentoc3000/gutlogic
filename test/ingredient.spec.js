@@ -72,6 +72,63 @@ describe('Ingredient database', () => {
     });
   });
 
+  describe('addIngredient', () => {
+    let mealEntryId2;
+    before('create meal', async () => {
+      const datetime = '2019-07-02T12:43:00Z';
+      mealEntryId2 = await dummyDb.createMealEntry(userId, datetime);
+    });
+
+    it('should add a ingredient', async () => {
+      const quantity = {
+        amount: 0.3,
+        unit: 'each',
+      };
+      const mutation = gql(`
+        mutation AddIngredient($input: CreateIngredientInput!) {
+        addIngredient(input: $input) {
+            nameId
+            entryId
+            quantity { amount, unit }
+        }
+        }`);
+
+      await client.hydrated();
+      const result = await client.mutate({
+        mutation,
+        variables: {
+          input: {
+            userId,
+            mealEntryId2,
+            foodId,
+            quantity,
+          },
+        },
+      });
+
+      const getDiaryEntry = gql(`
+        query getDiaryEntry($nameId: String!, $entryId: String!) {
+        getDiaryEntry(nameId: $nameId, entryId: $entryId) {
+            nameId
+            entryId
+            meal {
+              ingredients { nameId }
+            }
+        }
+        }`);
+
+      const getResult = await client.query({
+        query: getDiaryEntry,
+        variables: mealEntryId2,
+      });
+
+      const getData = getResult.data.getDiaryEntry;
+      expect(getData.meal.ingredients).to.be.array();
+      expect(getData.meal.ingredients.length).to.equal(1);
+      expect(getData.meal.ingredients[0].nameId).to.equal('food');
+    });
+  });
+
   describe('getIngredient', () => {
     let id;
     const amount = 2.4;
