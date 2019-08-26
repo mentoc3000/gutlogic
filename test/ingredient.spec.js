@@ -94,12 +94,12 @@ describe('Ingredient database', () => {
         }`);
 
       await client.hydrated();
-      const result = await client.mutate({
+      await client.mutate({
         mutation,
         variables: {
           input: {
             userId,
-            mealEntryId2,
+            mealEntryId: mealEntryId2,
             foodId,
             quantity,
           },
