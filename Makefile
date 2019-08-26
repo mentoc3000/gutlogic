@@ -55,7 +55,7 @@ describe-events:
 
 describe-errors:
 	@ make describe-events \
-		| jq -c '[ .StackEvents[] | select(.ResourceStatus | contains("UPDATE_FAILED")) ]' \
+		| jq -c '[ .StackEvents[] | select(.ResourceStatus | contains("UPDATE_FAILED") or contains("CREATE_FAILED")) ]' \
 		| jq '.' \
 		| less
 
