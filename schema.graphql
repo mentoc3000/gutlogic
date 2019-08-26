@@ -412,7 +412,7 @@ type Mutation {
   deleteFood(input: GutAiIdInput!): Food
 
   createIngredient(input: CreateIngredientInput!): Ingredient
-  addIngredient(input: UpdateIngredientInput!): Ingredient
+  addIngredient(input: CreateIngredientInput!): Ingredient
   deleteIngredient(input: GutAiIdInput!): Ingredient
 
   createMedicine(input: CreateMedicineInput!): Medicine
