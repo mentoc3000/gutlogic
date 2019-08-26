@@ -4,8 +4,8 @@
   "version": "2018-05-29",
   "operation": "UpdateItem",
   "key": {
-    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.mealEntry.nameId}),
-    "entryId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.mealEntry.entryId}),
+    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.nameId}),
+    "entryId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.entryId}),
   },
 
   #set( $meal = $ctx.prev.result.meal )
@@ -19,8 +19,8 @@
     "express" : "SET meal = :meal",
     "expressionValues": {
       ":meal" : $util.dynamodb.toDynamoDBJson($meal)
-    }
-  } 
+    },
+  },
 
   "condition": {
     "expression": "attribute_exists(#entryId)",

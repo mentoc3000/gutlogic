@@ -283,6 +283,7 @@ describe('Ingredient database', () => {
           },
         },
       });
+      console.log(result);
       const data = result.data.updateIngredient;
       expect(data.quantity.amount).to.equal(quantity.amount);
       expect(data.quantity.unit).to.equal(quantity.unit);
