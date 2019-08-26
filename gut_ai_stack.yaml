@@ -221,6 +221,57 @@ Resources:
       RequestMappingTemplateS3Location: resolver/ingredient/createIngredientRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+  AppSyncAddIngredientMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: addIngredient
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt AppSyncCreateIngredientFunction.FunctionId
+          - !GetAtt AppSyncGetDiaryEntryFromIngredientFunction.FunctionId
+          - !GetAtt AppSyncLinkIngredientDiaryEntryFunction.FunctionId
+      RequestMappingTemplateS3Location: "$util.toJson($ctx.args)"
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncCreateIngredientFunction:
+    Type: "AWS::AppSync::FunctionConfiguration"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      FunctionVersion: 2018-05-29
+      Name:
+      RequestMappingTemplateS3Location: resolver/ingredient/createIngredientFunctionRequest.vtl
+      ResponseMappingTemplate: resolver/ingredient/createIngredientFunctionResponse.vtl
+
+  AppSyncGetDiaryEntryFromIngredientFunction:
+    Type: "AWS::AppSync::FunctionConfiguration"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      FunctionVersion: 2018-05-29
+      Name: getDiaryEntryFunction
+      RequestMappingTemplateS3Location: resolver/ingredient/getDiaryEntryFromIngredientFunction.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncLinkIngredientDiaryEntryFunction:
+    Type: "AWS::AppSync::FunctionConfiguration"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      FunctionVersion: 2018-05-29
+      Name: linkIngredientDiaryEntryFunction
+      RequestMappingTemplateS3Location: resolver/ingredient/linkIngredientDiaryEntryFunctionRequest.vtl
+      # Note different response map. Return ingredient, not modified diary entry.
+      ResponseMappingTemplate: "$util.toJson($ctx.stash.ingredient)"
+
   AppSyncUpdateIngredientMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema
