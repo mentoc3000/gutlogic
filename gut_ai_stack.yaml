@@ -228,7 +228,6 @@ Resources:
       ApiId: !GetAtt AppSyncAPI.ApiId
       TypeName: Mutation
       FieldName: addIngredient
-      DataSourceName: !GetAtt AppSyncDataSource.Name
       Kind: PIPELINE
       PipelineConfig:
         Functions:
