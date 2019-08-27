@@ -125,7 +125,7 @@ describe('Ingredient database', () => {
       const getData = getResult.data.getDiaryEntry;
       expect(getData.meal.ingredients).to.be.array();
       expect(getData.meal.ingredients.length).to.equal(1);
-      expect(getData.meal.ingredients[0].nameId).to.equal('food');
+      expect(getData.meal.ingredients[0].nameId).to.equal(userId);
     });
   });
 
