@@ -13,7 +13,7 @@
     "nameId": $ctx.stash.ingredient.nameId,
     "entryId": $ctx.stash.ingredient.entryId
   } )
-  $util.qr($meal.ingredients.put($newIngredient))
+  $util.qr($meal.ingredients.add($newIngredient))
 
   "update" : {
     "expression" : "SET meal = :meal",
