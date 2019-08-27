@@ -10,7 +10,7 @@ const { expect } = chai;
 describe('Dose database', () => {
   const userId = 'fakeuserid';
   const dosageEntryId = {
-    nameId: 'meal',
+    nameId: 'dosage',
     entryId: 'entry',
   };
   const medicineId = {
@@ -69,6 +69,63 @@ describe('Dose database', () => {
       expect(data.__typename).to.equal('Dose');
       expect(data.quantity.amount).to.equal(quantity.amount);
       expect(data.quantity.unit).to.equal(quantity.unit);
+    });
+  });
+
+  describe('addDose', () => {
+    let dosageEntryId2;
+    before('create dosage', async () => {
+      const datetime = '2019-07-02T12:43:00Z';
+      dosageEntryId2 = await dummyDb.createDosageEntry(userId, datetime);
+    });
+
+    it('should add a dose', async () => {
+      const quantity = {
+        amount: 0.3,
+        unit: 'each',
+      };
+      const mutation = gql(`
+        mutation AddDose($input: CreateDoseInput!) {
+        addDose(input: $input) {
+            nameId
+            entryId
+            quantity { amount, unit }
+        }
+        }`);
+
+      await client.hydrated();
+      await client.mutate({
+        mutation,
+        variables: {
+          input: {
+            userId,
+            dosageEntryId: dosageEntryId2,
+            medicineId,
+            quantity,
+          },
+        },
+      });
+
+      const getDiaryEntry = gql(`
+        query getDiaryEntry($nameId: String!, $entryId: String!) {
+        getDiaryEntry(nameId: $nameId, entryId: $entryId) {
+            nameId
+            entryId
+            dosage {
+              doses { nameId }
+            }
+        }
+        }`);
+
+      const getResult = await client.query({
+        query: getDiaryEntry,
+        variables: dosageEntryId2,
+      });
+
+      const getData = getResult.data.getDiaryEntry;
+      expect(getData.dosage.doses).to.be.array();
+      expect(getData.dosage.doses.length).to.equal(1);
+      expect(getData.dosage.doses[0].nameId).to.equal(userId);
     });
   });
 
