@@ -16,7 +16,7 @@
   $util.qr($meal.ingredients.put($newIngredient))
 
   "update" : {
-    "express" : "SET meal = :meal",
+    "expression" : "SET meal = :meal",
     "expressionValues": {
       ":meal" : $util.dynamodb.toDynamoDBJson($meal)
     },
