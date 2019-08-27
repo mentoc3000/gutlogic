@@ -1,0 +1,31 @@
+#set( $doseNameId = $ctx.prev.result.nameId )
+#set( $doseEntryId = $ctx.prev.result.entryId )
+{
+  "version": "2018-05-29",
+  "operation": "UpdateItem",
+  "key": {
+    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.nameId}),
+    "entryId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.entryId}),
+  },
+
+  #set( $dosage = $ctx.prev.result.dosage )
+  #set( $newDose = {
+    "nameId": $ctx.stash.dose.nameId,
+    "entryId": $ctx.stash.dose.entryId
+  } )
+  $util.qr($dosage.doses.add($newDose))
+
+  "update" : {
+    "expression" : "SET dosage = :dosage",
+    "expressionValues": {
+      ":dosage" : $util.dynamodb.toDynamoDBJson($dosage)
+    },
+  },
+
+  "condition": {
+    "expression": "attribute_exists(#entryId)",
+    "expressionNames": {
+      "#entryId": "entryId",
+    },
+  }
+}

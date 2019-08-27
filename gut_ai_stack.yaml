@@ -407,6 +407,56 @@ Resources:
       RequestMappingTemplateS3Location: resolver/dose/createDoseRequest.vtl
       ResponseMappingTemplate: "$util.toJson($ctx.result)"
 
+  AppSyncAddDoseMutationResolver:
+    Type: "AWS::AppSync::Resolver"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      TypeName: Mutation
+      FieldName: addDose
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt AppSyncCreateDoseFunction.FunctionId
+          - !GetAtt AppSyncGetDiaryEntryFromDoseFunction.FunctionId
+          - !GetAtt AppSyncLinkDoseDiaryEntryFunction.FunctionId
+      RequestMappingTemplate: "$util.toJson($ctx.args)"
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncCreateDoseFunction:
+    Type: "AWS::AppSync::FunctionConfiguration"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      FunctionVersion: 2018-05-29
+      Name: createDoseFunction
+      RequestMappingTemplateS3Location: resolver/dose/createDoseFunctionRequest.vtl
+      ResponseMappingTemplateS3Location: resolver/dose/createDoseFunctionResponse.vtl
+
+  AppSyncGetDiaryEntryFromDoseFunction:
+    Type: "AWS::AppSync::FunctionConfiguration"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      FunctionVersion: 2018-05-29
+      Name: getDiaryEntryFromDoseFunction
+      RequestMappingTemplateS3Location: resolver/dose/getDiaryEntryFromDoseFunctionRequest.vtl
+      ResponseMappingTemplate: "$util.toJson($ctx.result)"
+
+  AppSyncLinkDoseDiaryEntryFunction:
+    Type: "AWS::AppSync::FunctionConfiguration"
+    DependsOn: GraphQLSchema
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      FunctionVersion: 2018-05-29
+      Name: linkDoseDiaryEntryFunction
+      RequestMappingTemplateS3Location: resolver/dose/linkDoseDiaryEntryFunctionRequest.vtl
+      # Note different response map. Return dose, not modified diary entry.
+      ResponseMappingTemplate: "$util.toJson($ctx.stash.dose)"
+
   AppSyncUpdateDoseMutationResolver:
     Type: "AWS::AppSync::Resolver"
     DependsOn: GraphQLSchema

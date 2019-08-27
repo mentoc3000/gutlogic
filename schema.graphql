@@ -421,6 +421,7 @@ type Mutation {
   deleteMedicine(input: GutAiIdInput!): Medicine
 
   createDose(input: CreateDoseInput!): Dose
+  addDose(input: CreateDoseInput!): Dose
   updateDose(input: UpdateDoseInput!): Dose
   deleteDose(input: GutAiIdInput!): Dose
 

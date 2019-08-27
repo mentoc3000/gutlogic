@@ -1,0 +1,15 @@
+{
+  "version": "2018-05-29",
+  "operation": "PutItem",
+  "key": {
+    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.input.userId}),
+    "entryId": $util.dynamodb.toDynamoDBJson("dose#${util.autoId()}"),
+  },
+  "attributeValues": $util.dynamodb.toMapValuesJson($ctx.prev.result.input),
+  "condition": {
+    "expression": "attribute_not_exists(#entryId)",
+    "expressionNames": {
+      "#entryId": "entryId",
+    },
+  },
+}
