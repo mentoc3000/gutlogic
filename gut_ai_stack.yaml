@@ -26,9 +26,6 @@ Resources:
         WriteCapacityUnits: 5
       TableName: GutAITable
 
-
-
-
   DynamoDBRole:
     Type: AWS::IAM::Role
     Properties:
@@ -79,10 +76,6 @@ Resources:
           AttributeDataType: String
           Mutable: false
           Required: true
-        - Name: phone_number
-          AttributeDataType: String
-          Mutable: false
-          Required: true
 
   UserPoolClient:
     Type: "AWS::Cognito::UserPoolClient"
@@ -101,72 +94,72 @@ Resources:
         - ClientId: !Ref UserPoolClient
           ProviderName: !GetAtt UserPool.ProviderName
 
-  CognitoUnAuthorizedRole:
-    Type: "AWS::IAM::Role"
-    Properties:
-      AssumeRolePolicyDocument: 
-        Version: "2012-10-17"
-        Statement:
-          - Effect: "Allow"
-            Principal: 
-              Federated: "cognito-identity.amazonaws.com"
-            Action: 
-              - "sts:AssumeRoleWithWebIdentity"
-            Condition:
-              StringEquals: 
-                "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
-              "ForAnyValue:StringLike":
-                "cognito-identity.amazonaws.com:amr": unauthenticated
-      Policies:
-        - PolicyName: "CognitoUnauthorizedPolicy"
-          PolicyDocument: 
-            Version: "2012-10-17"
-            Statement: 
-              - Effect: "Allow"
-                Action:
-                  - "mobileanalytics:PutEvents"
-                  - "cognito-sync:*"
-                Resource: "*"
+  # CognitoUnAuthorizedRole:
+  #   Type: "AWS::IAM::Role"
+  #   Properties:
+  #     AssumeRolePolicyDocument: 
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Effect: "Allow"
+  #           Principal: 
+  #             Federated: "cognito-identity.amazonaws.com"
+  #           Action: 
+  #             - "sts:AssumeRoleWithWebIdentity"
+  #           Condition:
+  #             StringEquals: 
+  #               "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
+  #             "ForAnyValue:StringLike":
+  #               "cognito-identity.amazonaws.com:amr": unauthenticated
+  #     Policies:
+  #       - PolicyName: "CognitoUnauthorizedPolicy"
+  #         PolicyDocument: 
+  #           Version: "2012-10-17"
+  #           Statement: 
+  #             - Effect: "Allow"
+  #               Action:
+  #                 - "mobileanalytics:PutEvents"
+  #                 - "cognito-sync:*"
+  #               Resource: "*"
 
-  CognitoAuthorizedRole:
-    Type: "AWS::IAM::Role"
-    Properties:
-      AssumeRolePolicyDocument: 
-        Version: "2012-10-17"
-        Statement:
-          - Effect: "Allow"
-            Principal: 
-              Federated: "cognito-identity.amazonaws.com"
-            Action: 
-              - "sts:AssumeRoleWithWebIdentity"
-            Condition:
-              StringEquals: 
-                "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
-              "ForAnyValue:StringLike":
-                "cognito-identity.amazonaws.com:amr": authenticated
-      Policies:
-        - PolicyName: "CognitoAuthorizedPolicy"
-          PolicyDocument: 
-            Version: "2012-10-17"
-            Statement: 
-              - Effect: "Allow"
-                Action:
-                  - "mobileanalytics:PutEvents"
-                  - "cognito-sync:*"
-                  - "cognito-identity:*"
-                Resource: "*"
-              - Effect: "Allow"
-                Action:
-                  - "lambda:InvokeFunction"
-                Resource: "*"
+  # CognitoAuthorizedRole:
+  #   Type: "AWS::IAM::Role"
+  #   Properties:
+  #     AssumeRolePolicyDocument: 
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Effect: "Allow"
+  #           Principal: 
+  #             Federated: "cognito-identity.amazonaws.com"
+  #           Action: 
+  #             - "sts:AssumeRoleWithWebIdentity"
+  #           Condition:
+  #             StringEquals: 
+  #               "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
+  #             "ForAnyValue:StringLike":
+  #               "cognito-identity.amazonaws.com:amr": authenticated
+  #     Policies:
+  #       - PolicyName: "CognitoAuthorizedPolicy"
+  #         PolicyDocument: 
+  #           Version: "2012-10-17"
+  #           Statement: 
+  #             - Effect: "Allow"
+  #               Action:
+  #                 - "mobileanalytics:PutEvents"
+  #                 - "cognito-sync:*"
+  #                 - "cognito-identity:*"
+  #               Resource: "*"
+  #             - Effect: "Allow"
+  #               Action:
+  #                 - "lambda:InvokeFunction"
+  #               Resource: "*"
   
-  IdentityPoolRoleMapping:
-    Type: "AWS::Cognito::IdentityPoolRoleAttachment"
-    Properties:
-      IdentityPoolId: !Ref IdentityPool
-      Roles:
-        authenticated: !GetAtt CognitoAuthorizedRole.Arn
-        unauthenticated: !GetAtt CognitoUnAuthorizedRole.Arn
+  # IdentityPoolRoleMapping:
+  #   Type: "AWS::Cognito::IdentityPoolRoleAttachment"
+  #   Properties:
+  #     IdentityPoolId: !Ref IdentityPool
+  #     Roles:
+  #       authenticated: !GetAtt CognitoAuthorizedRole.Arn
+  #       unauthenticated: !GetAtt CognitoUnAuthorizedRole.Arn
 
   AppSyncDynamoDBPolicy:
     Type: AWS::IAM::ManagedPolicy
@@ -206,8 +199,13 @@ Resources:
   AppSyncAPI:
     Type: AWS::AppSync::GraphQLApi
     Properties: 
-      AuthenticationType: API_KEY
       Name: GutAIAppSync
+      # AuthenticationType: API_KEY
+      AuthenticationType: "AMAZON_COGNITO_USER_POOLS"
+      UserPoolConfig:
+        UserPoolId: !Ref UserPool
+        AwsRegion: !Sub ${AWS::Region}
+        DefaultAction: "ALLOW"
       LogConfig:
         CloudWatchLogsRoleArn: !GetAtt CloudWatchRole.Arn
         FieldLogLevel: ALL
