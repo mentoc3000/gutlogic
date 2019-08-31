@@ -80,6 +80,7 @@ client-id:
 	@ make outputs \
 		| jq -r '.[] | select(.OutputKey == "UserPoolClientId") | .OutputValue'
 
+# Password with symbols should probably be in single quotes
 new-user:
 	@ { \
 	userpoolid=`make user-pool-id` ;\
