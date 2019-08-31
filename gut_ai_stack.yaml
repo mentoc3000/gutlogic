@@ -84,6 +84,8 @@ Resources:
       ClientName: gut-ai-appsync-client
       GenerateSecret: false
       UserPoolId: !Ref UserPool
+      ExplicitAuthFlows:
+        - USER_PASSWORD_AUTH
 
   IdentityPool:
     Type: "AWS::Cognito::IdentityPool"
