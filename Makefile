@@ -72,6 +72,38 @@ endif
 test: 
 	@ ./node_modules/mocha/bin/mocha $(specfile)
 
+user-pool-id:
+	@ make outputs \
+		| jq -r '.[] | select(.OutputKey == "UserPoolId") | .OutputValue'
+
+client-id:
+	@ make outputs \
+		| jq -r '.[] | select(.OutputKey == "UserPoolClientId") | .OutputValue'
+
+new-user:
+	@ { \
+	userpoolid=`make user-pool-id` ;\
+	clientid=`make client-id` ;\
+	aws cognito-idp admin-create-user  \
+		--user-pool-id $$userpoolid  \
+		--username $(email) \
+		--temporary-password ChangeMe123! \
+		--message-action SUPPRESS \
+		--user-attributes Name=email,Value=$(email) Name=name,Value=$(email) \
+		> /dev/null ;\
+	session=`aws cognito-idp initiate-auth \
+		--client-id $$clientid \
+		--auth-flow USER_PASSWORD_AUTH \
+		--auth-parameters USERNAME=$(email),PASSWORD="ChangeMe123!" \
+		| jq -r '.Session'` ;\
+	aws cognito-idp admin-respond-to-auth-challenge \
+		--user-pool-id $$userpoolid \
+		--client-id $$clientid \
+		--challenge-responses "NEW_PASSWORD=$(password),USERNAME=$(email)" \
+		--challenge-name NEW_PASSWORD_REQUIRED \
+		--session $$session ;\
+	}
+
 outputs:
 	@ make describe \
 		| jq -r '.Stacks[0].Outputs'
