@@ -410,8 +410,11 @@ type Query {
 
 type Mutation {
   createFood(input: CreateFoodInput!): Food
+  @aws_iam
   updateFood(input: UpdateFoodInput!): Food
+  @aws_iam
   deleteFood(input: GutAiIdInput!): Food
+  @aws_iam
 
   createIngredient(input: CreateIngredientInput!): Ingredient
   addIngredient(input: CreateIngredientInput!): Ingredient
