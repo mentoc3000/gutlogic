@@ -1,27 +1,27 @@
 # FOOD
 
-type Food {
+type Food @aws_iam {
   nameId: String!
   entryId: String!
   name: String!
 }
 
-type PaginatedFoods {
+type PaginatedFoods @aws_iam {
   items: [Food!]
   nextToken: String
 }
 
-input CreateFoodInput {
+input CreateFoodInput @aws_iam {
   name: String!
 }
 
-input UpdateFoodInput {
+input UpdateFoodInput @aws_iam {
   nameId: String!
   entryId: String!
   name: String
 }
 
-input TableFoodFilterInput {
+input TableFoodFilterInput @aws_iam {
   nameId: TableStringFilterInput
   entryId: TableStringFilterInput
   name: TableStringFilterInput
@@ -378,11 +378,13 @@ input TableAWSDateTimeFilterInput {
 
 type Query {
   getFood(nameId: String!, entryId: String!): Food
+  @aws_iam
   listFoods(
     filter: TableFoodFilterInput
     limit: Int
     nextToken: String
   ): PaginatedFoods!
+  @aws_iam
 
   getIngredient(nameId: String!, entryId: String!): Ingredient
   listIngredients(filter: TableIngredientFilterInput): Ingredients
