@@ -205,6 +205,7 @@ Resources:
       AuthenticationType: "AMAZON_COGNITO_USER_POOLS"
       AdditionalAuthenticationProviders:
         - AuthenticationType: API_KEY
+        - AuthenticationType: AWS_IAM
       UserPoolConfig:
         UserPoolId: !Ref UserPool
         AwsRegion: !Sub ${AWS::Region}

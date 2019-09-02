@@ -1,4 +1,4 @@
-// const AWS = require('aws-sdk');
+const AWS = require('aws-sdk');
 global.WebSocket = require('ws');
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -51,9 +51,9 @@ global.fetch = require('node-fetch');
 
 const url = config.ENDPOINT;
 const region = config.REGION;
-// const type = AUTH_TYPE.AWS_IAM;
+const type = AUTH_TYPE.AWS_IAM;
 // const type = AUTH_TYPE.API_KEY;
-const type = AUTH_TYPE.AMAZON_COGNITO_USER_POOLS;
+// const type = AUTH_TYPE.AMAZON_COGNITO_USER_POOLS;
 
 async function getJwtToken(username, password) {
   const poolData = {
@@ -92,7 +92,7 @@ async function getJwtToken(username, password) {
 // const jwtToken = await getJwtToken(username, password);
 
 // If you want to use AWS...
-// const { credentials } = AWS.config;
+const { credentials } = AWS.config;
 
 // Set up Apollo client
 const client = new AWSAppSyncClient(
@@ -101,10 +101,10 @@ const client = new AWSAppSyncClient(
     region,
     auth: {
       type,
-      // credentials: credentials,
+      credentials,
       // apiKey,
-      jwtToken: async () =>
-        getJwtToken(awsCredientials.username, awsCredientials.password),
+      // jwtToken: async () =>
+      //   getJwtToken(awsCredientials.username, awsCredientials.password),
     },
     disableOffline: true,
   },
