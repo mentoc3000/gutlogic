@@ -13,7 +13,6 @@
     "apollo-client": "^2.0.3",
     "apollo-link": "^1.0.3",
     "apollo-link-http": "^1.2.0",
-    "aws-sdk": "^2.141.0",
     "aws-appsync": "^1.0.0",
     "es6-promise": "^4.1.1",
     "graphql": "^14.4.2",
@@ -22,6 +21,8 @@
     "ws": "^7.1.1"
   },
   "devDependencies": {
+    "amazon-cognito-identity-js": "^3.0.15",
+    "aws-sdk": "^2.521.0",
     "chai": "^4.2.0",
     "chai-arrays": "^2.0.0",
     "eslint": "^6.1.0",
@@ -32,7 +33,11 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^2.0.1",
     "mocha": "^6.2.0",
-    "prettier": "^1.18.2"
+    "node-fetch": "^2.6.0",
+    "prettier": "^1.18.2",
+    "request": "^2.88.0"
   }
 }

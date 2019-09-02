@@ -40,17 +40,56 @@ require('isomorphic-fetch');
 // Require AppSync module
 const { AUTH_TYPE } = require('aws-appsync/lib/link/auth-link');
 const AWSAppSyncClient = require('aws-appsync').default;
+const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
+const awsCredientials = require('./aws-credentials');
+// const { CognitoUserPool } = AmazonCognitoIdentity;
+// const AWS = require('aws-sdk');
+// const request = require('request');
+// const jwkToPem = require('jwk-to-pem');
+// const jwt = require('jsonwebtoken');
+global.fetch = require('node-fetch');
 
 const url = config.ENDPOINT;
 const region = config.REGION;
 // const type = AUTH_TYPE.AWS_IAM;
-const type = AUTH_TYPE.API_KEY;
-// const type = AUTH_TYPE.AMAZON_COGNITO_USER_POOLS
+// const type = AUTH_TYPE.API_KEY;
+const type = AUTH_TYPE.AMAZON_COGNITO_USER_POOLS;
+
+async function getJwtToken(username, password) {
+  const poolData = {
+    UserPoolId: 'us-east-1_cUSIiRhO3', // Your user pool id here
+    ClientId: '7a8qhbu3d5kddqui69l0a42uh6', // Your client id here
+  };
+  const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+  const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(
+    {
+      Username: username,
+      Password: password,
+    }
+  );
+
+  const userData = {
+    Username: username,
+    Pool: userPool,
+  };
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+  return new Promise((resolve, reject) => {
+    cognitoUser.authenticateUser(authenticationDetails, {
+      onSuccess(result) {
+        resolve(result.getIdToken().getJwtToken());
+      },
+      onFailure(err) {
+        reject(err);
+      },
+    });
+  });
+}
 
 // If you want to use API key-based auth
-const apiKey = 'da2-r7xglsfcjbb33cmpzfbzyrxd64';
+// const apiKey = 'da2-r7xglsfcjbb33cmpzfbzyrxd64';
 // If you want to use a jwtToken from Amazon Cognito identity:
-// const jwtToken = 'xxxxxxxx';
+// const jwtToken = await getJwtToken(username, password);
 
 // If you want to use AWS...
 // const { credentials } = AWS.config;
@@ -63,7 +102,9 @@ const client = new AWSAppSyncClient(
     auth: {
       type,
       // credentials: credentials,
-      apiKey,
+      // apiKey,
+      jwtToken: async () =>
+        getJwtToken(awsCredientials.username, awsCredientials.password),
     },
     disableOffline: true,
   },
