@@ -87,7 +87,7 @@ async function getJwtToken(username, password) {
 }
 
 // If you want to use API key-based auth
-// const apiKey = 'da2-r7xglsfcjbb33cmpzfbzyrxd64';
+// const apiKey = 'da2-ryps7voi7vfulic3fmps3toxnu';
 // If you want to use a jwtToken from Amazon Cognito identity:
 // const jwtToken = await getJwtToken(username, password);
 
