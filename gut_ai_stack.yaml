@@ -154,6 +154,20 @@ Resources:
   #               Action:
   #                 - "lambda:InvokeFunction"
   #               Resource: "*"
+
+  # AppSyncTestPolicty:
+  #   Type: "AWS::IAM::Policty"
+  #   Properties:
+  #     PolicyName: "GutAIAppSyncTestPolicy"
+  #     PolicyDocument: 
+  #       Version: "2012-10-17"
+  #       Statement: 
+  #         - Effect: "Allow"
+  #           Action:
+  #             - "mobileanalytics:PutEvents"
+  #             - "cognito-sync:*"
+  #             - "cognito-identity:*"
+  #           Resource: !GetAtt AppSyncAPI.Arn
   
   # IdentityPoolRoleMapping:
   #   Type: "AWS::Cognito::IdentityPoolRoleAttachment"
