@@ -202,8 +202,9 @@ Resources:
     Type: AWS::AppSync::GraphQLApi
     Properties: 
       Name: GutAIAppSync
-      # AuthenticationType: API_KEY
       AuthenticationType: "AMAZON_COGNITO_USER_POOLS"
+      AdditionalAuthenticationProviders:
+        - AuthenticationType: API_KEY
       UserPoolConfig:
         UserPoolId: !Ref UserPool
         AwsRegion: !Sub ${AWS::Region}
