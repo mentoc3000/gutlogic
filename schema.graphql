@@ -29,7 +29,7 @@ input TableFoodFilterInput @aws_iam {
 
 # INGREDIENT
 
-type Ingredient {
+type Ingredient @aws_iam {
   nameId: String!
   entryId: String!
   mealEntry: DiaryEntry!
@@ -37,23 +37,23 @@ type Ingredient {
   quantity: Quantity!
 }
 
-type Ingredients {
+type Ingredients @aws_iam {
   items: [Ingredient!]
 }
 
-type Quantity {
+type Quantity @aws_iam {
   amount: Float!
   unit: String!
 }
 
-input CreateIngredientInput {
+input CreateIngredientInput @aws_iam {
   userId: String!
   mealEntryId: GutAiIdInput!
   foodId: GutAiIdInput!
   quantity: QuantityInput!
 }
 
-input UpdateIngredientInput {
+input UpdateIngredientInput @aws_iam {
   nameId: String!
   entryId: String!
   mealEntryId: GutAiIdInput
@@ -61,39 +61,39 @@ input UpdateIngredientInput {
   quantity: QuantityInput
 }
 
-input TableIngredientFilterInput {
+input TableIngredientFilterInput @aws_iam {
   mealEntryId: GutAiIdInput!
 }
 
-input QuantityInput {
+input QuantityInput @aws_iam {
   amount: Float!
   unit: String!
 }
 
 # MEDICINE
 
-type Medicine {
+type Medicine @aws_iam {
   nameId: String!
   entryId: String!
   name: String!
 }
 
-type PaginatedMedicines {
+type PaginatedMedicines @aws_iam {
   items: [Medicine!]
   nextToken: String
 }
 
-input CreateMedicineInput {
+input CreateMedicineInput @aws_iam {
   name: String!
 }
 
-input UpdateMedicineInput {
+input UpdateMedicineInput @aws_iam {
   nameId: String!
   entryId: String!
   name: String
 }
 
-input TableMedicineFilterInput {
+input TableMedicineFilterInput @aws_iam {
   nameId: TableStringFilterInput
   entryId: TableStringFilterInput
   name: TableStringFilterInput
@@ -101,7 +101,7 @@ input TableMedicineFilterInput {
 
 # DOSE
 
-type Dose {
+type Dose @aws_iam {
   nameId: String!
   entryId: String!
   dosageEntry: DiaryEntry!
@@ -109,18 +109,18 @@ type Dose {
   quantity: Quantity!
 }
 
-type Doses {
+type Doses @aws_iam {
   items: [Dose!]
 }
 
-input CreateDoseInput {
+input CreateDoseInput @aws_iam {
   userId: String!
   dosageEntryId: GutAiIdInput!
   medicineId: GutAiIdInput!
   quantity: QuantityInput!
 }
 
-input UpdateDoseInput {
+input UpdateDoseInput @aws_iam {
   nameId: String!
   entryId: String!
   dosageEntryId: GutAiIdInput
@@ -128,13 +128,13 @@ input UpdateDoseInput {
   quantity: QuantityInput
 }
 
-input TableDoseFilterInput {
+input TableDoseFilterInput @aws_iam {
   dosageEntryId: GutAiIdInput!
 }
 
 # DIARY ENTRY
 
-type DiaryEntry {
+type DiaryEntry @aws_iam {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime!
@@ -147,12 +147,12 @@ type DiaryEntry {
   notes: String
 }
 
-type PaginatedDiaryEntries {
+type PaginatedDiaryEntries @aws_iam {
   items: [DiaryEntry!]
   nextToken: String
 }
 
-input CreateDiaryEntryInput {
+input CreateDiaryEntryInput @aws_iam {
   userId: String!
   creationDate: AWSDateTime!
   modificationDate: AWSDateTime!
@@ -164,33 +164,33 @@ input CreateDiaryEntryInput {
   notes: String
 }
 
-input CreateMealEntryInput {
+input CreateMealEntryInput @aws_iam {
   userId: String!
   creationDate: AWSDateTime!
   datetime: AWSDateTime!
 }
 
-input CreateBowelMovementEntryInput {
+input CreateBowelMovementEntryInput @aws_iam {
   userId: String!
   creationDate: AWSDateTime!
   datetime: AWSDateTime!
   bowelMovement: BowelMovementInput!
 }
 
-input CreateDosageEntryInput {
+input CreateDosageEntryInput @aws_iam {
   userId: String!
   creationDate: AWSDateTime!
   datetime: AWSDateTime!
 }
 
-input CreateSymptomEntryInput {
+input CreateSymptomEntryInput @aws_iam {
   userId: String!
   creationDate: AWSDateTime!
   datetime: AWSDateTime!
   symptom: SymptomInput!
 }
 
-input UpdateDiaryEntryInput {
+input UpdateDiaryEntryInput @aws_iam {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
@@ -203,7 +203,7 @@ input UpdateDiaryEntryInput {
   notes: String
 }
 
-input UpdateMealEntryInput {
+input UpdateMealEntryInput @aws_iam {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
@@ -213,7 +213,7 @@ input UpdateMealEntryInput {
   notes: String
 }
 
-input UpdateBowelMovementEntryInput {
+input UpdateBowelMovementEntryInput @aws_iam {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
@@ -223,7 +223,7 @@ input UpdateBowelMovementEntryInput {
   notes: String
 }
 
-input UpdateDosageEntryInput {
+input UpdateDosageEntryInput @aws_iam {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
@@ -233,7 +233,7 @@ input UpdateDosageEntryInput {
   notes: String
 }
 
-input UpdateSymptomEntryInput {
+input UpdateSymptomEntryInput @aws_iam {
   nameId: String!
   entryId: String!
   creationDate: AWSDateTime
@@ -243,80 +243,80 @@ input UpdateSymptomEntryInput {
   notes: String
 }
 
-input TableDiaryEntryFilterInput {
+input TableDiaryEntryFilterInput @aws_iam {
   datetime: TableAWSDateTimeFilterInput
 }
 
 # MEAL ENTRY
 
-type Meal {
+type Meal @aws_iam {
   ingredients: [Ingredient!]
 }
 
-input MealInput {
+input MealInput @aws_iam {
   ingredients: [GutAiIdInput!]
 }
 
 # BOWEL MOVEMENT ENTRY
 
-type BowelMovement {
+type BowelMovement @aws_iam {
   type: Int!
   volume: Int!
 }
 
-input BowelMovementInput {
+input BowelMovementInput @aws_iam {
   type: Int!
   volume: Int!
 }
 
 # DOSAGE ENTRY
 
-type Dosage {
+type Dosage @aws_iam {
   doses: [Dose!]
 }
 
-input DosageInput {
+input DosageInput @aws_iam {
   doses: [GutAiIdInput!]
 }
 
 # SYMPTOM
 
-type Symptom {
+type Symptom @aws_iam {
   symptomType: SymptomType!
   severity: Float!
 }
 
-input SymptomInput {
+input SymptomInput @aws_iam {
   symptomType: SymptomTypeInput!
   severity: Float!
 }
 
-type SymptomType {
+type SymptomType @aws_iam {
   name: String!
 }
 
-input SymptomTypeInput {
+input SymptomTypeInput @aws_iam {
   name: String!
 }
 
 # GENERIC
 
-type GutAiId {
+type GutAiId @aws_iam {
   nameId: String!
   entryId: String!
 }
 
-input GutAiIdInput {
+input GutAiIdInput @aws_iam {
   nameId: String!
   entryId: String!
 }
 
-input TableBooleanFilterInput {
+input TableBooleanFilterInput @aws_iam {
   ne: Boolean
   eq: Boolean
 }
 
-input TableFloatFilterInput {
+input TableFloatFilterInput @aws_iam {
   ne: Float
   eq: Float
   le: Float
@@ -328,7 +328,7 @@ input TableFloatFilterInput {
   between: [Float]
 }
 
-input TableIDFilterInput {
+input TableIDFilterInput @aws_iam {
   ne: ID
   eq: ID
   le: ID
@@ -341,7 +341,7 @@ input TableIDFilterInput {
   beginsWith: ID
 }
 
-input TableIntFilterInput {
+input TableIntFilterInput @aws_iam {
   ne: Int
   eq: Int
   le: Int
@@ -353,7 +353,7 @@ input TableIntFilterInput {
   between: [Int]
 }
 
-input TableStringFilterInput {
+input TableStringFilterInput @aws_iam {
   ne: String
   eq: String
   le: String
@@ -366,7 +366,7 @@ input TableStringFilterInput {
   beginsWith: String
 }
 
-input TableAWSDateTimeFilterInput {
+input TableAWSDateTimeFilterInput @aws_iam {
   ne: AWSDateTime
   eq: AWSDateTime
   le: AWSDateTime
@@ -387,25 +387,33 @@ type Query {
   @aws_iam
 
   getIngredient(nameId: String!, entryId: String!): Ingredient
+  @aws_iam
   listIngredients(filter: TableIngredientFilterInput): Ingredients
+  @aws_iam
 
   getMedicine(nameId: String!, entryId: String!): Medicine
+  @aws_iam
   listMedicines(
     filter: TableMedicineFilterInput
     limit: Int
     nextToken: String
   ): PaginatedMedicines!
+  @aws_iam
 
   getDose(nameId: String!, entryId: String!): Dose
+  @aws_iam
   listDoses(filter: TableDoseFilterInput): Doses
+  @aws_iam
 
   getDiaryEntry(nameId: String!, entryId: String!): DiaryEntry
+  @aws_iam
   listDiaryEntries(
     userId: String!
     filter: TableDiaryEntryFilterInput
     limit: Int
     nextToken: String
   ): PaginatedDiaryEntries!
+  @aws_iam
 }
 
 type Mutation {
@@ -417,36 +425,59 @@ type Mutation {
   @aws_iam
 
   createIngredient(input: CreateIngredientInput!): Ingredient
+  @aws_iam
   addIngredient(input: CreateIngredientInput!): Ingredient
+  @aws_iam
   updateIngredient(input: UpdateIngredientInput!): Ingredient
+  @aws_iam
   deleteIngredient(input: GutAiIdInput!): Ingredient
+  @aws_iam
 
   createMedicine(input: CreateMedicineInput!): Medicine
+  @aws_iam
   updateMedicine(input: UpdateMedicineInput!): Medicine
+  @aws_iam
   deleteMedicine(input: GutAiIdInput!): Medicine
+  @aws_iam
 
   createDose(input: CreateDoseInput!): Dose
+  @aws_iam
   addDose(input: CreateDoseInput!): Dose
+  @aws_iam
   updateDose(input: UpdateDoseInput!): Dose
+  @aws_iam
   deleteDose(input: GutAiIdInput!): Dose
+  @aws_iam
 
   createDiaryEntry(input: CreateDiaryEntryInput!): DiaryEntry
+  @aws_iam
   updateDiaryEntry(input: UpdateDiaryEntryInput!): DiaryEntry
+  @aws_iam
   deleteDiaryEntry(input: GutAiIdInput!): DiaryEntry
+  @aws_iam
 
   createMealEntry(input: CreateMealEntryInput!): DiaryEntry
+  @aws_iam
   updateMealEntry(input: UpdateMealEntryInput!): DiaryEntry
+  @aws_iam
   
   createBowelMovementEntry(input: CreateBowelMovementEntryInput!): DiaryEntry
+  @aws_iam
   updateBowelMovementEntry(input: UpdateBowelMovementEntryInput!): DiaryEntry
+  @aws_iam
   
   createDosageEntry(input: CreateDosageEntryInput!): DiaryEntry
+  @aws_iam
   updateDosageEntry(input: UpdateDosageEntryInput!): DiaryEntry
+  @aws_iam
   
   createSymptomEntry(input: CreateSymptomEntryInput!): DiaryEntry
+  @aws_iam
   updateSymptomEntry(input: UpdateSymptomEntryInput!): DiaryEntry
+  @aws_iam
   
   deleteItem(input: GutAiIdInput!): GutAiId
+  @aws_iam
 }
 
 type Schema {
