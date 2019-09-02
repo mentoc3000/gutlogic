@@ -80,6 +80,10 @@ client-id:
 	@ make outputs \
 		| jq -r '.[] | select(.OutputKey == "UserPoolClientId") | .OutputValue'
 
+graphql-api-id:
+	@ make outputs \
+		| jq -r '.[] | select(.OutputKey == "GraphQLApiId") | .OutputValue'
+
 # Password with symbols should probably be in single quotes
 new-user:
 	@ { \
@@ -103,6 +107,14 @@ new-user:
 		--challenge-responses "NEW_PASSWORD=$(password),USERNAME=$(email)" \
 		--challenge-name NEW_PASSWORD_REQUIRED \
 		--session $$session ;\
+	}
+
+create-api-key:
+	@ { \
+	graphqlapiid=`make graphql-api-id` ;\
+	aws appsync create-api-key \
+		--api-id $$graphqlapiid \
+		--expires 1598926810 ;\
 	}
 
 outputs:
