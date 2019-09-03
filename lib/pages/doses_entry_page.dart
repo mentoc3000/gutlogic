@@ -11,19 +11,19 @@ import '../widgets/notes_tile.dart';
 import '../blocs/diary_entry_bloc.dart';
 import '../blocs/database_event.dart';
 
-class DosesEntryPage extends StatefulWidget {
+class DosageEntryPage extends StatefulWidget {
   static String tag = 'medicine-entry-page';
 
-  final DosesEntry entry;
+  final DosageEntry entry;
 
-  DosesEntryPage({this.entry});
+  DosageEntryPage({this.entry});
 
   @override
-  DosesEntryPageState createState() => DosesEntryPageState();
+  DosageEntryPageState createState() => DosageEntryPageState();
 }
 
-class DosesEntryPageState extends State<DosesEntryPage> {
-  DosesEntry _entry;
+class DosageEntryPageState extends State<DosageEntryPage> {
+  DosageEntry _entry;
 
   @override
   void initState() {
@@ -72,7 +72,7 @@ class DosesEntryPageState extends State<DosesEntryPage> {
         key: ObjectKey(dose),
         child: DoseTile(
           dose: dose,
-          dosesEntry: _entry,
+          dosageEntry: _entry,
           onTap: () => _onSelectDose(dose),
         ),
         onDismissed: (direction) {

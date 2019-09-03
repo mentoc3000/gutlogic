@@ -21,10 +21,10 @@ class DiaryEntryBloc extends DatabaseBloc<DiaryEntry, DiaryEntryRepository> {
     return BowelMovementEntry.newEntry(id, userId);
   }
 
-  DosesEntry newDosesEntry() {
+  DosageEntry newDosageEntry() {
     String id = idService.getId();
     String userId = idService.getUserId();
-    return DosesEntry.newEntry(id, userId);
+    return DosageEntry.newEntry(id, userId);
   }
 
   SymptomEntry newSymptomEntry() {

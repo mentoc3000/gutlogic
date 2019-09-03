@@ -108,9 +108,9 @@ abstract class BowelMovementEntry
   String queryText() => 'Bowel Movement';
 }
 
-abstract class DosesEntry
-    implements Built<DosesEntry, DosesEntryBuilder>, DiaryEntry {
-  static Serializer<DosesEntry> get serializer => _$dosesEntrySerializer;
+abstract class DosageEntry
+    implements Built<DosageEntry, DosageEntryBuilder>, DiaryEntry {
+  static Serializer<DosageEntry> get serializer => _$dosageEntrySerializer;
 
   String get id;
   String get userId;
@@ -120,19 +120,19 @@ abstract class DosesEntry
   BuiltList<Dose> get doses;
   String get notes;
 
-  DosesEntry._();
-  factory DosesEntry(
+  DosageEntry._();
+  factory DosageEntry(
       {@required String id,
       @required String userId,
       @required DateTime creationDate,
       @required DateTime modificationDate,
       @required DateTime dateTime,
       @required BuiltList<Dose> doses,
-      @required String notes}) = _$DosesEntry._;
-  factory DosesEntry.fromBuilder([updates(DosesEntryBuilder b)]) = _$DosesEntry;
+      @required String notes}) = _$DosageEntry._;
+  factory DosageEntry.fromBuilder([updates(DosageEntryBuilder b)]) = _$DosageEntry;
 
-  factory DosesEntry.newEntry(String id, String userId) =>
-      DosesEntry.fromBuilder((b) {
+  factory DosageEntry.newEntry(String id, String userId) =>
+      DosageEntry.fromBuilder((b) {
         DateTime now = DateTime.now();
         return b
           ..id = id

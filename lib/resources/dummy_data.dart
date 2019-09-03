@@ -81,8 +81,8 @@ class Dummy {
     )
   ];
 
-  static List<DosesEntry> dosesEntries = [
-    DosesEntry(
+  static List<DosageEntry> dosesEntries = [
+    DosageEntry(
       id: 'Dummy004',
       userId: 'jp.sheehan2@gmail.com',
       creationDate: DateTime(2019, 2, 7, 8, 14),

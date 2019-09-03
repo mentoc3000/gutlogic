@@ -47,13 +47,13 @@ class DiaryPageState extends State<DiaryPage> {
             ),
       );
     }
-    if (entry is DosesEntry) {
-      return DosesEntryListTile(
+    if (entry is DosageEntry) {
+      return DosageEntryListTile(
         entry: entry,
         onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DosesEntryPage(
+                builder: (context) => DosageEntryPage(
                       entry: entry,
                     ),
               ),
@@ -233,13 +233,13 @@ class DiaryFloatingActionButton extends StatelessWidget {
           backgroundColor: Colors.orange,
           label: 'Medicine',
           onTap: () {
-            DosesEntry newDosesEntry = diaryEntryBloc.newDosesEntry();
-            diaryEntryBloc.dispatch(Insert(newDosesEntry));
+            DosageEntry newDosageEntry = diaryEntryBloc.newDosageEntry();
+            diaryEntryBloc.dispatch(Insert(newDosageEntry));
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DosesEntryPage(
-                      entry: newDosesEntry,
+                builder: (context) => DosageEntryPage(
+                      entry: newDosageEntry,
                     ),
               ),
             );
@@ -395,11 +395,11 @@ class BowelMovementEntryListTile extends StatelessWidget {
   }
 }
 
-class DosesEntryListTile extends StatelessWidget {
-  final DosesEntry entry;
+class DosageEntryListTile extends StatelessWidget {
+  final DosageEntry entry;
   final void Function() onTap;
 
-  DosesEntryListTile({this.entry, this.onTap});
+  DosageEntryListTile({this.entry, this.onTap});
 
   @override
   Widget build(BuildContext context) {

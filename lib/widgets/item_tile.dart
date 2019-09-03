@@ -83,11 +83,11 @@ class IngredientTile extends StatelessWidget {
 }
 
 class DoseTile extends StatelessWidget {
-  final DosesEntry dosesEntry;
+  final DosageEntry dosageEntry;
   final Dose dose;
   final Function onTap;
 
-  DoseTile({this.dose, this.dosesEntry, this.onTap});
+  DoseTile({this.dose, this.dosageEntry, this.onTap});
 
   @override
   Widget build(BuildContext context) {

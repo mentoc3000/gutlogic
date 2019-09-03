@@ -28,7 +28,7 @@ part 'serializers.g.dart';
   Dose,
   MealEntry,
   BowelMovementEntry,
-  DosesEntry,
+  DosageEntry,
   SymptomEntry
 ])
 
