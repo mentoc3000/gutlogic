@@ -405,7 +405,7 @@ class DosageEntryListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return DiaryEntryListTile(
       heading: 'Medicine',
-      subheadings: entry.doses.map((d) => d.medicine.name),
+      subheadings: entry.dosage.doses.map((d) => d.medicine.name),
       datetime: entry.dateTime,
       barColor: Colors.orange,
       onTap: onTap,

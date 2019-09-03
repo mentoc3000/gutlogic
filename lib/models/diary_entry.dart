@@ -6,7 +6,7 @@ import 'package:gut_ai/models/symptom_type.dart';
 import 'bowel_movement.dart';
 import 'symptom.dart';
 import 'meal.dart';
-import 'dose.dart';
+import 'dosage.dart';
 import 'model_interfaces.dart';
 
 part 'diary_entry.g.dart';
@@ -117,7 +117,7 @@ abstract class DosageEntry
   DateTime get creationDate;
   DateTime get modificationDate;
   DateTime get dateTime;
-  BuiltList<Dose> get doses;
+  Dosage get dosage;
   String get notes;
 
   DosageEntry._();
@@ -127,7 +127,7 @@ abstract class DosageEntry
       @required DateTime creationDate,
       @required DateTime modificationDate,
       @required DateTime dateTime,
-      @required BuiltList<Dose> doses,
+      @required Dosage dosage,
       @required String notes}) = _$DosageEntry._;
   factory DosageEntry.fromBuilder([updates(DosageEntryBuilder b)]) = _$DosageEntry;
 
@@ -140,13 +140,13 @@ abstract class DosageEntry
           ..creationDate = now
           ..modificationDate = now
           ..dateTime = now
-          ..doses = BuiltList<Dose>([]).toBuilder()
+          ..dosage = Dosage.empty().toBuilder()
           ..notes = '';
       });
 
   String searchHeading() => 'Medicine';
   String queryText() {
-    Iterable<String> textParts = doses.map((d) => d.medicine.name).toList()
+    Iterable<String> textParts = dosage.doses.map((d) => d.medicine.name).toList()
       ..add(notes);
     return textParts.join(' ');
   }

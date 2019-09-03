@@ -2,6 +2,7 @@ import 'package:built_collection/built_collection.dart';
 
 import '../models/bowel_movement.dart';
 import '../models/diary_entry.dart';
+import '../models/dosage.dart';
 import '../models/dose.dart';
 import '../models/food.dart';
 import '../models/ingredient.dart';
@@ -88,14 +89,14 @@ class Dummy {
       creationDate: DateTime(2019, 2, 7, 8, 14),
       modificationDate: DateTime(2019, 2, 7, 8, 14),
       dateTime: DateTime(2019, 2, 7, 12, 0),
-      doses: BuiltList<Dose>([
+      dosage: Dosage(doses: BuiltList<Dose>([
         Dose(
             medicine: Medicine(name: "Pro-8"),
             quantity: Quantity(amount: 1, unit: 'pill')),
         Dose(
             medicine: Medicine(name: "Fiber"),
             quantity: Quantity(amount: 2, unit: 'Tbsp'))
-      ]),
+      ])),
       notes: '',
     )
   ];

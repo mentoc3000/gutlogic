@@ -42,8 +42,8 @@ class DosageEntryPageState extends State<DosageEntryPage> {
                 //How to replace dose?
                 // Replace old dose with new dose
                 _entry = _entry.rebuild((b) => b
-                  ..doses = BuiltList<Dose>(
-                          _entry.doses.map((d) => dose == d ? newDose : d))
+                  ..dosage.doses = BuiltList<Dose>(
+                          _entry.dosage.doses.map((d) => dose == d ? newDose : d))
                       .toBuilder());
                 diaryEntryBloc.dispatch(Update(_entry));
               },
@@ -55,7 +55,7 @@ class DosageEntryPageState extends State<DosageEntryPage> {
   void _deleteDose(Dose dose) {
     DiaryEntryBloc diaryEntryBloc = BlocProvider.of<DiaryEntryBloc>(context);
     setState(() {
-      _entry = _entry.rebuild((b) => b.doses.remove(dose));
+      _entry = _entry.rebuild((b) => b.dosage.doses.remove(dose));
     });
     diaryEntryBloc.dispatch(Update(_entry));
     Scaffold.of(context).showSnackBar(
@@ -67,7 +67,7 @@ class DosageEntryPageState extends State<DosageEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> doseTiles = _entry.doses.map((dose) {
+    List<Widget> doseTiles = _entry.dosage.doses.map((dose) {
       return Dismissible(
         key: ObjectKey(dose),
         child: DoseTile(
