@@ -20,6 +20,7 @@ void main() {
     test('inserts a diary entry', () async {
       BowelMovementEntry newBM = BowelMovementEntry.fromBuilder((b) => b
         ..id = 'Dummy005'
+        ..userId = 'user1'
         ..dateTime = DateTime.now()
         ..bowelMovement.type = 3
         ..bowelMovement.volume = 4
@@ -42,6 +43,7 @@ void main() {
     test('upsert inserts a diary entry', () async {
       BowelMovementEntry newBM = BowelMovementEntry.fromBuilder((b) => b
         ..id = 'Dummy005'
+        ..userId = 'user1'
         ..dateTime = DateTime.now()
         ..bowelMovement.type = 3
         ..bowelMovement.volume = 4
@@ -55,6 +57,7 @@ void main() {
     test('upsert updates a diary entry', () async {
       BowelMovementEntry bm = BowelMovementEntry.fromBuilder((b) => b
         ..id = 'Dummy005'
+        ..userId = 'user1'
         ..dateTime = DateTime.now()
         ..bowelMovement.type = 3
         ..bowelMovement.volume = 4
