@@ -58,14 +58,19 @@ void main() {
     testWidgets('updates value', (WidgetTester tester) async {
       const double initAmount = 1.5;
       const String initUnit = 'Bones';
-      final Quantity quantity = Quantity(amount: initAmount, unit: initUnit);
+      Quantity quantity = Quantity(amount: initAmount, unit: initUnit);
 
       // Build our app and trigger a frame.
-      await tester.pumpWidget(overlay(child: QuantityView(quantity: quantity)));
+      await tester.pumpWidget(overlay(
+          child: QuantityView(
+        quantity: quantity,
+        onChanged: (newQuantity) => quantity = newQuantity,
+      )));
 
       const double newAmount = 2.0;
       const String newUnit = 'Cups';
-      await tester.enterText(find.byType(TextField).first, newAmount.toString());
+      await tester.enterText(
+          find.byType(TextField).first, newAmount.toString());
       await tester.enterText(find.byType(TextField).last, newUnit);
 
       expect(find.text(initAmount.toString()), findsNothing);
