@@ -113,7 +113,10 @@ class UserRepository {
   /// Sign up new user
   Future<bool> signUp(
       {@required String email, @required String password}) async {
-    CognitoUserPoolData data = await _userPool.signUp(email, password);
+    AttributeArg name = AttributeArg(name: 'name', value: email);
+    AttributeArg emailArg = AttributeArg(name: 'email', value: email);
+    List<AttributeArg> userAttributes = [name, emailArg];
+    CognitoUserPoolData data = await _userPool.signUp(email, password, userAttributes: userAttributes);
     return data.userConfirmed;
   }
 
