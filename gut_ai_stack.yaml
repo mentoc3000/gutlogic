@@ -86,6 +86,7 @@ Resources:
       UserPoolId: !Ref UserPool
       ExplicitAuthFlows:
         - USER_PASSWORD_AUTH
+        - ADMIN_NO_SRP_AUTH
 
   IdentityPool:
     Type: "AWS::Cognito::IdentityPool"
@@ -152,22 +153,8 @@ Resources:
   #               Resource: "*"
   #             - Effect: "Allow"
   #               Action:
-  #                 - "lambda:InvokeFunction"
-  #               Resource: "*"
-
-  # AppSyncTestPolicty:
-  #   Type: "AWS::IAM::Policty"
-  #   Properties:
-  #     PolicyName: "GutAIAppSyncTestPolicy"
-  #     PolicyDocument: 
-  #       Version: "2012-10-17"
-  #       Statement: 
-  #         - Effect: "Allow"
-  #           Action:
-  #             - "mobileanalytics:PutEvents"
-  #             - "cognito-sync:*"
-  #             - "cognito-identity:*"
-  #           Resource: !GetAtt AppSyncAPI.Arn
+  #                 - "appsync:GraphQL"
+  #               Resource: !GetAtt AppSyncAPI.Arn
   
   # IdentityPoolRoleMapping:
   #   Type: "AWS::Cognito::IdentityPoolRoleAttachment"
