@@ -154,7 +154,7 @@ Resources:
   #             - Effect: "Allow"
   #               Action:
   #                 - "appsync:GraphQL"
-  #               Resource: !GetAtt AppSyncAPI.Arn
+  #               Resource: !Join [ "", [ !GetAtt AppSyncAPI.Arn, "*" ] ]
   
   # IdentityPoolRoleMapping:
   #   Type: "AWS::Cognito::IdentityPoolRoleAttachment"
