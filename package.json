@@ -13,6 +13,7 @@
     "apollo-client": "^2.0.3",
     "apollo-link": "^1.0.3",
     "apollo-link-http": "^1.2.0",
+    "aws-amplify": "^1.1.38",
     "aws-appsync": "^1.0.0",
     "es6-promise": "^4.1.1",
     "graphql": "^14.4.2",
@@ -21,6 +22,7 @@
     "ws": "^7.1.1"
   },
   "devDependencies": {
+    "@aws-amplify/cli": "^3.0.0",
     "amazon-cognito-identity-js": "^3.0.15",
     "aws-sdk": "^2.521.0",
     "chai": "^4.2.0",
