@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"gutai60762e46": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}

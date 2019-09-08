@@ -1,0 +1,19 @@
+{
+    "master": {
+        "awscloudformation": {
+            "AuthRoleName": "gutai-master-20190908160206-authRole",
+            "UnauthRoleArn": "arn:aws:iam::223301336720:role/gutai-master-20190908160206-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::223301336720:role/gutai-master-20190908160206-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "gutai-master-20190908160206-deployment",
+            "UnauthRoleName": "gutai-master-20190908160206-unauthRole",
+            "StackName": "gutai-master-20190908160206",
+            "StackId": "arn:aws:cloudformation:us-east-1:223301336720:stack/gutai-master-20190908160206/88e4aa70-d273-11e9-b2d1-0ecfb0c7c934"
+        },
+        "categories": {
+            "auth": {
+                "gutai60762e46": {}
+            }
+        }
+    }
+}
