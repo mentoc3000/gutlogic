@@ -5,7 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 const config = {
   AWS_ACCESS_KEY_ID: 'AKIATH7OL72IGRLR2YYS',
   AWS_SECRET_ACCESS_KEY: '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',
-  HOST: 'ndxzbvrlwfeerat5rz27xmj2ea.appsync-api.us-east-1.amazonaws.com',
+  HOST: 'vaakik5q2fguvg5q2ibwmhblo4.appsync-api.us-east-1.amazonaws.com',
   REGION: 'us-east-1',
   PATH: '/graphql',
   ENDPOINT: '',
