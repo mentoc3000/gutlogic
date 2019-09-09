@@ -9,6 +9,7 @@
   "author": "JP Sheehan",
   "license": "UNLICENSED",
   "dependencies": {
+    "@aws-amplify/api": "^1.1.1",
     "apollo-cache-inmemory": "^1.1.0",
     "apollo-client": "^2.0.3",
     "apollo-link": "^1.0.3",
