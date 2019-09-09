@@ -12,7 +12,9 @@ const { expect } = chai;
 
 describe('Food database', () => {
   before('Sign in', signIn);
-  after('Sign out', signOut);
+  after('Sign out', async () => {
+    await signOut();
+  });
 
   describe('listFoods', () => {
     it('should get all foods', async () => {
@@ -55,7 +57,7 @@ describe('Food database', () => {
     });
   });
 
-  describe.skip('getFood', () => {
+  describe('getFood', () => {
     let id;
     const name = 'Bacon';
 
@@ -65,20 +67,15 @@ describe('Food database', () => {
 
     it('should get a food', async () => {
       const getFood = gql(`
-        query getFood($nameId: String!, $entryId: String!) {
-        getFood(nameId: $nameId, entryId: $entryId) {
-            nameId
-            entryId
-            name
+        query GetFood($id: ID!) {
+        getFood(id: $id) {
+          id
+          name
         }
         }`);
 
-      const getResult = await client.query({
-        query: getFood,
-        variables: id,
-      });
+      const getResult = await API.graphql(graphqlOperation(getFood, { id }));
       const getData = getResult.data.getFood;
-      expect(getData.__typename).to.equal('Food');
       expect(getData.name).to.equal(name);
     });
   });
@@ -95,8 +92,7 @@ describe('Food database', () => {
       const deleteFood = gql(`
         mutation DeleteFood($input: GutAiIdInput!) {
         deleteFood(input: $input) {
-            nameId
-            entryId
+          id
         }
         }`);
 
@@ -126,8 +122,7 @@ describe('Food database', () => {
       const updateFood = gql(`
         mutation UpdateFood($input: UpdateFoodInput!) {
         updateFood(input: $input) {
-            nameId
-            entryId
+          id
             name
         }
         }`);

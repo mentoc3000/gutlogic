@@ -1,6 +1,7 @@
 // messy because of the export/import syntax differences
 const AmplifyCore = require('aws-amplify');
 const Amplify = require('aws-amplify').default;
+global.fetch = require('node-fetch');
 
 const { API, Auth } = Amplify;
 const { graphqlOperation } = AmplifyCore;
@@ -29,7 +30,6 @@ exports.signIn = async function signIn() {
   if (user.challengeName) {
     throw Error(`Encountered challenge when signing in: ${user.challengeName}`);
   }
-  console.log('Signed in');
 };
 
 exports.signOut = async function signOut() {
