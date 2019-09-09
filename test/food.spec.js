@@ -19,12 +19,11 @@ describe('Food database', () => {
       const query = gql(`
         query ListFoods {
         listFoods {
-            items {
-                nameId
-                entryId
-                name
-            }
-            nextToken
+          items {
+            id
+            name
+          }
+          nextToken
         }
         }`);
 
