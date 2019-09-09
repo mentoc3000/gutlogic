@@ -80,7 +80,7 @@ describe('Food database', () => {
     });
   });
 
-  describe.skip('deleteFood', () => {
+  describe('deleteFood', () => {
     let id;
     const name = 'Bacon';
 
@@ -90,27 +90,21 @@ describe('Food database', () => {
 
     it('should delete a food', async () => {
       const deleteFood = gql(`
-        mutation DeleteFood($input: GutAiIdInput!) {
+        mutation DeleteFood($input: DeleteFoodInput!) {
         deleteFood(input: $input) {
           id
         }
         }`);
 
-      await client.hydrated();
-      const result = await client.mutate({
-        mutation: deleteFood,
-        variables: {
-          input: id,
-        },
-      });
+      const result = await API.graphql(
+        graphqlOperation(deleteFood, { input: { id } })
+      );
       const data = result.data.deleteFood;
-      expect(data.__typename).to.equal('Food');
-      expect(data.nameId).to.equal(id.nameId);
-      expect(data.entryId).to.equal(id.entryId);
+      expect(data.id).to.equal(id);
     });
   });
 
-  describe.skip('updateFood', () => {
+  describe('updateFood', () => {
     let id;
     const name = 'Bacon';
 
@@ -123,22 +117,20 @@ describe('Food database', () => {
         mutation UpdateFood($input: UpdateFoodInput!) {
         updateFood(input: $input) {
           id
-            name
+          name
         }
         }`);
 
       const newName = 'Mimosa';
 
-      const result = await client.mutate({
-        mutation: updateFood,
-        variables: {
+      const result = await API.graphql(
+        graphqlOperation(updateFood, {
           input: {
-            nameId: id.nameId,
-            entryId: id.entryId,
+            id,
             name: newName,
           },
-        },
-      });
+        })
+      );
       const data = result.data.updateFood;
       expect(data.name).to.equal(newName);
     });
