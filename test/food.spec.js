@@ -33,30 +33,25 @@ describe('Food database', () => {
     });
   });
 
-  describe.skip('createFood', () => {
+  describe('createFood', () => {
     it('should create a food', async () => {
       const mutation = gql(`
         mutation CreateFood($input: CreateFoodInput!) {
         createFood(input: $input) {
-            nameId
-            entryId
+            id
             name
         }
         }`);
 
-      await client.hydrated();
-      const result = await client.mutate({
-        mutation,
-        variables: {
+      const result = await API.graphql(
+        graphqlOperation(mutation, {
           input: {
             name: 'Bacon',
           },
-        },
-      });
+        })
+      );
       const data = result.data.createFood;
-      expect(data.__typename).to.equal('Food');
       expect(data.name).to.equal('Bacon');
-      expect(data.nameId).to.equal('food');
     });
   });
 
