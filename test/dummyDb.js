@@ -4,7 +4,7 @@ const { config } = require('./aws-setup');
 
 API.configure(config);
 
-let createdIds = [];
+let createdItems = [];
 
 const createDose = async (userId, dosageEntryId, medicineId, amount, unit) => {
   const mutation = gql(`
@@ -25,7 +25,10 @@ const createDose = async (userId, dosageEntryId, medicineId, amount, unit) => {
     })
   );
   const createData = createResult.data.createDose;
-  createdIds.push(createData);
+  createdItems.push({
+    type: 'Dose',
+    id: createData.id,
+  });
   return createData.id;
 };
 
@@ -43,7 +46,10 @@ const createFood = async name => {
     })
   );
   const createData = createResult.data.createFood;
-  createdIds.push(createData);
+  createdItems.push({
+    type: 'Food',
+    id: createData.id,
+  });
   return createData.id;
 };
 
@@ -66,7 +72,10 @@ const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
     })
   );
   const createData = createResult.data.createIngredient;
-  createdIds.push(createData);
+  createdItems.push({
+    type: 'DiaryEntry',
+    id: createData.id,
+  });
   return createData.id;
 };
 
@@ -92,7 +101,10 @@ const createDosageEntry = async (userId, datetime) => {
     })
   );
   const createData = createResult.data.createDiaryEntry;
-  createdIds.push(createData);
+  createdItems.push({
+    type: 'DiaryEntry',
+    id: createData.id,
+  });
   return createData.id;
 };
 
@@ -118,7 +130,10 @@ const createMealEntry = async (userId, datetime) => {
     })
   );
   const createData = createResult.data.createDiaryEntry;
-  createdIds.push(createData);
+  createdItems.push({
+    type: 'DiaryEntry',
+    id: createData.id,
+  });
   return createData.id;
 };
 
@@ -136,7 +151,10 @@ const createMedicine = async name => {
     })
   );
   const createData = createResult.data.createMedicine;
-  createdIds.push(createData);
+  createdItems.push({
+    type: 'Medicine',
+    id: createData.id,
+  });
   return createData.id;
 };
 
@@ -154,28 +172,24 @@ const deleteItem = async (id, entryId) => {
     })
   );
   const deletedItem = result.data.deleteItem;
-  createdIds = createdIds.filter(x => x.id !== deletedItem.id);
+  createdItems = createdItems.filter(x => x.id !== deletedItem.id);
 };
 
 const clearItems = async () => {
-  const mutation = gql(`
-        mutation DeleteItem($input: GutAiIdInput!) {
-        deleteItem(input: $input) {
-          id
-        }
-        }`);
-
-  createdIds.forEach(async id => {
+  createdItems.forEach(async item => {
+    const mutation = gql(`
+          mutation Delete${item.type}($input: Delete${item.type}Input!) {
+          delete${item.type}(input: $input) {
+            id
+          }
+          }`);
     API.graphql(
       graphqlOperation(mutation, {
-        input: {
-          id: id.id,
-          entryId: id.entryId,
-        },
+        input: { id: item.id },
       })
     );
   });
-  createdIds = [];
+  createdItems = [];
 };
 
 module.exports = {

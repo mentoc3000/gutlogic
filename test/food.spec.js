@@ -13,6 +13,7 @@ const { expect } = chai;
 describe('Food database', () => {
   before('Sign in', signIn);
   after('Sign out', async () => {
+    await dummyDb.clearItems();
     await signOut();
   });
 
