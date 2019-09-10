@@ -6,7 +6,7 @@ API.configure(config);
 
 let createdItems = [];
 
-const createDose = async (userId, dosageEntryId, medicineId, amount, unit) => {
+const createDose = async (doseMedicineId, amount, unit) => {
   const mutation = gql(`
         mutation CreateDose($input: CreateDoseInput!) {
         createDose(input: $input) {
@@ -17,9 +17,7 @@ const createDose = async (userId, dosageEntryId, medicineId, amount, unit) => {
   const createResult = await API.graphql(
     graphqlOperation(mutation, {
       input: {
-        userId,
-        dosageEntryId,
-        medicineId,
+        doseMedicineId,
         quantity: { amount, unit },
       },
     })
