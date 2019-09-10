@@ -1,31 +1,36 @@
+const { API, graphqlOperation } = require('aws-amplify');
 const chai = require('chai');
 const gql = require('graphql-tag');
 const assertArrays = require('chai-arrays');
-const { client } = require('./aws-exports');
+const { config, signIn, signOut } = require('./aws-setup');
 const dummyDb = require('./dummyDb');
+
+API.configure(config);
 
 chai.use(assertArrays);
 const { expect } = chai;
 
 describe('Medicine database', () => {
+  before('Sign in', signIn);
+  after('Sign out', async () => {
+    await signOut();
+  });
+
   describe('listMedicines', () => {
     it('should get all medicines', async () => {
       const query = gql(`
         query ListMedicines {
         listMedicines {
-            items {
-                nameId
-                entryId
-                name
-            }
-            nextToken
+          items {
+            id
+            name
+          }
+          nextToken
         }
         }`);
 
-      await client.hydrated();
-      const result = await client.query({ query });
+      const result = await API.graphql(graphqlOperation(query));
       const data = result.data.listMedicines;
-      expect(data.__typename).to.equal('PaginatedMedicines');
       expect(data.items).to.be.array();
     });
   });
@@ -35,25 +40,20 @@ describe('Medicine database', () => {
       const mutation = gql(`
         mutation CreateMedicine($input: CreateMedicineInput!) {
         createMedicine(input: $input) {
-            nameId
-            entryId
+            id
             name
         }
         }`);
 
-      await client.hydrated();
-      const result = await client.mutate({
-        mutation,
-        variables: {
+      const result = await API.graphql(
+        graphqlOperation(mutation, {
           input: {
             name: 'Bacon',
           },
-        },
-      });
+        })
+      );
       const data = result.data.createMedicine;
-      expect(data.__typename).to.equal('Medicine');
       expect(data.name).to.equal('Bacon');
-      expect(data.nameId).to.equal('medicine');
     });
   });
 
@@ -67,20 +67,17 @@ describe('Medicine database', () => {
 
     it('should get a medicine', async () => {
       const getMedicine = gql(`
-        query getMedicine($nameId: String!, $entryId: String!) {
-        getMedicine(nameId: $nameId, entryId: $entryId) {
-            nameId
-            entryId
-            name
+        query GetMedicine($id: ID!) {
+        getMedicine(id: $id) {
+          id
+          name
         }
         }`);
 
-      const getResult = await client.query({
-        query: getMedicine,
-        variables: id,
-      });
+      const getResult = await API.graphql(
+        graphqlOperation(getMedicine, { id })
+      );
       const getData = getResult.data.getMedicine;
-      expect(getData.__typename).to.equal('Medicine');
       expect(getData.name).to.equal(name);
     });
   });
@@ -95,24 +92,17 @@ describe('Medicine database', () => {
 
     it('should delete a medicine', async () => {
       const deleteMedicine = gql(`
-        mutation DeleteMedicine($input: GutAiIdInput!) {
+        mutation DeleteMedicine($input: DeleteMedicineInput!) {
         deleteMedicine(input: $input) {
-            nameId
-            entryId
+          id
         }
         }`);
 
-      await client.hydrated();
-      const result = await client.mutate({
-        mutation: deleteMedicine,
-        variables: {
-          input: id,
-        },
-      });
+      const result = await API.graphql(
+        graphqlOperation(deleteMedicine, { input: { id } })
+      );
       const data = result.data.deleteMedicine;
-      expect(data.__typename).to.equal('Medicine');
-      expect(data.nameId).to.equal(id.nameId);
-      expect(data.entryId).to.equal(id.entryId);
+      expect(data.id).to.equal(id);
     });
   });
 
@@ -128,28 +118,23 @@ describe('Medicine database', () => {
       const updateMedicine = gql(`
         mutation UpdateMedicine($input: UpdateMedicineInput!) {
         updateMedicine(input: $input) {
-            nameId
-            entryId
-            name
+          id
+          name
         }
         }`);
 
       const newName = 'Mimosa';
 
-      const result = await client.mutate({
-        mutation: updateMedicine,
-        variables: {
+      const result = await API.graphql(
+        graphqlOperation(updateMedicine, {
           input: {
-            nameId: id.nameId,
-            entryId: id.entryId,
+            id,
             name: newName,
           },
-        },
-      });
+        })
+      );
       const data = result.data.updateMedicine;
       expect(data.name).to.equal(newName);
     });
   });
-
-  after('clear medicine database', dummyDb.clearItems);
 });

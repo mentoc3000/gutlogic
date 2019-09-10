@@ -22,3 +22,24 @@ export const deleteFood = `mutation DeleteFood($input: DeleteFoodInput!) {
   }
 }
 `;
+export const createMedicine = `mutation CreateMedicine($input: CreateMedicineInput!) {
+  createMedicine(input: $input) {
+    id
+    name
+  }
+}
+`;
+export const updateMedicine = `mutation UpdateMedicine($input: UpdateMedicineInput!) {
+  updateMedicine(input: $input) {
+    id
+    name
+  }
+}
+`;
+export const deleteMedicine = `mutation DeleteMedicine($input: DeleteMedicineInput!) {
+  deleteMedicine(input: $input) {
+    id
+    name
+  }
+}
+`;

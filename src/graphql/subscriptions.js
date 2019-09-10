@@ -22,3 +22,24 @@ export const onDeleteFood = `subscription OnDeleteFood {
   }
 }
 `;
+export const onCreateMedicine = `subscription OnCreateMedicine {
+  onCreateMedicine {
+    id
+    name
+  }
+}
+`;
+export const onUpdateMedicine = `subscription OnUpdateMedicine {
+  onUpdateMedicine {
+    id
+    name
+  }
+}
+`;
+export const onDeleteMedicine = `subscription OnDeleteMedicine {
+  onDeleteMedicine {
+    id
+    name
+  }
+}
+`;

@@ -2,6 +2,10 @@ type Food @model {
   id: ID!
   name: String!
 }
+type Medicine @model {
+  id: ID!
+  name: String!
+}
 # type Post @model {
 #   id: ID!
 #   title: String!

@@ -22,3 +22,24 @@ export const listFoods = `query ListFoods(
   }
 }
 `;
+export const getMedicine = `query GetMedicine($id: ID!) {
+  getMedicine(id: $id) {
+    id
+    name
+  }
+}
+`;
+export const listMedicines = `query ListMedicines(
+  $filter: ModelMedicineFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listMedicines(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+    }
+    nextToken
+  }
+}
+`;
