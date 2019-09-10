@@ -22,6 +22,48 @@ export const onDeleteFood = `subscription OnDeleteFood {
   }
 }
 `;
+export const onCreateIngredient = `subscription OnCreateIngredient {
+  onCreateIngredient {
+    id
+    food {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const onUpdateIngredient = `subscription OnUpdateIngredient {
+  onUpdateIngredient {
+    id
+    food {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const onDeleteIngredient = `subscription OnDeleteIngredient {
+  onDeleteIngredient {
+    id
+    food {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
 export const onCreateMedicine = `subscription OnCreateMedicine {
   onCreateMedicine {
     id

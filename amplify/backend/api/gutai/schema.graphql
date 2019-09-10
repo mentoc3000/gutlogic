@@ -2,6 +2,15 @@ type Food @model {
   id: ID!
   name: String!
 }
+type Ingredient @model {
+  id: ID!
+  food: Food @connection
+  quantity: Quantity
+}
+type Quantity {
+  amount: Float!
+  unit: String!
+}
 type Medicine @model {
   id: ID!
   name: String!

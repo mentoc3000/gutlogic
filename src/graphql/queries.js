@@ -22,6 +22,41 @@ export const listFoods = `query ListFoods(
   }
 }
 `;
+export const getIngredient = `query GetIngredient($id: ID!) {
+  getIngredient(id: $id) {
+    id
+    food {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const listIngredients = `query ListIngredients(
+  $filter: ModelIngredientFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listIngredients(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      food {
+        id
+        name
+      }
+      quantity {
+        amount
+        unit
+      }
+    }
+    nextToken
+  }
+}
+`;
 export const getMedicine = `query GetMedicine($id: ID!) {
   getMedicine(id: $id) {
     id
