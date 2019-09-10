@@ -8,8 +8,8 @@ type Ingredient @model {
   quantity: Quantity
 }
 type Quantity {
-  amount: Float!
-  unit: String!
+  amount: Float
+  unit: String
 }
 type Medicine @model {
   id: ID!

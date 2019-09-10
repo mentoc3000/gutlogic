@@ -53,7 +53,7 @@ const createFood = async name => {
   return createData.id;
 };
 
-const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
+const createIngredient = async (ingredientFoodId, amount, unit) => {
   const mutation = gql(`
         mutation CreateIngredient($input: CreateIngredientInput!) {
         createIngredient(input: $input) {
@@ -64,16 +64,14 @@ const createIngredient = async (userId, mealEntryId, foodId, amount, unit) => {
   const createResult = await API.graphql(
     graphqlOperation(mutation, {
       input: {
-        userId,
-        mealEntryId,
-        foodId,
+        ingredientFoodId,
         quantity: { amount, unit },
       },
     })
   );
   const createData = createResult.data.createIngredient;
   createdItems.push({
-    type: 'DiaryEntry',
+    type: 'Ingredient',
     id: createData.id,
   });
   return createData.id;
