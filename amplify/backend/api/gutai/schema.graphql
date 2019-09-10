@@ -2,27 +2,55 @@ type Food @model {
   id: ID!
   name: String!
 }
+
 type Ingredient @model {
   id: ID!
   food: Food @connection
   quantity: Quantity
 }
+
 type Quantity {
   amount: Float
   unit: String
 }
+
 type Medicine @model {
   id: ID!
   name: String!
 }
-# type Post @model {
-#   id: ID!
-#   title: String!
-#   blog: Blog @connection(name: "BlogPosts")
-#   comments: [Comment] @connection(name: "PostComments")
-# }
-# type Comment @model {
-#   id: ID!
-#   content: String
-#   post: Post @connection(name: "PostComments")
-# }
+
+type Dose @model {
+  id: ID!
+  medicine: Medicine @connection
+  quantity: Quantity 
+}
+
+enum DiaryEntryType {
+  MEAL,
+  BOWELMOVEMENT,
+  DOSAGE,
+  SYPMTOM
+}
+
+type DiaryEntry @model {
+  id: ID!
+  type: DiaryEntryType!
+  creationDate: AWSDateTime
+  modificationDate: AWSDateTime
+  datetime: AWSDateTime
+  ingredients: [Ingredient] @connection
+  bowelMovement: BowelMovement
+  doses: [Dose] @connection
+  symptom: Symptom
+  notes: String
+}
+
+type BowelMovement {
+  type: Int
+  volume: Int
+}
+
+type Symptom {
+  symptomType: String
+  severity: Float
+}

@@ -85,3 +85,138 @@ export const deleteMedicine = `mutation DeleteMedicine($input: DeleteMedicineInp
   }
 }
 `;
+export const createDose = `mutation CreateDose($input: CreateDoseInput!) {
+  createDose(input: $input) {
+    id
+    medicine {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const updateDose = `mutation UpdateDose($input: UpdateDoseInput!) {
+  updateDose(input: $input) {
+    id
+    medicine {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const deleteDose = `mutation DeleteDose($input: DeleteDoseInput!) {
+  deleteDose(input: $input) {
+    id
+    medicine {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const createDiaryEntry = `mutation CreateDiaryEntry($input: CreateDiaryEntryInput!) {
+  createDiaryEntry(input: $input) {
+    id
+    type
+    creationDate
+    modificationDate
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
+export const updateDiaryEntry = `mutation UpdateDiaryEntry($input: UpdateDiaryEntryInput!) {
+  updateDiaryEntry(input: $input) {
+    id
+    type
+    creationDate
+    modificationDate
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
+export const deleteDiaryEntry = `mutation DeleteDiaryEntry($input: DeleteDiaryEntryInput!) {
+  deleteDiaryEntry(input: $input) {
+    id
+    type
+    creationDate
+    modificationDate
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;

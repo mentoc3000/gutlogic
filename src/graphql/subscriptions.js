@@ -85,3 +85,138 @@ export const onDeleteMedicine = `subscription OnDeleteMedicine {
   }
 }
 `;
+export const onCreateDose = `subscription OnCreateDose {
+  onCreateDose {
+    id
+    medicine {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const onUpdateDose = `subscription OnUpdateDose {
+  onUpdateDose {
+    id
+    medicine {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const onDeleteDose = `subscription OnDeleteDose {
+  onDeleteDose {
+    id
+    medicine {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
+  onCreateDiaryEntry {
+    id
+    type
+    creationDate
+    modificationDate
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
+export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
+  onUpdateDiaryEntry {
+    id
+    type
+    creationDate
+    modificationDate
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
+export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
+  onDeleteDiaryEntry {
+    id
+    type
+    creationDate
+    modificationDate
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;

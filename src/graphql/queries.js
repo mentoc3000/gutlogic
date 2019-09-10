@@ -78,3 +78,101 @@ export const listMedicines = `query ListMedicines(
   }
 }
 `;
+export const getDose = `query GetDose($id: ID!) {
+  getDose(id: $id) {
+    id
+    medicine {
+      id
+      name
+    }
+    quantity {
+      amount
+      unit
+    }
+  }
+}
+`;
+export const listDoses = `query ListDoses(
+  $filter: ModelDoseFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listDoses(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      medicine {
+        id
+        name
+      }
+      quantity {
+        amount
+        unit
+      }
+    }
+    nextToken
+  }
+}
+`;
+export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
+  getDiaryEntry(id: $id) {
+    id
+    type
+    creationDate
+    modificationDate
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
+export const listDiaryEntrys = `query ListDiaryEntrys(
+  $filter: ModelDiaryEntryFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listDiaryEntrys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
+    nextToken
+  }
+}
+`;
