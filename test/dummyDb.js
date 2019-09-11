@@ -6,7 +6,7 @@ API.configure(config);
 
 let createdItems = [];
 
-const createDose = async (doseMedicineId, amount, unit) => {
+const createDose = async (doseDiaryEntryId, doseMedicineId, amount, unit) => {
   const mutation = gql(`
         mutation CreateDose($input: CreateDoseInput!) {
         createDose(input: $input) {
@@ -17,6 +17,7 @@ const createDose = async (doseMedicineId, amount, unit) => {
   const createResult = await API.graphql(
     graphqlOperation(mutation, {
       input: {
+        doseDiaryEntryId,
         doseMedicineId,
         quantity: { amount, unit },
       },
@@ -51,7 +52,12 @@ const createFood = async name => {
   return createData.id;
 };
 
-const createIngredient = async (ingredientFoodId, amount, unit) => {
+const createIngredient = async (
+  ingredientDiaryEntryId,
+  ingredientFoodId,
+  amount,
+  unit
+) => {
   const mutation = gql(`
         mutation CreateIngredient($input: CreateIngredientInput!) {
         createIngredient(input: $input) {
@@ -62,6 +68,7 @@ const createIngredient = async (ingredientFoodId, amount, unit) => {
   const createResult = await API.graphql(
     graphqlOperation(mutation, {
       input: {
+        ingredientDiaryEntryId,
         ingredientFoodId,
         quantity: { amount, unit },
       },
@@ -75,7 +82,7 @@ const createIngredient = async (ingredientFoodId, amount, unit) => {
   return createData.id;
 };
 
-const createDosageEntry = async (userId, datetime) => {
+const createDosageEntry = async datetime => {
   const mutation = gql(`
         mutation CreateDiaryEntry($input: CreateDiaryEntryInput!) {
         createDiaryEntry(input: $input) {
@@ -86,13 +93,10 @@ const createDosageEntry = async (userId, datetime) => {
   const createResult = await API.graphql(
     graphqlOperation(mutation, {
       input: {
-        userId,
+        type: 'DOSAGE',
         creationDate: datetime,
         modificationDate: datetime,
         datetime,
-        dosage: {
-          doses: [],
-        },
       },
     })
   );
@@ -104,7 +108,7 @@ const createDosageEntry = async (userId, datetime) => {
   return createData.id;
 };
 
-const createMealEntry = async (userId, datetime) => {
+const createMealEntry = async datetime => {
   const mutation = gql(`
         mutation CreateDiaryEntry($input: CreateDiaryEntryInput!) {
         createDiaryEntry(input: $input) {
@@ -115,13 +119,10 @@ const createMealEntry = async (userId, datetime) => {
   const createResult = await API.graphql(
     graphqlOperation(mutation, {
       input: {
-        userId,
+        type: 'MEAL',
         creationDate: datetime,
         modificationDate: datetime,
         datetime,
-        meal: {
-          ingredients: [],
-        },
       },
     })
   );
@@ -154,23 +155,6 @@ const createMedicine = async name => {
   return createData.id;
 };
 
-const deleteItem = async (id, entryId) => {
-  const mutation = gql(`
-        mutation DeleteItem($input: GutAiIdInput!) {
-        deleteItem(input: $input) {
-          id
-        }
-        }`);
-
-  const result = await API.graphql(
-    graphqlOperation(mutation, {
-      input: { id, entryId },
-    })
-  );
-  const deletedItem = result.data.deleteItem;
-  createdItems = createdItems.filter(x => x.id !== deletedItem.id);
-};
-
 const clearItems = async () => {
   createdItems.forEach(async item => {
     const mutation = gql(`
@@ -195,6 +179,5 @@ module.exports = {
   createIngredient,
   createMealEntry,
   createMedicine,
-  deleteItem,
   clearItems,
 };

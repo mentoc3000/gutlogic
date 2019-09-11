@@ -38,10 +38,13 @@ describe('Ingredient database', () => {
 
   describe('createIngredient', () => {
     const foodName = 'Rice Cake';
+    const datetime = '2019-07-02T12:43:00Z';
     let ingredientFoodId;
+    let ingredientDiaryEntryId;
 
     before('create food', async () => {
       ingredientFoodId = await dummyDb.createFood(foodName);
+      ingredientDiaryEntryId = await dummyDb.createMealEntry(datetime);
     });
 
     it('should create a ingredient', async () => {
@@ -63,6 +66,7 @@ describe('Ingredient database', () => {
       const result = await API.graphql(
         graphqlOperation(mutation, {
           input: {
+            ingredientDiaryEntryId,
             ingredientFoodId,
             quantity,
           },
@@ -76,7 +80,9 @@ describe('Ingredient database', () => {
   });
 
   describe('getIngredient', () => {
+    const datetime = '2019-07-02T12:43:00Z';
     let ingredientFoodId;
+    let ingredientDiaryEntryId;
     let ingredientId;
     const foodName = 'Bacon';
     const quantity = {
@@ -86,7 +92,9 @@ describe('Ingredient database', () => {
 
     before('create a ingredient', async () => {
       ingredientFoodId = await dummyDb.createFood(foodName);
+      ingredientDiaryEntryId = await dummyDb.createMealEntry(datetime);
       ingredientId = await dummyDb.createIngredient(
+        ingredientDiaryEntryId,
         ingredientFoodId,
         quantity.amount,
         quantity.unit
@@ -117,7 +125,9 @@ describe('Ingredient database', () => {
   });
 
   describe('deleteIngredient', () => {
+    const datetime = '2019-07-02T12:43:00Z';
     let ingredientFoodId;
+    let ingredientDiaryEntryId;
     let ingredientId;
     const foodName = 'Bacon';
     const quantity = {
@@ -127,7 +137,9 @@ describe('Ingredient database', () => {
 
     before('create a ingredient', async () => {
       ingredientFoodId = await dummyDb.createFood(foodName);
+      ingredientDiaryEntryId = await dummyDb.createMealEntry(datetime);
       ingredientId = await dummyDb.createIngredient(
+        ingredientDiaryEntryId,
         ingredientFoodId,
         quantity.amount,
         quantity.unit
@@ -151,7 +163,9 @@ describe('Ingredient database', () => {
   });
 
   describe('updateIngredient', () => {
+    const datetime = '2019-07-02T12:43:00Z';
     let ingredientFoodId;
+    let ingredientDiaryEntryId;
     let ingredientId;
     const foodName = 'Bacon';
     const quantity = {
@@ -161,7 +175,9 @@ describe('Ingredient database', () => {
 
     before('create a ingredient', async () => {
       ingredientFoodId = await dummyDb.createFood(foodName);
+      ingredientDiaryEntryId = await dummyDb.createMealEntry(datetime);
       ingredientId = await dummyDb.createIngredient(
+        ingredientDiaryEntryId,
         ingredientFoodId,
         quantity.amount,
         quantity.unit
