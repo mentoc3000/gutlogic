@@ -7,7 +7,7 @@ type Ingredient @model {
   id: ID!
   food: Food @connection
   quantity: Quantity
-  diaryEntry: DiaryEntry @connection(name: "DiaryEntryIngredients")
+  diaryEntry: DiaryEntry! @connection(name: "DiaryEntryIngredients")
 }
 
 type Quantity {
@@ -24,7 +24,7 @@ type Dose @model {
   id: ID!
   medicine: Medicine @connection
   quantity: Quantity 
-  diaryEntry: DiaryEntry @connection(name: "DiaryEntryDoses")
+  diaryEntry: DiaryEntry! @connection(name: "DiaryEntryDoses")
 }
 
 enum DiaryEntryType {
