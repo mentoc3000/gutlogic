@@ -34,7 +34,12 @@ enum DiaryEntryType {
   SYPMTOM
 }
 
-type DiaryEntry @model {
+type DiaryEntry @model(
+  queries: { 
+    get: "getDiaryEntry", 
+    list: "listDiaryEntries"
+  }
+) {
   id: ID!
   type: DiaryEntryType!
   creationDate: AWSDateTime

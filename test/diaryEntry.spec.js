@@ -16,8 +16,7 @@ describe('DiaryEntry database', () => {
         query ListDiaryEntries($userId: String!) {
         listDiaryEntries(userId: $userId) {
             items {
-                nameId
-                entryId
+              id
             }
         }
         }`);

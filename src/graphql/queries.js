@@ -204,12 +204,12 @@ export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
   }
 }
 `;
-export const listDiaryEntrys = `query ListDiaryEntrys(
+export const listDiaryEntries = `query ListDiaryEntries(
   $filter: ModelDiaryEntryFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listDiaryEntrys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listDiaryEntries(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       type

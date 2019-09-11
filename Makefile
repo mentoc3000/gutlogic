@@ -18,50 +18,12 @@ package:
 		--s3-bucket $(AWS_CF_BUCKET_NAME) \
 		--region $(AWS_REGION) \
 		--output-template-file $(FILE_PACKAGE)
-
-deploy:
-	@ aws cloudformation deploy \
-		--template-file $(FILE_PACKAGE) \
-		--region $(AWS_REGION) \
-		--capabilities CAPABILITY_NAMED_IAM \
-		--stack-name $(AWS_STACK_NAME) \
-		--force-upload \
-		--parameter-overrides \
-			ParamProjectName=$(PROJECT_NAME) \
-			ParamSchema="$(SCHEMA)" \
-			ParamKeyExpiration=$(EXPIRATION) \
-			ParamENV=$(ENV)
 			
 create:
-	@ make package
-	@ make deploy
+	@ amplify push --yes
 
 delete:
 	@ aws cloudformation delete-stack --stack-name $(AWS_STACK_NAME)
-
-describe:
-	@ aws cloudformation describe-stacks \
-			--region $(AWS_REGION) \
-			--stack-name $(AWS_STACK_NAME) \
-		| jq '.' \
-		| less
-
-describe-events:
-	@ aws cloudformation describe-stack-events \
-			--region $(AWS_REGION) \
-			--stack-name $(AWS_STACK_NAME) \
-		| jq '.' \
-		| less
-
-describe-errors:
-	@ make describe-events \
-		| jq -c '[ .StackEvents[] | select(.ResourceStatus | contains("UPDATE_FAILED") or contains("CREATE_FAILED")) ]' \
-		| jq '.' \
-		| less
-
-describe-error:
-	@ make describe-errors \
-		| jq '.[0]' 
 
 ifndef spec
 specfile = 
