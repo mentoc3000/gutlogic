@@ -33,6 +33,28 @@ export const createIngredient = `mutation CreateIngredient($input: CreateIngredi
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -47,6 +69,28 @@ export const updateIngredient = `mutation UpdateIngredient($input: UpdateIngredi
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -60,6 +104,28 @@ export const deleteIngredient = `mutation DeleteIngredient($input: DeleteIngredi
     quantity {
       amount
       unit
+    }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
     }
   }
 }
@@ -96,6 +162,28 @@ export const createDose = `mutation CreateDose($input: CreateDoseInput!) {
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -110,6 +198,28 @@ export const updateDose = `mutation UpdateDose($input: UpdateDoseInput!) {
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -123,6 +233,28 @@ export const deleteDose = `mutation DeleteDose($input: DeleteDoseInput!) {
     quantity {
       amount
       unit
+    }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
     }
   }
 }

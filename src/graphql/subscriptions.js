@@ -33,6 +33,28 @@ export const onCreateIngredient = `subscription OnCreateIngredient {
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -47,6 +69,28 @@ export const onUpdateIngredient = `subscription OnUpdateIngredient {
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -60,6 +104,28 @@ export const onDeleteIngredient = `subscription OnDeleteIngredient {
     quantity {
       amount
       unit
+    }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
     }
   }
 }
@@ -96,6 +162,28 @@ export const onCreateDose = `subscription OnCreateDose {
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -110,6 +198,28 @@ export const onUpdateDose = `subscription OnUpdateDose {
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -123,6 +233,28 @@ export const onDeleteDose = `subscription OnDeleteDose {
     quantity {
       amount
       unit
+    }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
     }
   }
 }

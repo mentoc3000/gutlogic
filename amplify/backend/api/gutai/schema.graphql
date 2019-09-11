@@ -7,6 +7,7 @@ type Ingredient @model {
   id: ID!
   food: Food @connection
   quantity: Quantity
+  diaryEntry: DiaryEntry @connection(name: "DiaryEntryIngredients")
 }
 
 type Quantity {
@@ -23,6 +24,7 @@ type Dose @model {
   id: ID!
   medicine: Medicine @connection
   quantity: Quantity 
+  diaryEntry: DiaryEntry @connection(name: "DiaryEntryDoses")
 }
 
 enum DiaryEntryType {
@@ -38,9 +40,9 @@ type DiaryEntry @model {
   creationDate: AWSDateTime
   modificationDate: AWSDateTime
   datetime: AWSDateTime
-  ingredients: [Ingredient] @connection
+  ingredients: [Ingredient] @connection(name: "DiaryEntryIngredients")
   bowelMovement: BowelMovement
-  doses: [Dose] @connection
+  doses: [Dose] @connection(name: "DiaryEntryDoses")
   symptom: Symptom
   notes: String
 }

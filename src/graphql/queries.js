@@ -33,6 +33,28 @@ export const getIngredient = `query GetIngredient($id: ID!) {
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -51,6 +73,14 @@ export const listIngredients = `query ListIngredients(
       quantity {
         amount
         unit
+      }
+      diaryEntry {
+        id
+        type
+        creationDate
+        modificationDate
+        datetime
+        notes
       }
     }
     nextToken
@@ -89,6 +119,28 @@ export const getDose = `query GetDose($id: ID!) {
       amount
       unit
     }
+    diaryEntry {
+      id
+      type
+      creationDate
+      modificationDate
+      datetime
+      ingredients {
+        nextToken
+      }
+      bowelMovement {
+        type
+        volume
+      }
+      doses {
+        nextToken
+      }
+      symptom {
+        symptomType
+        severity
+      }
+      notes
+    }
   }
 }
 `;
@@ -107,6 +159,14 @@ export const listDoses = `query ListDoses(
       quantity {
         amount
         unit
+      }
+      diaryEntry {
+        id
+        type
+        creationDate
+        modificationDate
+        datetime
+        notes
       }
     }
     nextToken
