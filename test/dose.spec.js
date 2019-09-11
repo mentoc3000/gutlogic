@@ -38,10 +38,13 @@ describe('Dose database', () => {
 
   describe('createDose', () => {
     const medicineName = 'Rice Cake';
+    const datetime = '2019-07-02T12:43:00Z';
     let doseMedicineId;
+    let doseDiaryEntryId;
 
     before('create medicine', async () => {
       doseMedicineId = await dummyDb.createMedicine(medicineName);
+      doseDiaryEntryId = await dummyDb.createDosageEntry(datetime);
     });
 
     it('should create a dose', async () => {
@@ -63,6 +66,7 @@ describe('Dose database', () => {
       const result = await API.graphql(
         graphqlOperation(mutation, {
           input: {
+            doseDiaryEntryId,
             doseMedicineId,
             quantity,
           },
@@ -76,17 +80,21 @@ describe('Dose database', () => {
   });
 
   describe('getDose', () => {
+    const datetime = '2019-07-02T12:43:00Z';
     let doseMedicineId;
+    let doseDiaryEntryId;
     let doseId;
-    const medicineName = 'Bacon';
+    const medicineName = 'Camphor Oil';
     const quantity = {
       amount: 1.5,
-      unit: 'slices',
+      unit: 'Tbps',
     };
 
     before('create a dose', async () => {
       doseMedicineId = await dummyDb.createMedicine(medicineName);
+      doseDiaryEntryId = await dummyDb.createDosageEntry(datetime);
       doseId = await dummyDb.createDose(
+        doseDiaryEntryId,
         doseMedicineId,
         quantity.amount,
         quantity.unit
@@ -117,17 +125,21 @@ describe('Dose database', () => {
   });
 
   describe('deleteDose', () => {
+    const datetime = '2019-07-02T12:43:00Z';
     let doseMedicineId;
+    let doseDiaryEntryId;
     let doseId;
-    const medicineName = 'Bacon';
+    const medicineName = 'Camphor Oil';
     const quantity = {
       amount: 1.5,
-      unit: 'slices',
+      unit: 'Tbps',
     };
 
     before('create a dose', async () => {
       doseMedicineId = await dummyDb.createMedicine(medicineName);
+      doseDiaryEntryId = await dummyDb.createDosageEntry(datetime);
       doseId = await dummyDb.createDose(
+        doseDiaryEntryId,
         doseMedicineId,
         quantity.amount,
         quantity.unit
@@ -151,17 +163,21 @@ describe('Dose database', () => {
   });
 
   describe('updateDose', () => {
+    const datetime = '2019-07-02T12:43:00Z';
     let doseMedicineId;
+    let doseDiaryEntryId;
     let doseId;
-    const medicineName = 'Bacon';
+    const medicineName = 'Camphor Oil';
     const quantity = {
       amount: 1.5,
-      unit: 'slices',
+      unit: 'Tbps',
     };
 
     before('create a dose', async () => {
       doseMedicineId = await dummyDb.createMedicine(medicineName);
+      doseDiaryEntryId = await dummyDb.createDosageEntry(datetime);
       doseId = await dummyDb.createDose(
+        doseDiaryEntryId,
         doseMedicineId,
         quantity.amount,
         quantity.unit
