@@ -42,7 +42,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
         createDiaryEntry(input: $input) {
           id
           type
-            meal { ingredients { entryId }}
+          ingredients { items { id } }
         }
         }`);
 
@@ -58,8 +58,8 @@ describe('DiaryEntry database', function diaryEntryTests() {
       );
       const data = result.data.createDiaryEntry;
       expect(data.type).to.equal('MEAL');
-      expect(data.ingredients).to.be.array();
-      expect(data.ingredients.length).to.equal(0);
+      expect(data.ingredients.items).to.be.array();
+      expect(data.ingredients.items.length).to.equal(0);
     });
 
     it('should create a bowel movement entry', async () => {
@@ -69,7 +69,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
         createDiaryEntry(input: $input) {
           id
           type
-            bowelMovement { volume }
+          bowelMovement { volume }
         }
         }`);
 
@@ -93,7 +93,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
     });
   });
 
-  describe('createMealEntry', () => {
+  describe.skip('createMealEntry', () => {
     it('should create a meal entry', async () => {
       const creationDatetime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
@@ -105,7 +105,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
           creationDate
           modificationDate
           datetime
-          meal { ingredients { id }}
+          ingredients { items { id } }
         }
         }`);
 
@@ -119,15 +119,15 @@ describe('DiaryEntry database', function diaryEntryTests() {
       );
       const data = result.data.createMealEntry;
       expect(data.type).to.equal('MEAL');
-      expect(data.ingredients).to.be.array();
-      expect(data.ingredients.length).to.equal(0);
+      expect(data.ingredients.items).to.be.array();
+      expect(data.ingredients.items.length).to.equal(0);
       expect(data.datetime).to.equal(datetime);
       expect(data.creationDate).to.equal(creationDatetime);
       expect(data.modificationDate).to.equal(data.creationDate);
     });
   });
 
-  describe('createBowelMovementEntry', () => {
+  describe.skip('createBowelMovementEntry', () => {
     it('should create a bowel movement entry', async () => {
       const creationDatetime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
@@ -136,10 +136,10 @@ describe('DiaryEntry database', function diaryEntryTests() {
         createBowelMovementEntry(input: $input) {
           id
           type
-            creationDate
-            modificationDate
-            datetime
-            bowelMovement { type, volume }
+          creationDate
+          modificationDate
+          datetime
+          bowelMovement { type, volume }
         }
         }`);
 
@@ -165,7 +165,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
     });
   });
 
-  describe('createDosageEntry', () => {
+  describe.skip('createDosageEntry', () => {
     it('should create a dosage entry', async () => {
       const creationDatetime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
@@ -174,10 +174,10 @@ describe('DiaryEntry database', function diaryEntryTests() {
         createDosageEntry(input: $input) {
           id
           type
-            creationDate
-            modificationDate
-            datetime
-            dosage { doses { medicine { name } } }
+          creationDate
+          modificationDate
+          datetime
+          doses { items { medicine { name } } }
         }
         }`);
 
@@ -199,7 +199,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
     });
   });
 
-  describe('createSymptomEntry', () => {
+  describe.skip('createSymptomEntry', () => {
     it('should create a symptom entry', async () => {
       const creationDatetime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
@@ -208,13 +208,13 @@ describe('DiaryEntry database', function diaryEntryTests() {
         createSymptomEntry(input: $input) {
           id
           type
-            creationDate
-            modificationDate
-            datetime
-            symptom { 
-              symptomType { name }
-              severity
-             }
+          creationDate
+          modificationDate
+          datetime
+          symptom { 
+            symptomType
+            severity
+            }
         }
         }`);
 
@@ -283,13 +283,11 @@ describe('DiaryEntry database', function diaryEntryTests() {
 
       const result = await API.graphql(
         graphqlOperation(deleteDiaryEntry, {
-          input: id,
+          input: { id },
         })
       );
       const data = result.data.deleteDiaryEntry;
-      expect(data.__typename).to.equal('DiaryEntry');
-      expect(data.nameId).to.equal(id.nameId);
-      expect(data.entryId).to.equal(id.entryId);
+      expect(data.id).to.equal(id);
     });
   });
 
@@ -306,8 +304,8 @@ describe('DiaryEntry database', function diaryEntryTests() {
         mutation UpdateDiaryEntry($input: UpdateDiaryEntryInput!) {
         updateDiaryEntry(input: $input) {
           id
-            modificationDate
-            datetime
+          modificationDate
+          datetime
         }
         }`);
 
@@ -315,8 +313,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
       const result = await API.graphql(
         graphqlOperation(updateDiaryEntry, {
           input: {
-            nameId: id.nameId,
-            entryId: id.entryId,
+            id,
             datetime: newDatetime,
             modificationDate: newDatetime,
           },
