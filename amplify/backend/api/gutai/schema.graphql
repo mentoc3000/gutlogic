@@ -3,7 +3,7 @@ type Food @model {
   name: String!
 }
 
-type Ingredient @model {
+type Ingredient @model @versioned {
   id: ID!
   food: Food @connection
   quantity: Quantity
@@ -20,7 +20,7 @@ type Medicine @model {
   name: String!
 }
 
-type Dose @model {
+type Dose @model @versioned {
   id: ID!
   medicine: Medicine @connection
   quantity: Quantity 
@@ -39,7 +39,7 @@ type DiaryEntry @model(
     get: "getDiaryEntry", 
     list: "listDiaryEntries"
   }
-) {
+) @versioned {
   id: ID!
   type: DiaryEntryType!
   createdAt: AWSDateTime

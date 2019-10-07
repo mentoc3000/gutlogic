@@ -54,7 +54,9 @@ export const getIngredient = `query GetIngredient($id: ID!) {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -81,7 +83,9 @@ export const listIngredients = `query ListIngredients(
         updatedAt
         datetime
         notes
+        version
       }
+      version
     }
     nextToken
   }
@@ -140,7 +144,9 @@ export const getDose = `query GetDose($id: ID!) {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -167,7 +173,9 @@ export const listDoses = `query ListDoses(
         updatedAt
         datetime
         notes
+        version
       }
+      version
     }
     nextToken
   }
@@ -183,6 +191,7 @@ export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -193,6 +202,7 @@ export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -201,6 +211,7 @@ export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -231,6 +242,7 @@ export const listDiaryEntries = `query ListDiaryEntries(
         severity
       }
       notes
+      version
     }
     nextToken
   }

@@ -54,7 +54,9 @@ export const onCreateIngredient = `subscription OnCreateIngredient {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -90,7 +92,9 @@ export const onUpdateIngredient = `subscription OnUpdateIngredient {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -126,7 +130,9 @@ export const onDeleteIngredient = `subscription OnDeleteIngredient {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -183,7 +189,9 @@ export const onCreateDose = `subscription OnCreateDose {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -219,7 +227,9 @@ export const onUpdateDose = `subscription OnUpdateDose {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -255,7 +265,9 @@ export const onDeleteDose = `subscription OnDeleteDose {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -269,6 +281,7 @@ export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -279,6 +292,7 @@ export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -287,6 +301,7 @@ export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -300,6 +315,7 @@ export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -310,6 +326,7 @@ export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -318,6 +335,7 @@ export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -331,6 +349,7 @@ export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -341,6 +360,7 @@ export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -349,6 +369,7 @@ export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
       severity
     }
     notes
+    version
   }
 }
 `;

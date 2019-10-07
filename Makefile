@@ -32,7 +32,7 @@ specfile = "./test/$(spec).spec.js"
 endif
 
 test: 
-	@ ./node_modules/mocha/bin/mocha $(specfile)
+	@ ./node_modules/mocha/bin/mocha $(specfile) --unhandled-rejections=strict
 
 user-pool-id:
 	@ make outputs \

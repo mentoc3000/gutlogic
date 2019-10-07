@@ -11,6 +11,7 @@ export const createMealEntry = `mutation CreateMealEntry($input: CreateMealEntry
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -21,6 +22,7 @@ export const createMealEntry = `mutation CreateMealEntry($input: CreateMealEntry
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -29,6 +31,7 @@ export const createMealEntry = `mutation CreateMealEntry($input: CreateMealEntry
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -42,6 +45,7 @@ export const createDosageEntry = `mutation CreateDosageEntry($input: CreateDosag
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -52,6 +56,7 @@ export const createDosageEntry = `mutation CreateDosageEntry($input: CreateDosag
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -60,6 +65,7 @@ export const createDosageEntry = `mutation CreateDosageEntry($input: CreateDosag
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -73,6 +79,7 @@ export const createSymptomEntry = `mutation CreateSymptomEntry($input: CreateSym
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -83,6 +90,7 @@ export const createSymptomEntry = `mutation CreateSymptomEntry($input: CreateSym
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -91,6 +99,7 @@ export const createSymptomEntry = `mutation CreateSymptomEntry($input: CreateSym
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -104,6 +113,7 @@ export const createBowelMovementEntry = `mutation CreateBowelMovementEntry($inpu
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -114,6 +124,7 @@ export const createBowelMovementEntry = `mutation CreateBowelMovementEntry($inpu
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -122,6 +133,7 @@ export const createBowelMovementEntry = `mutation CreateBowelMovementEntry($inpu
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -178,7 +190,9 @@ export const createIngredient = `mutation CreateIngredient($input: CreateIngredi
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -214,7 +228,9 @@ export const updateIngredient = `mutation UpdateIngredient($input: UpdateIngredi
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -250,7 +266,9 @@ export const deleteIngredient = `mutation DeleteIngredient($input: DeleteIngredi
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -307,7 +325,9 @@ export const createDose = `mutation CreateDose($input: CreateDoseInput!) {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -343,7 +363,9 @@ export const updateDose = `mutation UpdateDose($input: UpdateDoseInput!) {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -379,7 +401,9 @@ export const deleteDose = `mutation DeleteDose($input: DeleteDoseInput!) {
         severity
       }
       notes
+      version
     }
+    version
   }
 }
 `;
@@ -393,6 +417,7 @@ export const createDiaryEntry = `mutation CreateDiaryEntry($input: CreateDiaryEn
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -403,6 +428,7 @@ export const createDiaryEntry = `mutation CreateDiaryEntry($input: CreateDiaryEn
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -411,6 +437,7 @@ export const createDiaryEntry = `mutation CreateDiaryEntry($input: CreateDiaryEn
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -424,6 +451,7 @@ export const updateDiaryEntry = `mutation UpdateDiaryEntry($input: UpdateDiaryEn
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -434,6 +462,7 @@ export const updateDiaryEntry = `mutation UpdateDiaryEntry($input: UpdateDiaryEn
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -442,6 +471,7 @@ export const updateDiaryEntry = `mutation UpdateDiaryEntry($input: UpdateDiaryEn
       severity
     }
     notes
+    version
   }
 }
 `;
@@ -455,6 +485,7 @@ export const deleteDiaryEntry = `mutation DeleteDiaryEntry($input: DeleteDiaryEn
     ingredients {
       items {
         id
+        version
       }
       nextToken
     }
@@ -465,6 +496,7 @@ export const deleteDiaryEntry = `mutation DeleteDiaryEntry($input: DeleteDiaryEn
     doses {
       items {
         id
+        version
       }
       nextToken
     }
@@ -473,6 +505,7 @@ export const deleteDiaryEntry = `mutation DeleteDiaryEntry($input: DeleteDiaryEn
       severity
     }
     notes
+    version
   }
 }
 `;
