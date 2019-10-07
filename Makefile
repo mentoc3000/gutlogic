@@ -28,10 +28,10 @@ delete:
 ifndef spec
 specfile = 
 else
-specfile = "./test/$(spec).spec.js"
+specfile = "./test/amplify/$(spec).spec.js"
 endif
 
-test: 
+test-backend: 
 	@ ./node_modules/mocha/bin/mocha $(specfile) --unhandled-rejections=strict
 
 user-pool-id:
