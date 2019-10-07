@@ -155,20 +155,44 @@ const createMedicine = async name => {
   return createData.id;
 };
 
+const versionedTypes = ['Ingredient', 'Dose', 'DiaryEntry'];
+
 const clearItems = async () => {
-  createdItems.forEach(async item => {
-    const mutation = gql(`
-          mutation Delete${item.type}($input: Delete${item.type}Input!) {
-          delete${item.type}(input: $input) {
-            id
+  // createdItems.forEach(async item => {
+  for (let index = 0; index < createdItems.length; index++) {
+    const item = createdItems[index];
+    let input;
+    if (versionedTypes.includes(item.type)) {
+      // Add version to mutation input if necessary
+      const query = gql(`
+        query Get${item.type}($id: ID!) {
+          get${item.type}(id: $id) {
+            version
           }
-          }`);
-    API.graphql(
-      graphqlOperation(mutation, {
-        input: { id: item.id },
-      })
-    );
-  });
+        }`);
+      const result = await API.graphql(
+        graphqlOperation(query, { id: item.id })
+      );
+      const info = result.data[`get${item.type}`];
+      if (info == null) {
+        // item has already been deleted
+        break;
+      }
+      input = {
+        id: item.id,
+        expectedVersion: info.version,
+      };
+    } else {
+      input = { id: item.id };
+    }
+    const mutation = gql(`
+      mutation Delete${item.type}($input: Delete${item.type}Input!) {
+      delete${item.type}(input: $input) {
+        id
+      }
+      }`);
+    await API.graphql(graphqlOperation(mutation, { input }));
+  }
   createdItems = [];
 };
 
