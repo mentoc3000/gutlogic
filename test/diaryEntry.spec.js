@@ -95,7 +95,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
 
   describe('createMealEntry', () => {
     it('should create a meal entry', async () => {
-      const createdAttime = '2019-07-02T12:40:00Z';
+      const createdAtTime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
       const mutation = gql(`
         mutation CreateMealEntry($input: CreateMealEntryInput!) {
@@ -112,7 +112,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
       const result = await API.graphql(
         graphqlOperation(mutation, {
           input: {
-            createdAt: createdAttime,
+            createdAt: createdAtTime,
             datetime,
           },
         })
@@ -122,13 +122,13 @@ describe('DiaryEntry database', function diaryEntryTests() {
       expect(data.ingredients.items).to.be.array();
       expect(data.ingredients.items.length).to.equal(0);
       expect(data.datetime).to.equal(datetime);
-      expect(data.createdAt).to.equal(createdAttime);
+      expect(data.createdAt).to.equal(createdAtTime);
     });
   });
 
-  describe.skip('createBowelMovementEntry', () => {
+  describe('createBowelMovementEntry', () => {
     it('should create a bowel movement entry', async () => {
-      const createdAttime = '2019-07-02T12:40:00Z';
+      const createdAtTime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
       const mutation = gql(`
         mutation CreateBowelMovementEntry($input: CreateBowelMovementEntryInput!) {
@@ -145,7 +145,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
       const result = await API.graphql(
         graphqlOperation(mutation, {
           input: {
-            createdAt: createdAttime,
+            createdAt: createdAtTime,
             datetime,
             bowelMovement: {
               type: 3,
@@ -159,14 +159,13 @@ describe('DiaryEntry database', function diaryEntryTests() {
       expect(data.bowelMovement.type).to.equal(3);
       expect(data.bowelMovement.volume).to.equal(4);
       expect(data.datetime).to.equal(datetime);
-      expect(data.createdAt).to.equal(createdAttime);
-      expect(data.updatedAt).to.equal(data.createdAt);
+      expect(data.createdAt).to.equal(createdAtTime);
     });
   });
 
-  describe.skip('createDosageEntry', () => {
+  describe('createDosageEntry', () => {
     it('should create a dosage entry', async () => {
-      const createdAttime = '2019-07-02T12:40:00Z';
+      const createdAtTime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
       const mutation = gql(`
         mutation CreateDosageEntry($input: CreateDosageEntryInput!) {
@@ -183,24 +182,23 @@ describe('DiaryEntry database', function diaryEntryTests() {
       const result = await API.graphql(
         graphqlOperation(mutation, {
           input: {
-            createdAt: createdAttime,
+            createdAt: createdAtTime,
             datetime,
           },
         })
       );
       const data = result.data.createDosageEntry;
       expect(data.type).to.equal('DOSAGE');
-      expect(data.doses).to.be.array();
-      expect(data.doses.length).to.equal(0);
+      expect(data.doses.items).to.be.array();
+      expect(data.doses.items.length).to.equal(0);
       expect(data.datetime).to.equal(datetime);
-      expect(data.createdAt).to.equal(createdAttime);
-      expect(data.updatedAt).to.equal(data.createdAt);
+      expect(data.createdAt).to.equal(createdAtTime);
     });
   });
 
-  describe.skip('createSymptomEntry', () => {
+  describe('createSymptomEntry', () => {
     it('should create a symptom entry', async () => {
-      const createdAttime = '2019-07-02T12:40:00Z';
+      const createdAtTime = '2019-07-02T12:40:00Z';
       const datetime = '2019-07-02T12:43:00Z';
       const mutation = gql(`
         mutation CreateSymptomEntry($input: CreateSymptomEntryInput!) {
@@ -220,10 +218,10 @@ describe('DiaryEntry database', function diaryEntryTests() {
       const result = await API.graphql(
         graphqlOperation(mutation, {
           input: {
-            createdAt: createdAttime,
+            createdAt: createdAtTime,
             datetime,
             symptom: {
-              symptomType: { name: 'Gas' },
+              symptomType: 'Gas',
               severity: 4.3,
             },
           },
@@ -232,9 +230,8 @@ describe('DiaryEntry database', function diaryEntryTests() {
       const data = result.data.createSymptomEntry;
       expect(data.type).to.equal('SYMPTOM');
       expect(data.datetime).to.equal(datetime);
-      expect(data.createdAt).to.equal(createdAttime);
-      expect(data.updatedAt).to.equal(data.createdAt);
-      expect(data.symptom.symptomType.name).to.equal('Gas');
+      expect(data.createdAt).to.equal(createdAtTime);
+      expect(data.symptom.symptomType).to.equal('Gas');
       expect(data.symptom.severity).to.equal(4.3);
     });
   });

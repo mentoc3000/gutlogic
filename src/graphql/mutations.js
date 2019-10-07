@@ -32,6 +32,99 @@ export const createMealEntry = `mutation CreateMealEntry($input: CreateMealEntry
   }
 }
 `;
+export const createDosageEntry = `mutation CreateDosageEntry($input: CreateDosageEntryInput!) {
+  createDosageEntry(input: $input) {
+    id
+    type
+    createdAt
+    updatedAt
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
+export const createSymptomEntry = `mutation CreateSymptomEntry($input: CreateSymptomEntryInput!) {
+  createSymptomEntry(input: $input) {
+    id
+    type
+    createdAt
+    updatedAt
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
+export const createBowelMovementEntry = `mutation CreateBowelMovementEntry($input: CreateBowelMovementEntryInput!) {
+  createBowelMovementEntry(input: $input) {
+    id
+    type
+    createdAt
+    updatedAt
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
 export const createFood = `mutation CreateFood($input: CreateFoodInput!) {
   createFood(input: $input) {
     id

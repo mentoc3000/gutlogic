@@ -31,7 +31,7 @@ enum DiaryEntryType {
   MEAL,
   BOWELMOVEMENT,
   DOSAGE,
-  SYPMTOM
+  SYMPTOM
 }
 
 type DiaryEntry @model(
@@ -62,8 +62,21 @@ type Symptom {
   severity: Float
 }
 
+input BowelMovementInput {
+  type: Int
+  volume: Int
+}
+
+input SymptomInput {
+  symptomType: String
+  severity: Float
+}
+
 type Mutation {
   createMealEntry(input: CreateMealEntryInput!): DiaryEntry
+  createDosageEntry(input: CreateDosageEntryInput!): DiaryEntry
+  createSymptomEntry(input: CreateSymptomEntryInput!): DiaryEntry
+  createBowelMovementEntry(input: CreateBowelMovementEntryInput!): DiaryEntry
 }
 
 input CreateMealEntryInput {
@@ -71,5 +84,31 @@ input CreateMealEntryInput {
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
   datetime: AWSDateTime
+  notes: String
+}
+
+input CreateDosageEntryInput {
+  id: ID
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  datetime: AWSDateTime
+  notes: String
+}
+
+input CreateSymptomEntryInput {
+  id: ID
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  datetime: AWSDateTime
+  symptom: SymptomInput
+  notes: String
+}
+
+input CreateBowelMovementEntryInput {
+  id: ID
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  datetime: AWSDateTime
+  bowelMovement: BowelMovementInput
   notes: String
 }
