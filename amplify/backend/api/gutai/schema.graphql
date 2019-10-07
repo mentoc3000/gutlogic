@@ -3,7 +3,7 @@ type Food @model {
   name: String!
 }
 
-type Ingredient @model @versioned {
+type Ingredient @model @versioned @auth(rules: [{ allow: owner }]) {
   id: ID!
   food: Food @connection
   quantity: Quantity
@@ -20,26 +20,24 @@ type Medicine @model {
   name: String!
 }
 
-type Dose @model @versioned {
+type Dose @model @versioned @auth(rules: [{ allow: owner }]) {
   id: ID!
   medicine: Medicine @connection
-  quantity: Quantity 
+  quantity: Quantity
   diaryEntry: DiaryEntry! @connection(name: "DiaryEntryDoses")
 }
 
 enum DiaryEntryType {
-  MEAL,
-  BOWELMOVEMENT,
-  DOSAGE,
+  MEAL
+  BOWELMOVEMENT
+  DOSAGE
   SYMPTOM
 }
 
-type DiaryEntry @model(
-  queries: { 
-    get: "getDiaryEntry", 
-    list: "listDiaryEntries"
-  }
-) @versioned {
+type DiaryEntry
+  @model(queries: { get: "getDiaryEntry", list: "listDiaryEntries" })
+  @versioned
+  @auth(rules: [{ allow: owner }]) {
   id: ID!
   type: DiaryEntryType!
   createdAt: AWSDateTime

@@ -22,8 +22,8 @@ export const onDeleteFood = `subscription OnDeleteFood {
   }
 }
 `;
-export const onCreateIngredient = `subscription OnCreateIngredient {
-  onCreateIngredient {
+export const onCreateIngredient = `subscription OnCreateIngredient($owner: String!) {
+  onCreateIngredient(owner: $owner) {
     id
     food {
       id
@@ -55,13 +55,15 @@ export const onCreateIngredient = `subscription OnCreateIngredient {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
-export const onUpdateIngredient = `subscription OnUpdateIngredient {
-  onUpdateIngredient {
+export const onUpdateIngredient = `subscription OnUpdateIngredient($owner: String!) {
+  onUpdateIngredient(owner: $owner) {
     id
     food {
       id
@@ -93,13 +95,15 @@ export const onUpdateIngredient = `subscription OnUpdateIngredient {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
-export const onDeleteIngredient = `subscription OnDeleteIngredient {
-  onDeleteIngredient {
+export const onDeleteIngredient = `subscription OnDeleteIngredient($owner: String!) {
+  onDeleteIngredient(owner: $owner) {
     id
     food {
       id
@@ -131,8 +135,10 @@ export const onDeleteIngredient = `subscription OnDeleteIngredient {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -157,8 +163,8 @@ export const onDeleteMedicine = `subscription OnDeleteMedicine {
   }
 }
 `;
-export const onCreateDose = `subscription OnCreateDose {
-  onCreateDose {
+export const onCreateDose = `subscription OnCreateDose($owner: String!) {
+  onCreateDose(owner: $owner) {
     id
     medicine {
       id
@@ -190,13 +196,15 @@ export const onCreateDose = `subscription OnCreateDose {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
-export const onUpdateDose = `subscription OnUpdateDose {
-  onUpdateDose {
+export const onUpdateDose = `subscription OnUpdateDose($owner: String!) {
+  onUpdateDose(owner: $owner) {
     id
     medicine {
       id
@@ -228,13 +236,15 @@ export const onUpdateDose = `subscription OnUpdateDose {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
-export const onDeleteDose = `subscription OnDeleteDose {
-  onDeleteDose {
+export const onDeleteDose = `subscription OnDeleteDose($owner: String!) {
+  onDeleteDose(owner: $owner) {
     id
     medicine {
       id
@@ -266,13 +276,15 @@ export const onDeleteDose = `subscription OnDeleteDose {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
-export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
-  onCreateDiaryEntry {
+export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry($owner: String!) {
+  onCreateDiaryEntry(owner: $owner) {
     id
     type
     createdAt
@@ -282,6 +294,7 @@ export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -293,6 +306,7 @@ export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -302,11 +316,12 @@ export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
     }
     notes
     version
+    owner
   }
 }
 `;
-export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
-  onUpdateDiaryEntry {
+export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry($owner: String!) {
+  onUpdateDiaryEntry(owner: $owner) {
     id
     type
     createdAt
@@ -316,6 +331,7 @@ export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -327,6 +343,7 @@ export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -336,11 +353,12 @@ export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
     }
     notes
     version
+    owner
   }
 }
 `;
-export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
-  onDeleteDiaryEntry {
+export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry($owner: String!) {
+  onDeleteDiaryEntry(owner: $owner) {
     id
     type
     createdAt
@@ -350,6 +368,7 @@ export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -361,6 +380,7 @@ export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -370,6 +390,7 @@ export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
     }
     notes
     version
+    owner
   }
 }
 `;

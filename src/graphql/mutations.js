@@ -12,6 +12,7 @@ export const createMealEntry = `mutation CreateMealEntry($input: CreateMealEntry
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -23,6 +24,7 @@ export const createMealEntry = `mutation CreateMealEntry($input: CreateMealEntry
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -32,6 +34,7 @@ export const createMealEntry = `mutation CreateMealEntry($input: CreateMealEntry
     }
     notes
     version
+    owner
   }
 }
 `;
@@ -46,6 +49,7 @@ export const createDosageEntry = `mutation CreateDosageEntry($input: CreateDosag
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -57,6 +61,7 @@ export const createDosageEntry = `mutation CreateDosageEntry($input: CreateDosag
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -66,6 +71,7 @@ export const createDosageEntry = `mutation CreateDosageEntry($input: CreateDosag
     }
     notes
     version
+    owner
   }
 }
 `;
@@ -80,6 +86,7 @@ export const createSymptomEntry = `mutation CreateSymptomEntry($input: CreateSym
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -91,6 +98,7 @@ export const createSymptomEntry = `mutation CreateSymptomEntry($input: CreateSym
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -100,6 +108,7 @@ export const createSymptomEntry = `mutation CreateSymptomEntry($input: CreateSym
     }
     notes
     version
+    owner
   }
 }
 `;
@@ -114,6 +123,7 @@ export const createBowelMovementEntry = `mutation CreateBowelMovementEntry($inpu
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -125,6 +135,7 @@ export const createBowelMovementEntry = `mutation CreateBowelMovementEntry($inpu
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -134,6 +145,7 @@ export const createBowelMovementEntry = `mutation CreateBowelMovementEntry($inpu
     }
     notes
     version
+    owner
   }
 }
 `;
@@ -191,8 +203,10 @@ export const createIngredient = `mutation CreateIngredient($input: CreateIngredi
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -229,8 +243,10 @@ export const updateIngredient = `mutation UpdateIngredient($input: UpdateIngredi
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -267,8 +283,10 @@ export const deleteIngredient = `mutation DeleteIngredient($input: DeleteIngredi
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -326,8 +344,10 @@ export const createDose = `mutation CreateDose($input: CreateDoseInput!) {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -364,8 +384,10 @@ export const updateDose = `mutation UpdateDose($input: UpdateDoseInput!) {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -402,8 +424,10 @@ export const deleteDose = `mutation DeleteDose($input: DeleteDoseInput!) {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -418,6 +442,7 @@ export const createDiaryEntry = `mutation CreateDiaryEntry($input: CreateDiaryEn
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -429,6 +454,7 @@ export const createDiaryEntry = `mutation CreateDiaryEntry($input: CreateDiaryEn
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -438,6 +464,7 @@ export const createDiaryEntry = `mutation CreateDiaryEntry($input: CreateDiaryEn
     }
     notes
     version
+    owner
   }
 }
 `;
@@ -452,6 +479,7 @@ export const updateDiaryEntry = `mutation UpdateDiaryEntry($input: UpdateDiaryEn
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -463,6 +491,7 @@ export const updateDiaryEntry = `mutation UpdateDiaryEntry($input: UpdateDiaryEn
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -472,6 +501,7 @@ export const updateDiaryEntry = `mutation UpdateDiaryEntry($input: UpdateDiaryEn
     }
     notes
     version
+    owner
   }
 }
 `;
@@ -486,6 +516,7 @@ export const deleteDiaryEntry = `mutation DeleteDiaryEntry($input: DeleteDiaryEn
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -497,6 +528,7 @@ export const deleteDiaryEntry = `mutation DeleteDiaryEntry($input: DeleteDiaryEn
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -506,6 +538,7 @@ export const deleteDiaryEntry = `mutation DeleteDiaryEntry($input: DeleteDiaryEn
     }
     notes
     version
+    owner
   }
 }
 `;

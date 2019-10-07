@@ -55,8 +55,10 @@ export const getIngredient = `query GetIngredient($id: ID!) {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -84,8 +86,10 @@ export const listIngredients = `query ListIngredients(
         datetime
         notes
         version
+        owner
       }
       version
+      owner
     }
     nextToken
   }
@@ -145,8 +149,10 @@ export const getDose = `query GetDose($id: ID!) {
       }
       notes
       version
+      owner
     }
     version
+    owner
   }
 }
 `;
@@ -174,8 +180,10 @@ export const listDoses = `query ListDoses(
         datetime
         notes
         version
+        owner
       }
       version
+      owner
     }
     nextToken
   }
@@ -192,6 +200,7 @@ export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -203,6 +212,7 @@ export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
       items {
         id
         version
+        owner
       }
       nextToken
     }
@@ -212,6 +222,7 @@ export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
     }
     notes
     version
+    owner
   }
 }
 `;
@@ -243,6 +254,7 @@ export const listDiaryEntries = `query ListDiaryEntries(
       }
       notes
       version
+      owner
     }
     nextToken
   }
