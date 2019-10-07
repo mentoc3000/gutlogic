@@ -1,4 +1,4 @@
-type Food @model {
+type Food @model @auth(rules: [{ allow: private }]) {
   id: ID!
   name: String!
 }
@@ -15,7 +15,7 @@ type Quantity {
   unit: String
 }
 
-type Medicine @model {
+type Medicine @model @auth(rules: [{ allow: private }]) {
   id: ID!
   name: String!
 }
