@@ -36,8 +36,8 @@ export const getIngredient = `query GetIngredient($id: ID!) {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -77,8 +77,8 @@ export const listIngredients = `query ListIngredients(
       diaryEntry {
         id
         type
-        creationDate
-        modificationDate
+        createdAt
+        updatedAt
         datetime
         notes
       }
@@ -122,8 +122,8 @@ export const getDose = `query GetDose($id: ID!) {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -163,8 +163,8 @@ export const listDoses = `query ListDoses(
       diaryEntry {
         id
         type
-        creationDate
-        modificationDate
+        createdAt
+        updatedAt
         datetime
         notes
       }
@@ -177,8 +177,8 @@ export const getDiaryEntry = `query GetDiaryEntry($id: ID!) {
   getDiaryEntry(id: $id) {
     id
     type
-    creationDate
-    modificationDate
+    createdAt
+    updatedAt
     datetime
     ingredients {
       items {
@@ -213,8 +213,8 @@ export const listDiaryEntries = `query ListDiaryEntries(
     items {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken

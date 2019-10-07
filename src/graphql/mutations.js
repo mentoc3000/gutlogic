@@ -1,6 +1,37 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createMealEntry = `mutation CreateMealEntry($input: CreateMealEntryInput!) {
+  createMealEntry(input: $input) {
+    id
+    type
+    createdAt
+    updatedAt
+    datetime
+    ingredients {
+      items {
+        id
+      }
+      nextToken
+    }
+    bowelMovement {
+      type
+      volume
+    }
+    doses {
+      items {
+        id
+      }
+      nextToken
+    }
+    symptom {
+      symptomType
+      severity
+    }
+    notes
+  }
+}
+`;
 export const createFood = `mutation CreateFood($input: CreateFoodInput!) {
   createFood(input: $input) {
     id
@@ -36,8 +67,8 @@ export const createIngredient = `mutation CreateIngredient($input: CreateIngredi
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -72,8 +103,8 @@ export const updateIngredient = `mutation UpdateIngredient($input: UpdateIngredi
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -108,8 +139,8 @@ export const deleteIngredient = `mutation DeleteIngredient($input: DeleteIngredi
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -165,8 +196,8 @@ export const createDose = `mutation CreateDose($input: CreateDoseInput!) {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -201,8 +232,8 @@ export const updateDose = `mutation UpdateDose($input: UpdateDoseInput!) {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -237,8 +268,8 @@ export const deleteDose = `mutation DeleteDose($input: DeleteDoseInput!) {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -263,8 +294,8 @@ export const createDiaryEntry = `mutation CreateDiaryEntry($input: CreateDiaryEn
   createDiaryEntry(input: $input) {
     id
     type
-    creationDate
-    modificationDate
+    createdAt
+    updatedAt
     datetime
     ingredients {
       items {
@@ -294,8 +325,8 @@ export const updateDiaryEntry = `mutation UpdateDiaryEntry($input: UpdateDiaryEn
   updateDiaryEntry(input: $input) {
     id
     type
-    creationDate
-    modificationDate
+    createdAt
+    updatedAt
     datetime
     ingredients {
       items {
@@ -325,8 +356,8 @@ export const deleteDiaryEntry = `mutation DeleteDiaryEntry($input: DeleteDiaryEn
   deleteDiaryEntry(input: $input) {
     id
     type
-    creationDate
-    modificationDate
+    createdAt
+    updatedAt
     datetime
     ingredients {
       items {

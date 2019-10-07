@@ -42,8 +42,8 @@ type DiaryEntry @model(
 ) {
   id: ID!
   type: DiaryEntryType!
-  creationDate: AWSDateTime
-  modificationDate: AWSDateTime
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
   datetime: AWSDateTime
   ingredients: [Ingredient] @connection(name: "DiaryEntryIngredients")
   bowelMovement: BowelMovement
@@ -60,4 +60,16 @@ type BowelMovement {
 type Symptom {
   symptomType: String
   severity: Float
+}
+
+type Mutation {
+  createMealEntry(input: CreateMealEntryInput!): DiaryEntry
+}
+
+input CreateMealEntryInput {
+  id: ID
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  datetime: AWSDateTime
+  notes: String
 }

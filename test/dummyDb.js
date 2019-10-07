@@ -94,8 +94,8 @@ const createDosageEntry = async datetime => {
     graphqlOperation(mutation, {
       input: {
         type: 'DOSAGE',
-        creationDate: datetime,
-        modificationDate: datetime,
+        createdAt: datetime,
+        updatedAt: datetime,
         datetime,
       },
     })
@@ -120,8 +120,8 @@ const createMealEntry = async datetime => {
     graphqlOperation(mutation, {
       input: {
         type: 'MEAL',
-        creationDate: datetime,
-        modificationDate: datetime,
+        createdAt: datetime,
+        updatedAt: datetime,
         datetime,
       },
     })

@@ -36,8 +36,8 @@ export const onCreateIngredient = `subscription OnCreateIngredient {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -72,8 +72,8 @@ export const onUpdateIngredient = `subscription OnUpdateIngredient {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -108,8 +108,8 @@ export const onDeleteIngredient = `subscription OnDeleteIngredient {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -165,8 +165,8 @@ export const onCreateDose = `subscription OnCreateDose {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -201,8 +201,8 @@ export const onUpdateDose = `subscription OnUpdateDose {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -237,8 +237,8 @@ export const onDeleteDose = `subscription OnDeleteDose {
     diaryEntry {
       id
       type
-      creationDate
-      modificationDate
+      createdAt
+      updatedAt
       datetime
       ingredients {
         nextToken
@@ -263,8 +263,8 @@ export const onCreateDiaryEntry = `subscription OnCreateDiaryEntry {
   onCreateDiaryEntry {
     id
     type
-    creationDate
-    modificationDate
+    createdAt
+    updatedAt
     datetime
     ingredients {
       items {
@@ -294,8 +294,8 @@ export const onUpdateDiaryEntry = `subscription OnUpdateDiaryEntry {
   onUpdateDiaryEntry {
     id
     type
-    creationDate
-    modificationDate
+    createdAt
+    updatedAt
     datetime
     ingredients {
       items {
@@ -325,8 +325,8 @@ export const onDeleteDiaryEntry = `subscription OnDeleteDiaryEntry {
   onDeleteDiaryEntry {
     id
     type
-    creationDate
-    modificationDate
+    createdAt
+    updatedAt
     datetime
     ingredients {
       items {
