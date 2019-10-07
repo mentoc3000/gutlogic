@@ -155,7 +155,12 @@ describe('Ingredient database', () => {
         }`);
 
       const result = await API.graphql(
-        graphqlOperation(deleteIngredient, { input: { id: ingredientId } })
+        graphqlOperation(deleteIngredient, {
+          input: {
+            id: ingredientId,
+            expectedVersion: 1,
+          },
+        })
       );
       const data = result.data.deleteIngredient;
       expect(data.id).to.equal(ingredientId);
@@ -190,6 +195,7 @@ describe('Ingredient database', () => {
         updateIngredient(input: $input) {
           id
           quantity { amount }
+          version
         }
         }`);
 
@@ -199,6 +205,7 @@ describe('Ingredient database', () => {
         graphqlOperation(updateIngredient, {
           input: {
             id: ingredientId,
+            expectedVersion: 1,
             quantity: {
               amount: newAmount,
             },
@@ -207,6 +214,7 @@ describe('Ingredient database', () => {
       );
       const data = result.data.updateIngredient;
       expect(data.quantity.amount).to.equal(newAmount);
+      expect(data.version).to.equal(2);
     });
   });
 });

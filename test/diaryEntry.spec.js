@@ -279,7 +279,10 @@ describe('DiaryEntry database', function diaryEntryTests() {
 
       const result = await API.graphql(
         graphqlOperation(deleteDiaryEntry, {
-          input: { id },
+          input: {
+            id,
+            expectedVersion: 1,
+          },
         })
       );
       const data = result.data.deleteDiaryEntry;
@@ -300,6 +303,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
         mutation UpdateDiaryEntry($input: UpdateDiaryEntryInput!) {
         updateDiaryEntry(input: $input) {
           id
+          version
           updatedAt
           datetime
         }
@@ -310,6 +314,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
         graphqlOperation(updateDiaryEntry, {
           input: {
             id,
+            expectedVersion: 1,
             datetime: newDatetime,
             updatedAt: newDatetime,
           },
@@ -318,6 +323,7 @@ describe('DiaryEntry database', function diaryEntryTests() {
       const data = result.data.updateDiaryEntry;
       expect(data.datetime).to.equal(newDatetime);
       expect(data.updatedAt).to.equal(newDatetime);
+      expect(data.version).to.equal(2);
     });
   });
 });
