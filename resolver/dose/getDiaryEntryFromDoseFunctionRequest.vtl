@@ -1,8 +1,0 @@
-{
-  "version": "2018-05-29",
-  "operation": "GetItem",
-  "key": {
-    "nameId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.dosageEntryId.nameId}),
-    "entryId": $util.dynamodb.toDynamoDBJson(${ctx.prev.result.dosageEntryId.entryId}),
-  },
-}
