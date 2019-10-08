@@ -1,9 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
-@immutable
 abstract class SearchableEvent extends Equatable {
-  SearchableEvent([List props = const []]) : super(props);
+  @override
+  List<Object> get props => [];
 }
 
 class FetchAll extends SearchableEvent {
@@ -14,7 +13,10 @@ class FetchAll extends SearchableEvent {
 class FetchQuery extends SearchableEvent {
   final String query;
 
-  FetchQuery(this.query) : super([query]);
+  FetchQuery(this.query);
+
+  @override
+  List<Object> get props => [query];
 
   @override
   String toString() => 'FetchQuery { query: $query }';

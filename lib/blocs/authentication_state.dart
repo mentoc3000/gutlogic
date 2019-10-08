@@ -1,7 +1,10 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class AuthenticationState extends Equatable {}
+abstract class AuthenticationState extends Equatable {
+  @override
+  List<Object> get props => [];
+}
 
 class AuthenticationUninitialized extends AuthenticationState {
   @override

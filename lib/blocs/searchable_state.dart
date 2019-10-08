@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 import 'package:built_collection/built_collection.dart';
 import '../models/model_interfaces.dart';
 
-@immutable
 abstract class SearchableState extends Equatable {
-  SearchableState([List props = const []]) : super(props);
+  @override
+  List<Object> get props => [];
 }
 
 class SearchableLoading extends SearchableState {
@@ -16,7 +15,10 @@ class SearchableLoading extends SearchableState {
 class SearchableLoaded<T extends Searchable> extends SearchableState {
   final BuiltList<T> items;
 
-  SearchableLoaded([this.items]) : super([items]);
+  SearchableLoaded([this.items]);
+
+  @override
+  List<Object> get props => [items];
 
   @override
   String toString() => 'SearchableLoaded { Searchable: ${items.length} }';

@@ -1,8 +1,12 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
+// TODO: add constant contructors. See last point here:
+// https://github.com/felangel/equatable/blob/master/doc/migration_guides/migration-0.6.0.md
+
 abstract class AuthenticationEvent extends Equatable {
-  AuthenticationEvent([List props = const []]) : super(props);
+  @override
+  List<Object> get props => [];
 }
 
 class AppStarted extends AuthenticationEvent {
@@ -31,7 +35,10 @@ class Reauthenticate extends AuthenticationEvent {
 class Confirm extends AuthenticationEvent {
   final String username;
 
-  Confirm({@required this.username}) : super([username]);
+  Confirm({@required this.username});
+
+  @override
+  List<Object> get props => [username];
 
   @override
   String toString() => 'Confirm';

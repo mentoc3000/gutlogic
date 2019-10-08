@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:meta/meta.dart';
 import '../models/medicine.dart';
 
-@immutable
 abstract class MedicinesState extends Equatable {
-  MedicinesState([List props = const []]) : super(props);
+  @override
+  List<Object> get props => [];
 }
 
 class InitialMedicineState extends MedicinesState {}
@@ -23,9 +22,10 @@ class MedicinesError extends MedicinesState {
 class MedicinesLoaded extends MedicinesState {
   final BuiltList<Medicine> medicines;
 
-  MedicinesLoaded({
-    this.medicines,
-  }) : super([medicines]);
+  MedicinesLoaded({this.medicines});
+
+  @override
+  List<Object> get props => [medicines];
 
   MedicinesLoaded copyWith({
     BuiltList<Medicine> medicines,
