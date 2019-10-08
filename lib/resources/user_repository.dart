@@ -5,10 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amazon_cognito_identity_dart/cognito.dart';
 
 // Setup AWS User Pool Id & Client Id settings here:
-const _awsUserPoolId = 'us-east-1_cUSIiRhO3'; // "UserPoolId"
-const _awsClientId = '7a8qhbu3d5kddqui69l0a42uh6'; // "UserPoolClientId"
+const _awsUserPoolId = 'us-east-1_oaqINGrgZ'; // "UserPoolId"
+const _awsClientId = '7g89vc37d3pc441ou4iqlb8erq'; // "UserPoolClientId"
 
-const _identityPoolId = 'us-east-1:9297f8fa-ccc1-4349-9625-044008a59137'; // "IdentityPoolId"
+const _identityPoolId = 'us-east-1:c8d0392f-2ecb-49eb-b5c1-926d2dd868ad'; // "IdentityPoolId"
 
 /// Extend CognitoStorage with Shared Preferences to persist account
 /// login sessions

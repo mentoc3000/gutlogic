@@ -7,8 +7,7 @@ import 'dart:convert';
 class AppSyncService {
   static final _region = 'us-east-1';
   static final _endpoint =
-      'https://ndxzbvrlwfeerat5rz27xmj2ea.appsync-api.us-east-1.amazonaws.com/graphql'; // "GraphQLApiEndpoint"
-  static final _apiId = 'a5qr2ygtl5a6vc73ld5wky5j2e'; // "GraphQLApiId"
+      'https://vaakik5q2fguvg5q2ibwmhblo4.appsync-api.us-east-1.amazonaws.com/graphql'; // "GraphQLApiEndpoint"
 
   CognitoUserSession session;
 
