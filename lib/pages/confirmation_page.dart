@@ -81,6 +81,7 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
   final _confirmationCodeController = TextEditingController();
 
   String get _username => widget.username;
+  // TODO: have LoginBloc provided by parent widget
   LoginBloc get _loginBloc => widget.loginBloc;
 
   @override
