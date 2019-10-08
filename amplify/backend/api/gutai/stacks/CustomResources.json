@@ -33,7 +33,7 @@
 		},
 
     "MutationCreateMealEntryResolver": {
-      "Type": "AWS::AppSync::Resolver",
+      "Type": "AWS::AppSync::Resolver", 
       "Properties": {
         "ApiId": {
           "Ref": "AppSyncApiId"
