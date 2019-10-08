@@ -24,7 +24,7 @@ void main() {
       when(diaryEntryBloc.currentState).thenAnswer((_) => DatabaseLoading());
 
       Widget diaryPage = BlocProvider(
-        bloc: diaryEntryBloc,
+        builder: (BuildContext context) => diaryEntryBloc,
         child: MaterialApp(
           home: DiaryPage(),
         ),
@@ -50,7 +50,7 @@ void main() {
           ])));
 
       Widget diaryPage = BlocProvider(
-        bloc: diaryEntryBloc,
+        builder: (BuildContext context) => diaryEntryBloc,
         child: MaterialApp(
           home: DiaryPage(),
         ),
@@ -66,7 +66,7 @@ void main() {
       when(diaryEntryBloc.currentState).thenAnswer((_) => DatabaseError());
 
       Widget diaryPage = BlocProvider(
-        bloc: diaryEntryBloc,
+        builder: (BuildContext context) => diaryEntryBloc,
         child: MaterialApp(
           home: DiaryPage(),
         ),

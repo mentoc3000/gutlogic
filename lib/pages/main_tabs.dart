@@ -95,12 +95,12 @@ class _TabbedState extends State<Tabbed> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProviderTree(
-      blocProviders: [
-        BlocProvider<FoodBloc>(bloc: _foodBloc),
-        BlocProvider<MedicineBloc>(bloc: _medicineBloc),
-        BlocProvider<SymptomTypeBloc>(bloc: _symptomTypeBloc),
-        BlocProvider<DiaryEntryBloc>(bloc: _diaryEntryBloc),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<FoodBloc>(builder: (BuildContext context) => _foodBloc),
+        BlocProvider<MedicineBloc>(builder: (BuildContext context) => _medicineBloc),
+        BlocProvider<SymptomTypeBloc>(builder: (BuildContext context) => _symptomTypeBloc),
+        BlocProvider<DiaryEntryBloc>(builder: (BuildContext context) => _diaryEntryBloc),
       ],
       child: BlocBuilder(
         bloc: _tabBloc,
