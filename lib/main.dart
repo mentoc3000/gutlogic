@@ -72,7 +72,7 @@ class _AppState extends State<App> {
     return BlocProvider<AuthenticationBloc>(
       bloc: _authenticationBloc,
       child: MaterialApp(
-        home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
+        home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           bloc: _authenticationBloc,
           builder: (BuildContext context, AuthenticationState state) {
             if (state is AuthenticationUninitialized) {

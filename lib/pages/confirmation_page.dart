@@ -85,7 +85,7 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginEvent, LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
       bloc: _loginBloc,
       builder: (
         BuildContext context,
