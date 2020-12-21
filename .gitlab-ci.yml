@@ -20,6 +20,8 @@ workflow:
 
 compliance:
   stage: check
+  tags:
+    - docker
   script:
     - echo "Running compliance job to enable merge requests."
   rules:
@@ -195,7 +197,7 @@ screenshots:ios:
     - git clone https://github.com/mmcc007/screenshots.git
     - cd screenshots
     - git checkout 169_global_preferences
-    - pub global activate --source path .
+    - flutter pub global activate --source path .
     - cd ../client
     - screenshots --flavor=$FLUTTER_FLAVOR --config=test_driver/screenshots/ios_screenshots.yaml
   allow_failure: true
