@@ -1,0 +1,29 @@
+# A list of screen capture tests
+tests:
+  # Note: flutter driver expects a pair of files eg, main1.dart and main1_test.dart
+  - test_driver/screenshots/screenshots.dart
+
+# Interim location of screenshots from tests
+staging: /tmp/screenshots
+
+# A list of locales supported by the app
+locales:
+  - en-US
+  # - de-DE
+
+# A map of devices to emulate
+devices:
+  ios:
+    iPhone 11 Pro Max: # 6.5 inch
+    # iPhone 11 Pro: # 5.8 inch
+    iPhone 8 Plus: # 5.5 inch
+    # iPhone 8: # 4.7 inch
+    # iPhone SE (2nd generation): # 4 inch
+    iPad Pro (12.9-inch) (3rd generation): # 12.9 inch (both are requried)
+    iPad Pro (12.9-inch) (2nd generation): # 12.9 inch  (both are required)
+    # iPad Pro (11-inch) (2nd generation): # 11 inch
+    # iPad Pro (10.5-inch): # 10.5 inch
+    # iPad Pro (9.7-inch): # 9.7 inch
+
+# Frame screenshots
+frame: false

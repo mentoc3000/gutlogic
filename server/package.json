@@ -1,0 +1,22 @@
+{
+  "name": "gut-logic-server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "test": "firebase emulators:exec \"ava\""
+  },
+  "engines": {
+    "node": "10"
+  },
+  "dependencies": {
+    "gut-logic-cloud-functions": "file:functions"
+  },
+  "devDependencies": {
+    "ava": "^3.12.1",
+    "eslint": "^7.8.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "firebase-tools": "^8.10.0",
+    "@firebase/testing": "^0.20.11"
+  }
+}

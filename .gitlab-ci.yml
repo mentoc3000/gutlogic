@@ -1,0 +1,286 @@
+stages:
+  - check
+  - test
+  - build
+  - deploy
+
+workflow:
+  rules:
+    - if: ($CI_MERGE_REQUEST_TITLE =~ /WIP:/) || ($CI_MERGE_REQUEST_TITLE =~ /Draft:/)
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "master"
+    - if: $CI_COMMIT_BRANCH == "release"
+
+# Create a job that only runs if neither of the subdirectories will run. This
+# is so MRs that don't change any of those files will still generate a pipeline
+# and comply with "prevent merge unless a pipeline succeeded" rule.
+
+compliance:
+  stage: check
+  script:
+    - echo "Running compliance job to enable merge requests."
+  rules:
+    - changes:
+        - client/**/*
+        - server/**/*
+      when: never
+    - when: always
+
+### Server Jobs
+
+.server:
+  image: node:10-alpine
+  tags:
+    - docker
+  before_script:
+    - cd server
+    # install alpine deps (ideally this would happen in a custom dockerfile)
+    - apk add --quiet --no-cache openjdk8
+    # install the server dependencies
+    - npm ci --log-level error
+    # add locally installed bins to the path so we can run firebase-tools
+    - PATH="$(npm bin):$PATH"
+    # configure the firebase environment
+    - firebase use $FIREBASE_PROJECT
+  dependencies: [] # ignore flutter artifacts
+
+# Rule for server jobs that run on any merge request.
+.server-merge-request-rule: &server-merge-request-rule
+  if: $CI_MERGE_REQUEST_ID
+  #changes: [ server/**/* ]
+
+.server-commit-develop-rule: &server-commit-develop-rule
+  if: ($CI_COMMIT_BRANCH == "develop")
+  #changes: [ server/**/* ]
+
+.server-commit-master-rule: &server-commit-master-rule
+  if: ($CI_COMMIT_BRANCH == "master")
+  #changes: [ server/**/* ]
+
+format:server:
+  stage: check
+  extends:
+    - .server
+  script:
+    - npm run lint
+  rules:
+    - *server-merge-request-rule
+    - *server-commit-master-rule
+    - *server-commit-develop-rule
+  needs: []
+
+test:server:
+  stage: test
+  extends:
+    - .server
+  script:
+    - npm run test
+  rules:
+    - *server-merge-request-rule
+    - *server-commit-master-rule
+    - *server-commit-develop-rule
+  needs: []
+
+.deploy:server:
+  stage: deploy
+  extends:
+    - .server
+  script:
+    - firebase deploy --token $FIREBASE_TOKEN
+  needs:
+    - test:server
+
+deploy:server:dev:
+  environment: development
+  extends:
+    - .deploy:server
+  rules:
+    - *server-commit-develop-rule
+
+deploy:server:prod:
+  environment: production
+  extends:
+    - .deploy:server
+  rules:
+    - *server-commit-master-rule
+
+### Client Jobs
+
+.flutter:
+  image: cirrusci/flutter:1.20.4
+  tags:
+    - docker
+  before_script:
+    - cd client
+    - flutter --version
+    # pick the flutter flavor and store it FLUTTER_FLAVOR
+    - if   [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "release" ] || [ "$CI_COMMIT_BRANCH" == "release" ]; then FLUTTER_FLAVOR="production";
+      elif [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master"  ] || [ "$CI_COMMIT_BRANCH" == "master"  ]; then FLUTTER_FLAVOR="production";
+      else FLUTTER_FLAVOR="development";
+      fi
+    # install the client dependencies and generate code
+    - flutter pub get
+    - flutter pub run build_runner build --delete-conflicting-outputs
+
+# Rule for client jobs that run on any merge request.
+.client-merge-request-rule: &client-merge-request-rule
+  if: $CI_MERGE_REQUEST_ID
+  #changes: [ client/**/* ]
+
+# Rule for client jobs that run on critical commits.
+.client-commit-rule: &client-commit-rule
+  if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
+  #changes: [ client/**/* ]
+
+format:client:
+  stage: check
+  extends:
+    - .flutter
+  script:
+    - dartanalyzer --fatal-warnings lib test
+    # Delete generated files after analysis but before formatting. They cause the formatter to quit with an error
+    # because they are formatter to 80 columns. There's no way to change the source_gen formatting, and no way to
+    # exclude the generated files, so we have to delete them (see https://github.com/dart-lang/dart_style/issues/864).
+    - find lib test -name "*.g.dart" -type f -delete
+    - flutter format --line-length 120 --dry-run --set-exit-if-changed lib test
+  rules:
+    - *client-merge-request-rule
+    - *client-commit-rule
+  needs: []
+
+test:client:
+  stage: test
+  extends:
+    - .flutter
+  script:
+    - bash test/generate_coverage_test_file.sh
+    - flutter test --coverage
+    - lcov --list coverage/lcov.info
+    - genhtml coverage/lcov.info -o coverage/html
+  artifacts:
+    paths:
+      - client/coverage
+    expire_in: 5 days
+  rules:
+    - *client-merge-request-rule
+    - *client-commit-rule
+  needs: []
+
+# screenshots:apk:
+#   stage: build
+#   extends:
+#     - .flutter
+#   tags:
+#     - docker
+#   rules:
+#     - *client-screenshot-rules
+#   artifacts:
+#     paths:
+#       - client/apk/fastlane/screenshots
+#     untracked: true
+#     expire_in: 1 day
+
+screenshots:ios:
+  stage: build
+  extends:
+    - .flutter
+  tags:
+    - macos
+  script:
+    - export PATH="${PATH//~/$HOME}" # Replace ~ with path to home
+    - cd ..
+    - git clone https://github.com/mmcc007/screenshots.git
+    - cd screenshots
+    - git checkout 169_global_preferences
+    - pub global activate --source path .
+    - cd ../client
+    - screenshots --flavor=$FLUTTER_FLAVOR --config=test_driver/screenshots/ios_screenshots.yaml
+  allow_failure: true
+  rules:
+    # skip the develop branch on screenshots
+    - if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
+      changes: [client/**/*]
+    # provide manual screenshot job on other branches
+    - when: manual
+      changes: [client/**/*]
+  artifacts:
+    paths:
+      - client/ios/fastlane/screenshots
+    untracked: true
+    expire_in: 1 day
+
+# build:client:apk:
+#   extends:
+#     - .flutter
+#   stage: build
+#   script:
+#     - flutter pub run flutter_launcher_icons:main
+#     - flutter build apk --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
+#   rules:
+#     - *client-commit-rule
+#     - *client-merge-request-rule
+#   artifacts:
+#     untracked: true
+#     expire_in: 1 day
+
+build:client:ios:
+  extends:
+    - .flutter
+  stage: build
+  tags:
+    - macos
+  script:
+    - flutter pub run flutter_launcher_icons:main
+    - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
+  rules:
+    - *client-commit-rule
+    - *client-merge-request-rule
+  artifacts:
+    untracked: true
+    expire_in: 1 day
+
+# Choose the Fastlane channel by commit branch and store it in FASTLANE_CHANNEL
+.fastlane-channel-variable: &fastlane-channel-variable >
+  if   [ "$CI_COMMIT_BRANCH" == "release" ]; then FASTLANE_CHANNEL="release";
+  elif [ "$CI_COMMIT_BRANCH" == "master"  ]; then FASTLANE_CHANNEL="staging";
+  else FASTLANE_CHANNEL="develop";
+  fi
+
+# deploy:client:apk:
+#   stage: deploy
+#   extends:
+#     - .fastlane-apk
+#   dependencies:
+#     - build:client:apk
+#     - screenshots:apk
+#   script:
+#     - *fastlane-channel-variable
+#     - bundle exec fastlane $FASTLANE_CHANNEL
+#   rules:
+#     - *client-commit-rule
+
+deploy:client:ios:
+  stage: deploy
+  tags:
+    - macos
+  dependencies:
+    - build:client:ios
+    - screenshots:ios
+  before_script:
+    - cd client/ios/
+    - cp "$GC_KEYS" "$(pwd)/gc_keys.json"
+    - export PATH="$PATH":"$HOME/.gem/ruby/2.6.0/bin"
+    - gem install --user-install bundler
+    - bundle install --path vendor/bundle
+    - bundle exec fastlane match
+    - bundle exec fastlane run increment_build_number build_number:"$CI_PIPELINE_ID"
+    - export FLUTTER_APP_VERSION=$(pubver -d ../. get)
+  script:
+    - *fastlane-channel-variable
+    - bundle exec fastlane $FASTLANE_CHANNEL
+  rules:
+    - *client-commit-rule
+# For a great CD example, see https://github.com/fezu54/flutter-gitlab-ci-example/blob/master/.gitlab-ci.yml

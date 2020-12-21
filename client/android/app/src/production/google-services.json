@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "763316144034",
+    "firebase_url": "https://gutlogic.firebaseio.com",
+    "project_id": "gutlogic",
+    "storage_bucket": "gutlogic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763316144034:android:c7306438de87f5a1e6d4fb",
+        "android_client_info": {
+          "package_name": "com.gutlogic.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763316144034-e77bajb58be9vj4mv9k1nupld08bbf3r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVKcpmZwonayi1jJHjmKFJLW0auWAi_-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "763316144034-e77bajb58be9vj4mv9k1nupld08bbf3r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "763316144034-38h5bifo6qh4e19koea086fc7pkb2rlo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gutlogic.app",
+                "app_store_id": "1511243449"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

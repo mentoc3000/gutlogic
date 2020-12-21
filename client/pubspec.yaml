@@ -1,0 +1,144 @@
+name: gutlogic
+description: Gut Logic app
+
+# Prevent accidentally publishing the package to pub.dev
+publish_to: "none"
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# Read more about versioning at semver.org.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.9.0 <2.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  built_collection: ^4.3.2
+  built_value: ^7.1.0
+  collection: ^1.14.11
+  connectivity: ^0.4.8+2
+  crypto: ^2.1.4
+  cupertino_icons: ^0.1.2
+  datetime_picker_formfield: ^1.0.0
+  device_info: ^0.4.2+1
+  email_validator: ^1.0.0
+  equatable: ^1.0.1
+  flutter_bloc: ^4.0.0
+  flutter_password_strength: ^0.1.4
+  flutter_sfsymbols: ^1.0.0
+  flutter_speed_dial: ^1.1.1
+  flutter_svg: ^0.18.1
+  # flutter_widgets: ^0.1.6
+  font_awesome_flutter: ^8.5.0
+  google_fonts: ^1.1.0
+  google_sign_in: ^4.5.4
+  http: ^0.12.2
+  intl: 0.16.1
+  json_annotation: ^3.0.1
+  logger: ^0.8.1
+  material_design_icons_flutter: ^3.4.4795
+  # pedantic: ^1.9.0
+  # provider: ^4.3.2
+  rxdart: ^0.23.1
+  scrollable_positioned_list: ^0.1.7
+  url_launcher: ^5.4.2
+
+  # Firebase
+  cloud_firestore: '>=0.14.1+1 <0.14.3' 
+  cloud_functions: ^0.6.0
+  firebase_analytics: ^6.0.0
+  firebase_auth: ^0.18.1+1
+  firebase_core: ^0.5.0
+  firebase_crashlytics: ^0.2.1
+  firebase_remote_config: ^0.4.2
+
+dev_dependencies:
+  test: any
+  flutter_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  bloc_test: ^5.0.0
+  build_runner: ^1.10.1
+  build_resolvers: ^1.3.11
+  built_value_generator: ^7.1.0
+  cloud_firestore_mocks: ^0.5.0
+  effective_dart: ^1.1.2
+  flutter_launcher_icons: ^0.7.5
+  json_serializable: ^3.3.0
+  mockito: ^4.1.1
+  timezone: ^0.5.6
+  screenshots: ^2.1.1 # May need local install https://github.com/mmcc007/screenshots/issues/169
+
+# For information on the generic Dart part of this file, see the
+# following page: https://www.dartlang.org/tools/pub/pubspec
+# To generate icons, run `flutter pub run flutter_launcher_icons:main`
+flutter_icons:
+  android: true # can specify file name here e.g. "ic_launcher"
+  ios: true # can specify file name here e.g. "My-Launcher-Icon"
+  image_path: "assets/app_icon/logo_green.png"
+  # image_path_android: "assets/logo_green.png"
+  # image_path_ios: "assets/logo_green.png"
+  adaptive_icon_background: "assets/app_icon/logo_android_background.png" # only available for Android 8.0 devices and above
+  adaptive_icon_foreground: "assets/app_icon/logo_android_foreground.png" # only available for Android 8.0 devices and above
+
+# The following section is specific to Flutter.
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/
+    - assets/auth/apple/
+    - assets/auth/google/
+    - assets/consent/
+    - assets/pain_scale/
+    - assets/icons/
+
+  fonts:
+    - family: SickFaceFont
+      fonts:
+        - asset: assets/icons/SickFaceFont.ttf
+    - family: sficonsets
+      fonts:
+        - asset: packages/flutter_sfsymbols/fonts/sficonsets.ttf
+    - family: SanFrancisco
+      fonts:
+        - asset: assets/fonts/SF-Pro.ttf
+        - asset: assets/fonts/SF-Pro-Italic.ttf
+          style: italic
+    - family: Quicksand410
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-410.ttf
+    - family: Quicksand420
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-420.ttf
+    - family: Quicksand430
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-430.ttf
+    - family: Quicksand440
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-440.ttf
+    - family: Quicksand450
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-450.ttf
+    - family: Quicksand460
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-460.ttf
+    - family: Quicksand470
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-470.ttf
+    - family: Quicksand480
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-480.ttf
+    - family: Quicksand490
+      fonts: 
+        - asset: assets/fonts/Quicksand-VariableFont_wght-490.ttf

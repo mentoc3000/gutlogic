@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userID} {
+      allow read, update, delete: if request.auth.uid == userID;
+      allow create: if request.auth.uid != null;
+    }
+    match /user_data/{userID}/{document=**} {
+      allow read, write: if request.auth.uid == userID;
+    }
+    match /test/{document=**} {
+      // admin API will always have access
+      allow read, write: if false;
+    }
+  }
+}

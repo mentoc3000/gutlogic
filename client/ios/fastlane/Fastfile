@@ -1,0 +1,121 @@
+default_platform :ios
+
+# Suppress warnings about Google Cloud API limits.
+ENV["GOOGLE_AUTH_SUPPRESS_CREDENTIALS_WARNINGS"] = "true"
+
+desc "Match the local development certificate for the development app."
+lane :certificate_develop_local do |options|
+
+  # Default to readonly matching.
+  readonly = options.fetch(:readonly, true)
+  force = options.fetch(:force, false)
+
+  match(
+    app_identifier: ["com.gutlogic.app.dev"],
+    type: "development",
+    force: force,
+    readonly: readonly,
+    force_for_new_devices: true)
+
+end
+
+desc "Match the staging development certificate for the development app."
+lane :certificate_develop_adhoc do |options|
+
+  # Default to readonly matching.
+  readonly = options.fetch(:readonly, true)
+  force = options.fetch(:force, false)
+
+  match(
+    app_identifier: ["com.gutlogic.app.dev"],
+    type: "adhoc",
+    force: force,
+    readonly: readonly,
+    force_for_new_devices: true)
+
+end
+
+desc "Match the certificate for the release app."
+lane :certificate_release do |options|
+
+  # Default to readonly matching.
+  readonly = options.fetch(:readonly, true)
+  force = options.fetch(:force, false)
+
+  match(
+    app_identifier: ["com.gutlogic.app"],
+    type: "appstore",
+    force: force,
+    readonly: readonly)
+
+end
+
+desc "Match all of the certificates."
+lane :certificates do |options|
+
+  certificate_develop_local(options)
+  certificate_develop_adhoc(options)
+  certificate_release(options)
+
+end
+
+platform :ios do
+
+  desc "Build the development app for distribution, signed with the staging certificate."
+  lane :build_develop do
+
+    # Build number is incremented manually by GitLab CI
+
+    certificate_develop_adhoc()
+
+    gym(workspace: "Runner.xcworkspace",
+        scheme: "development",
+        export_method: "ad-hoc",
+        include_bitcode: true)
+
+  end
+
+  desc "Build the production app for the distribution, signed with the release certificate."
+  lane :build_release do
+
+    # Build number is incremented manually by GitLab CI
+
+    certificate_release()
+
+    gym(workspace: "Runner.xcworkspace",
+        scheme: "production",
+        include_bitcode: true)
+
+  end
+
+  desc "Push a new develop channel build to Firebase App Distribution."
+  lane :develop do
+
+    build_develop()
+
+    firebase_app_distribution(
+      groups: "develop-testers",
+      release_notes: "Gut Logic Dev",
+    )
+
+  end
+
+  desc "Push a new release channel build to TestFlight."
+  lane :staging do
+
+    build_release()
+
+    testflight
+
+  end
+
+  desc "Push a new release channel build to the App Store."
+  lane :release do
+  
+    build_release()
+
+    app_store
+
+  end
+
+end

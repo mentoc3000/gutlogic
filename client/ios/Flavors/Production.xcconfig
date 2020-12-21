@@ -1,0 +1,8 @@
+// The APP_FLAVOR is passed into the bundle via Info.plist so it can be accessed from Dart.
+APP_FLAVOR=production
+
+// The APP_DISPLAY_NAME replaces the final display name, since our target has to be named Runner.
+APP_DISPLAY_NAME=Gut Logic
+
+// Provide the Google service file path so the build process can copy it into the bundle.
+GOOGLE_SERVICE_FILE=${PROJECT_DIR}/Configurations/Production/GoogleService-Info.plist

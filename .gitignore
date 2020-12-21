@@ -1,19 +1,6 @@
 package.yaml
 node_modules/
-.vscode/
 test/aws-credentials.json
-
-#amplify
-amplify/\#current-cloud-backend
-amplify/.config/local-*
-amplify/mock-data
-amplify/backend/amplify-meta.json
-amplify/backend/awscloudformation
-build/
-dist/
-node_modules/
-aws-exports.js
-awsconfiguration.json
 
 # Miscellaneous
 *.class
@@ -34,12 +21,13 @@ awsconfiguration.json
 .idea/
 
 # Visual Studio Code related
-.vscode/
+.vscode/settings.json
 
 # Flutter/Dart/Pub related
 **/doc/api/
 .dart_tool/
 .flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
@@ -56,6 +44,8 @@ build/
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+*.jks
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -76,12 +66,38 @@ build/
 **/ios/.generated/
 **/ios/Flutter/App.framework
 **/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
 **/ios/Flutter/Generated.xcconfig
 **/ios/Flutter/app.flx
 **/ios/Flutter/app.zip
 **/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+
+# Coverage
+coverage/
+coverage_helper_test.dart
+
+# Credentials
+gut-logic-dev-firebase-adminsdk-*.json
+gutlogic-dev-firebase-adminsdk-*.json
+gut-logic-firebase-adminsdk-*.json
+gutlogic-firebase-adminsdk-*.json
+client/ios/gc_keys.json
+
+# Builds
+builds/
+client/ios/Runner.ipa
+client/ios/Runner.app.dSYM.zip
+
+# Fastlane
+client/ios/fastlane/screenshots
+client/android/fastlane/metadata/android
+client/ios/fastlane/report.xml
+client/android/fastlane/report.xml
+client/ios/.bundle/
+client/ios/vendor/
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
@@ -89,3 +105,4 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+!/dev/ci/**/Gemfile.lock

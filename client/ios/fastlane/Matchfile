@@ -1,0 +1,7 @@
+storage_mode("google_cloud")
+google_cloud_bucket_name("fastlane_match_gutlogic")
+google_cloud_project_id("gutlogic")
+
+type("appstore")
+app_identifier("com.gutlogic.app")
+username("dev@gutlogic.co")

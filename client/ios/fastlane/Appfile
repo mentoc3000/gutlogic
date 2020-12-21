@@ -1,0 +1,8 @@
+app_identifier("com.gutlogic.app") # The bundle identifier of your app
+apple_id("dev@gutlogic.co") # Your Apple email address
+
+itc_team_id("121498146") # App Store Connect Team ID
+team_id("GASX6Z8HK9") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

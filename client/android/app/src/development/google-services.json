@@ -1,0 +1,72 @@
+{
+  "project_info": {
+    "project_number": "573853302109",
+    "firebase_url": "https://gutlogic-dev.firebaseio.com",
+    "project_id": "gutlogic-dev",
+    "storage_bucket": "gutlogic-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573853302109:android:a8f326a1e87ec8618a3cb4",
+        "android_client_info": {
+          "package_name": "com.gutlogic.app.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "573853302109-3ii12nt4mr3e8q84jvabidpg870op2o5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gutlogic.app.dev",
+            "certificate_hash": "bf28ca92903e5ac054131532514409a5e167bb88"
+          }
+        },
+        {
+          "client_id": "573853302109-97oam6lsovif1qeuht8d5mv1botdqtu9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gutlogic.app.dev",
+            "certificate_hash": "2dd831ec315d2ac494bf0e9ee3f6899c9674c4e1"
+          }
+        },
+        {
+          "client_id": "573853302109-6hqjnk8c0coabi07aa0lm3pjq55j6bgl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gutlogic.app.dev",
+            "certificate_hash": "aa7745a7b96420c7ae77d0dd94e031c19a96cc17"
+          }
+        },
+        {
+          "client_id": "573853302109-vfnplnbgv98j77977ijaktbtnhp278sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3tce1NkRUGyRaPTYSHmvr8jI_efz0jxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "573853302109-vfnplnbgv98j77977ijaktbtnhp278sm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "573853302109-ebhdh2cb8sohvmabkgjftquot9uo62pt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gutlogic.app.dev",
+                "app_store_id": "1511243449"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

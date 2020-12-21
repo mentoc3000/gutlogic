@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "gutlogic-dev",
+    "development": "gutlogic-dev",
+    "production": "gutlogic"
+  }
+}

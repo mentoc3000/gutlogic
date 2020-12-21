@@ -1,0 +1,164 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [{
+      "label": "Dart analyzer",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "dartanalyzer ./lib ./test",
+      "problemMatcher": []
+    }, {
+      "label": "Code generation build",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter pub run build_runner build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Code generation force build",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter pub run build_runner build --delete-conflicting-outputs",
+      "problemMatcher": []
+    },
+    {
+      "label": "Code generation watch",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter pub run build_runner watch",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter run manually - development",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter run --flavor development --observatory-port 8887 --disable-service-auth-codes lib/main_dev.dart",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter unit tests",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter drive driver tests",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter drive --flavor development --target=test_driver/app.dart",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter attach driver tests",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "export VM_SERVICE_URL=http://127.0.0.1:8887/; dart test_driver/app_test.dart",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter build for iOS - development",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter build ios --flavor development --release --no-codesign",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter build for iOS - production",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter build ios --flavor production --release --no-codesign",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate coverage report",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "osx": {
+      "command": "bash test/generate_coverage_test_file.sh; flutter test --coverage; genhtml coverage/lcov.info -o coverage/html; rm test/coverage_helper_test.dart",
+      },
+      "windows": {
+        "command": "",
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Launch Android emulator",
+      "type": "shell",
+      "osx": {
+        "command": "~/Library/Android/sdk/emulator/emulator -avd flutter_emulator",
+      },
+      "windows": {
+        "command": ""
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Launch iPhone simulator",
+      "type": "shell",
+      "osx": {
+        "command": "ios-sim start --devicetypeid \"iPhone-8, 13.4\"",
+      },
+      "windows": {
+        "command": "echo 'There is no iPhone simulator on Windows.'",
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run screenshot tests",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter drive --flavor=production --target=test_driver/screenshots/screenshots.dart",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate iOS screenshots",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "screenshots -v --flavor=production --config=test_driver/screenshots/ios_screenshots.yaml",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate app icons",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter pub run flutter_launcher_icons:main",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run GitLab Runner",
+      "type": "shell",
+      "command": "gitlab-runner run",
+      "problemMatcher": []
+    }
+  ]
+}

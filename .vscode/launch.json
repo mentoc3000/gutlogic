@@ -1,0 +1,45 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [{
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${fileDirname}"
+    },
+    {
+      "name": "Flutter Production",
+      "request": "launch",
+      "program": "client/lib/main.dart",
+      "type": "dart",
+      "args": ["--flavor", "production"]
+    },
+    {
+      "name": "Flutter Develop",
+      "request": "launch",
+      "program": "client/lib/main.dart",
+      "type": "dart",
+      "args": ["--flavor", "development"]
+    },
+    {
+      "name": "Flutter Driver App",
+      "request": "launch",
+      "program": "client/test_driver/app.dart",
+      "type": "dart",
+      "args": ["--flavor", "development", "--observatory-port", "8887", "--disable-service-auth-codes"]
+    }
+    // {
+    //   "name": "Flutter Driver Tests",
+    //   "request": "launch",
+    //   "program": "client/test_driver/app_test.dart",
+    //   "type": "dart",
+    //   "env": {
+    //     "VM_SERVICE_URL": "http://127.0.0.1:8887/"
+    //   }
+    // }
+  ]
+}

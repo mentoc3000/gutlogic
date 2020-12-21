@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+import '../gl_icons.dart';
+import 'gl_list_tile.dart';
+
+class PushListTile extends StatelessWidget {
+  final String heading;
+  final String subheading;
+  final Widget leading;
+  final VoidCallback onTap;
+
+  const PushListTile({
+    Key key,
+    this.heading,
+    this.subheading,
+    this.leading,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GLListTile(
+      heading: heading,
+      subheading: subheading,
+      leading: leading,
+      trailing: const Icon(GLIcons.arrowRight),
+      onTap: onTap,
+    );
+  }
+}

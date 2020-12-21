@@ -1,0 +1,15 @@
+{
+  "name": "gut-logic-cloud-functions",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": "10"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "firebase": "^7.19.1",
+    "firebase-admin": "^9.1.1",
+    "firebase-functions": "^3.11.0",
+    "firebase-tools": "^8.10.0"
+  }
+}
