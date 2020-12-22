@@ -204,7 +204,6 @@ screenshots:ios:
   rules:
     # skip the develop branch on screenshots
     - if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-      changes: [client/**/*]
     # provide manual screenshot job on other branches
     - when: manual
       changes: [client/**/*]
