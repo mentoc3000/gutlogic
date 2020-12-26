@@ -105,7 +105,13 @@ platform :ios do
 
     build_release()
 
-    testflight
+    testflight(
+      demo_account_required: true,
+      distribute_external: true,
+      groups: ["Friends and Family"],
+      beta_app_feedback_email: "dev@gutlogic.co",
+      reject_build_waiting_for_review: true,
+    )
 
   end
 

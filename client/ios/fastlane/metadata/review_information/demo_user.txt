@@ -1,1 +1,1 @@
-dev+review@gutlogic.co
+demo@gutlogic.co
