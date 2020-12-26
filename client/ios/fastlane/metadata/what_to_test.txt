@@ -1,0 +1,9 @@
+Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities. This version lets you track the foods you eat and symptoms they feel on a timeline to help make the connection between what you eat and how you feel. Prior to releasing it to the public, we would like you, our trusted beta testers, to try it out and give us some feedback. Try taking either or both of these approaches to really put the app through its paces:
+
+1. Use it like a typical user might. Navigate the app how it was intended. Is it intuitive to use and easy to navigate, or clunky and confusing? Does the app react how you would expect or does it take a few tries to figure things out? Are there any features that you would like to see? The answers to these kinds of questions are valuable feedback for us.
+
+2. Be a maverick. Do things that we would never expect a normal user to do. Try unlikely sequences of operations to see if the app breaks. Suddenly put your phone into airplane mode to see if it can handle an internet outage, or, even better, use the app in a place of very slow or spotty connectivity. We want to be able to handle all of those edge cases.
+
+Spend a couple of days or weeks with the app and then fill out the feedback form at the link below. We will accept feedback on this beta version until Jan 12. Thanks in advance for your time and candid feedback!
+
+https://forms.gle/xKekWxMTCjHS74xs6

@@ -111,6 +111,7 @@ platform :ios do
       groups: ["Friends and Family"],
       beta_app_feedback_email: "dev@gutlogic.co",
       reject_build_waiting_for_review: true,
+      changelog: File.read("./metadata/what_to_test.txt")
     )
 
   end
