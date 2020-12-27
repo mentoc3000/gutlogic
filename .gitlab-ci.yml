@@ -199,6 +199,7 @@ screenshots:ios:
     - git checkout 169_global_preferences
     - flutter pub global activate --source path .
     - export PATH="$PATH":"$HOME/.pub-cache/bin"
+    - export PATH="$PATH":"$HOME/Development/flutter/bin/cache/dart-sdk/bin"
     - cd ../client
     - screenshots --flavor=$FLUTTER_FLAVOR --config=test_driver/screenshots/ios_screenshots.yaml
   allow_failure: true
