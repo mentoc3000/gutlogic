@@ -38,7 +38,7 @@ void main() {
           id: 'food1',
           name: 'Eggs',
         ),
-        quantity: Quantity(amount: 2, unit: 'each'),
+        quantity: Quantity.unweighed(amount: 2, unit: 'each'),
       );
       mealElement2 = MealElement(
         id: '$diaryEntryId#mealElement2',
@@ -46,7 +46,7 @@ void main() {
           id: 'food2',
           name: 'Bread',
         ),
-        quantity: Quantity(amount: 1, unit: 'slice'),
+        quantity: Quantity.unweighed(amount: 1, unit: 'slice'),
       );
       final mealElements = [mealElement1, mealElement2].build();
       diaryEntry = MealEntry(

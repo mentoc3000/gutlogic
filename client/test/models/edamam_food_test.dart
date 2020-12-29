@@ -42,6 +42,7 @@ void main() {
         ..name = 'Bread');
       expect(serializers.serialize(food), {
         '\$': 'EdamamFood',
+        'measures': [],
         'id': '1234',
         'name': food.name,
       });

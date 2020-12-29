@@ -21,9 +21,9 @@ class _QuantityCardState extends State<QuantityCard> {
   @override
   void initState() {
     super.initState();
-    _quantity = widget.quantity ?? Quantity(amount: 0, unit: '');
+    _quantity = widget.quantity ?? Quantity();
     _amountController = TextEditingController(text: _quantity.amount.toString());
-    _unitController = TextEditingController(text: _quantity.unit);
+    _unitController = TextEditingController(text: _quantity.measure.unit);
   }
 
   @override
@@ -55,7 +55,7 @@ class _QuantityCardState extends State<QuantityCard> {
                 controller: _unitController,
                 textAlign: TextAlign.center,
                 onChanged: (String unit) {
-                  _quantity = _quantity.rebuild((b) => b..unit = unit);
+                  _quantity = _quantity.rebuild((b) => b..measure.unit = unit);
                   widget.onChanged(_quantity);
                 },
               ),

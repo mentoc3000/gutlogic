@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
+import '../../models/food/food.dart';
 import '../../models/meal_element.dart';
 import '../../util/error_report.dart';
 import '../../util/exception_messages.dart';
@@ -18,11 +19,12 @@ class MealElementLoading extends MealElementState {
 
 class MealElementLoaded extends MealElementState {
   final MealElement mealElement;
+  final Food food;
 
-  MealElementLoaded(this.mealElement);
+  MealElementLoaded({@required this.mealElement, this.food});
 
   @override
-  List<Object> get props => [mealElement];
+  List<Object> get props => [mealElement, food];
 
   @override
   String toString() => 'MealElementLoaded { MealElementId: ${mealElement?.id} }';

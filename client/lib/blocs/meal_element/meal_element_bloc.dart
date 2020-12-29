@@ -11,12 +11,12 @@ import 'meal_element_event.dart';
 import 'meal_element_state.dart';
 
 class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with StreamSubscriber {
-  final MealElementRepository repository;
+  final MealElementRepository mealElementRepository;
 
-  MealElementBloc({@required this.repository});
+  MealElementBloc({@required this.mealElementRepository});
 
   factory MealElementBloc.fromContext(BuildContext context) => MealElementBloc(
-        repository: context.repository<MealElementRepository>(),
+        mealElementRepository: context.repository<MealElementRepository>(),
       );
 
   @override
@@ -34,34 +34,35 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
     MealElementEvent event,
   ) async* {
     try {
+      if (event is Load) {
+        final mealElement = event.mealElement;
+        yield MealElementLoaded(mealElement: mealElement);
+      }
       if (event is StreamMealElement) {
-        yield MealElementLoaded(event.mealElement);
-        streamSubscription = repository.stream(event.mealElement).listen(
+        add(Load(event.mealElement));
+        streamSubscription = mealElementRepository.stream(event.mealElement).listen(
               (mealElement) => add(Load(mealElement)),
               onError: (error, StackTrace trace) => add(Throw(error: error, trace: trace)),
             );
       }
-      if (event is Load) {
-        yield MealElementLoaded(event.mealElement);
-      }
       if (event is Delete) {
         final mealElement = (state as MealElementLoaded).mealElement;
-        unawaited(repository.delete(mealElement));
+        unawaited(mealElementRepository.delete(mealElement));
       }
       if (event is Update) {
-        unawaited(repository.update(event.mealElement));
+        unawaited(mealElementRepository.update(event.mealElement));
       }
       if (event is UpdateFoodReference) {
         final mealElement = (state as MealElementLoaded).mealElement;
-        unawaited(repository.updateFoodReference(mealElement, event.foodReference));
+        unawaited(mealElementRepository.updateFoodReference(mealElement, event.foodReference));
       }
       if (event is UpdateQuantity) {
         final mealElement = (state as MealElementLoaded).mealElement;
-        unawaited(repository.updateQuantity(mealElement, event.quantity));
+        unawaited(mealElementRepository.updateQuantity(mealElement, event.quantity));
       }
       if (event is UpdateNotes) {
         final mealElement = (state as MealElementLoaded).mealElement;
-        unawaited(repository.updateNotes(mealElement, event.notes));
+        unawaited(mealElementRepository.updateNotes(mealElement, event.notes));
       }
       if (event is Throw) {
         yield MealElementError.fromError(error: event.error, trace: event.trace);

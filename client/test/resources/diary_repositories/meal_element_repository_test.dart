@@ -31,12 +31,12 @@ void main() {
       mealElement1 = MealElement(
         id: '$diaryEntryId#mealElement1',
         foodReference: CustomFoodReference(id: 'food1', name: 'Eggs'),
-        quantity: Quantity(amount: 2, unit: 'each'),
+        quantity: Quantity.unweighed(amount: 2, unit: 'each'),
       );
       mealElement2 = MealElement(
         id: '$diaryEntryId#mealElement2',
         foodReference: CustomFoodReference(id: 'food2', name: 'Bread'),
-        quantity: Quantity(amount: 1, unit: 'slice'),
+        quantity: Quantity.unweighed(amount: 1, unit: 'slice'),
       );
       final mealElements = [mealElement1, mealElement2].build();
       diaryEntry = MealEntry(
@@ -78,7 +78,7 @@ void main() {
       final mealElement3 = MealElement(
         id: '$diaryEntryId#mealElement3',
         foodReference: CustomFoodReference(id: 'food3', name: 'Bread'),
-        quantity: Quantity(amount: 1, unit: 'slice'),
+        quantity: Quantity.unweighed(amount: 1, unit: 'slice'),
       );
       final mealElement = await repository.addMealElementTo(diaryEntry, mealElement: mealElement3);
       expect(mealElement.id.startsWith('$diaryEntryId#'), true);
@@ -111,10 +111,10 @@ void main() {
     });
 
     test('updates quantity', () async {
-      final quantity = Quantity(amount: 3, unit: 'patties');
+      final quantity = Quantity.unweighed(amount: 3, unit: 'patties');
       await repository.updateQuantity(mealElement1, quantity);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntry['mealElements'] as List).first['quantity']['unit'], quantity.unit);
+      expect((retrievedEntry['mealElements'] as List).first['quantity']['measure']['unit'], quantity.measure.unit);
     });
 
     test('updates notes', () async {

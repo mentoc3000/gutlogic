@@ -17,7 +17,7 @@ void main() {
           ..id = '$id#mealElement1'
           ..foodReference = foodReference
           ..quantity.amount = 1.2
-          ..quantity.unit = 'slices'),
+          ..quantity.measure.unit = 'slices'),
       ]);
       final mealEntry = MealEntry.fromBuilder((b) => b
         ..id = id
@@ -50,7 +50,10 @@ void main() {
               'id': '5',
               'name': 'Bread',
             },
-            'quantity': {'amount': 1.2, 'unit': 'Slices'},
+            'quantity': {
+              'amount': 1.2,
+              'measure': {'unit': 'Slices'},
+            },
           },
         ],
         'notes': 'Tasty!'
@@ -76,7 +79,10 @@ void main() {
               'id': '5',
               'name': 'Bread',
             },
-            'quantity': {'amount': 1.2, 'unit': 'Slices'},
+            'quantity': {
+              'amount': 1.2,
+              'measure': {'unit': 'Slices'},
+            },
           },
         ],
         'notes': 'Tasty!'

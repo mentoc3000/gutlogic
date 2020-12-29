@@ -60,18 +60,6 @@ class _MealElementEntryPageState extends State<MealElementEntryPage> {
     return currentState is MealElementLoaded && !(previousState is MealElementLoaded);
   }
 
-  // void showFoodSearch(BuildContext context, MealElement mealElement, MealElementBloc mealElementBloc) {
-  //   final foodBloc = BlocProvider.of<FoodBloc>(context);
-
-  //   showSearch(
-  //     context: context,
-  //     delegate: FoodSearchDelegate(
-  //       foodBloc: foodBloc,
-  //       onSelect: (food) => mealElementBloc.add(UpdateFood(food)),
-  //     ),
-  //   );
-  // }
-
   Widget builder(BuildContext context, MealElementState state) {
     List<Widget> buildCards(MealElement mealElement) {
       return [

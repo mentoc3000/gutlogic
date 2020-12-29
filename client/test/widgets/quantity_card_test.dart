@@ -18,7 +18,7 @@ void main() {
     testWidgets('displays initial value', (WidgetTester tester) async {
       const amount = 1.5;
       const unit = 'Bones';
-      final quantity = Quantity(amount: amount, unit: unit);
+      final quantity = Quantity.unweighed(amount: amount, unit: unit);
 
       // Build our app and trigger a frame.
       await tester.pumpWidget(
@@ -34,7 +34,7 @@ void main() {
     testWidgets('updates value', (WidgetTester tester) async {
       const initAmount = 1.5;
       const initUnit = 'Bones';
-      var quantity = Quantity(amount: initAmount, unit: initUnit);
+      var quantity = Quantity.unweighed(amount: initAmount, unit: initUnit);
 
       // Build our app and trigger a frame.
       await tester.pumpWidget(
@@ -56,7 +56,7 @@ void main() {
       expect(find.text(newAmount.toString()), findsOneWidget);
       expect(find.text(newUnit), findsOneWidget);
       expect(quantity.amount, newAmount);
-      expect(quantity.unit, newUnit);
+      expect(quantity.measure.unit, newUnit);
     });
   });
 }

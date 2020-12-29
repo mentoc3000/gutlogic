@@ -10,7 +10,7 @@ void main() {
       final foodReference = CustomFoodReference(id: '1', name: 'Bok Choy');
       final quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
-        ..unit = 'Slices');
+        ..measure.unit = 'Slices');
       final mealElement = MealElement(
         id: 'mealEntry1#mealElement1',
         foodReference: foodReference,
@@ -27,7 +27,7 @@ void main() {
         final foodReference = CustomFoodReference(id: '1', name: 'Bok Choy');
         final quantity = Quantity.fromBuilder((b) => b
           ..amount = 3.4
-          ..unit = 'Slices');
+          ..measure.unit = 'Slices');
         final mealElement = MealElement(
           id: 'mealEntry1#mealElement1',
           foodReference: foodReference,
@@ -45,7 +45,7 @@ void main() {
       final foodReference = CustomFoodReference(id: '1', name: 'Bok Choy');
       final quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
-        ..unit = 'Slices');
+        ..measure.unit = 'Slices');
       final Map<String, dynamic> foodReferenceJson = serializers.serialize(foodReference);
       final Map<String, dynamic> quantityJson = serializers.serialize(quantity);
       final mealElementJson = {
@@ -63,7 +63,7 @@ void main() {
       final foodReference = CustomFoodReference(id: '1', name: 'Bok Choy');
       final quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
-        ..unit = 'Slices');
+        ..measure.unit = 'Slices');
       final mealElement = MealElement(
         id: 'mealEntry1#mealElement1',
         foodReference: foodReference,

@@ -27,7 +27,7 @@ void main() {
     mealElement = MealElement(
       id: 'mealElement1',
       foodReference: CustomFoodReference(id: 'food1', name: 'Fruit Cake'),
-      quantity: Quantity(amount: 1, unit: 'brick'),
+      quantity: Quantity.unweighed(amount: 1, unit: 'brick'),
       notes: 'notes',
     );
 
@@ -51,7 +51,7 @@ void main() {
         mealElementBloc,
         Stream.fromIterable([
           MealElementLoading(),
-          MealElementLoaded(mealElement),
+          MealElementLoaded(mealElement: mealElement),
         ]),
       );
 
@@ -100,7 +100,7 @@ void main() {
         mealElementBloc,
         Stream.fromIterable([
           MealElementLoading(),
-          MealElementLoaded(mealElement),
+          MealElementLoaded(mealElement: mealElement),
         ]),
       );
 
@@ -111,7 +111,9 @@ void main() {
       await tester.enterText(amountField, '2.0');
       expect(find.text('1.0'), findsNothing);
       expect(find.text('2.0'), findsOneWidget);
-      verify(mealElementBloc.add(UpdateQuantity(Quantity(amount: 2, unit: mealElement.quantity.unit)))).called(1);
+      verify(mealElementBloc
+              .add(UpdateQuantity(Quantity.unweighed(amount: 2, unit: mealElement.quantity.measure.unit))))
+          .called(1);
     }, skip: true);
 
     testWidgets('updates notes', (WidgetTester tester) async {
@@ -119,7 +121,7 @@ void main() {
         mealElementBloc,
         Stream.fromIterable([
           MealElementLoading(),
-          MealElementLoaded(mealElement),
+          MealElementLoaded(mealElement: mealElement),
         ]),
       );
 

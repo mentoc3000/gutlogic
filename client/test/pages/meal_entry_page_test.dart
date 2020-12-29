@@ -44,7 +44,7 @@ void main() {
     final mealElement = MealElement(
       id: 'meal1#mealElement1',
       foodReference: CustomFoodReference(id: 'food1', name: 'Fruit Cake'),
-      quantity: Quantity(amount: 3, unit: 'head'),
+      quantity: Quantity.unweighed(amount: 3, unit: 'head'),
     );
 
     mealEntry = MealEntry(

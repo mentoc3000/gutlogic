@@ -90,17 +90,17 @@ void main() {
         MealElement(
           id: 'mealElement2',
           foodReference: CustomFoodReference(id: 'Oatmeal', name: 'Oatmeal'),
-          quantity: Quantity(amount: 1, unit: 'cup'),
+          quantity: Quantity.unweighed(amount: 1, unit: 'cup'),
         ),
         MealElement(
           id: 'mealElement3',
           foodReference: CustomFoodReference(id: 'banana', name: 'Banana'),
-          quantity: Quantity(amount: 1, unit: 'each'),
+          quantity: Quantity.unweighed(amount: 1, unit: 'each'),
         ),
         MealElement(
           id: 'mealElement1',
           foodReference: CustomFoodReference(id: 'orange juice', name: 'Orange Juice'),
-          quantity: Quantity(amount: 6, unit: 'oz'),
+          quantity: Quantity.unweighed(amount: 6, unit: 'oz'),
         ),
       ].build(),
     ),
@@ -117,22 +117,22 @@ void main() {
           MealElement(
             id: 'mealElement4',
             foodReference: CustomFoodReference(id: 'bread', name: 'Italian Bread'),
-            quantity: Quantity(amount: 2, unit: 'slices'),
+            quantity: Quantity.unweighed(amount: 2, unit: 'slices'),
           ),
           MealElement(
             id: 'mealElement5',
             foodReference: CustomFoodReference(id: 'turkey', name: 'Sliced Turkey'),
-            quantity: Quantity(amount: 5, unit: 'slices'),
+            quantity: Quantity.unweighed(amount: 5, unit: 'slices'),
           ),
           MealElement(
             id: 'mealElement6',
             foodReference: CustomFoodReference(id: 'lettuce', name: 'Lettuce'),
-            quantity: Quantity(amount: 2, unit: 'leaves'),
+            quantity: Quantity.unweighed(amount: 2, unit: 'leaves'),
           ),
           MealElement(
             id: 'mealElement7',
             foodReference: CustomFoodReference(id: 'milk shake', name: 'Milk Shake'),
-            quantity: Quantity(amount: 12, unit: 'oz'),
+            quantity: Quantity.unweighed(amount: 12, unit: 'oz'),
             notes: 'Chocolate',
           ),
         ].build(),
