@@ -60,29 +60,31 @@ class ConsentFormState extends State<ConsentForm> {
   Widget builder(BuildContext context, ConsentState state) {
     final isSubmittable = _isMinimumAge && _isPrivacyReviewed && (state is ConsentReady);
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      const Spacer(),
-      SizedBox(height: 200, child: _consentImage),
-      Padding(
-        padding: const EdgeInsets.only(top: 40, bottom: 40),
-        child: _consentText,
-      ),
-      const Spacer(),
-      CheckboxListTile(
-        value: _isMinimumAge,
-        title: const Text('I am 16 or older.'),
-        onChanged: state is ConsentReady ? (value) => onAgeCheckboxChanged(value: value) : null,
-      ),
-      CheckboxListTile(
-        value: _isPrivacyReviewed,
-        title: const Text('I have reviewed the privacy policy.'),
-        onChanged: state is ConsentReady ? (value) => onPrivacyCheckboxChanged(value: value) : null,
-      ),
-      GLPrimaryRaisedButton(
-        label: 'Agree',
-        onPressed: isSubmittable ? () => onAgreeButtonPressed(context) : null,
-      )
-    ]);
+    return ListView(
+      children: [
+        const Spacer(),
+        SizedBox(height: 200, child: _consentImage),
+        Padding(
+          padding: const EdgeInsets.only(top: 40, bottom: 40),
+          child: _consentText,
+        ),
+        const Spacer(),
+        CheckboxListTile(
+          value: _isMinimumAge,
+          title: const Text('I am 16 or older.'),
+          onChanged: state is ConsentReady ? (value) => onAgeCheckboxChanged(value: value) : null,
+        ),
+        CheckboxListTile(
+          value: _isPrivacyReviewed,
+          title: const Text('I have reviewed the privacy policy.'),
+          onChanged: state is ConsentReady ? (value) => onPrivacyCheckboxChanged(value: value) : null,
+        ),
+        GLPrimaryRaisedButton(
+          label: 'Agree',
+          onPressed: isSubmittable ? () => onAgreeButtonPressed(context) : null,
+        )
+      ],
+    );
   }
 
   void onAgeCheckboxChanged({bool value}) {
