@@ -62,13 +62,11 @@ class ConsentFormState extends State<ConsentForm> {
 
     return ListView(
       children: [
-        const Spacer(),
         SizedBox(height: 200, child: _consentImage),
         Padding(
           padding: const EdgeInsets.only(top: 40, bottom: 40),
           child: _consentText,
         ),
-        const Spacer(),
         CheckboxListTile(
           value: _isMinimumAge,
           title: const Text('I am 16 or older.'),
