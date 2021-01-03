@@ -3,6 +3,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_driver/driver_extension.dart';
+import 'package:gutlogic/auth/auth_provider.dart';
 import 'package:gutlogic/blocs/account/account.dart';
 import 'package:gutlogic/blocs/authentication/authentication.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
@@ -23,13 +24,14 @@ import 'package:gutlogic/resources/diary_repositories/meal_element_repository.da
 import 'package:gutlogic/resources/diary_repositories/meal_entry_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
 import 'package:gutlogic/resources/user_repository.dart';
-import 'package:gutlogic/auth/auth_provider.dart';
+import 'package:gutlogic/routes/routes.dart';
+import 'package:gutlogic/style/gl_theme.dart';
+import 'package:gutlogic/widgets/multi_resource_provider.dart';
 import 'package:mockito/mockito.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:timezone/timezone.dart';
-import 'package:gutlogic/routes/routes.dart';
-import 'package:gutlogic/widgets/multi_resource_provider.dart';
-import 'package:gutlogic/style/gl_theme.dart';
+
+import 'screenshots/screenshots_handler.dart' as screenshots;
 
 class MockUserRepository extends Mock implements UserRepository {}
 
@@ -54,8 +56,8 @@ class MainTabsPageWrapper extends StatelessWidget {
 }
 
 void main() {
-  // This line enables the extension.
-  enableFlutterDriverExtension();
+  // Pass the screenshots data request handler to the driver extension. This is required by the screenshot driver.
+  enableFlutterDriverExtension(handler: screenshots.handler);
 
   // Today
   initializeTimeZones();

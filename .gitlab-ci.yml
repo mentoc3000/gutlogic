@@ -192,16 +192,7 @@ screenshots:ios:
   tags:
     - macos
   script:
-    - export PATH="${PATH//~/$HOME}" # Replace ~ with path to home
-    - cd ..
-    - git clone https://github.com/mmcc007/screenshots.git
-    - cd screenshots
-    - git checkout 169_global_preferences
-    - flutter pub global activate --source path .
-    - export PATH="$PATH":"$HOME/.pub-cache/bin"
-    - export PATH="$PATH":"$HOME/Development/flutter/bin/cache/dart-sdk/bin"
-    - cd ../client
-    - screenshots --flavor=$FLUTTER_FLAVOR --config=test_driver/screenshots/ios_screenshots.yaml
+    - flutter pub run bin/screenshots
   allow_failure: true
   rules:
     # skip the develop branch on screenshots
