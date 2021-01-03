@@ -86,10 +86,16 @@ void main() {
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
 
+      // Swipe
       final entryTile = find.text('Food & Drink');
       expect(entryTile, findsOneWidget);
-      await tester.drag(entryTile, const Offset(-500, 0));
+      await tester.fling(entryTile, const Offset(-500, 0), 1e3);
       await tester.pumpAndSettle();
+
+      // Confirm
+      await tester.tap(find.text('Delete'));
+      await tester.pumpAndSettle();
+
       expect(entryTile, findsNothing);
       verify(diaryBloc.add(Delete(mealEntry))).called(1);
     });

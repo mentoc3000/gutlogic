@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../models/model_interfaces.dart';
+import '../../../widgets/alert_dialogs/confirm_delete_dialog.dart';
+import '../../../widgets/dismissible/delete_dismissible.dart';
 import '../../../widgets/gl_icons.dart';
-import '../../../widgets/gl_swipeable.dart';
 import '../../../widgets/list_tiles/gl_list_tile.dart';
 
 class SearchResultTile extends StatelessWidget {
@@ -10,7 +11,7 @@ class SearchResultTile extends StatelessWidget {
   final VoidCallback onTap;
   final FutureOr<void> Function(Searchable) onDelete;
   final bool isCustom;
-  bool get isSwipeable => onDelete != null;
+  bool get isDismissible => onDelete != null;
 
   SearchResultTile({@required this.searchable, @required this.onTap, this.onDelete, this.isCustom = false});
 
@@ -18,6 +19,15 @@ class SearchResultTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final trailing = isCustom ? const Icon(GLIcons.account) : null;
     final tile = GLListTile(heading: searchable.searchHeading(), onTap: onTap, trailing: trailing);
-    return isSwipeable ? GLSwipeable(child: tile, onDelete: () => onDelete(searchable)) : tile;
+    return isDismissible
+        ? DeleteDismissible(
+            child: tile,
+            onDelete: () => onDelete(searchable),
+            confirmDismiss: () => showDialog(
+              context: context,
+              builder: (_) => ConfirmDeleteDialog(itemName: searchable.searchHeading()),
+            ),
+          )
+        : tile;
   }
 }

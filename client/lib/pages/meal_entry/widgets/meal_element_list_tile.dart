@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/meal_entry/meal_entry.dart';
 import '../../../models/diary_entry/meal_entry.dart';
 import '../../../models/meal_element.dart';
-import '../../../widgets/gl_swipeable.dart';
+import '../../../widgets/alert_dialogs/confirm_delete_dialog.dart';
+import '../../../widgets/dismissible/delete_dismissible.dart';
 import '../../../widgets/list_tiles/push_list_tile.dart';
 
 class MealElementListTile extends StatelessWidget {
@@ -16,13 +17,17 @@ class MealElementListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mealEntryBloc = context.bloc<MealEntryBloc>();
-    return GLSwipeable(
+    return DeleteDismissible(
       child: PushListTile(
         heading: mealElement.foodReference.name,
         // subheading: mealElement.foodReference.irritants.map((i) => i.name).join(', '),
         onTap: onTap,
       ),
       onDelete: () => mealEntryBloc.add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),
+      confirmDismiss: () => showDialog(
+        context: context,
+        builder: (_) => ConfirmDeleteDialog(itemName: mealElement.foodReference.name),
+      ),
     );
   }
 }

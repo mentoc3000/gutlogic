@@ -182,10 +182,16 @@ void main() {
       await tester.pumpWidget(mealEntryPage);
       await tester.pumpAndSettle();
 
+      // Swipe
       final mealElementTile = find.text(mealEntry.mealElements.first.foodReference.name);
       expect(mealElementTile, findsOneWidget);
-      await tester.drag(mealElementTile, const Offset(-500, 0));
+      await tester.fling(mealElementTile, const Offset(-500, 0), 1e3);
       await tester.pumpAndSettle();
+
+      // Confirm
+      await tester.tap(find.text('Delete'));
+      await tester.pumpAndSettle();
+
       expect(mealElementTile, findsNothing);
       verify(mealEntryBloc.add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealEntry.mealElements.first)))
           .called(1);

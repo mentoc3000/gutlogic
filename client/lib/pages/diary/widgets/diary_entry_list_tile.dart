@@ -4,8 +4,9 @@ import 'package:intl/intl.dart';
 import '../../../blocs/diary/diary.dart';
 import '../../../models/diary_entry/diary_entry.dart';
 import '../../../style/gl_theme.dart';
+import '../../../widgets/alert_dialogs/confirm_delete_dialog.dart';
+import '../../../widgets/dismissible/delete_dismissible.dart';
 import '../../../widgets/gl_icons.dart';
-import '../../../widgets/gl_swipeable.dart';
 
 class DiaryEntryListTile extends StatelessWidget {
   final String heading;
@@ -103,7 +104,7 @@ class DiaryEntryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final diaryEntriesBloc = BlocProvider.of<DiaryBloc>(context);
-    return GLSwipeable(
+    return DeleteDismissible(
       child: ListTile(
         dense: true,
         leading: buildTime(context),
@@ -112,6 +113,10 @@ class DiaryEntryListTile extends StatelessWidget {
         onTap: onTap,
       ),
       onDelete: () => diaryEntriesBloc.add(Delete(diaryEntry)),
+      confirmDismiss: () => showDialog(
+        context: context,
+        builder: (_) => const ConfirmDeleteDialog(itemName: 'entry'),
+      ),
     );
   }
 }
