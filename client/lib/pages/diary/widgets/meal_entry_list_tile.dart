@@ -13,7 +13,7 @@ class MealEntryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiaryEntryListTile(
-      heading: 'Food & Drink',
+      heading: 'Meal/Snack',
       subheadings: entry.mealElements.map((e) => e.foodReference.name),
       diaryEntry: entry,
       barColor: GLColors.food,

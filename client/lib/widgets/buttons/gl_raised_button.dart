@@ -15,10 +15,7 @@ class GLRaisedButton extends StatelessWidget {
   final double highlightElevation = null;
   final double disabledElevation = null;
   final TextStyle textStyle;
-  final String label;
-  final IconData iconData;
-  final Widget leader;
-  final Widget disabledLeader;
+  final Widget child;
 
   GLRaisedButton({
     Key key,
@@ -29,10 +26,7 @@ class GLRaisedButton extends StatelessWidget {
     this.color,
     this.disabledColor,
     this.textStyle,
-    this.label,
-    this.iconData,
-    this.leader,
-    this.disabledLeader,
+    @required this.child,
   }) : super(key: key);
 
   @override
@@ -50,9 +44,7 @@ class GLRaisedButton extends StatelessWidget {
       highlightElevation: highlightElevation,
       disabledElevation: disabledElevation,
       textStyle: textStyle,
-      label: label,
-      leader: leader,
-      disabledLeader: disabledLeader,
+      child: child,
     );
   }
 }

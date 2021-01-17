@@ -11,6 +11,7 @@ import 'package:gutlogic/models/diary_entry/diary_entry.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/meal_element.dart';
+import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/pages/diary/diary_page.dart';
@@ -30,6 +31,11 @@ class MockDiaryBloc extends MockBloc<DiaryEvent, DiaryState> implements DiaryBlo
 class DiaryPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(home: DiaryPage());
+}
+
+Future<void> scrollToTop(WidgetTester tester) async {
+  await tester.dragFrom(const Offset(300, 200), const Offset(0, 1000));
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -84,10 +90,10 @@ void main() {
       );
       when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[mealEntry].build()));
       await tester.pumpWidget(diaryPage);
+      await scrollToTop(tester);
       await tester.pumpAndSettle();
 
-      // Swipe
-      final entryTile = find.text('Food & Drink');
+      final entryTile = find.text('Meal/Snack');
       expect(entryTile, findsOneWidget);
       await tester.fling(entryTile, const Offset(-500, 0), 1e3);
       await tester.pumpAndSettle();
@@ -113,6 +119,7 @@ void main() {
             DiaryEntryDeleted(mealEntry),
           ]));
       await tester.pumpWidget(diaryPage);
+      await scrollToTop(tester);
       await tester.pumpAndSettle();
 
       expect(find.byType(SnackBar), findsOneWidget);
@@ -127,9 +134,10 @@ void main() {
       );
       when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[mealEntry].build()));
       await tester.pumpWidget(diaryPage);
+      await scrollToTop(tester);
       await tester.pumpAndSettle();
 
-      final entryTile = find.text('Food & Drink');
+      final entryTile = find.text('Meal/Snack');
       expect(entryTile, findsOneWidget);
       await tester.drag(entryTile, const Offset(500, 0));
       await tester.pumpAndSettle();
@@ -137,7 +145,19 @@ void main() {
       verifyNever(diaryBloc.add(Delete(mealEntry)));
     });
 
-    testWidgets('start at today\'s entries', (WidgetTester tester) async {
+    testWidgets('always shows today', (WidgetTester tester) async {
+      final today = DateTime.now();
+      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[].build()));
+      await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
+
+      final dateFormatter = DateFormat.MMMEd();
+      final todayString = dateFormatter.format(today.toLocal());
+      expect(find.text(todayString), findsOneWidget);
+      expect(find.text('No Entries'), findsNothing);
+    });
+
+    testWidgets('start at today', (WidgetTester tester) async {
       final today = DateTime.now();
       final yesterday = today.subtract(const Duration(days: 1));
       final yesterdayMealEntry = MealEntry(
@@ -151,8 +171,8 @@ void main() {
         mealElements: BuiltList<MealElement>([]),
       );
       when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[
-        ...List<MealEntry>.filled(20, yesterdayMealEntry),
-        ...List<MealEntry>.filled(20, todayMealEntry),
+        ...List<MealEntry>.filled(5, yesterdayMealEntry),
+        ...List<MealEntry>.filled(5, todayMealEntry),
       ].build()));
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
@@ -160,8 +180,8 @@ void main() {
       final dateFormatter = DateFormat.MMMEd();
       final todayString = dateFormatter.format(today.toLocal());
       final yesterdayString = dateFormatter.format(yesterday.toLocal());
-      expect(find.text(todayString), findsOneWidget);
       expect(find.text(yesterdayString), findsNothing);
+      expect(find.text(todayString), findsOneWidget);
       expect(find.text('No Entries'), findsNothing);
     });
 
@@ -176,6 +196,7 @@ void main() {
       );
       when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[todayMealEntry].build()));
       await tester.pumpWidget(diaryPage);
+      await scrollToTop(tester);
       await tester.pumpAndSettle();
 
       // Local date in header
@@ -184,7 +205,6 @@ void main() {
       final utcTodayHeaderString = headerDateFormatter.format(datetime.toUtc());
       assert(localTodayHeaderString != utcTodayHeaderString);
       expect(find.text(localTodayHeaderString), findsOneWidget);
-      expect(find.text(utcTodayHeaderString), findsNothing);
 
       // Local time in tile
       final timeFormatter = DateFormat.jm();
@@ -203,16 +223,11 @@ void main() {
         datetime: lastMonth,
         mealElements: BuiltList<MealElement>([]),
       );
-      final lastWeekMealEntry = MealEntry(
-        id: 'meal2',
-        datetime: lastWeek,
-        mealElements: BuiltList<MealElement>([]),
-      );
       when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[
         ...List<MealEntry>.filled(2, lastMonthMealEntry),
-        ...List<MealEntry>.filled(2, lastWeekMealEntry),
       ].build()));
       await tester.pumpWidget(diaryPage);
+      await scrollToTop(tester);
       await tester.pumpAndSettle();
 
       expect(find.text('No Entries'), findsOneWidget);
@@ -233,6 +248,7 @@ void main() {
       );
       when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[morningMealEntry, afternoonMealEntry].build()));
       await tester.pumpWidget(diaryPage);
+      await scrollToTop(tester);
       await tester.pumpAndSettle();
 
       final morningTitle = (find.byType(ListTile).first.evaluate().single.widget as ListTile).title;
@@ -255,10 +271,11 @@ void main() {
 
       testWidgets('shows tile', (WidgetTester tester) async {
         await tester.pumpWidget(diaryPage);
+        await scrollToTop(tester);
         await tester.pumpAndSettle();
         expect(find.text('Mon, Mar 4'), findsOneWidget);
         expect(find.text('11:23 AM'), findsOneWidget);
-        expect(find.text('Food & Drink'), findsOneWidget);
+        expect(find.text('Meal/Snack'), findsOneWidget);
       });
 
       testWidgets('tile routes to page', (WidgetTester tester) async {
@@ -267,9 +284,10 @@ void main() {
         when(routes.createMealEntryRoute(entry: anyNamed('entry'))).thenReturn(MockPageRoute(key: navigationKey));
 
         await tester.pumpWidget(diaryPage);
+        await scrollToTop(tester);
         await tester.pumpAndSettle();
 
-        final tappable = find.text('Food & Drink');
+        final tappable = find.text('Meal/Snack');
         await tester.tap(tappable);
         await tester.pumpAndSettle();
         expect(find.byKey(navigationKey), findsOneWidget);
@@ -289,6 +307,7 @@ void main() {
 
       testWidgets('shows bowel movement entry', (WidgetTester tester) async {
         await tester.pumpWidget(diaryPage);
+        await scrollToTop(tester);
         await tester.pumpAndSettle();
         expect(find.text('Mon, Mar 4'), findsOneWidget);
         expect(find.text('11:23 AM'), findsOneWidget);
@@ -302,6 +321,7 @@ void main() {
             .thenReturn(MockPageRoute(key: navigationKey));
 
         await tester.pumpWidget(diaryPage);
+        await scrollToTop(tester);
         await tester.pumpAndSettle();
 
         final tappable = find.text('Bowel Movement');
@@ -318,7 +338,8 @@ void main() {
         final symptomEntry = SymptomEntry(
           id: 'symptom1',
           datetime: DateTime(2019, 3, 4, 11, 23),
-          symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: symptomName), severity: 3),
+          symptom:
+              Symptom(symptomType: SymptomType(id: 'symptomType1', name: symptomName), severity: Severity.moderate),
           notes: 'notes',
         );
         when(diaryBloc.state).thenReturn(DiaryLoaded(BuiltList<DiaryEntry>([symptomEntry])));
@@ -326,6 +347,7 @@ void main() {
 
       testWidgets('shows symptom entry', (WidgetTester tester) async {
         await tester.pumpWidget(diaryPage);
+        await scrollToTop(tester);
         await tester.pumpAndSettle();
         expect(find.text('Mon, Mar 4'), findsOneWidget);
         expect(find.text('11:23 AM'), findsOneWidget);
@@ -338,6 +360,7 @@ void main() {
         when(routes.createSymptomEntryRoute(entry: anyNamed('entry'))).thenReturn(MockPageRoute(key: navigationKey));
 
         await tester.pumpWidget(diaryPage);
+        await scrollToTop(tester);
         await tester.pumpAndSettle();
 
         final tappable = find.text(symptomName);

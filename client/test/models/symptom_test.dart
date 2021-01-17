@@ -1,4 +1,6 @@
+import 'package:built_value/serializer.dart';
 import 'package:gutlogic/models/serializers.dart';
+import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:test/test.dart';
@@ -7,58 +9,57 @@ void main() {
   group('Symptom', () {
     test('constructs simple object', () {
       final symptomType = SymptomType(id: 'id', name: 'Gas');
-      final symptom = Symptom(symptomType: symptomType, severity: 2.1);
+      final symptom = Symptom(symptomType: symptomType, severity: Severity.moderate);
       expect(symptom.symptomType, symptomType);
-      expect(symptom.severity, 2.1);
+      expect(symptom.severity, Severity.moderate);
     });
 
     test('build nested object', () {
       final symptom = Symptom.fromBuilder((b) => b
         ..symptomType.id = 'st1'
         ..symptomType.name = 'Gas'
-        ..severity = 2.1);
+        ..severity = Severity.moderate);
       expect(symptom.symptomType.name, 'Gas');
-      expect(symptom.severity, 2.1);
+      expect(symptom.severity, Severity.moderate);
     });
 
     test('rebuild nested object', () {
       var symptom = Symptom.fromBuilder((b) => b
         ..symptomType.id = 'st1'
         ..symptomType.name = 'Pain'
-        ..severity = 2.1);
+        ..severity = Severity.moderate);
       symptom = symptom.rebuild((b) => b..symptomType.name = 'Gas');
       expect(symptom.symptomType.name, 'Gas');
-      expect(symptom.severity, 2.1);
+      expect(symptom.severity, Severity.moderate);
     });
 
     test('is equatable', () {
       Symptom constructSymptom() => Symptom.fromBuilder((b) => b
         ..symptomType.id = 'st1'
         ..symptomType.name = 'Gas'
-        ..severity = 3.4);
+        ..severity = Severity.intense);
       expect(constructSymptom(), constructSymptom());
     });
 
     test('is deserializable', () {
-      const symptomJson = {
+      final symptomJson = {
         'symptomType': {'id': 'id', 'name': 'Gas'},
-        'severity': 4.56,
+        'severity': serializers.serialize(Severity.moderate, specifiedType: const FullType(Severity)),
       };
       final symptom = serializers.deserializeWith(Symptom.serializer, symptomJson);
       expect(symptom.symptomType.name, 'Gas');
-      expect(symptom.severity, 4.56);
     });
 
     test('is serializable', () {
       final symptomType = SymptomType(id: 'id', name: 'Gas');
       final symptom = Symptom.fromBuilder((b) => b
         ..symptomType = symptomType.toBuilder()
-        ..severity = 2.1);
+        ..severity = Severity.moderate);
       final Map<String, dynamic> symptomTypeJson = serializers.serialize(symptomType);
       expect(serializers.serialize(symptom), {
         '\$': 'Symptom',
         'symptomType': symptomTypeJson..remove('\$'),
-        'severity': symptom.severity,
+        'severity': serializers.serializeWith(Severity.serializer, symptom.severity),
       });
     });
   });

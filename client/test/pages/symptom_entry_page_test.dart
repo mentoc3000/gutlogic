@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/symptom_entry/symptom_entry.dart';
 import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
+import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/pages/loading_page.dart';
@@ -31,7 +32,7 @@ void main() {
     symptomEntry = SymptomEntry(
       id: 'symptom1',
       datetime: DateTime(2019, 3, 4, 11, 23),
-      symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: 'Gas'), severity: 1),
+      symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: 'Gas'), severity: Severity.mild),
       notes: 'notes',
     );
 
@@ -155,9 +156,10 @@ void main() {
       await tester.pumpAndSettle();
       final severitySlider = find.byType(SeveritySlider);
       expect(severitySlider, findsOneWidget);
-      await tester.tap(severitySlider);
+      final moderateLabel = find.text('Moderate');
+      await tester.tap(moderateLabel);
       await tester.pumpAndSettle();
-      verify(symptomEntryBloc.add(const UpdateSeverity(2))).called(1);
+      verify(symptomEntryBloc.add(const UpdateSeverity(Severity.moderate))).called(1);
     });
 
     testWidgets('updates notes', (WidgetTester tester) async {

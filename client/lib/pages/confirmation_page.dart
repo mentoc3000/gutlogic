@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/login/login.dart';
 import '../resources/user_repository.dart';
-import '../widgets/buttons/gl_button.dart';
+import '../widgets/buttons/buttons.dart';
 import '../widgets/form_fields/gl_text_form_field.dart';
 import '../widgets/gl_app_bar.dart';
 import '../widgets/gl_circular_progress_indicator.dart';
@@ -74,13 +74,13 @@ class ConfirmationForm extends StatelessWidget {
                 labelText: 'confirmation code',
                 controller: confirmationCodeController,
               ),
-              GLPrimaryRaisedButton(
+              GLPrimaryButton(
                 onPressed: state is! LoginLoading ? _onSignupButtonPressed : null,
-                label: 'Confirm',
+                child: const StretchedButtonContent(label: 'Confirm'),
               ),
-              GLSecondaryFlatButton(
+              GLTertiaryButton(
                 onPressed: state is! LoginLoading ? _onCancelButtonPressed : null,
-                label: 'Cancel',
+                child: const StretchedButtonContent(label: 'Cancel'),
               ),
               Container(
                 child: state is LoginLoading ? const GLCircularProgressIndicator() : null,

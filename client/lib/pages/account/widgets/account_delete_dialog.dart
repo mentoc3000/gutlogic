@@ -7,8 +7,7 @@ import '../../../auth/auth.dart';
 import '../../../blocs/account_delete/account_delete.dart';
 import '../../../resources/user_repository.dart';
 import '../../../routes/routes.dart';
-import '../../../style/gl_colors.dart';
-import '../../../widgets/buttons/gl_button.dart';
+import '../../../widgets/buttons/buttons.dart';
 import '../../../widgets/form_fields/password_form_field.dart';
 import '../../../widgets/gl_scaffold.dart';
 import '../../../widgets/snack_bars/error_snack_bar.dart';
@@ -83,8 +82,14 @@ class AccountDeleteDialogState extends State<AccountDeleteDialog> {
       title: const Text('Delete Account?'),
       content: SingleChildScrollView(child: body),
       actions: [
-        GLFlatButton(label: 'Cancel', onPressed: isSubmittable ? onCancelPressed : null),
-        GLFlatButton(label: 'Delete', onPressed: isSubmittable ? onDeletePressed : null, textColor: GLColors.red),
+        GLTertiaryButton(
+          child: const ShrinkWrappedButtonContent(label: 'Cancel'),
+          onPressed: isSubmittable ? onCancelPressed : null,
+        ),
+        GLWarningButton(
+          child: const ShrinkWrappedButtonContent(label: 'Delete'),
+          onPressed: isSubmittable ? onDeletePressed : null,
+        ),
       ],
     );
   }

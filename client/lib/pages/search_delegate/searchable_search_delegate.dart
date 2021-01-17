@@ -10,7 +10,7 @@ import '../../widgets/list_tiles/gl_list_tile.dart';
 abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDelegate<T> {
   final void Function(T) onSelect;
   Widget floatingActionButton;
-  final FutureOr<void> Function(String) onAdd;
+  final FutureOr<String> Function(String) onAdd;
   final FutureOr<void> Function(Searchable) onDelete;
 
   SearchableSearchDelegate({
@@ -19,7 +19,12 @@ abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDele
     this.onDelete,
     String searchFieldLabel,
   }) : super(searchFieldLabel: searchFieldLabel) {
-    floatingActionButton = onAdd == null ? null : AddFloatingActionButton(onPressed: () => onAdd(query));
+    floatingActionButton = onAdd == null
+        ? null
+        : AddFloatingActionButton(onPressed: () async {
+            final result = await onAdd(query);
+            if (result != null) query = result; // set the query to the newly added Searchable
+          });
   }
 
   @override

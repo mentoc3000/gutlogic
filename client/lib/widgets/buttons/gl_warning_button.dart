@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
 
-import 'gl_flat_button.dart';
+import 'gl_raised_button.dart';
 
-class GLWarningFlatButton extends StatelessWidget {
+class GLWarningButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String label;
-  final IconData iconData;
+  final Widget child;
 
-  const GLWarningFlatButton({
+  const GLWarningButton({
     Key key,
     @required this.onPressed,
-    this.label,
-    this.iconData,
+    @required this.child,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = ButtonTheme.of(context).colorScheme;
-    return GLFlatButton(
+    return GLRaisedButton(
       onPressed: onPressed,
       textColor: colorScheme.onError,
       color: colorScheme.error,
-      label: label,
-      iconData: iconData,
+      child: child,
     );
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
+import '../../../models/severity.dart';
 import '../../../widgets/cards/headed_card.dart';
 import 'severity_slider.dart';
 
 class SeverityCard extends StatefulWidget {
-  final double severity;
-  final Function(double) onChanged;
+  final Severity severity;
+  final Function(Severity) onChanged;
 
   const SeverityCard({this.severity, this.onChanged});
 
@@ -13,7 +14,7 @@ class SeverityCard extends StatefulWidget {
 }
 
 class _SeverityCardState extends State<SeverityCard> {
-  double _severity;
+  Severity _severity;
 
   @override
   void initState() {
@@ -23,21 +24,16 @@ class _SeverityCardState extends State<SeverityCard> {
 
   @override
   Widget build(BuildContext context) {
-    int severityToSliderValue(double severity) => (4 - severity).round();
-
-    double sliderValueToSeverity(int value) => (4 - value).roundToDouble();
-
     return HeadedCard(
       heading: 'Severity',
       content: SeveritySlider(
-        initialValue: severityToSliderValue(_severity),
-        onChange: (newValue) => setState(() {
-          final newSeverity = sliderValueToSeverity(newValue);
-          if (_severity == newSeverity) {
+        initialSeverity: _severity,
+        onChange: (Severity newValue) => setState(() {
+          if (_severity == newValue) {
             return;
           }
-          _severity = newSeverity;
-          widget.onChanged(newSeverity);
+          _severity = newValue;
+          widget.onChanged(newValue);
         }),
       ),
     );

@@ -54,7 +54,13 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
         );
       }
       if (event is LoadFoods) {
-        yield FoodsLoaded(customFoods: event.customFoods, edamamFoods: event.edamamFoods);
+        final customFoods = event.customFoods;
+        final edamamFoods = event.edamamFoods;
+        if (customFoods.isEmpty && edamamFoods.isEmpty) {
+          yield NoFoodsFound();
+        } else {
+          yield FoodsLoaded(customFoods: customFoods, edamamFoods: edamamFoods);
+        }
       }
       if (event is CreateCustomFood) {
         unawaited(customFoodRepository.add(name: event.foodName));

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../buttons/gl_secondary_flat_button.dart';
-import '../buttons/gl_warning_flat_button.dart';
+
+import '../buttons/buttons.dart';
 import 'gl_alert_dialog.dart';
 
 class ConfirmDeleteDialog extends StatelessWidget {
@@ -13,8 +13,14 @@ class ConfirmDeleteDialog extends StatelessWidget {
     return GLAlertDialog(
       title: 'Delete $itemName?',
       actions: <Widget>[
-        GLSecondaryFlatButton(label: 'Cancel', onPressed: () => Navigator.pop(context)),
-        GLWarningFlatButton(label: 'Delete', onPressed: () => Navigator.pop(context, true)),
+        GLSecondaryButton(
+          child: const ShrinkWrappedButtonContent(label: 'Cancel'),
+          onPressed: () => Navigator.pop(context),
+        ),
+        GLWarningButton(
+          child: const ShrinkWrappedButtonContent(label: 'Delete'),
+          onPressed: () => Navigator.pop(context, true),
+        ),
       ],
     );
   }

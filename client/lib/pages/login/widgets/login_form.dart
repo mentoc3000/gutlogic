@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/login/login.dart';
 import '../../../routes/routes.dart';
-import '../../../widgets/buttons/gl_flat_button.dart';
-import '../../../widgets/buttons/gl_primary_raised_button.dart';
+import '../../../widgets/buttons/buttons.dart';
 import '../../../widgets/form_fields/email_form_field.dart';
 import '../../../widgets/form_fields/password_form_field.dart';
 import '../../../widgets/snack_bars/error_snack_bar.dart';
@@ -93,8 +92,14 @@ class LoginFormState extends State<LoginForm> {
             validator: _passwordValidator,
           ),
           const Spacer(),
-          GLPrimaryRaisedButton(label: 'Login', onPressed: isLoginButtonEnabled ? onLoginButtonPressed : null),
-          GLFlatButton(label: 'I forgot my password', onPressed: isSubmittable ? onResetPasswordButtonPressed : null),
+          GLPrimaryButton(
+            child: const StretchedButtonContent(label: 'Login'),
+            onPressed: isLoginButtonEnabled ? onLoginButtonPressed : null,
+          ),
+          GLTertiaryButton(
+            child: const StretchedButtonContent(label: 'I forgot my password'),
+            onPressed: isSubmittable ? onResetPasswordButtonPressed : null,
+          ),
         ],
       ),
     );

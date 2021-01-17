@@ -6,9 +6,7 @@ import '../../../blocs/landing/landing.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/auth/apple_auth_button.dart';
 import '../../../widgets/auth/google_auth_button.dart';
-import '../../../widgets/buttons/gl_button.dart';
-import '../../../widgets/buttons/gl_primary_raised_button.dart';
-import '../../../widgets/buttons/gl_secondary_flat_button.dart';
+import '../../../widgets/buttons/buttons.dart';
 
 class LandingPageButtons extends StatelessWidget {
   @override
@@ -17,30 +15,32 @@ class LandingPageButtons extends StatelessWidget {
   }
 
   Widget builder(BuildContext context, LandingState state) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      GoogleAuthButton(
-        label: 'Continue with Google',
-        onPressed: () {
-          if (state is LandingReady) onGoogleButtonPressed(context);
-        },
-      ),
-      if (AppleAuth.available)
-        AppleAuthButton(
-          label: 'Continue with Apple',
+    return Column(
+      children: [
+        GoogleAuthButton(
+          label: 'Continue with Google',
           onPressed: () {
-            if (state is LandingReady) onAppleButtonPressed(context);
+            if (state is LandingReady) onGoogleButtonPressed(context);
           },
         ),
-      GLPrimaryRaisedButton(
-        label: 'Log in with your email',
-        onPressed: state is LandingReady ? () => onLoginButtonPressed(context) : null,
-      ),
-      const SizedBox(height: GLButton.height),
-      GLSecondaryFlatButton(
-        label: 'Create a new account',
-        onPressed: state is LandingReady ? () => onRegisterButtonPressed(context) : null,
-      ),
-    ]);
+        if (AppleAuth.available)
+          AppleAuthButton(
+            label: 'Continue with Apple',
+            onPressed: () {
+              if (state is LandingReady) onAppleButtonPressed(context);
+            },
+          ),
+        GLPrimaryButton(
+          child: const StretchedButtonContent(label: 'Log in with your email'),
+          onPressed: state is LandingReady ? () => onLoginButtonPressed(context) : null,
+        ),
+        const SizedBox(height: 20),
+        GLTertiaryButton(
+          child: const StretchedButtonContent(label: 'Create a new account'),
+          onPressed: state is LandingReady ? () => onRegisterButtonPressed(context) : null,
+        ),
+      ],
+    );
   }
 
   void onGoogleButtonPressed(BuildContext context) {

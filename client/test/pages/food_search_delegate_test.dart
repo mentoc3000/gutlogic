@@ -68,8 +68,7 @@ void main() {
     });
 
     testWidgets('displays message when no results are found', (WidgetTester tester) async {
-      when(foodBloc.state)
-          .thenReturn(FoodsLoaded(customFoods: <CustomFood>[].build(), edamamFoods: <EdamamFood>[].build()));
+      when(foodBloc.state).thenReturn(NoFoodsFound());
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
@@ -83,11 +82,13 @@ void main() {
       // Open search
       await tester.tap(find.byIcon(GLIcons.search));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextField), 'Fruit');
+      final searchField = find.byType(TextField);
+      expect(searchField, findsOneWidget);
+      await tester.enterText(searchField, 'Fruit');
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
 
-      expect(find.text('No matches found. Try adding a food!'), findsOneWidget);
+      expect(find.text(delegate.noResultsMessage), findsOneWidget);
     });
 
     testWidgets('shows search results', (WidgetTester tester) async {

@@ -5,7 +5,6 @@ import '../../blocs/meal_entry/meal_entry.dart';
 import '../../models/diary_entry/meal_entry.dart';
 import '../../widgets/cards/datetime_card.dart';
 import '../../widgets/cards/notes_card.dart';
-import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/snack_bars/undo_delete_snack_bar.dart';
@@ -48,14 +47,11 @@ class _MealEntryPageState extends State<MealEntryPage> {
   @override
   Widget build(BuildContext context) {
     return GLScaffold(
-      appBar: GLAppBar(title: 'Food & Drink'),
+      appBar: GLAppBar(title: 'Meal/Snack'),
       body: BlocConsumer<MealEntryBloc, MealEntryState>(
         builder: builder,
         listener: listener,
         listenWhen: listenWhen,
-      ),
-      floatingActionButton: AddFloatingActionButton(
-        onPressed: () => addMealElement(context),
       ),
     );
   }
@@ -80,7 +76,7 @@ class _MealEntryPageState extends State<MealEntryPage> {
     return loadedAfterSomethingElse || deleted;
   }
 
-  Future<void> addFood(BuildContext context, {String initialFoodName = ''}) async {
+  Future<String> addFood(BuildContext context, {String initialFoodName = ''}) async {
     final foodBloc = context.bloc<FoodBloc>();
 
     final foodName = await showDialog<String>(
@@ -89,6 +85,8 @@ class _MealEntryPageState extends State<MealEntryPage> {
     );
 
     if (foodName != null) foodBloc.add(CreateCustomFood(foodName));
+
+    return foodName;
   }
 
   void addMealElement(BuildContext context) {
@@ -100,7 +98,7 @@ class _MealEntryPageState extends State<MealEntryPage> {
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
         onSelect: (food) => mealEntryBloc.add(AddMealElement(food)),
-        onAdd: (foodName) => addFood(context, initialFoodName: foodName),
+        onAdd: (initialFoodName) => addFood(context, initialFoodName: initialFoodName),
         onDelete: (food) => foodBloc.add(DeleteCustomFood(food)),
       ),
     );
@@ -113,7 +111,10 @@ class _MealEntryPageState extends State<MealEntryPage> {
         dateTime: entry.datetime,
         onChanged: (DateTime datetime) => mealEntryBloc.add(UpdateMealEntryDateTime(datetime)),
       ),
-      MealElementsCard(mealEntry: entry),
+      MealElementsCard(
+        mealEntry: entry,
+        onAdd: () => addMealElement(context),
+      ),
       NotesCard(
         controller: _notesController,
         onChanged: (String notes) => mealEntryBloc.add(UpdateMealEntryNotes(notes)),

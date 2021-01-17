@@ -14,10 +14,7 @@ class ListCard extends StatelessWidget {
       child: Column(
         children: [
           HeaderListTile(heading: heading),
-          ...items.map((e) => Padding(
-                padding: const EdgeInsets.only(left: 0),
-                child: e,
-              )),
+          ...items,
         ],
       ),
     );

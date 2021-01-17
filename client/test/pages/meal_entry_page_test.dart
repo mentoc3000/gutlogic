@@ -83,13 +83,12 @@ void main() {
 
       await tester.pumpWidget(mealEntryPage);
       await tester.pumpAndSettle();
-      expect(find.text('Food & Drink'), findsOneWidget);
+      expect(find.text('Meal/Snack'), findsOneWidget);
       // expect(find.text('Monday, March 4, 2019 at 11:23AM'), findsOneWidget);
-      expect(find.text('Ingredients'), findsOneWidget);
+      expect(find.text('Food & Drink'), findsOneWidget);
       expect(find.text(mealEntry.mealElements.first.foodReference.name), findsOneWidget);
       expect(find.text('Notes'), findsOneWidget);
       expect(find.text(mealEntry.notes), findsOneWidget);
-      expect(find.byType(FloatingActionButton), findsOneWidget);
       verifyNever(mealEntryBloc.add(any));
     });
 
@@ -104,7 +103,7 @@ void main() {
 
       when(mealEntryBloc.state).thenReturn(MealEntryLoading());
       await tester.pumpWidget(mealEntryPage);
-      expect(find.text('Food & Drink'), findsOneWidget);
+      expect(find.text('Meal/Snack'), findsOneWidget);
       expect(find.byType(LoadingPage), findsOneWidget);
       verifyNever(mealEntryBloc.add(any));
     });
@@ -121,7 +120,7 @@ void main() {
 
       await tester.pumpWidget(mealEntryPage);
       await tester.pump(const Duration(milliseconds: 100));
-      expect(find.text('Food & Drink'), findsOneWidget);
+      expect(find.text('Meal/Snack'), findsOneWidget);
       expect(find.text(message), findsOneWidget);
       verifyNever(mealEntryBloc.add(any));
     });
@@ -149,7 +148,7 @@ void main() {
       expect(find.byKey(navigationKey), findsOneWidget);
     });
 
-    testWidgets('fab shows food search', (WidgetTester tester) async {
+    testWidgets('add button shows food search', (WidgetTester tester) async {
       when(mealEntryBloc.state).thenReturn(MealEntryLoaded(mealEntry));
 
       final newFood = CustomFood(id: '919', name: 'Hoisin Sauce');
@@ -161,7 +160,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap search icon
-      final searchIcon = find.byType(FloatingActionButton);
+      final searchIcon = find.text('Add Food or Drink');
       expect(searchIcon, findsOneWidget);
       await tester.tap(searchIcon);
       await tester.pumpAndSettle();

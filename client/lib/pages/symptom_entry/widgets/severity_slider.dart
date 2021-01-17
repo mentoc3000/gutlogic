@@ -26,14 +26,49 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math.dart' as v_math;
 
-typedef OnChange = void Function(int index);
+import '../../../models/severity.dart';
+
+typedef OnChange = void Function(Severity severity);
+
+double _severityToValue(Severity severity) {
+  switch (severity) {
+    case Severity.mild:
+      return 1;
+    case Severity.moderate:
+      return 2;
+    case Severity.intense:
+      return 3;
+    case Severity.severe:
+      return 4;
+    default:
+      throw ArgumentError(severity);
+  }
+}
+
+Severity _valueToSeverity(int value) {
+  switch (value) {
+    case 1:
+      return Severity.mild;
+    case 2:
+      return Severity.moderate;
+    case 3:
+      return Severity.intense;
+    case 4:
+      return Severity.severe;
+    default:
+      return Severity.mild;
+  }
+}
 
 class SeveritySlider extends StatefulWidget {
   const SeveritySlider(
-      {Key key, @required this.onChange, this.initialValue = 2, this.optionStyle, this.width, this.circleDiameter = 60})
-      : assert(initialValue >= 0 && initialValue <= 4, 'Initial value should be between 0 and 4'),
-        assert(options.length == 5, 'Reviews options should be 5'),
-        super(key: key);
+      {Key key,
+      @required this.onChange,
+      this.initialSeverity = Severity.moderate,
+      this.optionStyle,
+      this.width,
+      this.circleDiameter = 60})
+      : super(key: key);
 
   /// The onChange callback calls every time when a pointer have changed
   /// the value of the slider and is no longer in contact with the screen.
@@ -49,8 +84,8 @@ class SeveritySlider extends StatefulWidget {
   /// ```
 
   final OnChange onChange;
-  final int initialValue;
-  static const options = ['None', 'Mild', 'Moderate', 'Intense', 'Severe'];
+  final Severity initialSeverity;
+  static const options = ['Mild', 'Moderate', 'Intense', 'Severe'];
   final TextStyle optionStyle;
   final double width;
   final double circleDiameter;
@@ -75,7 +110,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    final initValue = widget.initialValue.toDouble();
+    final initValue = _severityToValue(widget.initialSeverity) - 1;
     _controller = AnimationController(
       value: initValue,
       vsync: this,
@@ -97,7 +132,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
   }
 
   void _afterLayout(_) {
-    widget.onChange(widget.initialValue);
+    widget.onChange(widget.initialSeverity);
   }
 
   void handleTap(int state) {
@@ -107,7 +142,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
     _controller.reset();
     _controller.forward();
 
-    widget.onChange(state);
+    widget.onChange(_valueToSeverity(state + 1));
   }
 
   void _onDrag(double dx, innerWidth) {
@@ -129,7 +164,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
     _controller.reset();
     _controller.forward();
 
-    widget.onChange(_animationValue.round());
+    widget.onChange(_valueToSeverity(_animationValue.round()));
   }
 
   void _onDragStart(x, width) {
@@ -149,28 +184,26 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
       height: 100,
       child: LayoutBuilder(
         builder: (context, size) {
+          final width = widget.width != null && widget.width < size.maxWidth ? widget.width : size.maxWidth;
           return Stack(
             children: <Widget>[
               MeasureLine(
                 states: SeveritySlider.options,
                 handleTap: handleTap,
                 animationValue: _animationValue,
-//                width: size.maxWidth,
-                width: widget.width != null && widget.width < size.maxWidth ? widget.width : size.maxWidth,
+                width: width,
                 optionStyle: widget.optionStyle,
                 circleDiameter: widget.circleDiameter,
               ),
               MyIndicator(
                 circleDiameter: widget.circleDiameter,
                 animationValue: _animationValue,
-                width: widget.width != null && widget.width < size.maxWidth ? widget.width : size.maxWidth,
+                width: width,
                 onDragStart: (details) {
-                  _onDragStart(details.globalPosition.dx,
-                      widget.width != null && widget.width < size.maxWidth ? widget.width : size.maxWidth);
+                  _onDragStart(details.globalPosition.dx, width);
                 },
                 onDrag: (details) {
-                  _onDrag(details.globalPosition.dx,
-                      widget.width != null && widget.width < size.maxWidth ? widget.width : size.maxWidth);
+                  _onDrag(details.globalPosition.dx, width);
                 },
                 onDragEnd: _onDragEnd,
               ),
@@ -209,9 +242,8 @@ class MeasureLine extends StatelessWidget {
         opacity = 0.3 + unitAnimatingValue * 0.7;
       }
       final faceValue = (states.length - index - 1).toDouble();
-      res.add(LimitedBox(
+      res.add(Expanded(
         key: ValueKey(text),
-        maxWidth: circleDiameter,
         child: GestureDetector(
           onTap: () {
             handleTap(index);
@@ -258,8 +290,8 @@ class MeasureLine extends StatelessWidget {
         children: <Widget>[
           Positioned(
             top: circleDiameter / 2,
-            left: 20,
-            width: width - 40,
+            left: width / 8,
+            width: width * 3 / 4,
             child: Container(
               width: width,
               color: const Color(0xFFeceeef),
@@ -464,9 +496,8 @@ class MyPainter extends CustomPainter {
 }
 
 class MyIndicator extends StatelessWidget {
-  MyIndicator({this.animationValue, width, this.onDrag, this.onDragStart, this.onDragEnd, this.circleDiameter})
-      : width = width - circleDiameter,
-        position = animationValue == 0 ? 0 : animationValue / 4;
+  MyIndicator({this.animationValue, this.width, this.onDrag, this.onDragStart, this.onDragEnd, this.circleDiameter})
+      : position = (animationValue + .5) / 4;
 
   final double animationValue;
   final Function onDrag;
@@ -514,7 +545,7 @@ class MyIndicator extends StatelessWidget {
     return Container(
       child: Positioned(
         top: 0,
-        left: width * position,
+        left: width * position - circleDiameter / 2,
         child: _buildIndicator(),
       ),
     );

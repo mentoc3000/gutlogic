@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
+import 'package:gutlogic/models/severity.dart';
+import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
@@ -21,7 +23,7 @@ void main() {
     setUp(() {
       diaryEntryId = 'entry1Id';
       const name = 'Gas';
-      const severity = 2.0;
+      const severity = Severity.mild;
       final dateTime = DateTime.now().toUtc();
       const notes = 'easy';
       diaryEntry = SymptomEntry(
@@ -38,7 +40,7 @@ void main() {
             'id': 'symptomType1',
             'name': name,
           },
-          'severity': severity,
+          'severity': serializers.serializeWith(Severity.serializer, severity),
         },
         'datetime': Timestamp.fromDate(dateTime),
         'notes': notes,
@@ -113,10 +115,10 @@ void main() {
     });
 
     test('updates severity', () async {
-      const severity = 3.0;
+      const severity = Severity.intense;
       await repository.updateSeverity(diaryEntry, severity);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['symptom']['severity'], severity);
+      expect(retrievedEntry['symptom']['severity'], serializers.serializeWith(Severity.serializer, severity));
     });
 
     test('updates symptom type', () async {
@@ -134,10 +136,10 @@ void main() {
     });
 
     test('updates symptom', () async {
-      final symptom = Symptom(symptomType: SymptomType(id: 'symptomType1', name: 'Bloat'), severity: 3.0);
+      final symptom = Symptom(symptomType: SymptomType(id: 'symptomType1', name: 'Bloat'), severity: Severity.intense);
       await repository.updateSymptom(diaryEntry, symptom);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['symptom']['severity'], symptom.severity);
+      expect(retrievedEntry['symptom']['severity'], serializers.serializeWith(Severity.serializer, symptom.severity));
     });
   });
 }

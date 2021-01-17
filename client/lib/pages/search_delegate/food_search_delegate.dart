@@ -18,7 +18,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
   FoodSearchDelegate({
     this.foodBloc,
     @required void Function(Food) onSelect,
-    FutureOr<void> Function(String) onAdd,
+    FutureOr<String> Function(String) onAdd,
     FutureOr<void> Function(Food) onDelete,
   }) : super(
           onSelect: onSelect,
@@ -47,12 +47,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
         if (state is FoodsLoaded) {
           final items = state.items;
           if (query.isEmpty) {
-            return addFab(Column(children: []));
-          }
-          if (items.isEmpty) {
-            return addFab(Column(
-              children: [GLListTile(heading: noResultsMessage)],
-            ));
+            return Column(children: []);
           } else {
             return addFab(
               PoweredByEdamam(
@@ -75,6 +70,11 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
               ),
             );
           }
+        }
+        if (state is NoFoodsFound) {
+          return addFab(Column(
+            children: [GLListTile(heading: noResultsMessage)],
+          ));
         }
         if (state is FoodsLoading) {
           return addFab(LoadingPage());

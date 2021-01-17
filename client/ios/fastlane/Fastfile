@@ -108,7 +108,7 @@ platform :ios do
     testflight(
       demo_account_required: true,
       distribute_external: true,
-      groups: ["Friends and Family"],
+      groups: ["Family and Friends"],
       beta_app_feedback_email: "dev@gutlogic.co",
       reject_build_waiting_for_review: true,
       changelog: File.read("./metadata/what_to_test.txt")

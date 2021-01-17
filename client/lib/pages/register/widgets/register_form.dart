@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/register/register.dart';
-import '../../../widgets/buttons/gl_primary_raised_button.dart';
+import '../../../widgets/buttons/buttons.dart';
 import '../../../widgets/form_fields/email_form_field.dart';
 import '../../../widgets/form_fields/password_form_field.dart';
 import '../../../widgets/snack_bars/error_snack_bar.dart';
@@ -80,8 +80,8 @@ class RegisterFormState extends State<RegisterForm> {
             showStrengthBar: true,
           ),
           const Spacer(),
-          GLPrimaryRaisedButton(
-            label: 'Register',
+          GLPrimaryButton(
+            child: const StretchedButtonContent(label: 'Register'),
             onPressed: isSubmittable ? onRegisterButtonPressed : null,
           ),
         ],

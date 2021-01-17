@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/symptom_entry/symptom_entry.dart';
 import '../../blocs/symptom_type/symptom_type.dart';
 import '../../models/diary_entry/symptom_entry.dart';
+import '../../models/severity.dart';
 import '../../models/symptom_type.dart';
 import '../../resources/diary_repositories/symptom_entry_repository.dart';
 import '../../widgets/cards/datetime_card.dart';
@@ -82,7 +83,7 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
         ),
         SeverityCard(
           severity: entry.symptom?.severity ?? 1,
-          onChanged: (double newValue) => _symptomEntryBloc.add(UpdateSeverity(newValue)),
+          onChanged: (Severity newValue) => _symptomEntryBloc.add(UpdateSeverity(newValue)),
         ),
         NotesCard(
           controller: _notesController,

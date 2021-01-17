@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
 
-export 'gl_flat_button.dart';
-export 'gl_primary_flat_button.dart';
-export 'gl_primary_raised_button.dart';
-export 'gl_raised_button.dart';
-export 'gl_secondary_flat_button.dart';
-export 'gl_secondary_raised_button.dart';
-export 'gl_warning_flat_button.dart';
-export 'gl_warning_raised_button.dart';
+import 'button_helpers.dart';
 
 class GLButton extends StatelessWidget {
-  static const height = 38.0;
-  static const fontSize = 16.0; // Adheres to Apple's font/height = .43 requirement
-  static const defaultIconSize = 18.0;
-  static const borderRadius = GLButton.height / 2;
-
   final VoidCallback onPressed;
   final VoidCallback onLongPress = null;
   final ValueChanged<bool> onHighlightChanged = null;
@@ -35,16 +23,13 @@ class GLButton extends StatelessWidget {
   final double disabledElevation;
   final EdgeInsetsGeometry padding = EdgeInsets.zero;
   final VisualDensity visualDensity = null;
-  final ShapeBorder shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(GLButton.borderRadius));
   final Clip clipBehavior = Clip.none;
   final FocusNode focusNode = null;
   final bool autoFocus = false;
   final MaterialTapTargetSize materialTapTargetSize = null;
   final Duration animationDuration = null;
   final TextStyle textStyle;
-  final String label;
-  final Widget leader;
-  final Widget disabledLeader;
+  final Widget child;
 
   bool get isDisabled => onPressed == null;
 
@@ -62,51 +47,16 @@ class GLButton extends StatelessWidget {
     this.highlightElevation,
     this.disabledElevation,
     this.textStyle,
-    this.label,
-    this.leader,
-    this.disabledLeader,
+    @required this.child,
   }) : super(key: key);
-
-  static Widget iconLeader({IconData iconData, Color color, double size}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(iconData, color: color, size: size),
-        const SizedBox(width: 8.0),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = const TextStyle(fontSize: fontSize).merge(this.textStyle);
-
-    final text = Padding(
-      padding: const EdgeInsets.only(left: GLButton.borderRadius, right: GLButton.borderRadius),
-      child: Text(label, textAlign: TextAlign.center, style: textStyle),
-    );
-
-    Widget child;
-
-    if (leader == null) {
-      child = text;
-    } else {
-      final showDisabledLeader = isDisabled && disabledLeader != null;
-
-      // Stack the leader on top of the label text, and expand the label to the maximum width of the button, so the
-      // label is centered to the button width and not offset by the leader width.
-
-      child = Stack(
-        alignment: AlignmentDirectional.centerStart,
-        children: [
-          showDisabledLeader ? disabledLeader : leader,
-          SizedBox(width: double.infinity, child: text),
-        ],
-      );
-    }
+    final height = buttonHeight(context);
+    final ShapeBorder shape =
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(height * 0.5)); // maximize radius
 
     return ButtonTheme(
-      minWidth: 140,
       height: height,
       child: MaterialButton(
         key: key,

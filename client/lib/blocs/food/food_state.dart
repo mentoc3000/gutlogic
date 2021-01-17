@@ -22,6 +22,8 @@ abstract class FoodState extends Equatable {
 
 class FoodsLoading extends FoodState with SearchableLoading {}
 
+class NoFoodsFound extends FoodState {}
+
 class FoodsLoaded extends FoodState with SearchableLoaded {
   @override
   BuiltList<Food> get items => <Food>[...customFoods, ...edamamFoods].build();

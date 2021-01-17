@@ -9,6 +9,7 @@ import 'package:gutlogic/models/diary_entry/diary_entry.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/meal_element.dart';
+import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
@@ -35,7 +36,7 @@ void main() {
     final symptomEntry = SymptomEntry(
         id: '3',
         datetime: DateTime.now().toUtc(),
-        symptom: Symptom(severity: 3, symptomType: SymptomType(id: 'symptomType1', name: 'Gas')));
+        symptom: Symptom(severity: Severity.moderate, symptomType: SymptomType(id: 'symptomType1', name: 'Gas')));
     final allDiaryEntries = BuiltList<DiaryEntry>([mealEntry, bowelMovementEntry, symptomEntry]);
 
     setUp(() {

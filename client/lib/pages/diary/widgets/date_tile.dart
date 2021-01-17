@@ -18,7 +18,7 @@ class DateTile extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
         decoration: BoxDecoration(
           color: GLColors.lighterGray,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          borderRadius: const BorderRadius.all(Radius.circular(1E10)), // Always use semicircle ends
         ),
         child: Text(
           dateFormatter.format(datetime),

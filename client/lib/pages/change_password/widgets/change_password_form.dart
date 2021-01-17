@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../auth/auth_provider.dart';
 import '../../../blocs/change_password/change_password.dart';
-import '../../../widgets/buttons/gl_button.dart';
+import '../../../widgets/buttons/buttons.dart';
 import '../../../widgets/form_fields/password_form_field.dart';
 import 'change_password_upgrade_warning.dart';
 
@@ -153,8 +153,8 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
   }
 
   static Widget buildAcceptButton({VoidCallback onPressed}) {
-    return GLPrimaryFlatButton(
-      label: 'Save',
+    return GLPrimaryButton(
+      child: const StretchedButtonContent(label: 'Save'),
       onPressed: onPressed,
     );
   }

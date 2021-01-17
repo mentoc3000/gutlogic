@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../blocs/consent/consent.dart';
 import '../../../routes/routes.dart';
 import '../../../style/gl_colors.dart';
-import '../../../widgets/buttons/gl_primary_raised_button.dart';
+import '../../../widgets/buttons/buttons.dart';
 import '../../../widgets/snack_bars/error_snack_bar.dart';
 
 final _consentImage = SvgPicture.asset('assets/consent/consent_image.svg');
@@ -60,29 +60,27 @@ class ConsentFormState extends State<ConsentForm> {
   Widget builder(BuildContext context, ConsentState state) {
     final isSubmittable = _isMinimumAge && _isPrivacyReviewed && (state is ConsentReady);
 
-    return ListView(
-      children: [
-        SizedBox(height: 200, child: _consentImage),
-        Padding(
-          padding: const EdgeInsets.only(top: 40, bottom: 40),
-          child: _consentText,
-        ),
-        CheckboxListTile(
-          value: _isMinimumAge,
-          title: const Text('I am 16 or older.'),
-          onChanged: state is ConsentReady ? (value) => onAgeCheckboxChanged(value: value) : null,
-        ),
-        CheckboxListTile(
-          value: _isPrivacyReviewed,
-          title: const Text('I have reviewed the privacy policy.'),
-          onChanged: state is ConsentReady ? (value) => onPrivacyCheckboxChanged(value: value) : null,
-        ),
-        GLPrimaryRaisedButton(
-          label: 'Agree',
-          onPressed: isSubmittable ? () => onAgreeButtonPressed(context) : null,
-        )
-      ],
-    );
+    return ListView(children: [
+      SizedBox(height: 200, child: _consentImage),
+      Padding(
+        padding: const EdgeInsets.only(top: 40, bottom: 40),
+        child: _consentText,
+      ),
+      CheckboxListTile(
+        value: _isMinimumAge,
+        title: const Text('I am 16 or older.'),
+        onChanged: state is ConsentReady ? (value) => onAgeCheckboxChanged(value: value) : null,
+      ),
+      CheckboxListTile(
+        value: _isPrivacyReviewed,
+        title: const Text('I have reviewed the privacy policy.'),
+        onChanged: state is ConsentReady ? (value) => onPrivacyCheckboxChanged(value: value) : null,
+      ),
+      GLPrimaryButton(
+        child: const StretchedButtonContent(label: 'Agree'),
+        onPressed: isSubmittable ? () => onAgreeButtonPressed(context) : null,
+      )
+    ]);
   }
 
   void onAgeCheckboxChanged({bool value}) {

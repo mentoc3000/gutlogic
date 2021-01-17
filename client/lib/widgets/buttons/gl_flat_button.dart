@@ -15,10 +15,7 @@ class GLFlatButton extends StatelessWidget {
   final double highlightElevation = 0.0;
   final double disabledElevation = 0.0;
   final TextStyle textStyle;
-  final String label;
-  final IconData iconData;
-  final Widget leader;
-  final Widget disabledLeader;
+  final Widget child;
 
   GLFlatButton({
     Key key,
@@ -29,10 +26,7 @@ class GLFlatButton extends StatelessWidget {
     this.color,
     this.disabledColor,
     this.textStyle,
-    this.label,
-    this.iconData,
-    this.leader,
-    this.disabledLeader,
+    @required this.child,
   }) : super(key: key);
 
   @override
@@ -50,9 +44,7 @@ class GLFlatButton extends StatelessWidget {
       highlightElevation: highlightElevation,
       disabledElevation: disabledElevation,
       textStyle: textStyle,
-      label: label,
-      leader: leader,
-      disabledLeader: disabledLeader,
+      child: child,
     );
   }
 }

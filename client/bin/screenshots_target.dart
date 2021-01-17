@@ -15,6 +15,7 @@ import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
+import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/pages/main_tabs.dart';
@@ -142,7 +143,7 @@ void main() {
     SymptomEntry(
       id: 'symptom1',
       datetime: todayAt(14, 3),
-      symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: 'Bloated'), severity: 3),
+      symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: 'Bloated'), severity: Severity.intense),
       notes: 'Feels like a reaction to the milk shake.',
     ),
   ].build();

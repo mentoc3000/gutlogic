@@ -4,13 +4,13 @@ import 'package:pedantic/pedantic.dart';
 
 import '../../../blocs/account/account.dart';
 import '../../../routes/routes.dart';
-import '../../../style/gl_colors.dart';
-import '../../../widgets/buttons/gl_button.dart';
+import '../../../widgets/buttons/buttons.dart';
 import '../../../widgets/form_fields/gl_text_form_field.dart';
 import '../../../widgets/snack_bars/info_snack_bar.dart';
 import '../../error_page.dart';
 import '../../loading_page.dart';
 import 'account_delete_dialog.dart';
+import 'delete_account_button.dart';
 
 class AccountForm extends StatefulWidget {
   @override
@@ -46,7 +46,6 @@ class AccountFormState extends State<AccountForm> {
     updateTextControllerValues();
     if (state is AccountUpdated) {
       // TODO: upon saving, remove focus on text fields
-      // TODO: use GLSnackBar
       final snackbar = InfoSnackBar(text: 'Account updated');
       Scaffold.of(context).showSnackBar(snackbar);
     }
@@ -127,30 +126,30 @@ class AccountFormState extends State<AccountForm> {
   }
 
   static Widget buildChangePasswordButton({VoidCallback onPressed}) {
-    return GLSecondaryRaisedButton(
-      label: 'Change Password',
+    return GLSecondaryButton(
+      child: const StretchedButtonContent(label: 'Change Password'),
       onPressed: onPressed,
     );
   }
 
   static Widget buildSaveButton({VoidCallback onPressed}) {
-    return GLPrimaryRaisedButton(
-      label: 'Save',
+    return GLPrimaryButton(
+      child: const StretchedButtonContent(label: 'Save'),
       onPressed: onPressed,
     );
   }
 
   static Widget buildLogoutButton({VoidCallback onPressed}) {
-    return GLWarningRaisedButton(
-      label: 'Logout',
+    return GLWarningButton(
+      child: const StretchedButtonContent(label: 'Logout'),
       onPressed: onPressed,
     );
   }
 
   static Widget buildDeleteButton({VoidCallback onPressed}) {
-    return GLFlatButton(
-      label: 'Delete Account',
-      textColor: GLColors.red,
+    // TODO: differentiate this style from logout
+    return DeleteAccountButton(
+      child: const StretchedButtonContent(label: 'Delete Account'),
       onPressed: onPressed,
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../buttons/gl_primary_flat_button.dart';
-import '../buttons/gl_secondary_flat_button.dart';
+
+import '../buttons/buttons.dart';
 import 'gl_alert_dialog.dart';
 
 class TextFieldDialog extends StatelessWidget {
@@ -28,8 +28,14 @@ class TextFieldDialog extends StatelessWidget {
       title: title,
       content: content,
       actions: <Widget>[
-        GLSecondaryFlatButton(label: 'Cancel', onPressed: () => Navigator.pop(context)),
-        GLPrimaryFlatButton(label: 'OK', onPressed: () => Navigator.pop(context, textController.text)),
+        GLSecondaryButton(
+          child: const ShrinkWrappedButtonContent(label: 'Cancel'),
+          onPressed: () => Navigator.pop(context),
+        ),
+        GLPrimaryButton(
+          child: const ShrinkWrappedButtonContent(label: 'OK'),
+          onPressed: () => Navigator.pop(context, textController.text),
+        ),
       ],
     );
   }

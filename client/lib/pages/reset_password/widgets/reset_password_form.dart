@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/reset_password/reset_password.dart';
-import '../../../widgets/buttons/gl_button.dart';
+import '../../../widgets/buttons/buttons.dart';
 import '../../../widgets/form_fields/email_form_field.dart';
 import 'reset_password_done.dart';
 
@@ -70,8 +70,8 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
             controller: _emailTextController,
             validator: _emailValidator,
           ),
-          GLPrimaryRaisedButton(
-            label: 'Send Reset Link',
+          GLPrimaryButton(
+            child: const StretchedButtonContent(label: 'Send Reset Link'),
             onPressed: isSubmittable ? onSubmitButtonPressed : null,
           ),
         ],

@@ -14,10 +14,12 @@ class GLListTile extends StatelessWidget {
       {this.heading, this.subheading, this.sensitivity, this.leading, this.trailing, this.onTap, this.dense = false});
 
   @override
-  Widget build(BuildContext contexts) {
+  Widget build(BuildContext context) {
+    final headingWidget = Text(heading);
     final subheadingWidget = (subheading != null && subheading != '') ? Text(subheading) : null;
+
     return ListTile(
-      title: Text(heading),
+      title: headingWidget,
       subtitle: subheadingWidget,
       leading: leading,
       trailing: trailing,

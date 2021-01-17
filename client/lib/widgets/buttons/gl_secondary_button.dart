@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../style/gl_colors.dart';
 import 'gl_raised_button.dart';
 
-class GLWarningRaisedButton extends StatelessWidget {
+class GLSecondaryButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String label;
-  final IconData iconData;
+  final Widget child;
 
-  const GLWarningRaisedButton({
+  const GLSecondaryButton({
     Key key,
     @required this.onPressed,
-    this.label,
-    this.iconData,
+    @required this.child,
   }) : super(key: key);
 
   @override
@@ -19,10 +18,9 @@ class GLWarningRaisedButton extends StatelessWidget {
     final colorScheme = ButtonTheme.of(context).colorScheme;
     return GLRaisedButton(
       onPressed: onPressed,
-      textColor: colorScheme.onError,
-      color: colorScheme.error,
-      label: label,
-      iconData: iconData,
+      textColor: colorScheme.onBackground,
+      color: GLColors.lighterGray,
+      child: child,
     );
   }
 }

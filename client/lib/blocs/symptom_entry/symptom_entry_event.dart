@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import '../../models/diary_entry/symptom_entry.dart';
+import '../../models/severity.dart';
 import '../../models/symptom.dart';
 import '../../models/symptom_type.dart';
 import '../../resources/firebase/analytics_service.dart';
@@ -133,7 +134,7 @@ class UpdateSymptom extends SymptomEntryEvent with DebouncedEvent implements Tra
 }
 
 class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
-  final double severity;
+  final Severity severity;
 
   const UpdateSeverity(this.severity);
 

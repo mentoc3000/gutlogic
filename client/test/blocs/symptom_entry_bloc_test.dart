@@ -8,6 +8,7 @@ import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
+import 'package:gutlogic/models/severity.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -21,7 +22,7 @@ void main() {
     final DiaryEntry diaryEntry = SymptomEntry(
       id: '2',
       datetime: DateTime.now().toUtc(),
-      symptom: Symptom(symptomType: symptomType, severity: 4.0),
+      symptom: Symptom(symptomType: symptomType, severity: Severity.severe),
       notes: 'Better than yesterday',
     );
     final debounceWaitDuration = debounceDuration + const Duration(milliseconds: 100);
@@ -230,7 +231,8 @@ void main() {
       },
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
-        ..add(UpdateSymptom(Symptom(severity: 3, symptomType: SymptomType(id: 'symptomType1', name: 'Fat')))),
+        ..add(UpdateSymptom(
+            Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat')))),
       wait: debounceWaitDuration,
       expect: [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -244,15 +246,19 @@ void main() {
       build: () async => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
-        ..add(UpdateSymptom(Symptom(severity: 3, symptomType: SymptomType(id: 'symptomType1', name: 'Fat'))))
-        ..add(UpdateSymptom(Symptom(severity: 2, symptomType: SymptomType(id: 'symptomType1', name: 'Fat'))))
-        ..add(UpdateSymptom(Symptom(severity: 1, symptomType: SymptomType(id: 'symptomType1', name: 'Fat'))))
-        ..add(UpdateSymptom(Symptom(severity: 3, symptomType: SymptomType(id: 'symptomType1', name: 'Skinny')))),
+        ..add(UpdateSymptom(
+            Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
+        ..add(UpdateSymptom(
+            Symptom(severity: Severity.moderate, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
+        ..add(UpdateSymptom(
+            Symptom(severity: Severity.mild, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
+        ..add(UpdateSymptom(
+            Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Skinny')))),
       wait: debounceWaitDuration,
       expect: [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
-        verify(repository.updateSymptom(
-                diaryEntry, Symptom(severity: 3, symptomType: SymptomType(id: 'symptomType1', name: 'Skinny'))))
+        verify(repository.updateSymptom(diaryEntry,
+                Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Skinny'))))
             .called(1);
         verifyNoMoreInteractions(repository);
       },
@@ -329,7 +335,7 @@ void main() {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadSymptomEntry(diaryEntry))..add(const UpdateSeverity(3)),
+      act: (bloc) async => bloc..add(LoadSymptomEntry(diaryEntry))..add(const UpdateSeverity(Severity.intense)),
       wait: debounceWaitDuration,
       expect: [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -343,14 +349,14 @@ void main() {
       build: () async => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
-        ..add(const UpdateSeverity(3))
-        ..add(const UpdateSeverity(4))
-        ..add(const UpdateSeverity(3))
-        ..add(const UpdateSeverity(2)),
+        ..add(const UpdateSeverity(Severity.intense))
+        ..add(const UpdateSeverity(Severity.severe))
+        ..add(const UpdateSeverity(Severity.intense))
+        ..add(const UpdateSeverity(Severity.moderate)),
       wait: debounceWaitDuration,
       expect: [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
-        verify(repository.updateSeverity(diaryEntry, 2)).called(1);
+        verify(repository.updateSeverity(diaryEntry, Severity.moderate)).called(1);
         verifyNoMoreInteractions(repository);
       },
     );
@@ -360,9 +366,9 @@ void main() {
       build: () async => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
-        ..add(const UpdateSeverity(3))
+        ..add(const UpdateSeverity(Severity.intense))
         ..add(const UpdateSymptomName('Gas'))
-        ..add(const UpdateSeverity(2)),
+        ..add(const UpdateSeverity(Severity.moderate)),
       wait: debounceWaitDuration,
       expect: [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
