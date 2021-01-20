@@ -44,7 +44,7 @@ void main() {
       expect: [AccountUpdated(), AccountReady(user: user)],
       verify: (bloc) async {
         verify(userRepository.updateMetadata(updatedUser: updatedUser)).called(1);
-        verify(analyticsService.logUpdateProfile()).called(1);
+        verify(analyticsService.logEvent('profile_updated')).called(1);
       },
     );
 
@@ -57,7 +57,7 @@ void main() {
       act: (bloc) async => bloc.add(AccountLogOut()),
       expect: [AccountLoggedOut()],
       verify: (bloc) async {
-        verify(analyticsService.logLogOut()).called(1);
+        verify(analyticsService.logEvent('log_out')).called(1);
       },
     );
   });

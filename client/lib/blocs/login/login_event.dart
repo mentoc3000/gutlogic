@@ -29,5 +29,5 @@ class LoginSubmitted extends LoginEvent implements TrackedEvent {
   List<Object> get props => [username, password];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logLogin(authProvider: AuthProvider.password);
+  void track(AnalyticsService analyticsService) => analyticsService.logLogin(AuthProvider.password);
 }

@@ -21,8 +21,11 @@ class AnalyticsService {
 
   AnalyticsService();
 
-  static Map<String, String> _removeNulls(Map<String, String> parameters) =>
-      Map.from(parameters)..removeWhere((key, value) => value == null);
+  void _logEvent({@required String name, Map<String, dynamic> parameters}) {
+    final condensedParameters =
+        parameters == null ? null : (Map<String, dynamic>.from(parameters)..removeWhere((key, value) => value == null));
+    unawaited(analytics?.logEvent(name: name, parameters: condensedParameters));
+  }
 
   void subscribeToRoute(RouteAware routeAware, PageRoute route) => observer?.subscribe(routeAware, route);
 
@@ -32,78 +35,9 @@ class AnalyticsService {
 
   void setUser(ApplicationUser user) => unawaited(analytics?.setUserId(user.id));
 
-  void logRegister({AuthProvider authProvider}) => unawaited(analytics?.logEvent(
-        name: 'register',
-        parameters: _removeNulls({'auth_provider': authProvider?.toString()}),
-      ));
+  void logEvent(String name) => _logEvent(name: name);
 
-  void logLogin({AuthProvider authProvider}) => unawaited(analytics?.logLogin(loginMethod: authProvider?.toString()));
+  void logLogin([AuthProvider authProvider]) => unawaited(analytics?.logLogin(loginMethod: authProvider?.toString()));
 
-  void logPasswordChange() => unawaited(analytics?.logEvent(name: 'password_change'));
-
-  void logUpdateProfile() => unawaited(analytics?.logEvent(name: 'update_profile'));
-
-  void logLogOut() => unawaited(analytics?.logEvent(name: 'log_out'));
-
-  void logCreateMealEntry() => unawaited(analytics?.logEvent(name: 'create_meal_entry'));
-
-  void logCreateBowelMovementEntry() => unawaited(analytics?.logEvent(name: 'create_bowel_movement_entry'));
-
-  void logCreateSymptomEntry() => unawaited(analytics?.logEvent(name: 'create_symptom_entry'));
-
-  void logCreateMealElement() => unawaited(analytics?.logEvent(name: 'create_mealElement'));
-
-  void logCreateCustomFood() => unawaited(analytics?.logEvent(name: 'create_custom_food'));
-
-  void logUpdateMealEntry({String field}) => unawaited(analytics?.logEvent(
-        name: 'update_meal_entry',
-        parameters: _removeNulls({'field': field}),
-      ));
-
-  void logUpdateBowelMovementEntry({String field}) => unawaited(analytics?.logEvent(
-        name: 'update_bowel_movement_entry',
-        parameters: _removeNulls({'field': field}),
-      ));
-
-  void logUpdateSymptomEntry({String field}) => unawaited(analytics?.logEvent(
-        name: 'update_symptom_entry',
-        parameters: _removeNulls({'field': field}),
-      ));
-
-  void logUpdateMealElement({String field}) => unawaited(analytics?.logEvent(
-        name: 'update_mealElement',
-        parameters: _removeNulls({'field': field}),
-      ));
-
-  void logDeleteMealEntry({String action}) => unawaited(analytics?.logEvent(
-        name: 'delete_meal_entry',
-        parameters: _removeNulls({'action': action}),
-      ));
-
-  void logDeleteBowelMovementEntry({String action}) => unawaited(analytics?.logEvent(
-        name: 'delete_bowel_movement_entry',
-        parameters: _removeNulls({'action': action}),
-      ));
-
-  void logDeleteSymptomEntry({String action}) => unawaited(analytics?.logEvent(
-        name: 'delete_symptom_entry',
-        parameters: _removeNulls({'action': action}),
-      ));
-
-  void logDeleteMealElement({String action}) => unawaited(analytics?.logEvent(
-        name: 'delete_mealElement',
-        parameters: _removeNulls({'action': action}),
-      ));
-
-  void logDeleteCustomFood() => unawaited(analytics?.logEvent(name: 'delete_custom_food'));
-
-  void logFoodSearch({String searchTerm}) => unawaited(analytics?.logEvent(
-        name: 'food_search',
-        parameters: _removeNulls({'search_term': searchTerm}),
-      ));
-
-  void logSymptomTypeSearch({String searchTerm}) => unawaited(analytics?.logEvent(
-        name: 'symptom_type_search',
-        parameters: _removeNulls({'search_term': searchTerm}),
-      ));
+  void logUpdateEvent(String name, [String field]) => _logEvent(name: name, parameters: {'field': field});
 }

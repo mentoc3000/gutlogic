@@ -28,7 +28,7 @@ class CreateAndStreamMealEntry extends MealEntryEvent with CreateAndStreamDiaryE
   const CreateAndStreamMealEntry();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logCreateMealEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_meal_entry');
 }
 
 class StreamMealEntry extends MealEntryEvent with StreamDiaryEntry {
@@ -45,7 +45,7 @@ class DeleteMealEntry extends MealEntryEvent with DeleteDiaryEntry implements Tr
   const DeleteMealEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logDeleteMealEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_meal_entry');
 }
 
 class UpdateMealEntry extends MealEntryEvent with UpdateDiaryEntry implements DebouncedEvent, TrackedEvent {
@@ -55,7 +55,7 @@ class UpdateMealEntry extends MealEntryEvent with UpdateDiaryEntry implements De
   const UpdateMealEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_meal_entry');
 }
 
 class UpdateMealEntryDateTime extends MealEntryEvent
@@ -67,7 +67,7 @@ class UpdateMealEntryDateTime extends MealEntryEvent
   const UpdateMealEntryDateTime(this.dateTime);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealEntry(field: 'dateTime');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_meal_entry', 'dateTime');
 }
 
 class UpdateMealEntryNotes extends MealEntryEvent with UpdateDiaryEntryNotes implements DebouncedEvent, TrackedEvent {
@@ -77,7 +77,7 @@ class UpdateMealEntryNotes extends MealEntryEvent with UpdateDiaryEntryNotes imp
   const UpdateMealEntryNotes(this.notes);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealEntry(field: 'notes');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_meal_entry', 'notes');
 }
 
 class AddMealElement extends MealEntryEvent implements TrackedEvent {
@@ -89,7 +89,7 @@ class AddMealElement extends MealEntryEvent implements TrackedEvent {
   List<Object> get props => [food];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealEntry(field: 'add_meal_element');
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_meal_element');
 
   @override
   String toString() => 'AddMealElement { food: ${food.name} }';
@@ -105,7 +105,8 @@ class MoveMealElement extends MealEntryEvent implements TrackedEvent {
   List<Object> get props => [fromIndex, toIndex];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealEntry(field: 'move_meal_element');
+  void track(AnalyticsService analyticsService) =>
+      analyticsService.logUpdateEvent('update_meal_entry', 'move_meal_element');
 
   @override
   String toString() => 'MoveMealElement { fromIndex: $fromIndex, toIndex: $toIndex }';
@@ -121,7 +122,7 @@ class DeleteMealElement extends MealEntryEvent implements TrackedEvent {
   List<Object> get props => [mealEntry, mealElement];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealEntry(field: 'remove_meal_element');
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_meal_element');
 
   @override
   String toString() => 'RemoveMealElement { mealElementId: ${mealElement?.id} }';

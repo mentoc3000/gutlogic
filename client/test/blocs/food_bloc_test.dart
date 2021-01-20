@@ -54,7 +54,7 @@ void main() {
       act: (bloc) async => bloc.add(const CreateCustomFood('new food name')),
       verify: (bloc) async {
         verifyNamedParameter(customFoodRepository.add, 'name', 'new food name');
-        verify(analyticsService.logCreateCustomFood()).called(1);
+        verify(analyticsService.logEvent('create_custom_food')).called(1);
       },
     );
 
@@ -67,7 +67,7 @@ void main() {
       act: (bloc) async => bloc.add(DeleteCustomFood(bread)),
       verify: (bloc) async {
         verify(customFoodRepository.delete(bread)).called(1);
-        verify(analyticsService.logDeleteCustomFood()).called(1);
+        verify(analyticsService.logEvent('delete_custom_food')).called(1);
       },
     );
 
@@ -82,7 +82,7 @@ void main() {
       expect: [FoodsLoaded(customFoods: justBread, edamamFoods: justBacon)],
       verify: (bloc) async {
         verify(customFoodRepository.streamQuery('B')).called(1);
-        verifyNamedParameter(analyticsService.logFoodSearch, 'searchTerm', 'B');
+        verify(analyticsService.logEvent('food_search')).called(1);
       },
     );
 
@@ -101,7 +101,7 @@ void main() {
       ],
       verify: (bloc) async {
         verify(customFoodRepository.streamQuery('B')).called(1);
-        verifyNamedParameter(analyticsService.logFoodSearch, 'searchTerm', 'B');
+        verify(analyticsService.logEvent('food_search')).called(1);
       },
     );
   });

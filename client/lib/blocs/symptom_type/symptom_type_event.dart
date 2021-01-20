@@ -20,7 +20,7 @@ class FetchAllSymptomTypes extends SymptomTypeEvent with FetchAll implements Tra
   const FetchAllSymptomTypes();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logSymptomTypeSearch();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('symptom_type_search');
 }
 
 class FetchSymptomTypeQuery extends SymptomTypeEvent with FetchQuery implements TrackedEvent {
@@ -30,14 +30,14 @@ class FetchSymptomTypeQuery extends SymptomTypeEvent with FetchQuery implements 
   const FetchSymptomTypeQuery(this.query);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logSymptomTypeSearch(searchTerm: query);
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('symptom_type_search');
 }
 
 class StreamAllSymptomTypes extends SymptomTypeEvent with StreamAll implements TrackedEvent {
   const StreamAllSymptomTypes();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logSymptomTypeSearch();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('symptom_type_search');
 }
 
 class StreamSymptomTypeQuery extends SymptomTypeEvent with StreamQuery implements TrackedEvent {
@@ -47,7 +47,7 @@ class StreamSymptomTypeQuery extends SymptomTypeEvent with StreamQuery implement
   const StreamSymptomTypeQuery(this.query);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logSymptomTypeSearch(searchTerm: query);
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('symptom_type_search');
 }
 
 class LoadSymptomTypes extends SymptomTypeEvent with LoadSearchables {

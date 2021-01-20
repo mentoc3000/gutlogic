@@ -31,7 +31,7 @@ class Delete extends MealElementEvent implements TrackedEvent {
   String toString() => 'Delete';
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logDeleteMealElement();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_meal_element');
 }
 
 class StreamMealElement extends MealElementEvent {
@@ -55,7 +55,7 @@ class Update extends MealElementEvent with DebouncedEvent implements TrackedEven
   List<Object> get props => [mealElement];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealElement();
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_meal_element');
 
   @override
   String toString() => 'Update { mealElementId : ${mealElement?.id} }';
@@ -70,7 +70,7 @@ class UpdateQuantity extends MealElementEvent with DebouncedEvent implements Tra
   List<Object> get props => [quantity];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealElement(field: 'quantity');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_meal_element', 'quantity');
 
   @override
   String toString() => 'Update { quantity: $quantity }';
@@ -85,7 +85,7 @@ class UpdateNotes extends MealElementEvent with DebouncedEvent implements Tracke
   List<Object> get props => [notes];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealElement(field: 'notes');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_meal_element', 'notes');
 
   @override
   String toString() => 'Update { notes: $notes }';
@@ -100,7 +100,7 @@ class UpdateFoodReference extends MealElementEvent with DebouncedEvent implement
   List<Object> get props => [foodReference];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateMealElement(field: 'food');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_meal_element', 'food');
 
   @override
   String toString() => 'Update { food: ${foodReference.name} }';

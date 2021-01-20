@@ -34,7 +34,7 @@ class CreateFromAndStreamSymptomEntry extends SymptomEntryEvent implements Track
   List<Object> get props => [symptomType];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logCreateSymptomEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_symptom_entry');
 }
 
 class StreamSymptomEntry extends SymptomEntryEvent with StreamDiaryEntry {
@@ -51,7 +51,7 @@ class DeleteSymptomEntry extends SymptomEntryEvent with DeleteDiaryEntry impleme
   const DeleteSymptomEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logDeleteSymptomEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_symptom_entry');
 }
 
 class UpdateSymptomEntry extends SymptomEntryEvent with UpdateDiaryEntry implements DebouncedEvent, TrackedEvent {
@@ -61,7 +61,7 @@ class UpdateSymptomEntry extends SymptomEntryEvent with UpdateDiaryEntry impleme
   const UpdateSymptomEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateSymptomEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry');
 }
 
 class UpdateSymptomEntryDateTime extends SymptomEntryEvent
@@ -73,7 +73,7 @@ class UpdateSymptomEntryDateTime extends SymptomEntryEvent
   const UpdateSymptomEntryDateTime(this.dateTime);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateSymptomEntry(field: 'dateTime');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'dateTime');
 }
 
 class UpdateSymptomEntryNotes extends SymptomEntryEvent
@@ -85,7 +85,7 @@ class UpdateSymptomEntryNotes extends SymptomEntryEvent
   const UpdateSymptomEntryNotes(this.notes);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateSymptomEntry(field: 'notes');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'notes');
 }
 
 class UpdateSymptomType extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -97,7 +97,7 @@ class UpdateSymptomType extends SymptomEntryEvent with DebouncedEvent implements
   List<Object> get props => [symptomType];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateSymptomEntry(field: 'type');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'type');
 
   @override
   String toString() => 'UpdateSymptomType { symptomName: ${symptomType?.name} } }';
@@ -112,7 +112,8 @@ class UpdateSymptomName extends SymptomEntryEvent with DebouncedEvent implements
   List<Object> get props => [symptomName];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateSymptomEntry(field: 'symptom_name');
+  void track(AnalyticsService analyticsService) =>
+      analyticsService.logUpdateEvent('update_symptom_entry', 'symptom_name');
 
   @override
   String toString() => 'UpdateSymptomName { symptomName: $symptomName } }';
@@ -127,7 +128,7 @@ class UpdateSymptom extends SymptomEntryEvent with DebouncedEvent implements Tra
   List<Object> get props => [symptom];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateSymptomEntry(field: 'symptom');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'symptom');
 
   @override
   String toString() => 'UpdateSymptom { symptomName: ${symptom?.symptomType?.name} }';
@@ -142,7 +143,7 @@ class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements Tr
   List<Object> get props => [severity];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateSymptomEntry(field: 'severity');
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'severity');
 
   @override
   String toString() => 'UpdateSeverity { severity: $severity } }';

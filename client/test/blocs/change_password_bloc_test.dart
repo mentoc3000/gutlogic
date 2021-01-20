@@ -125,7 +125,7 @@ void main() {
           currentPassword: currentPassword,
           updatedPassword: updatedPassword,
         )).called(1);
-        verify(analyticsService.logPasswordChange()).called(1);
+        verify(analyticsService.logEvent('password_change')).called(1);
       },
     );
 

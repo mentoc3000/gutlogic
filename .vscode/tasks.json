@@ -159,6 +159,12 @@
       "type": "shell",
       "command": "gitlab-runner run",
       "problemMatcher": []
+    },
+    {
+      "label": "Enable Firebase Analytics debugging",
+      "type": "shell",
+      "command": "adb shell setprop debug.firebase.analytics.app com.gutlogic.app.dev",
+      "problemMatcher": []
     }
   ]
 }

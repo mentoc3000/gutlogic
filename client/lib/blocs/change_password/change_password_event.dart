@@ -52,7 +52,7 @@ class ChangePasswordSubmitted extends ChangePasswordEvent implements TrackedEven
   List<Object> get props => [currentPassword, updatedPassword];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logPasswordChange();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('password_change');
 
   // TODO remove password value logging in production
 }

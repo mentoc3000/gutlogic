@@ -28,7 +28,7 @@ class CreateAndStreamBowelMovementEntry extends BowelMovementEntryEvent
   const CreateAndStreamBowelMovementEntry();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logCreateBowelMovementEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_bowel_movement_entry');
 }
 
 class StreamBowelMovementEntry extends BowelMovementEntryEvent with StreamDiaryEntry {
@@ -45,7 +45,7 @@ class DeleteBowelMovementEntry extends BowelMovementEntryEvent with DeleteDiaryE
   const DeleteBowelMovementEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logDeleteBowelMovementEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_bowel_movement_entry');
 }
 
 class UpdateBowelMovementEntry extends BowelMovementEntryEvent
@@ -57,7 +57,7 @@ class UpdateBowelMovementEntry extends BowelMovementEntryEvent
   const UpdateBowelMovementEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateBowelMovementEntry();
+  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_bowel_movement_entry');
 }
 
 class UpdateBowelMovementEntryDateTime extends BowelMovementEntryEvent
@@ -69,7 +69,8 @@ class UpdateBowelMovementEntryDateTime extends BowelMovementEntryEvent
   const UpdateBowelMovementEntryDateTime(this.dateTime);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateBowelMovementEntry(field: 'dateTime');
+  void track(AnalyticsService analyticsService) =>
+      analyticsService.logUpdateEvent('update_bowel_movement_entry', 'dateTime');
 }
 
 class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent
@@ -81,7 +82,8 @@ class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent
   const UpdateBowelMovementEntryNotes(this.notes);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateBowelMovementEntry(field: 'notes');
+  void track(AnalyticsService analyticsService) =>
+      analyticsService.logUpdateEvent('update_bowel_movement_entry', 'notes');
 }
 
 class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -93,7 +95,8 @@ class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements 
   List<Object> get props => [type];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateBowelMovementEntry(field: 'type');
+  void track(AnalyticsService analyticsService) =>
+      analyticsService.logUpdateEvent('update_bowel_movement_entry', 'type');
 
   @override
   String toString() => 'UpdateType { type: $type } }';
@@ -108,7 +111,8 @@ class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implement
   List<Object> get props => [volume];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateBowelMovementEntry(field: 'volume');
+  void track(AnalyticsService analyticsService) =>
+      analyticsService.logUpdateEvent('update_bowel_movement_entry', 'volume');
 
   @override
   String toString() => 'UpdateVolume { volume: $volume } }';

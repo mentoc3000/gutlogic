@@ -10,7 +10,6 @@ import 'package:gutlogic/resources/diary_repositories/bowel_movement_entry_repos
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import '../mocks/mock_bloc_delegate.dart';
-import '../util/test_helpers.dart';
 
 void main() {
   group('BowelMovementEntryBloc', () {
@@ -79,7 +78,7 @@ void main() {
       verify: (bloc) async {
         verify(repository.create()).called(1);
         verify(repository.stream(diaryEntry)).called(1);
-        verify(analyticsService.logCreateBowelMovementEntry()).called(1);
+        verify(analyticsService.logEvent('create_bowel_movement_entry')).called(1);
       },
     );
 
@@ -118,7 +117,7 @@ void main() {
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.delete(diaryEntry)).called(1);
-        verify(analyticsService.logDeleteBowelMovementEntry()).called(1);
+        verify(analyticsService.logEvent('delete_bowel_movement_entry')).called(1);
       },
     );
 
@@ -146,7 +145,7 @@ void main() {
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateEntry(diaryEntry)).called(1);
-        verify(analyticsService.logUpdateBowelMovementEntry()).called(1);
+        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry')).called(1);
       },
     );
 
@@ -177,7 +176,7 @@ void main() {
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateDateTime(diaryEntry, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateBowelMovementEntry, 'field', 'dateTime');
+        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'dateTime')).called(1);
       },
     );
 
@@ -211,7 +210,7 @@ void main() {
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateNotes(diaryEntry, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateBowelMovementEntry, 'field', 'notes');
+        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'notes')).called(1);
       },
     );
 
@@ -242,7 +241,7 @@ void main() {
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateType(diaryEntry, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateBowelMovementEntry, 'field', 'type');
+        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'type')).called(1);
       },
     );
 
@@ -274,7 +273,7 @@ void main() {
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateVolume(diaryEntry, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateBowelMovementEntry, 'field', 'volume');
+        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'volume')).called(1);
       },
     );
 

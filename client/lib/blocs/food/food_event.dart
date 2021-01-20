@@ -24,7 +24,7 @@ class StreamFoodQuery extends FoodEvent with FetchQuery, DebouncedEvent implemen
   const StreamFoodQuery(this.query);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logFoodSearch(searchTerm: query);
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('food_search');
 }
 
 class CreateCustomFood extends FoodEvent implements TrackedEvent {
@@ -33,7 +33,7 @@ class CreateCustomFood extends FoodEvent implements TrackedEvent {
   const CreateCustomFood(this.foodName);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logCreateCustomFood();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_custom_food');
 }
 
 class DeleteCustomFood extends FoodEvent implements TrackedEvent {
@@ -42,7 +42,7 @@ class DeleteCustomFood extends FoodEvent implements TrackedEvent {
   const DeleteCustomFood(this.customFood);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logDeleteCustomFood();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_custom_food');
 }
 
 class LoadFoods extends FoodEvent {

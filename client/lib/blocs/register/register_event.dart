@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import '../../auth/auth.dart';
 import '../../resources/firebase/analytics_service.dart';
 import '../bloc_helpers.dart';
 
@@ -29,7 +28,7 @@ class RegisterSubmitted extends RegisterEvent implements TrackedEvent {
   List<Object> get props => [username, password];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logRegister(authProvider: AuthProvider.password);
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('register_with_email');
 }
 
 class RegisterResendEmailVerification extends RegisterEvent {

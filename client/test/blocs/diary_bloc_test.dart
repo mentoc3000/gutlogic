@@ -82,7 +82,7 @@ void main() {
       expect: [DiaryEntryDeleted(mealEntry)],
       verify: (bloc) async {
         verify(diaryRepository.delete(mealEntry)).called(1);
-        verify(analyticsService.logDeleteMealEntry()).called(1);
+        verify(analyticsService.logEvent('delete_meal_entry')).called(1);
       },
     );
 
@@ -96,7 +96,7 @@ void main() {
       expect: [DiaryEntryDeleted(symptomEntry)],
       verify: (bloc) async {
         verify(diaryRepository.delete(symptomEntry)).called(1);
-        verify(analyticsService.logDeleteSymptomEntry()).called(1);
+        verify(analyticsService.logEvent('delete_symptom_entry')).called(1);
       },
     );
 
@@ -110,7 +110,7 @@ void main() {
       expect: [DiaryEntryDeleted(bowelMovementEntry)],
       verify: (bloc) async {
         verify(diaryRepository.delete(bowelMovementEntry)).called(1);
-        verify(analyticsService.logDeleteBowelMovementEntry()).called(1);
+        verify(analyticsService.logEvent('delete_bowel_movement_entry')).called(1);
       },
     );
 

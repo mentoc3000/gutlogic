@@ -42,6 +42,8 @@ class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
 
   @override
   Stream<VerifyEmailState> mapEventToState(VerifyEmailEvent event) async* {
+    if (event is VerifyEmailConfirmed) return;
+
     yield VerifyEmailLoading();
 
     if (event is VerifyEmailExitRequested) {
@@ -59,7 +61,12 @@ class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
         unawaited(_userRepository.sendEmailVerification());
       }
 
-      yield VerifyEmailValue(verified: _userRepository.user.verified);
+      final isVerified = _userRepository.user.verified;
+      yield VerifyEmailValue(verified: isVerified);
+
+      if (isVerified) {
+        add(VerifyEmailConfirmed());
+      }
     }
   }
 }

@@ -20,12 +20,12 @@ class LandingContinueGoogle extends LandingEvent implements TrackedEvent {
   const LandingContinueGoogle();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logLogin(authProvider: AuthProvider.google);
+  void track(AnalyticsService analyticsService) => analyticsService.logLogin(AuthProvider.google);
 }
 
 class LandingContinueApple extends LandingEvent implements TrackedEvent {
   const LandingContinueApple();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logLogin(authProvider: AuthProvider.apple);
+  void track(AnalyticsService analyticsService) => analyticsService.logLogin(AuthProvider.apple);
 }

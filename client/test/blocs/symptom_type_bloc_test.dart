@@ -9,7 +9,6 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../mocks/mock_bloc_delegate.dart';
-import '../util/test_helpers.dart';
 
 void main() {
   group('SymptomType Bloc', () {
@@ -54,7 +53,7 @@ void main() {
       expect: [SymptomTypesLoaded(justGas)],
       verify: (bloc) async {
         verify(symptomTypeRepository.fetchQuery('Gas')).called(1);
-        verifyNamedParameter(analyticsService.logSymptomTypeSearch, 'searchTerm', 'Gas');
+        verify(analyticsService.logEvent('symptom_type_search')).called(1);
       },
     );
 
@@ -69,7 +68,7 @@ void main() {
       expect: [SymptomTypesLoaded(justGas)],
       verify: (bloc) async {
         verify(symptomTypeRepository.streamQuery('Gas')).called(1);
-        verifyNamedParameter(analyticsService.logSymptomTypeSearch, 'searchTerm', 'Gas');
+        verify(analyticsService.logEvent('symptom_type_search')).called(1);
       },
     );
   });

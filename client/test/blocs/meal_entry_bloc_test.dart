@@ -13,7 +13,6 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../mocks/mock_bloc_delegate.dart';
-import '../util/test_helpers.dart';
 
 void main() {
   group('MealEntryBloc', () {
@@ -85,7 +84,7 @@ void main() {
       verify: (bloc) async {
         verify(repository.create()).called(1);
         verify(repository.stream(diaryEntry)).called(1);
-        verify(analyticsService.logCreateMealEntry()).called(1);
+        verify(analyticsService.logEvent('create_meal_entry')).called(1);
       },
     );
 
@@ -120,7 +119,7 @@ void main() {
       expect: [MealEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.delete(diaryEntry)).called(1);
-        verify(analyticsService.logDeleteMealEntry()).called(1);
+        verify(analyticsService.logEvent('delete_meal_entry')).called(1);
       },
     );
 
@@ -146,7 +145,7 @@ void main() {
       expect: [MealEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateEntry(diaryEntry)).called(1);
-        verify(analyticsService.logUpdateMealEntry()).called(1);
+        verify(analyticsService.logUpdateEvent('update_meal_entry')).called(1);
       },
     );
 
@@ -176,7 +175,7 @@ void main() {
       expect: [MealEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateDateTime(diaryEntry, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateMealEntry, 'field', 'dateTime');
+        verify(analyticsService.logUpdateEvent('update_meal_entry', 'dateTime')).called(1);
       },
     );
 
@@ -206,7 +205,7 @@ void main() {
       expect: [MealEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateNotes(diaryEntry, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateMealEntry, 'field', 'notes');
+        verify(analyticsService.logUpdateEvent('update_meal_entry', 'notes')).called(1);
       },
     );
 
@@ -237,7 +236,7 @@ void main() {
       expect: [MealEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.createMealElement(diaryEntry, food)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateMealEntry, 'field', 'add_meal_element');
+        verify(analyticsService.logEvent('create_meal_element')).called(1);
       },
     );
 
@@ -263,7 +262,7 @@ void main() {
       expect: [MealEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.reorderMealElement(diaryEntry, 3, 2)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateMealEntry, 'field', 'move_meal_element');
+        verify(analyticsService.logUpdateEvent('update_meal_entry', 'move_meal_element')).called(1);
       },
     );
 
@@ -298,7 +297,7 @@ void main() {
       ],
       verify: (bloc) async {
         verify(repository.removeMealElement(diaryEntry, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateMealEntry, 'field', 'remove_meal_element');
+        verify(analyticsService.logEvent('delete_meal_element')).called(1);
       },
     );
 

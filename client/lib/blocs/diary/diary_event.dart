@@ -57,13 +57,13 @@ class Delete extends DiaryEvent implements TrackedEvent {
   @override
   void track(AnalyticsService analyticsService) {
     if (diaryEntry is MealEntry) {
-      analyticsService.logDeleteMealEntry();
+      analyticsService.logEvent('delete_meal_entry');
     }
     if (diaryEntry is BowelMovementEntry) {
-      analyticsService.logDeleteBowelMovementEntry();
+      analyticsService.logEvent('delete_bowel_movement_entry');
     }
     if (diaryEntry is SymptomEntry) {
-      analyticsService.logDeleteSymptomEntry();
+      analyticsService.logEvent('delete_symptom_entry');
     }
   }
 

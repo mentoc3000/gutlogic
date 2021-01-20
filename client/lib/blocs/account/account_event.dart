@@ -24,7 +24,7 @@ class AccountUpdate extends AccountEvent implements TrackedEvent {
   List<Object> get props => [user];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateProfile();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('profile_updated');
 
   @override
   String toString() => 'AccountUpdate { user.id: ${user?.id} }';
@@ -32,7 +32,7 @@ class AccountUpdate extends AccountEvent implements TrackedEvent {
 
 class AccountLogOut extends AccountEvent implements TrackedEvent {
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logLogOut();
+  void track(AnalyticsService analyticsService) => analyticsService.logEvent('log_out');
 }
 
 class AccountDelete extends AccountEvent {}

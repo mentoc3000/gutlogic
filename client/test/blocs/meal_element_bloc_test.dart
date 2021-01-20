@@ -11,7 +11,6 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../mocks/mock_bloc_delegate.dart';
-import '../util/test_helpers.dart';
 
 void main() {
   group('MealElementBloc', () {
@@ -90,7 +89,7 @@ void main() {
       expect: [MealElementLoaded(mealElement: mealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.delete(mealElement)).called(1);
-        verify(analyticsService.logDeleteMealElement()).called(1);
+        verify(analyticsService.logEvent('delete_meal_element')).called(1);
       },
     );
 
@@ -115,7 +114,7 @@ void main() {
       expect: [MealElementLoaded(mealElement: mealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.update(mealElement)).called(1);
-        verify(analyticsService.logUpdateMealElement()).called(1);
+        verify(analyticsService.logUpdateEvent('update_meal_element')).called(1);
       },
     );
 
@@ -142,7 +141,7 @@ void main() {
       expect: [MealElementLoaded(mealElement: mealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.updateNotes(mealElement, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateMealElement, 'field', 'notes');
+        verify(analyticsService.logUpdateEvent('update_meal_element', 'notes')).called(1);
       },
     );
 
@@ -174,7 +173,7 @@ void main() {
       expect: [MealElementLoaded(mealElement: mealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.updateFoodReference(mealElement, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateMealElement, 'field', 'food');
+        verify(analyticsService.logUpdateEvent('update_meal_element', 'food')).called(1);
       },
     );
 
@@ -208,7 +207,7 @@ void main() {
       expect: [MealElementLoaded(mealElement: mealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.updateQuantity(mealElement, any)).called(1);
-        verifyNamedParameter(analyticsService.logUpdateMealElement, 'field', 'quantity');
+        verify(analyticsService.logUpdateEvent('update_meal_element', 'quantity')).called(1);
       },
     );
 
