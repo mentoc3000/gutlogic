@@ -124,6 +124,7 @@ deploy:server:prod:
       else FLUTTER_FLAVOR="development";
       fi
     # install the client dependencies and generate code
+    - flutter clean # rebuild dependencies; attempts to resolve #29
     - flutter pub get
     - flutter pub run build_runner build --delete-conflicting-outputs
 
