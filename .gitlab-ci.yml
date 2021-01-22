@@ -275,6 +275,7 @@ deploy:client:ios:
     - export FLUTTER_APP_VERSION=$(pubver -d ../. get)
   script:
     - *fastlane-channel-variable
+    - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign # added to resolve #29
     - bundle exec fastlane $FASTLANE_CHANNEL
   rules:
     - *client-commit-rule
