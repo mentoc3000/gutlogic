@@ -84,7 +84,7 @@ platform :ios do
 
     gym(workspace: "Runner.xcworkspace",
         scheme: "production",
-        export_method: "app-store"
+        export_method: "app-store",
         include_bitcode: true)
 
   end
