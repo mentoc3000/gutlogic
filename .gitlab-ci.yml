@@ -268,6 +268,7 @@ deploy:client:ios:
     - cd client/ios/
     - cp "$GC_KEYS" "$(pwd)/gc_keys.json"
     - export PATH="$PATH":"$HOME/.gem/ruby/2.6.0/bin"
+    - export PATH="$PATH":"$HOME/.pub-cache/bin/pubver"
     - gem install --user-install bundler
     - bundle install --path vendor/bundle
     - bundle exec fastlane match
