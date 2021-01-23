@@ -111,6 +111,12 @@ deploy:server:prod:
 
 ### Client Jobs
 
+.set_flavor: &set_flavor >
+  if   [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "release" ] || [ "$CI_COMMIT_BRANCH" == "release" ]; then FLUTTER_FLAVOR="production";
+  elif [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master"  ] || [ "$CI_COMMIT_BRANCH" == "master"  ]; then FLUTTER_FLAVOR="production";
+  else FLUTTER_FLAVOR="development";
+  fi
+
 .flutter:
   image: cirrusci/flutter:1.20.4
   tags:
@@ -119,10 +125,7 @@ deploy:server:prod:
     - cd client
     - flutter --version
     # pick the flutter flavor and store it FLUTTER_FLAVOR
-    - if   [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "release" ] || [ "$CI_COMMIT_BRANCH" == "release" ]; then FLUTTER_FLAVOR="production";
-      elif [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master"  ] || [ "$CI_COMMIT_BRANCH" == "master"  ]; then FLUTTER_FLAVOR="production";
-      else FLUTTER_FLAVOR="development";
-      fi
+    - *set_flavor
     # install the client dependencies and generate code
     - flutter clean # rebuild dependencies; attempts to resolve #29
     - flutter pub get
@@ -269,6 +272,7 @@ deploy:client:ios:
     - cp "$GC_KEYS" "$(pwd)/gc_keys.json"
     - export PATH="$PATH":"$HOME/.gem/ruby/2.6.0/bin"
     - export PATH="$PATH":"$HOME/.pub-cache/bin/pubver"
+    - *set_flavor
     - gem install --user-install bundler
     - bundle install --path vendor/bundle
     - bundle exec fastlane match
