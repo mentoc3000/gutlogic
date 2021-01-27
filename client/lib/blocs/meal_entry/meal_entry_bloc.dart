@@ -12,7 +12,7 @@ import 'meal_entry_state.dart';
 class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubscriber, DiaryEntryMapper {
   final MealEntryRepository repository;
 
-  MealEntryBloc({@required this.repository}) {
+  MealEntryBloc({@required this.repository}) : super(MealEntryLoading()) {
     diaryEntryStreamer = repository;
     diaryEntryDeleter = repository;
     diaryEntryUpdater = repository;
@@ -21,9 +21,6 @@ class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubs
   factory MealEntryBloc.fromContext(BuildContext context) => MealEntryBloc(
         repository: context.repository<MealEntryRepository>(),
       );
-
-  @override
-  MealEntryState get initialState => MealEntryLoading();
 
   @override
   Stream<Transition<MealEntryEvent, MealEntryState>> transformEvents(

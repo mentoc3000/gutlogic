@@ -12,7 +12,7 @@ import 'symptom_entry_state.dart';
 class SymptomEntryBloc extends Bloc<SymptomEntryEvent, SymptomEntryState> with StreamSubscriber, DiaryEntryMapper {
   final SymptomEntryRepository repository;
 
-  SymptomEntryBloc({@required this.repository}) {
+  SymptomEntryBloc({@required this.repository}) : super(SymptomEntryLoading()) {
     diaryEntryStreamer = repository;
     diaryEntryDeleter = repository;
     diaryEntryUpdater = repository;
@@ -21,9 +21,6 @@ class SymptomEntryBloc extends Bloc<SymptomEntryEvent, SymptomEntryState> with S
   factory SymptomEntryBloc.fromContext(BuildContext context) => SymptomEntryBloc(
         repository: context.repository<SymptomEntryRepository>(),
       );
-
-  @override
-  SymptomEntryState get initialState => SymptomEntryLoading();
 
   @override
   Stream<Transition<SymptomEntryEvent, SymptomEntryState>> transformEvents(

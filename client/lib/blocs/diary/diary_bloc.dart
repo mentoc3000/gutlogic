@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:pedantic/pedantic.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/widgets.dart';
+import 'package:pedantic/pedantic.dart';
 
 import '../../resources/diary_repositories/diary_repository.dart';
 import '../bloc_helpers.dart';
@@ -13,14 +13,11 @@ import 'diary_state.dart';
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
   final DiaryRepository repository;
 
-  DiaryBloc({@required this.repository});
+  DiaryBloc({@required this.repository}) : super(DiaryLoading());
 
   factory DiaryBloc.fromContext(BuildContext context) => DiaryBloc(
         repository: context.repository<DiaryRepository>(),
       );
-
-  @override
-  DiaryState get initialState => DiaryLoading();
 
   @override
   Stream<DiaryState> mapEventToState(

@@ -1,6 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../resources/symptom_type_repository.dart';
 import '../bloc_helpers.dart';
@@ -10,14 +10,11 @@ import 'symptom_type_state.dart';
 class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with StreamSubscriber {
   final SymptomTypeRepository repository;
 
-  SymptomTypeBloc({@required this.repository});
+  SymptomTypeBloc({@required this.repository}) : super(SymptomTypesLoading());
 
   factory SymptomTypeBloc.fromContext(BuildContext context) => SymptomTypeBloc(
         repository: context.repository<SymptomTypeRepository>(),
       );
-
-  @override
-  SymptomTypeState get initialState => SymptomTypesLoading();
 
   @override
   Stream<SymptomTypeState> mapEventToState(SymptomTypeEvent event) async* {

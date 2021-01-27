@@ -18,7 +18,8 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
   ChangePasswordBloc({@required this.userRepository, @required this.authenticator})
       : assert(userRepository != null),
         assert(authenticator != null),
-        assert(userRepository.authenticated);
+        assert(userRepository.authenticated),
+        super(ChangePasswordEntry(user: userRepository.user, isValid: false, isRepeated: false));
 
   factory ChangePasswordBloc.fromContext(BuildContext context) {
     return ChangePasswordBloc(
@@ -28,9 +29,6 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
   }
 
   ApplicationUser get user => userRepository.user;
-
-  @override
-  ChangePasswordState get initialState => ChangePasswordEntry(user: user, isValid: false, isRepeated: false);
 
   // TODO debounce events when rebased on JPs debounce mixin
 

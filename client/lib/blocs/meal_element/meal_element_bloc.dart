@@ -13,7 +13,7 @@ import 'meal_element_state.dart';
 class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with StreamSubscriber {
   final MealElementRepository mealElementRepository;
 
-  MealElementBloc({@required this.mealElementRepository});
+  MealElementBloc({@required this.mealElementRepository}) : super(MealElementLoading());
 
   factory MealElementBloc.fromContext(BuildContext context) => MealElementBloc(
         mealElementRepository: context.repository<MealElementRepository>(),
@@ -25,9 +25,6 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
     TransitionFunction<MealElementEvent, MealElementState> transition,
   ) =>
       super.transformEvents(debounceDebouncedByType(events), transition);
-
-  @override
-  MealElementState get initialState => MealElementLoading();
 
   @override
   Stream<MealElementState> mapEventToState(

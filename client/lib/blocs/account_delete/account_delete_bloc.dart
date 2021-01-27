@@ -11,10 +11,8 @@ class AccountDeleteBloc extends Bloc<AccountDeleteEvent, AccountDeleteState> {
 
   AccountDeleteBloc({Authenticator authenticator, UserRepository userRepository})
       : _authenticator = authenticator,
-        _userRepository = userRepository;
-
-  @override
-  AccountDeleteState get initialState => const AccountDeleteReady();
+        _userRepository = userRepository,
+        super(const AccountDeleteReady());
 
   @override
   Stream<AccountDeleteState> mapEventToState(AccountDeleteEvent event) async* {

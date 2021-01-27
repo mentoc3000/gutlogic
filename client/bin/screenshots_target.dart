@@ -27,7 +27,6 @@ import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.d
 import 'package:gutlogic/resources/user_repository.dart';
 import 'package:gutlogic/routes/routes.dart';
 import 'package:gutlogic/style/gl_theme.dart';
-import 'package:gutlogic/widgets/multi_resource_provider.dart';
 import 'package:mockito/mockito.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:timezone/timezone.dart';
@@ -171,11 +170,9 @@ void main() {
   // remove debug banner for screenshots
   WidgetsApp.debugAllowBannerOverride = false;
 
-  final app = MultiResourceProvider(
-    services: [
+  final app = MultiRepositoryProvider(
+    providers: [
       Routes.provider(),
-    ],
-    repos: [
       RepositoryProvider<BowelMovementEntryRepository>(create: (context) => bowelMovementEntryRepository),
       RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
       RepositoryProvider<MealElementRepository>(create: (context) => mealElementRepository),
@@ -183,12 +180,14 @@ void main() {
       RepositoryProvider<SymptomEntryRepository>(create: (context) => symptomEntryRepository),
       RepositoryProvider<UserRepository>(create: (context) => userRepository),
     ],
-    blocs: [
-      BlocProvider(create: (context) => AccountBloc(userRepository: context.repository<UserRepository>())),
-      BlocProvider<AuthenticationBloc>(create: (context) => authenticationBloc),
-      BlocProvider(create: (context) => DiaryBloc(repository: context.repository<DiaryRepository>())),
-    ],
-    child: MainTabsPageWrapper(),
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AccountBloc(userRepository: context.repository<UserRepository>())),
+        BlocProvider<AuthenticationBloc>(create: (context) => authenticationBloc),
+        BlocProvider(create: (context) => DiaryBloc(repository: context.repository<DiaryRepository>())),
+      ],
+      child: MainTabsPageWrapper(),
+    ),
   );
 
   runApp(app);

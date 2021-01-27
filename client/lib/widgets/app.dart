@@ -1,10 +1,9 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 import '../auth/auth.dart';
-import '../blocs/simple_bloc_delegate.dart';
+import '../blocs/gut_logic_bloc_observer.dart';
 import '../pages/landing/landing_page.dart';
 import '../resources/firebase/analytics_service.dart';
 import '../resources/firebase/remote_config_service.dart';
@@ -16,7 +15,6 @@ import '../util/app_config.dart';
 import 'authenticated_resources.dart';
 import 'flavor_banner.dart';
 import 'gl_widget_config.dart';
-import 'multi_resource_provider.dart';
 
 class GutLogicApp extends StatelessWidget {
   final analyticsService = AnalyticsService();
@@ -25,7 +23,7 @@ class GutLogicApp extends StatelessWidget {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   GutLogicApp({@required this.remoteConfigService}) {
-    BlocSupervisor.delegate = SimpleBlocDelegate(
+    Bloc.observer = GutLogicBlocObserver(
       analyticsService: analyticsService,
       firebaseCrashlytics: firebaseCrashlytics,
     );
@@ -33,15 +31,13 @@ class GutLogicApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiResourceProvider(
-      services: [
-        Authenticator.provider(),
+    return MultiRepositoryProvider(
+      providers: [
         Routes.provider(),
-        Provider.value(value: analyticsService),
-        Provider.value(value: firebaseCrashlytics),
-        Provider.value(value: remoteConfigService),
-      ],
-      repos: [
+        Authenticator.provider(),
+        RepositoryProvider.value(value: analyticsService),
+        RepositoryProvider.value(value: firebaseCrashlytics),
+        RepositoryProvider.value(value: remoteConfigService),
         RepositoryProvider(create: (context) => UserRepository()),
       ],
       child: createRootWidget(),

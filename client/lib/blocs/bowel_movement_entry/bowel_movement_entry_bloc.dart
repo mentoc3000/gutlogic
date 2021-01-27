@@ -13,7 +13,7 @@ class BowelMovementEntryBloc extends Bloc<BowelMovementEntryEvent, BowelMovement
     with StreamSubscriber, DiaryEntryMapper {
   final BowelMovementEntryRepository repository;
 
-  BowelMovementEntryBloc({@required this.repository}) {
+  BowelMovementEntryBloc({@required this.repository}) : super(BowelMovementEntryLoading()) {
     diaryEntryStreamer = repository;
     diaryEntryDeleter = repository;
     diaryEntryUpdater = repository;
@@ -29,9 +29,6 @@ class BowelMovementEntryBloc extends Bloc<BowelMovementEntryEvent, BowelMovement
     TransitionFunction<BowelMovementEntryEvent, BowelMovementEntryState> transition,
   ) =>
       super.transformEvents(debounceDebouncedByType(events), transition);
-
-  @override
-  BowelMovementEntryState get initialState => BowelMovementEntryLoading();
 
   @override
   Stream<BowelMovementEntryState> mapEventToState(BowelMovementEntryEvent event) async* {

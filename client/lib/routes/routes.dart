@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/diary_entry/bowel_movement_entry.dart';
 import '../models/diary_entry/meal_entry.dart';
@@ -24,10 +24,14 @@ import '../pages/verify_email/verify_email_page.dart';
 
 class Routes {
   /// Find a provided Routes in the widget tree.
-  static Routes of(BuildContext context) => Provider.of<Routes>(context, listen: false);
+  static Routes of(BuildContext context) {
+    return RepositoryProvider.of<Routes>(context);
+  }
 
-  /// Create a new Provider widget for the Routes.
-  static Provider<Routes> provider() => Provider<Routes>(create: (_) => Routes());
+  /// Create a new RepositoryProvider widget for the Routes.
+  static RepositoryProvider<Routes> provider() {
+    return RepositoryProvider<Routes>(create: (context) => Routes());
+  }
 
   Route get root {
     return MaterialPageRoute(

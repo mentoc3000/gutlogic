@@ -17,7 +17,7 @@ class LandingBloc extends Bloc<LandingEvent, LandingState> {
   LandingBloc({
     @required this.userRepository,
     @required this.authenticator,
-  });
+  }) : super(const LandingReady());
 
   factory LandingBloc.fromContext(BuildContext context) {
     return LandingBloc(
@@ -25,9 +25,6 @@ class LandingBloc extends Bloc<LandingEvent, LandingState> {
       authenticator: Authenticator.of(context),
     );
   }
-
-  @override
-  LandingState get initialState => const LandingReady();
 
   @override
   Stream<LandingState> mapEventToState(LandingEvent event) async* {

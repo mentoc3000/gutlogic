@@ -1,17 +1,17 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../blocs/bloc_helpers.dart';
 import '../resources/firebase/analytics_service.dart';
 import '../util/logger.dart';
 
-class SimpleBlocDelegate extends BlocDelegate {
+class GutLogicBlocObserver extends BlocObserver {
   final AnalyticsService analyticsService;
   final FirebaseCrashlytics firebaseCrashlytics;
 
-  SimpleBlocDelegate({@required this.analyticsService, @required this.firebaseCrashlytics});
+  GutLogicBlocObserver({@required this.analyticsService, @required this.firebaseCrashlytics});
 
   @override
   void onEvent(Bloc<dynamic, dynamic> bloc, Object event) {

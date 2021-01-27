@@ -14,15 +14,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository userRepository;
   final Authenticator authenticator;
 
-  LoginBloc({@required this.userRepository, @required this.authenticator});
+  LoginBloc({@required this.userRepository, @required this.authenticator}) : super(const LoginReady());
 
   factory LoginBloc.fromContext(BuildContext context) => LoginBloc(
         userRepository: context.repository<UserRepository>(),
         authenticator: Authenticator.of(context),
       );
-
-  @override
-  LoginState get initialState => const LoginReady();
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {

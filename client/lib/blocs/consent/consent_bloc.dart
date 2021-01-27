@@ -13,10 +13,7 @@ class ConsentBloc extends Bloc<ConsentEvent, ConsentState> {
     return ConsentBloc(userRepository: context.repository<UserRepository>());
   }
 
-  ConsentBloc({@required this.userRepository});
-
-  @override
-  ConsentState get initialState => const ConsentReady();
+  ConsentBloc({@required this.userRepository}) : super(const ConsentReady());
 
   @override
   Stream<ConsentState> mapEventToState(ConsentEvent event) async* {

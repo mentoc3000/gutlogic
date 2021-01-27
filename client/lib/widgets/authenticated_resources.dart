@@ -18,7 +18,6 @@ import '../resources/food/edamam_service.dart';
 import '../resources/symptom_type_repository.dart';
 import '../resources/user_repository.dart';
 import '../routes/routes.dart';
-import '../widgets/multi_resource_provider.dart';
 
 class AuthenticatedResources extends StatelessWidget {
   final Widget child;
@@ -50,8 +49,8 @@ class AuthenticatedResources extends StatelessWidget {
       final firebaseCrashlytics = context.repository<FirebaseCrashlytics>();
       final edamamService = EdamamService(edamamFoodSearchService: CloudFunctionService('edamamFoodSearch'));
       // Wrap the child views in the global authenticated repositories/blocs.
-      return MultiResourceProvider(
-        repos: [
+      return MultiRepositoryProvider(
+        providers: [
           RepositoryProvider(create: (context) => BowelMovementEntryRepository(firestoreService: firestoreService)),
           RepositoryProvider(
             create: (context) => DiaryRepository(
@@ -71,12 +70,14 @@ class AuthenticatedResources extends StatelessWidget {
           RepositoryProvider(create: (context) => CustomFoodRepository(firestoreService: firestoreService)),
           RepositoryProvider(create: (context) => EdamamFoodRepository(edamamService: edamamService)),
         ],
-        blocs: [
-          // TODO move these into their most tightly nested widget trees
-          BlocProvider(create: (context) => FoodBloc.fromContext(context)),
-          BlocProvider(create: (context) => SymptomTypeBloc.fromContext(context)),
-        ],
-        child: child,
+        child: MultiBlocProvider(
+          providers: [
+            // TODO move these into their most tightly nested widget trees
+            BlocProvider(create: (context) => FoodBloc.fromContext(context)),
+            BlocProvider(create: (context) => SymptomTypeBloc.fromContext(context)),
+          ],
+          child: child,
+        ),
       );
     } else {
       return child;

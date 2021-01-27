@@ -15,7 +15,9 @@ class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
   StreamSubscription _userValueSubscription;
   StreamSubscription _userRefreshSubscription;
 
-  VerifyEmailBloc({@required UserRepository userRepository}) : _userRepository = userRepository {
+  VerifyEmailBloc({@required UserRepository userRepository})
+      : _userRepository = userRepository,
+        super(VerifyEmailValue(verified: userRepository.user.verified)) {
     assert(userRepository.authenticated);
 
     // Refresh the bloc state every two seconds, because verifying the email does not emit a new user value.
@@ -36,9 +38,6 @@ class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
     _userValueSubscription?.cancel();
     return super.close();
   }
-
-  @override
-  VerifyEmailState get initialState => VerifyEmailValue(verified: _userRepository.user.verified);
 
   @override
   Stream<VerifyEmailState> mapEventToState(VerifyEmailEvent event) async* {

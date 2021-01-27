@@ -9,14 +9,11 @@ import 'reset_password_state.dart';
 class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
   final UserRepository userRepository;
 
-  ResetPasswordBloc({this.userRepository});
+  ResetPasswordBloc({this.userRepository}) : super(const ResetPasswordReady());
 
   factory ResetPasswordBloc.fromContext(BuildContext context) => ResetPasswordBloc(
         userRepository: context.repository<UserRepository>(),
       );
-
-  @override
-  ResetPasswordState get initialState => const ResetPasswordReady();
 
   @override
   Stream<ResetPasswordState> mapEventToState(ResetPasswordEvent event) async* {

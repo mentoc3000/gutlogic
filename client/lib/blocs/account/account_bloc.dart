@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../../models/application_user.dart';
@@ -15,16 +15,14 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   AccountBloc({@required UserRepository userRepository})
       : assert(userRepository.authenticated),
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        super(AccountReady(user: userRepository.user));
 
   factory AccountBloc.fromContext(BuildContext context) => AccountBloc(
         userRepository: context.repository<UserRepository>(),
       );
 
   ApplicationUser get _user => _userRepository.user;
-
-  @override
-  AccountState get initialState => AccountReady(user: _user);
 
   @override
   Stream<AccountState> mapEventToState(AccountEvent event) async* {

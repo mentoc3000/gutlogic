@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:provider/provider.dart';
 
 import 'apple/apple_auth.dart';
 import 'auth_provider.dart';
@@ -11,10 +11,14 @@ import 'password/password_auth.dart';
 /// An authenticator abstracts the various ways of authenticating (Google, Apple, etc).
 class Authenticator {
   /// Find a provided Authenticator in the widget tree.
-  static Authenticator of(BuildContext context) => Provider.of<Authenticator>(context, listen: false);
+  static Authenticator of(BuildContext context) {
+    return RepositoryProvider.of<Authenticator>(context);
+  }
 
-  /// Create a new Provider widget for the Authenticator.
-  static Provider<Authenticator> provider() => Provider<Authenticator>(create: (_) => Authenticator());
+  /// Create a new RepositoryProvider widget for the Authenticator.
+  static RepositoryProvider<Authenticator> provider() {
+    return RepositoryProvider<Authenticator>(create: (context) => Authenticator());
+  }
 
   final PasswordAuth _passwordAuth = PasswordAuth();
   final GoogleAuth _googleAuth = GoogleAuth();

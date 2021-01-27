@@ -71,8 +71,7 @@ class Pair extends Equatable {
 }
 
 class PairBloc extends Bloc<PairEvent, Pair> {
-  @override
-  Pair get initialState => Pair(0, 0);
+  PairBloc() : super(Pair(0, 0));
 
   @override
   Stream<Transition<PairEvent, Pair>> transformEvents(
