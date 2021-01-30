@@ -1,3 +1,5 @@
+## Default
+
 *.mode1v3
 *.mode2v3
 *.moved-aside
@@ -25,9 +27,24 @@ Flutter/flutter_export_environment.sh
 ServiceDefinitions.json
 Runner/GeneratedPluginRegistrant.*
 
-# Exceptions to above rules.
 !default.mode1v3
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
-!Gemfile.lock
+
+## Custom
+
+# Builds
+Flutter/.last_build_id
+Runner.ipa
+Runner.app.dSYM.zip
+
+# Fastlane
+fastlane/screenshots
+fastlane/report.xml
+
+# Ruby bundle exec
+vendor/bundle
+
+# CI/CD
+gc_keys.json

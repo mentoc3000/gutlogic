@@ -1,3 +1,5 @@
+## Default
+
 gradle-wrapper.jar
 /.gradle
 /captures/
@@ -6,5 +8,9 @@ gradle-wrapper.jar
 /local.properties
 GeneratedPluginRegistrant.java
 
-# AWS Authorization
-awsconfiguration.json
+key.properties
+
+## Custom
+
+fastlane/metadata/android
+fastlane/report.xml

@@ -1,0 +1,29 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# Build
+build/
+
+# Codegen
+*.g.dart
+
+# Docs
+**/doc/api/
+
+# Web
+lib/generated_plugin_registrant.dart
+
+# Symbolication
+app.*.symbols
+
+# Obfuscation
+app.*.map.json
+
+# Coverage
+coverage/
+coverage_helper_test.dart

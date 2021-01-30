@@ -17,18 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Setup
 
-### Server-Side Testing
-
-Gut Logic uses Firebase as its backend. To run the Firestore test you must provide
-admin credentials using the following steps:
-
-1. Obtain the private key json file from [Chris](mailto:chris@gutlogic.co)
-2. Save it someplace safe. DO NOT COMMIT IT TO THE REPOSITORY.
-3. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the file path
-
-For more information, see
-[Add the Firebase Admin SDK to Your Server](https://firebase.google.com/docs/admin/setup?authuser=1).
-
 ### Screenshots
 
 Install `screenshots` as described [here](https://github.com/mmcc007/screenshots).

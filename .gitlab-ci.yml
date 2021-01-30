@@ -274,7 +274,7 @@ deploy:client:ios:
     - export PATH="$PATH":"$HOME/.pub-cache/bin/pubver"
     - *set_flavor
     - gem install --user-install bundler
-    - bundle install --path vendor/bundle
+    - bundle install
     - bundle exec fastlane match
     - bundle exec fastlane run increment_build_number build_number:"$CI_PIPELINE_ID"
     - export FLUTTER_APP_VERSION=$(pubver -d ../. get)
