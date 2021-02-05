@@ -46,7 +46,7 @@ The app is distributed on several channels using Fastlane.
    distributed to **Firebase App Distribution** with internally managed groups, and has a different
    package identifier so it can be installed adjacent to a staging or release build.
 
-2. `staging` - The earliest publically distributed releases are on the staging channel, which are
+2. `staging` - The earliest publicly distributed releases are on the staging channel, which are
    built from the `master` branch and linked against the `gutlogic` project. Data from the staging
    channel is shared with the release channel. The staging channel should be feature complete. The
    staging channel is distributed to **Google Play Store Open Tests** and **Apple TestFlight** and

@@ -34,5 +34,4 @@ To build for iOS, GitLab Runner must run on MacOS. Set up a [local runner](https
 
 - [flutter](https://flutter.dev/docs/get-started/install)
 - [fastlane](https://docs.fastlane.tools/getting-started/ios/setup/)
-- [pubspec_version](https://pub.dev/packages/pubspec_version)
 - [lcov](https://formulae.brew.sh/formula/lcov)

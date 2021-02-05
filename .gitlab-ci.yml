@@ -1,7 +1,12 @@
+# Jobs are named [stage][subproject][task].
+
+# Reference: https://github.com/fezu54/flutter-gitlab-ci-example/blob/master/.gitlab-ci.yml
+
 stages:
   - check
   - test
   - build
+  - predeploy
   - deploy
 
 workflow:
@@ -9,14 +14,12 @@ workflow:
     - if: ($CI_MERGE_REQUEST_TITLE =~ /WIP:/) || ($CI_MERGE_REQUEST_TITLE =~ /Draft:/)
       when: never
     - if: $CI_MERGE_REQUEST_ID
-    - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH == "develop"
     - if: $CI_COMMIT_BRANCH == "master"
     - if: $CI_COMMIT_BRANCH == "release"
 
-# Create a job that only runs if neither of the subdirectories will run. This
-# is so MRs that don't change any of those files will still generate a pipeline
-# and comply with "prevent merge unless a pipeline succeeded" rule.
+# Create a job that only runs if neither of the subdirectories have changed. This is so MRs that don't change any of
+# those files will still generate a pipeline and comply with "prevent merge unless a pipeline succeeded" rule.
 
 compliance:
   stage: check
@@ -31,13 +34,37 @@ compliance:
       when: never
     - when: always
 
+# Choose the pipeline channel (develop/staging/release) by commit branch and store it in PIPELINE_CHANNEL
+.pipeline-channel-variable: &pipeline-channel-variable >
+  if   [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "release" ] || [ "$CI_COMMIT_BRANCH" == "release" ]; then PIPELINE_CHANNEL="release";
+  elif [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master"  ] || [ "$CI_COMMIT_BRANCH" == "master"  ]; then PIPELINE_CHANNEL="staging";
+  else PIPELINE_CHANNEL="develop"; fi
+
+# Rule for manual jobs on any critical commit.
+.manual-commit-rule: &manual-commit-rule
+  if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
+  when: manual
+
 ### Server Jobs
+
+# Rule for automatic pipelines on merge requests with server changes.
+.server-merge-request-rule: &server-merge-request-rule
+  if: $CI_MERGE_REQUEST_ID
+  changes: [ server/**/* ]
+
+# Rule for automatic pipelines on critical commits with server changes.
+.server-commit-rule: &server-commit-rule
+  if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
+  changes: [ server/**/* ]
 
 .server:
   image: node:10-alpine
   tags:
     - docker
   before_script:
+    # server pipeline variables
+    - *pipeline-channel-variable
+    # move into the server directory
     - cd server
     # install alpine deps (ideally this would happen in a custom dockerfile)
     - apk add --quiet --no-cache openjdk8
@@ -46,23 +73,10 @@ compliance:
     # add locally installed bins to the path so we can run firebase-tools
     - PATH="$(npm bin):$PATH"
     # configure the firebase environment
-    - firebase use $FIREBASE_PROJECT
+    - firebase use $PIPELINE_CHANNEL
   dependencies: [] # ignore flutter artifacts
 
-# Rule for server jobs that run on any merge request.
-.server-merge-request-rule: &server-merge-request-rule
-  if: $CI_MERGE_REQUEST_ID
-  #changes: [ server/**/* ]
-
-.server-commit-develop-rule: &server-commit-develop-rule
-  if: ($CI_COMMIT_BRANCH == "develop")
-  #changes: [ server/**/* ]
-
-.server-commit-master-rule: &server-commit-master-rule
-  if: ($CI_COMMIT_BRANCH == "master")
-  #changes: [ server/**/* ]
-
-format:server:
+check:server:
   stage: check
   extends:
     - .server
@@ -70,8 +84,8 @@ format:server:
     - npm run lint
   rules:
     - *server-merge-request-rule
-    - *server-commit-master-rule
-    - *server-commit-develop-rule
+    - *server-commit-rule
+    - *manual-commit-rule
   needs: []
 
 test:server:
@@ -82,69 +96,62 @@ test:server:
     - npm run test
   rules:
     - *server-merge-request-rule
-    - *server-commit-master-rule
-    - *server-commit-develop-rule
+    - *server-commit-rule
+    - *manual-commit-rule
   needs: []
 
-.deploy:server:
+deploy:server:
   stage: deploy
   extends:
     - .server
   script:
     - firebase deploy --token $FIREBASE_TOKEN
+  rules:
+    - *server-commit-rule
+    - *manual-commit-rule
   needs:
     - test:server
 
-deploy:server:dev:
-  environment: development
-  extends:
-    - .deploy:server
-  rules:
-    - *server-commit-develop-rule
-
-deploy:server:prod:
-  environment: production
-  extends:
-    - .deploy:server
-  rules:
-    - *server-commit-master-rule
-
 ### Client Jobs
 
-.set_flavor: &set_flavor >
-  if   [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "release" ] || [ "$CI_COMMIT_BRANCH" == "release" ]; then FLUTTER_FLAVOR="production";
-  elif [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master"  ] || [ "$CI_COMMIT_BRANCH" == "master"  ]; then FLUTTER_FLAVOR="production";
-  else FLUTTER_FLAVOR="development";
-  fi
+# Rule for client jobs that run on any merge request with client changes.
+.client-merge-request-rule: &client-merge-request-rule
+  if: $CI_MERGE_REQUEST_ID
+  changes: [ client/**/* ]
 
-.flutter:
+# Rule for client jobs that run on critical commits with client changes.
+.client-commit-rule: &client-commit-rule
+  if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
+  changes: [ client/**/* ]
+
+# Rule for client jobs that run on critical commits with client changes (except develop).
+.client-deploy-rule: &client-deploy-rule
+  if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
+  changes: [ client/**/* ]
+
+.client:
   image: cirrusci/flutter:1.20.4
   tags:
     - docker
   before_script:
+    # client pipeline variables
+    - *pipeline-channel-variable
+    # move into the client directory
     - cd client
+    # print the flutter version for logs
     - flutter --version
-    # pick the flutter flavor and store it FLUTTER_FLAVOR
-    - *set_flavor
+    # set FLUTTER_FLAVOR based on the pipeline channel
+    - if   [ "$PIPELINE_CHANNEL" == "release" ]; then FLUTTER_FLAVOR="production";
+      elif [ "$PIPELINE_CHANNEL" == "staging" ]; then FLUTTER_FLAVOR="production";
+      else FLUTTER_FLAVOR="development"; fi
     # install the client dependencies and generate code
-    - flutter clean # rebuild dependencies; attempts to resolve #29
     - flutter pub get
     - flutter pub run build_runner build --delete-conflicting-outputs
 
-# Rule for client jobs that run on any merge request.
-.client-merge-request-rule: &client-merge-request-rule
-  if: $CI_MERGE_REQUEST_ID
-  #changes: [ client/**/* ]
-
-# Rule for client jobs that run on critical commits.
-.client-commit-rule: &client-commit-rule
-  if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-  #changes: [ client/**/* ]
-
-format:client:
+check:client:
   stage: check
   extends:
-    - .flutter
+    - .client
   script:
     - dartanalyzer --fatal-warnings lib test
     # Delete generated files after analysis but before formatting. They cause the formatter to quit with an error
@@ -155,12 +162,13 @@ format:client:
   rules:
     - *client-merge-request-rule
     - *client-commit-rule
+    - *manual-commit-rule
   needs: []
 
 test:client:
   stage: test
   extends:
-    - .flutter
+    - .client
   script:
     - bash test/generate_coverage_test_file.sh
     - flutter test --coverage
@@ -173,115 +181,89 @@ test:client:
   rules:
     - *client-merge-request-rule
     - *client-commit-rule
+    - *manual-commit-rule
   needs: []
 
-# screenshots:apk:
+# build:client:apk:
 #   stage: build
 #   extends:
-#     - .flutter
-#   tags:
-#     - docker
+#     - .client
+#   script:
+#     - flutter build apk --flavor $FLUTTER_FLAVOR --release --no-codesign
 #   rules:
-#     - *client-screenshot-rules
-#   artifacts:
-#     paths:
-#       - client/apk/fastlane/screenshots
-#     untracked: true
-#     expire_in: 1 day
+#     - *client-merge-request-rule
+#     - *manual-commit-rule
 
-screenshots:ios:
+build:client:ios:
   stage: build
   extends:
-    - .flutter
+    - .client
+  tags:
+    - macos
+  script:
+    - flutter build ios --flavor $FLUTTER_FLAVOR --release --no-codesign
+  rules:
+    - *client-merge-request-rule
+    - *manual-commit-rule
+
+predeploy:client:screenshots:
+  stage: predeploy
+  extends:
+    - .client
   tags:
     - macos
   script:
     - flutter pub run bin/screenshots
-  allow_failure: true
-  rules:
-    # skip the develop branch on screenshots
-    - if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-    # provide manual screenshot job on other branches
-    - when: manual
-      changes: [client/**/*]
   artifacts:
     paths:
-      - client/ios/fastlane/screenshots
-    untracked: true
+      - client/android/fastlane
+      - client/ios/fastlane
     expire_in: 1 day
-
-# build:client:apk:
-#   extends:
-#     - .flutter
-#   stage: build
-#   script:
-#     - flutter pub run flutter_launcher_icons:main
-#     - flutter build apk --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
-#   rules:
-#     - *client-commit-rule
-#     - *client-merge-request-rule
-#   artifacts:
-#     untracked: true
-#     expire_in: 1 day
-
-build:client:ios:
-  extends:
-    - .flutter
-  stage: build
-  tags:
-    - macos
-  script:
-    - flutter pub run flutter_launcher_icons:main
-    - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
   rules:
-    - *client-commit-rule
-    - *client-merge-request-rule
-  artifacts:
-    untracked: true
-    expire_in: 1 day
+    - *client-deploy-rule
+    - *manual-commit-rule
 
-# Choose the Fastlane channel by commit branch and store it in FASTLANE_CHANNEL
-.fastlane-channel-variable: &fastlane-channel-variable >
-  if   [ "$CI_COMMIT_BRANCH" == "release" ]; then FASTLANE_CHANNEL="release";
-  elif [ "$CI_COMMIT_BRANCH" == "master"  ]; then FASTLANE_CHANNEL="staging";
-  else FASTLANE_CHANNEL="develop";
-  fi
-
-# deploy:client:apk:
-#   stage: deploy
-#   extends:
-#     - .fastlane-apk
-#   dependencies:
-#     - build:client:apk
-#     - screenshots:apk
-#   script:
-#     - *fastlane-channel-variable
-#     - bundle exec fastlane $FASTLANE_CHANNEL
-#   rules:
-#     - *client-commit-rule
+predeploy:client:tag:
+  stage: predeploy
+  extends:
+    - .client
+  script:
+    - FLUTTER_APP_VERSION=${flutter pub run bin/version}
+  release:
+    tag_name: "v$FLUTTER_APP_VERSION"
+    description: "Release $FLUTTER_APP_VERSION"
+  rules:
+    - *client-deploy-rule
+    - *manual-commit-rule
 
 deploy:client:ios:
   stage: deploy
+  extends:
+    - .client
   tags:
     - macos
-  dependencies:
-    - build:client:ios
-    - screenshots:ios
-  before_script:
-    - cd client/ios/
+  script:
+    # set FASTLANE_CHANNEL to the pipeline channel
+    - export FASTLANE_CHANNEL=$PIPELINE_CHANNEL
+    # set FLUTTER_APP_VERSION to the pubspec version
+    - export FLUTTER_APP_VERSION=${flutter pub run bin/version}
+    # move into ios
+    - cd ios
+    # copy GC_KEYS from environment into fastlane target
     - cp "$GC_KEYS" "$(pwd)/gc_keys.json"
+    # prep fastlane
     - export PATH="$PATH":"$HOME/.gem/ruby/2.6.0/bin"
-    - export PATH="$PATH":"$HOME/.pub-cache/bin/pubver"
-    - *set_flavor
     - gem install --user-install bundler
     - bundle install
-    - bundle exec fastlane match
     - bundle exec fastlane run increment_build_number build_number:"$CI_PIPELINE_ID"
-    - export FLUTTER_APP_VERSION=$(pubver -d ../. get)
-  script:
-    - *fastlane-channel-variable
-    - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign # added to resolve #29
+    # build:client:ios is skipped on deploy jobs due to issue #29
+    - flutter pub run flutter_launcher_icons:main
+    - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
+    # execute fastlane (archives and uploads app)
     - bundle exec fastlane $FASTLANE_CHANNEL
+  needs:
+    - predeploy:client:screenshots
+    - predeploy:client:tag
   rules:
     - *client-commit-rule
-# For a great CD example, see https://github.com/fezu54/flutter-gitlab-ci-example/blob/master/.gitlab-ci.yml
+    - *manual-commit-rule
