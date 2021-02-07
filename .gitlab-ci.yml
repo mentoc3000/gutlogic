@@ -76,7 +76,6 @@ compliance:
     - PATH="$(npm bin):$PATH"
     # configure the firebase environment
     - firebase use $PIPELINE_CHANNEL
-  dependencies: [] # ignore flutter artifacts
 
 check:server:
   stage: check
@@ -111,8 +110,7 @@ deploy:server:
   rules:
     - *server-commit-rule
     - *manual-commit-rule
-  needs:
-    - test:server
+  dependencies: [] # ignore flutter artifacts
 
 ### Client Jobs
 
@@ -207,6 +205,7 @@ build:client:ios:
   rules:
     - *client-merge-request-rule
     - *manual-commit-rule
+  dependencies: [] # ignore server artifacts
 
 predeploy:client:screenshots:
   stage: predeploy
@@ -224,6 +223,7 @@ predeploy:client:screenshots:
   rules:
     - *client-deploy-rule
     - *manual-commit-rule
+  dependencies: [] # ignore server artifacts
 
 predeploy:client:tag:
   stage: predeploy
@@ -237,6 +237,7 @@ predeploy:client:tag:
   rules:
     - *client-deploy-rule
     - *manual-commit-rule
+  dependencies: [] # ignore server artifacts
 
 deploy:client:ios:
   stage: deploy
@@ -266,3 +267,5 @@ deploy:client:ios:
   rules:
     - *client-commit-rule
     - *manual-commit-rule
+  dependencies:
+    - predeploy:client:screenshots
