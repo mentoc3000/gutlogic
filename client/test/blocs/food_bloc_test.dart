@@ -37,17 +37,19 @@ void main() {
       when(edamamFoodRepository.streamQuery('B')).thenAnswer((i) => Stream.value(justBacon));
     });
 
-    blocTest(
-      'initial state is Loading',
-      build: () async =>
-          FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository),
-      skip: 0,
-      expect: [FoodsLoading()],
-    );
+    test('initial state', () {
+      expect(
+        FoodBloc(
+          customFoodRepository: customFoodRepository,
+          edamamFoodRepository: edamamFoodRepository,
+        ).state,
+        FoodsLoading(),
+      );
+    });
 
     blocTest(
       'creates custom food',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository);
       },
@@ -60,7 +62,7 @@ void main() {
 
     blocTest(
       'deletes custom food',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository);
       },
@@ -73,13 +75,18 @@ void main() {
 
     blocTest(
       'streams queried foods',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository);
       },
-      act: (bloc) async => bloc.add(const StreamFoodQuery('B')),
+      act: (bloc) async {
+        bloc.add(const StreamFoodQuery('B'));
+      },
       wait: debounceWaitDuration,
-      expect: [FoodsLoaded(customFoods: justBread, edamamFoods: justBacon)],
+      expect: [
+        FoodsLoading(),
+        FoodsLoaded(customFoods: justBread, edamamFoods: justBacon),
+      ],
       verify: (bloc) async {
         verify(customFoodRepository.streamQuery('B')).called(1);
         verify(analyticsService.logEvent('food_search')).called(1);
@@ -88,14 +95,17 @@ void main() {
 
     blocTest(
       'updates results when one source emits event',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         when(customFoodRepository.streamQuery('B')).thenAnswer((i) => Stream.fromIterable([justBread, breadAndBeer]));
         return FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository);
       },
-      act: (bloc) async => bloc.add(const StreamFoodQuery('B')),
+      act: (bloc) async {
+        bloc.add(const StreamFoodQuery('B'));
+      },
       wait: debounceWaitDuration,
       expect: [
+        FoodsLoading(),
         FoodsLoaded(customFoods: justBread, edamamFoods: justBacon),
         FoodsLoaded(customFoods: breadAndBeer, edamamFoods: justBacon),
       ],

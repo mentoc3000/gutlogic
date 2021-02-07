@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/symptom_entry/symptom_entry.dart';
 import '../../blocs/symptom_type/symptom_type.dart';
 import '../../models/diary_entry/symptom_entry.dart';
 import '../../models/severity.dart';
 import '../../models/symptom_type.dart';
-import '../../resources/diary_repositories/symptom_entry_repository.dart';
 import '../../widgets/cards/datetime_card.dart';
 import '../../widgets/cards/notes_card.dart';
 import '../../widgets/floating_action_buttons/search_floating_action_button.dart';
@@ -21,8 +21,7 @@ class SymptomEntryPage extends StatefulWidget {
 
   static Widget forNewEntryFrom(SymptomType symptomType) {
     return BlocProvider(
-      create: (context) => SymptomEntryBloc(repository: context.repository<SymptomEntryRepository>())
-        ..add(CreateFromAndStreamSymptomEntry(symptomType)),
+      create: (context) => SymptomEntryBloc.fromContext(context)..add(CreateFromAndStreamSymptomEntry(symptomType)),
       child: SymptomEntryPage(),
     );
   }
@@ -41,12 +40,9 @@ class SymptomEntryPage extends StatefulWidget {
 class _SymptomEntryPageState extends State<SymptomEntryPage> {
   final TextEditingController _notesController = TextEditingController();
 
-  SymptomEntryBloc _symptomEntryBloc;
-
   @override
   void initState() {
     super.initState();
-    _symptomEntryBloc = context.bloc<SymptomEntryBloc>();
   }
 
   @override
@@ -79,15 +75,19 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
       return [
         DateTimeCard(
           dateTime: entry.datetime,
-          onChanged: (DateTime datetime) => _symptomEntryBloc.add(UpdateSymptomEntryDateTime(datetime)),
+          onChanged: (DateTime datetime) {
+            context.read<SymptomEntryBloc>().add(UpdateSymptomEntryDateTime(datetime));
+          },
         ),
         SeverityCard(
           severity: entry.symptom?.severity ?? 1,
-          onChanged: (Severity newValue) => _symptomEntryBloc.add(UpdateSeverity(newValue)),
+          onChanged: (Severity newValue) => context.read<SymptomEntryBloc>().add(UpdateSeverity(newValue)),
         ),
         NotesCard(
           controller: _notesController,
-          onChanged: (String notes) => _symptomEntryBloc.add(UpdateSymptomEntryNotes(notes)),
+          onChanged: (String notes) {
+            context.read<SymptomEntryBloc>().add(UpdateSymptomEntryNotes(notes));
+          },
         ),
       ];
     }
@@ -99,7 +99,9 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
         context: context,
         delegate: SymptomTypeSearchDelegate(
           symptomTypeBloc: symptomTypeBloc,
-          onSelect: (symptomType) => _symptomEntryBloc.add(UpdateSymptomType(symptomType)),
+          onSelect: (symptomType) {
+            context.read<SymptomEntryBloc>().add(UpdateSymptomType(symptomType));
+          },
         ),
       );
     }

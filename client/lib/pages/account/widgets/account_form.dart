@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../../../blocs/account/account.dart';
+import '../../../models/application_user.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/buttons/buttons.dart';
 import '../../../widgets/form_fields/gl_text_form_field.dart';
@@ -21,12 +22,9 @@ class AccountFormState extends State<AccountForm> {
   final TextEditingController firstNameTextController = TextEditingController();
   final TextEditingController lastNameTextController = TextEditingController();
 
-  AccountBloc bloc;
-
   @override
   void initState() {
     super.initState();
-    bloc = context.bloc<AccountBloc>();
     updateTextControllerValues();
   }
 
@@ -52,10 +50,11 @@ class AccountFormState extends State<AccountForm> {
   }
 
   void updateTextControllerValues() {
-    if (bloc.state is AccountReady) {
-      final user = (bloc.state as AccountReady).user;
-      firstNameTextController.text = user.firstname;
-      lastNameTextController.text = user.lastname;
+    final state = context.read<AccountBloc>().state;
+
+    if (state is AccountReady) {
+      firstNameTextController.text = state.user.firstname;
+      lastNameTextController.text = state.user.lastname;
     }
   }
 
@@ -70,6 +69,8 @@ class AccountFormState extends State<AccountForm> {
 
     final isFormEnabled = state is AccountReady;
 
+    final user = state is AccountReady ? state.user : null;
+
     return ListView(
       children: [
         const SizedBox(height: 20),
@@ -79,7 +80,7 @@ class AccountFormState extends State<AccountForm> {
         const SizedBox(height: 20),
         buildChangePasswordButton(onPressed: onChangePasswordPressed),
         const SizedBox(height: 20),
-        buildSaveButton(onPressed: isFormEnabled ? onSavePressed : null),
+        buildSaveButton(onPressed: isFormEnabled ? () => onSavePressed(user) : null),
         const SizedBox(height: 20),
         buildLogoutButton(onPressed: isFormEnabled ? onLogOutPressed : null),
         const SizedBox(height: 20),
@@ -88,13 +89,12 @@ class AccountFormState extends State<AccountForm> {
     );
   }
 
-  void onSavePressed() {
-    final currentUser = (bloc.state as AccountReady).user;
-    final updatedUser = currentUser.rebuild((b) => b
+  void onSavePressed(ApplicationUser user) {
+    final updatedUser = user.rebuild((b) => b
       ..firstname = firstNameTextController.text
       ..lastname = lastNameTextController.text);
 
-    bloc.add(AccountUpdate(user: updatedUser));
+    context.read<AccountBloc>().add(AccountUpdate(user: updatedUser));
   }
 
   void onChangePasswordPressed() {
@@ -102,7 +102,7 @@ class AccountFormState extends State<AccountForm> {
   }
 
   void onLogOutPressed() {
-    bloc.add(AccountLogOut());
+    context.read<AccountBloc>().add(AccountLogOut());
   }
 
   void onDeletePressed() async {

@@ -23,7 +23,7 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
 
   factory ChangePasswordBloc.fromContext(BuildContext context) {
     return ChangePasswordBloc(
-      userRepository: context.repository<UserRepository>(),
+      userRepository: context.read<UserRepository>(),
       authenticator: Authenticator.of(context),
     );
   }

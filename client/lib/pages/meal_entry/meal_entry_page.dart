@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/food/food.dart';
 import '../../blocs/meal_entry/meal_entry.dart';
 import '../../models/diary_entry/meal_entry.dart';
@@ -77,7 +78,7 @@ class _MealEntryPageState extends State<MealEntryPage> {
   }
 
   Future<String> addFood(BuildContext context, {String initialFoodName = ''}) async {
-    final foodBloc = context.bloc<FoodBloc>();
+    final foodBloc = context.read<FoodBloc>();
 
     final foodName = await showDialog<String>(
       context: context,
@@ -91,7 +92,7 @@ class _MealEntryPageState extends State<MealEntryPage> {
 
   void addMealElement(BuildContext context) {
     final foodBloc = BlocProvider.of<FoodBloc>(context);
-    final mealEntryBloc = context.bloc<MealEntryBloc>();
+    final mealEntryBloc = context.read<MealEntryBloc>();
 
     showSearch(
       context: context,
@@ -105,11 +106,12 @@ class _MealEntryPageState extends State<MealEntryPage> {
   }
 
   List<Widget> buildCards(BuildContext context, MealEntry entry) {
-    final mealEntryBloc = context.bloc<MealEntryBloc>();
     return [
       DateTimeCard(
         dateTime: entry.datetime,
-        onChanged: (DateTime datetime) => mealEntryBloc.add(UpdateMealEntryDateTime(datetime)),
+        onChanged: (DateTime datetime) {
+          context.read<MealEntryBloc>().add(UpdateMealEntryDateTime(datetime));
+        },
       ),
       MealElementsCard(
         mealEntry: entry,
@@ -117,7 +119,9 @@ class _MealEntryPageState extends State<MealEntryPage> {
       ),
       NotesCard(
         controller: _notesController,
-        onChanged: (String notes) => mealEntryBloc.add(UpdateMealEntryNotes(notes)),
+        onChanged: (String notes) {
+          context.read<MealEntryBloc>().add(UpdateMealEntryNotes(notes));
+        },
       )
     ];
   }

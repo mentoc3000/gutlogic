@@ -20,12 +20,9 @@ class RegisterFormState extends State<RegisterForm> {
   final String Function(String) _usernameValidator = EmailValidators.full;
   final String Function(String) _passwordValidator = PasswordValidators.isNotEmpty;
 
-  RegisterBloc _bloc;
-
   @override
   void initState() {
     super.initState();
-    _bloc = context.bloc<RegisterBloc>();
     _usernameTextController.addListener(validateForm);
     _passwordTextController.addListener(validateForm);
   }
@@ -90,10 +87,10 @@ class RegisterFormState extends State<RegisterForm> {
   }
 
   void onRegisterButtonPressed() {
-    _bloc.add(RegisterSubmitted(
-      username: _usernameTextController.text,
-      password: _passwordTextController.text,
-    ));
+    context.read<RegisterBloc>().add(RegisterSubmitted(
+          username: _usernameTextController.text,
+          password: _passwordTextController.text,
+        ));
   }
 
   void cancel() {

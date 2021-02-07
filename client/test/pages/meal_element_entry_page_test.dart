@@ -7,13 +7,13 @@ import 'package:gutlogic/blocs/meal_element/meal_element.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
-import 'package:gutlogic/pages/meal_element_entry/meal_element_entry_page.dart';
 import 'package:gutlogic/pages/loading_page.dart';
+import 'package:gutlogic/pages/meal_element_entry/meal_element_entry_page.dart';
 import 'package:mockito/mockito.dart';
 
-class MockMealElementBloc extends MockBloc<MealElementEvent, MealElementState> implements MealElementBloc {}
+class MockMealElementBloc extends MockBloc<MealElementState> implements MealElementBloc {}
 
-class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
+class MockFoodBloc extends MockBloc<FoodState> implements FoodBloc {}
 
 void main() {
   MealElementBloc mealElementBloc;

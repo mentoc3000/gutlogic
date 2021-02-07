@@ -10,7 +10,7 @@ class ConsentBloc extends Bloc<ConsentEvent, ConsentState> {
   final UserRepository userRepository;
 
   factory ConsentBloc.fromContext(BuildContext context) {
-    return ConsentBloc(userRepository: context.repository<UserRepository>());
+    return ConsentBloc(userRepository: context.read<UserRepository>());
   }
 
   ConsentBloc({@required this.userRepository}) : super(const ConsentReady());

@@ -19,9 +19,9 @@ class BowelMovementEntryBloc extends Bloc<BowelMovementEntryEvent, BowelMovement
     diaryEntryUpdater = repository;
   }
 
-  factory BowelMovementEntryBloc.fromContext(BuildContext context) => BowelMovementEntryBloc(
-        repository: context.repository<BowelMovementEntryRepository>(),
-      );
+  factory BowelMovementEntryBloc.fromContext(BuildContext context) {
+    return BowelMovementEntryBloc(repository: context.read<BowelMovementEntryRepository>());
+  }
 
   @override
   Stream<Transition<BowelMovementEntryEvent, BowelMovementEntryState>> transformEvents(

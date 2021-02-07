@@ -18,9 +18,9 @@ class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubs
     diaryEntryUpdater = repository;
   }
 
-  factory MealEntryBloc.fromContext(BuildContext context) => MealEntryBloc(
-        repository: context.repository<MealEntryRepository>(),
-      );
+  factory MealEntryBloc.fromContext(BuildContext context) {
+    return MealEntryBloc(repository: context.read<MealEntryRepository>());
+  }
 
   @override
   Stream<Transition<MealEntryEvent, MealEntryState>> transformEvents(

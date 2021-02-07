@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/food/food.dart';
 import '../../models/food/custom_food.dart';
 import '../../models/food/food.dart';
@@ -42,7 +44,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
 
   Widget buildList(FoodBloc foodBloc) {
     return BlocBuilder<FoodBloc, FoodState>(
-      bloc: foodBloc,
+      cubit: foodBloc,
       builder: (BuildContext context, FoodState state) {
         if (state is FoodsLoaded) {
           final items = state.items;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/meal_element/meal_element.dart';
 import '../../models/meal_element.dart';
 import '../../widgets/cards/notes_card.dart';
@@ -27,12 +28,9 @@ class MealElementEntryPage extends StatefulWidget {
 class _MealElementEntryPageState extends State<MealElementEntryPage> {
   final TextEditingController _notesController = TextEditingController();
 
-  MealElementBloc _mealElementBloc;
-
   @override
   void initState() {
     super.initState();
-    _mealElementBloc = context.bloc<MealElementBloc>();
   }
 
   @override
@@ -69,7 +67,7 @@ class _MealElementEntryPageState extends State<MealElementEntryPage> {
         // ),
         NotesCard(
           controller: _notesController,
-          onChanged: (notes) => _mealElementBloc.add(UpdateNotes(notes)),
+          onChanged: (notes) => context.read<MealElementBloc>().add(UpdateNotes(notes)),
         )
       ];
     }

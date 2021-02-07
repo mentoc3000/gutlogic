@@ -20,9 +20,9 @@ import 'package:provider/provider.dart';
 import '../mocks/mock_page_route.dart';
 import '../mocks/mock_router.dart';
 
-class MockMealEntryBloc extends MockBloc<MealEntryEvent, MealEntryState> implements MealEntryBloc {}
+class MockMealEntryBloc extends MockBloc<MealEntryState> implements MealEntryBloc {}
 
-class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
+class MockFoodBloc extends MockBloc<FoodState> implements FoodBloc {}
 
 class MealEntryPageWrapper extends StatelessWidget {
   @override

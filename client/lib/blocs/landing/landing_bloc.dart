@@ -21,7 +21,7 @@ class LandingBloc extends Bloc<LandingEvent, LandingState> {
 
   factory LandingBloc.fromContext(BuildContext context) {
     return LandingBloc(
-      userRepository: context.repository<UserRepository>(),
+      userRepository: context.read<UserRepository>(),
       authenticator: Authenticator.of(context),
     );
   }

@@ -36,22 +36,24 @@ void main() {
 
     when(userRepository.authenticated).thenReturn(true);
 
-    blocTest(
-      'initial state is ChangePasswordEntry',
-      build: () async {
-        when(userRepository.user).thenReturn(passwordUser);
-        return ChangePasswordBloc(
+    test('initial state', () {
+      when(userRepository.user).thenReturn(passwordUser);
+      expect(
+        ChangePasswordBloc(
           userRepository: userRepository,
           authenticator: MockAuthenticator(),
-        );
-      },
-      skip: 0,
-      expect: [ChangePasswordEntry(user: passwordUser, isValid: false, isRepeated: false)],
-    );
+        ).state,
+        ChangePasswordEntry(
+          user: passwordUser,
+          isValid: false,
+          isRepeated: false,
+        ),
+      );
+    });
 
     blocTest(
       'updates unmatching passwords',
-      build: () async {
+      build: () {
         when(userRepository.user).thenReturn(passwordUser);
         return ChangePasswordBloc(
           userRepository: userRepository,
@@ -68,7 +70,7 @@ void main() {
 
     blocTest(
       'updates matching invalid passwords',
-      build: () async {
+      build: () {
         when(userRepository.user).thenReturn(passwordUser);
         return ChangePasswordBloc(
           userRepository: userRepository,
@@ -85,7 +87,7 @@ void main() {
 
     blocTest(
       'updates matching valid passwords',
-      build: () async {
+      build: () {
         when(userRepository.user).thenReturn(passwordUser);
         return ChangePasswordBloc(
           userRepository: userRepository,
@@ -102,7 +104,7 @@ void main() {
 
     blocTest(
       'submits password update',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         when(userRepository.user).thenReturn(passwordUser);
         return ChangePasswordBloc(
@@ -120,7 +122,7 @@ void main() {
         ChangePasswordLoading(user: passwordUser),
         ChangePasswordSuccess(user: passwordUser),
       ],
-      verify: (bloc) async {
+      verify: (bloc) {
         verify(userRepository.updatePassword(
           currentPassword: currentPassword,
           updatedPassword: updatedPassword,
@@ -131,7 +133,7 @@ void main() {
 
     blocTest(
       'submits password update to federated account',
-      build: () async {
+      build: () {
         when(userRepository.user).thenReturn(federatedUser);
         return ChangePasswordBloc(
           userRepository: userRepository,

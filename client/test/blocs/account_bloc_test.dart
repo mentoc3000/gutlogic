@@ -20,28 +20,34 @@ void main() {
       consented: true,
       providers: <AuthProvider>[].build(),
     );
+
     ApplicationUser updatedUser;
+
     when(userRepository.authenticated).thenReturn(true);
     when(userRepository.user).thenReturn(user);
 
-    blocTest(
-      'initial state is AccountReady(user: user)',
-      build: () async => AccountBloc(userRepository: userRepository),
-      skip: 0,
-      expect: [AccountReady(user: user)],
-    );
+    AccountBloc build() {
+      return AccountBloc(userRepository: userRepository);
+    }
+
+    test('initial state', () {
+      expect(build().state, AccountReady(user: user));
+    });
 
     blocTest(
       'updates account',
-      build: () async {
+      build: () {
         mockBlocDelegate();
-        return AccountBloc(userRepository: userRepository);
+        return build();
       },
       act: (bloc) async {
         updatedUser = user.rebuild((b) => b.email = 'evan@aol.com');
         return bloc.add(AccountUpdate(user: updatedUser));
       },
-      expect: [AccountUpdated(), AccountReady(user: user)],
+      expect: [
+        AccountUpdated(),
+        AccountReady(user: user),
+      ],
       verify: (bloc) async {
         verify(userRepository.updateMetadata(updatedUser: updatedUser)).called(1);
         verify(analyticsService.logEvent('profile_updated')).called(1);
@@ -50,12 +56,14 @@ void main() {
 
     blocTest(
       'logs out',
-      build: () async {
+      build: () {
         mockBlocDelegate();
-        return AccountBloc(userRepository: userRepository);
+        return build();
       },
       act: (bloc) async => bloc.add(AccountLogOut()),
-      expect: [AccountLoggedOut()],
+      expect: [
+        AccountLoggedOut(),
+      ],
       verify: (bloc) async {
         verify(analyticsService.logEvent('log_out')).called(1);
       },

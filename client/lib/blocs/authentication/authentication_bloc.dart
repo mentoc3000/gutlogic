@@ -20,9 +20,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     _userValueSubscription = _userRepository.stream.listen(_onUserValue, onError: _onError);
   }
 
-  factory AuthenticationBloc.fromContext(BuildContext context) => AuthenticationBloc(
-        userRepository: context.repository<UserRepository>(),
-      );
+  factory AuthenticationBloc.fromContext(BuildContext context) {
+    return AuthenticationBloc(userRepository: context.read<UserRepository>());
+  }
 
   void _onUserValue(ApplicationUser user) {
     add(user == null ? const AuthenticationRevoked() : const AuthenticationProvided());

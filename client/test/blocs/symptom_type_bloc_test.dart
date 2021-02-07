@@ -28,29 +28,40 @@ void main() {
       when(symptomTypeRepository.streamQuery('Gas')).thenAnswer((_) => Stream.value(justGas));
     });
 
-    blocTest(
-      'initial state is Loading',
-      build: () async => SymptomTypeBloc(repository: symptomTypeRepository),
-      skip: 0,
-      expect: [SymptomTypesLoading()],
-    );
+    test('initial state', () {
+      expect(SymptomTypeBloc(repository: symptomTypeRepository).state, SymptomTypesLoading());
+    });
 
     blocTest(
       'fetches all symptom types',
-      build: () async => SymptomTypeBloc(repository: symptomTypeRepository),
-      act: (bloc) async => bloc.add(const FetchAllSymptomTypes()),
-      expect: [SymptomTypesLoaded(allSymptomTypes)],
-      verify: (bloc) async => verify(symptomTypeRepository.fetchQuery('')).called(1),
+      build: () {
+        return SymptomTypeBloc(repository: symptomTypeRepository);
+      },
+      act: (bloc) async {
+        bloc.add(const FetchAllSymptomTypes());
+      },
+      expect: [
+        SymptomTypesLoading(),
+        SymptomTypesLoaded(allSymptomTypes),
+      ],
+      verify: (bloc) async {
+        verify(symptomTypeRepository.fetchQuery('')).called(1);
+      },
     );
 
     blocTest(
       'fetches queried symptom types',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomTypeBloc(repository: symptomTypeRepository);
       },
-      act: (bloc) async => bloc.add(const FetchSymptomTypeQuery('Gas')),
-      expect: [SymptomTypesLoaded(justGas)],
+      act: (bloc) async {
+        bloc.add(const FetchSymptomTypeQuery('Gas'));
+      },
+      expect: [
+        SymptomTypesLoading(),
+        SymptomTypesLoaded(justGas),
+      ],
       verify: (bloc) async {
         verify(symptomTypeRepository.fetchQuery('Gas')).called(1);
         verify(analyticsService.logEvent('symptom_type_search')).called(1);
@@ -59,13 +70,18 @@ void main() {
 
     blocTest(
       'streams queried symptom types',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomTypeBloc(repository: symptomTypeRepository);
       },
-      act: (bloc) async => bloc.add(const StreamSymptomTypeQuery('Gas')),
+      act: (bloc) async {
+        bloc.add(const StreamSymptomTypeQuery('Gas'));
+      },
       wait: const Duration(milliseconds: 100),
-      expect: [SymptomTypesLoaded(justGas)],
+      expect: [
+        SymptomTypesLoading(),
+        SymptomTypesLoaded(justGas),
+      ],
       verify: (bloc) async {
         verify(symptomTypeRepository.streamQuery('Gas')).called(1);
         verify(analyticsService.logEvent('symptom_type_search')).called(1);

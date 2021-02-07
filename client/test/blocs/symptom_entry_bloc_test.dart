@@ -31,16 +31,13 @@ void main() {
       when(repository.stream(diaryEntry)).thenAnswer((_) => Stream<DiaryEntry>.fromIterable([diaryEntry]));
     });
 
-    blocTest(
-      'initial state is Loading',
-      build: () async => SymptomEntryBloc(repository: repository),
-      skip: 0,
-      expect: [SymptomEntryLoading()],
-    );
+    test('initial state', () {
+      expect(SymptomEntryBloc(repository: repository).state, SymptomEntryLoading());
+    });
 
     blocTest(
       'streams diary entry',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc.add(StreamSymptomEntry(diaryEntry)),
       expect: [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -50,7 +47,7 @@ void main() {
 
     blocTest(
       'does not debounce streaming',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc..add(StreamSymptomEntry(diaryEntry))..add(StreamSymptomEntry(diaryEntry)),
       expect: [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -60,7 +57,7 @@ void main() {
 
     blocTest(
       'enters error state when stream throws an error',
-      build: () async {
+      build: () {
         when(repository.stream(diaryEntry)).thenThrow(Exception());
         return SymptomEntryBloc(repository: repository);
       },
@@ -70,7 +67,7 @@ void main() {
 
     blocTest(
       'creates and streams diary entry from symptom type',
-      build: () async {
+      build: () {
         when(repository.createFrom(any)).thenAnswer((_) async => await diaryEntry);
         return SymptomEntryBloc(repository: repository);
       },
@@ -85,7 +82,7 @@ void main() {
 
     blocTest(
       'loads diary entries',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc.add(LoadSymptomEntry(diaryEntry)),
       expect: [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -95,7 +92,7 @@ void main() {
 
     blocTest(
       'does not debounce loading',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async =>
           bloc..add(LoadSymptomEntry(diaryEntry))..add(LoadSymptomEntry(diaryEntry.rebuild((b) => b.notes = 'asdf'))),
       expect: [SymptomEntryLoaded(diaryEntry), SymptomEntryLoaded(diaryEntry.rebuild((b) => b.notes = 'asdf'))],
@@ -106,7 +103,7 @@ void main() {
 
     blocTest(
       'deletes entry',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
@@ -120,7 +117,7 @@ void main() {
 
     blocTest(
       'does not debounce deletion',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(DeleteSymptomEntry(diaryEntry))
@@ -133,7 +130,7 @@ void main() {
 
     blocTest(
       'updates entry',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
@@ -148,7 +145,7 @@ void main() {
 
     blocTest(
       'debounces entry updates',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(UpdateSymptomEntry(diaryEntry))
@@ -163,7 +160,7 @@ void main() {
 
     blocTest(
       'updates datetime',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
@@ -179,7 +176,7 @@ void main() {
 
     blocTest(
       'debounces datetime updates',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc()))
@@ -194,7 +191,7 @@ void main() {
 
     blocTest(
       'updates notes',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
@@ -209,7 +206,7 @@ void main() {
 
     blocTest(
       'debounces notes updates',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(const UpdateSymptomEntryNotes('noted'))
@@ -224,7 +221,7 @@ void main() {
 
     blocTest(
       'updates symptom',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
@@ -242,7 +239,7 @@ void main() {
 
     blocTest(
       'debounces symptom updates',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(UpdateSymptom(
@@ -265,7 +262,7 @@ void main() {
 
     blocTest(
       'updates symptom type',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
@@ -282,7 +279,7 @@ void main() {
 
     blocTest(
       'debounces symptom type updates',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Tall')))
@@ -299,7 +296,7 @@ void main() {
 
     blocTest(
       'updates symptom name',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
@@ -314,7 +311,7 @@ void main() {
 
     blocTest(
       'debounces symptom name updates',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(const UpdateSymptomName('Moe'))
@@ -330,7 +327,7 @@ void main() {
 
     blocTest(
       'updates severity',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return SymptomEntryBloc(repository: repository);
       },
@@ -345,7 +342,7 @@ void main() {
 
     blocTest(
       'debounces severity updates',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(const UpdateSeverity(Severity.intense))
@@ -362,7 +359,7 @@ void main() {
 
     blocTest(
       'maps multiple debounced events',
-      build: () async => SymptomEntryBloc(repository: repository),
+      build: () => SymptomEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadSymptomEntry(diaryEntry))
         ..add(const UpdateSeverity(Severity.intense))

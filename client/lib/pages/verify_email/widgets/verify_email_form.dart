@@ -36,15 +36,15 @@ class VerifyEmailForm extends StatelessWidget {
   }
 
   void onResendPressed(BuildContext context) {
-    context.bloc<VerifyEmailBloc>().add(VerifyEmailResendRequested());
+    context.read<VerifyEmailBloc>().add(VerifyEmailResendRequested());
   }
 
   void onRefreshPressed(BuildContext context) {
-    context.bloc<VerifyEmailBloc>().add(VerifyEmailUserRefreshed());
+    context.read<VerifyEmailBloc>().add(VerifyEmailUserRefreshed());
   }
 
   void onBackPressed(BuildContext context) {
-    context.bloc<VerifyEmailBloc>().add(VerifyEmailExitRequested());
+    context.read<VerifyEmailBloc>().add(VerifyEmailExitRequested());
   }
 
   void listener(BuildContext context, VerifyEmailState state) {
@@ -53,7 +53,7 @@ class VerifyEmailForm extends StatelessWidget {
     }
 
     if (state is VerifyEmailValue && state.verified) {
-      if (context.repository<UserRepository>().user.consented) {
+      if (context.read<UserRepository>().user.consented) {
         Navigator.of(context).pushAndRemoveUntil(Routes.of(context).main, (_) => false);
       } else {
         Navigator.of(context).pushReplacement(Routes.of(context).consent);

@@ -11,8 +11,7 @@ import 'package:gutlogic/pages/bowel_movement_entry/widgets/bm_volume_card.dart'
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:mockito/mockito.dart';
 
-class MockBowelMovementEntryBloc extends MockBloc<BowelMovementEntryEvent, BowelMovementEntryState>
-    implements BowelMovementEntryBloc {}
+class MockBowelMovementEntryBloc extends MockBloc<BowelMovementEntryState> implements BowelMovementEntryBloc {}
 
 void main() {
   BowelMovementEntryBloc bowelmovementEntryBloc;

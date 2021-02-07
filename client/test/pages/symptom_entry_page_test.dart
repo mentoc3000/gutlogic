@@ -11,13 +11,13 @@ import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/symptom_entry/symptom_entry_page.dart';
+import 'package:gutlogic/pages/symptom_entry/widgets/severity_slider.dart';
 import 'package:gutlogic/widgets/gl_icons.dart';
 import 'package:mockito/mockito.dart';
-import 'package:gutlogic/pages/symptom_entry/widgets/severity_slider.dart';
 
-class MockSymptomEntryBloc extends MockBloc<SymptomEntryEvent, SymptomEntryState> implements SymptomEntryBloc {}
+class MockSymptomEntryBloc extends MockBloc<SymptomEntryState> implements SymptomEntryBloc {}
 
-class MockSymptomTypeBloc extends MockBloc<SymptomEntryEvent, SymptomTypeState> implements SymptomTypeBloc {}
+class MockSymptomTypeBloc extends MockBloc<SymptomTypeState> implements SymptomTypeBloc {}
 
 void main() {
   SymptomEntryBloc symptomEntryBloc;

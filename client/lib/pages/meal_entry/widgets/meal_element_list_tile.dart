@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../blocs/meal_entry/meal_entry.dart';
 import '../../../models/diary_entry/meal_entry.dart';
 import '../../../models/meal_element.dart';
@@ -16,14 +17,14 @@ class MealElementListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mealEntryBloc = context.bloc<MealEntryBloc>();
     return DeleteDismissible(
       child: PushListTile(
         heading: mealElement.foodReference.name,
         // subheading: mealElement.foodReference.irritants.map((i) => i.name).join(', '),
         onTap: onTap,
       ),
-      onDelete: () => mealEntryBloc.add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),
+      onDelete: () =>
+          context.read<MealEntryBloc>().add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),
       confirmDismiss: () => showDialog(
         context: context,
         builder: (_) => ConfirmDeleteDialog(itemName: mealElement.foodReference.name),

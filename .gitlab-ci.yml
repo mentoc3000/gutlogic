@@ -129,15 +129,27 @@ deploy:server:
   if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
   changes: [ client/**/* ]
 
+# Aliases flutter to use fvm if fvm is installed. This is so fvm is used on the mac runner, but not on docker, where it is redundant.
+# TODO use a custom docker image with fvm already installed so we can use fvm on both the macos and docker runners
+.flutter-fvm: &flutter-fvm >
+  if flutter pub global list | grep -q "fvm"; then
+    echo "Using FVM";
+    flutter pub global run fvm:main install;
+    alias flutter="flutter pub global run fvm:main flutter";
+  fi;
+
 .client:
-  image: cirrusci/flutter:1.20.4
+  image: cirrusci/flutter:1.22.6
   tags:
     - docker
   before_script:
+    - shopt -s expand_aliases
     # client pipeline variables
     - *pipeline-channel-variable
     # move into the client directory
     - cd client
+    # alias flutter to use fvm
+    - *flutter-fvm
     # print the flutter version for logs
     - flutter --version
     # set FLUTTER_FLAVOR based on the pipeline channel

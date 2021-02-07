@@ -21,12 +21,9 @@ class LoginFormState extends State<LoginForm> {
   final String Function(String) _usernameValidator = EmailValidators.full;
   final String Function(String) _passwordValidator = PasswordValidators.isNotEmpty;
 
-  LoginBloc _bloc;
-
   @override
   void initState() {
     super.initState();
-    _bloc = context.bloc<LoginBloc>();
     _usernameTextController.addListener(validateForm);
     _passwordTextController.addListener(validateForm);
   }
@@ -49,10 +46,10 @@ class LoginFormState extends State<LoginForm> {
   }
 
   void onLoginButtonPressed() {
-    _bloc.add(LoginSubmitted(
-      username: _usernameTextController.text,
-      password: _passwordTextController.text,
-    ));
+    context.read<LoginBloc>().add(LoginSubmitted(
+          username: _usernameTextController.text,
+          password: _passwordTextController.text,
+        ));
   }
 
   void onResetPasswordButtonPressed() {

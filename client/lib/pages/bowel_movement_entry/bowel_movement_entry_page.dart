@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/bowel_movement_entry/bowel_movement_entry.dart';
 import '../../models/diary_entry/bowel_movement_entry.dart';
 import '../../widgets/cards/datetime_card.dart';
@@ -35,12 +36,9 @@ class BowelMovementEntryPage extends StatefulWidget {
 class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
   final TextEditingController _notesController = TextEditingController();
 
-  BowelMovementEntryBloc _bowelMovementEntryBloc;
-
   @override
   void initState() {
     super.initState();
-    _bowelMovementEntryBloc = context.bloc<BowelMovementEntryBloc>();
   }
 
   @override
@@ -73,19 +71,27 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
       return [
         DateTimeCard(
           dateTime: entry.datetime,
-          onChanged: (newValue) => _bowelMovementEntryBloc.add(UpdateBowelMovementEntryDateTime(newValue)),
+          onChanged: (newValue) {
+            context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryDateTime(newValue));
+          },
         ),
         BMVolumeCard(
           volume: entry.bowelMovement?.volume ?? 3,
-          onChanged: (newValue) => _bowelMovementEntryBloc.add(UpdateVolume(newValue)),
+          onChanged: (newValue) {
+            context.read<BowelMovementEntryBloc>().add(UpdateVolume(newValue));
+          },
         ),
         BMTypeCard(
           type: entry.bowelMovement?.type ?? 5,
-          onChanged: (newValue) => _bowelMovementEntryBloc.add(UpdateType(newValue)),
+          onChanged: (newValue) {
+            context.read<BowelMovementEntryBloc>().add(UpdateType(newValue));
+          },
         ),
         NotesCard(
           controller: _notesController,
-          onChanged: (newValue) => _bowelMovementEntryBloc.add(UpdateBowelMovementEntryNotes(newValue)),
+          onChanged: (newValue) {
+            context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryNotes(newValue));
+          },
         ),
       ];
     }

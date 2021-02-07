@@ -18,10 +18,12 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
 
   FoodBloc({@required this.customFoodRepository, @required this.edamamFoodRepository}) : super(FoodsLoading());
 
-  factory FoodBloc.fromContext(BuildContext context) => FoodBloc(
-        customFoodRepository: context.repository<CustomFoodRepository>(),
-        edamamFoodRepository: context.repository<EdamamFoodRepository>(),
-      );
+  factory FoodBloc.fromContext(BuildContext context) {
+    return FoodBloc(
+      customFoodRepository: context.read<CustomFoodRepository>(),
+      edamamFoodRepository: context.read<EdamamFoodRepository>(),
+    );
+  }
 
   @override
   Stream<Transition<FoodEvent, FoodState>> transformEvents(

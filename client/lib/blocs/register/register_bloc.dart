@@ -17,8 +17,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc({@required this.userRepository, @required this.authenticator}) : super(const RegisterReady());
 
   factory RegisterBloc.fromContext(BuildContext context) => RegisterBloc(
-        userRepository: context.repository<UserRepository>(),
-        authenticator: context.repository<Authenticator>(),
+        userRepository: context.read<UserRepository>(),
+        authenticator: context.read<Authenticator>(),
       );
 
   @override

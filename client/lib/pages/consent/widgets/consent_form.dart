@@ -92,7 +92,7 @@ class ConsentFormState extends State<ConsentForm> {
   }
 
   void onAgreeButtonPressed(BuildContext context) {
-    context.bloc<ConsentBloc>().add(const ConsentSubmitted());
+    context.read<ConsentBloc>().add(const ConsentSubmitted());
   }
 
   void listener(BuildContext context, ConsentState state) {

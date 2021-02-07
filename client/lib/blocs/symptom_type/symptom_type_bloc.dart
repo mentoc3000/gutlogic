@@ -12,9 +12,9 @@ class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with Stre
 
   SymptomTypeBloc({@required this.repository}) : super(SymptomTypesLoading());
 
-  factory SymptomTypeBloc.fromContext(BuildContext context) => SymptomTypeBloc(
-        repository: context.repository<SymptomTypeRepository>(),
-      );
+  factory SymptomTypeBloc.fromContext(BuildContext context) {
+    return SymptomTypeBloc(repository: context.read<SymptomTypeRepository>());
+  }
 
   @override
   Stream<SymptomTypeState> mapEventToState(SymptomTypeEvent event) async* {

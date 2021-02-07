@@ -43,9 +43,7 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
   void onSubmitButtonPressed() {
     if (_formKey.currentState.validate() == false) return;
 
-    final bloc = context.bloc<ResetPasswordBloc>();
-
-    bloc.add(ResetPasswordSubmitted(email: _emailTextController.text));
+    context.read<ResetPasswordBloc>().add(ResetPasswordSubmitted(email: _emailTextController.text));
   }
 
   @override

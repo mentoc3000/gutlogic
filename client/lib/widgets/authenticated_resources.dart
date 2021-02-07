@@ -44,40 +44,58 @@ class AuthenticatedResources extends StatelessWidget {
 
   Widget builder(BuildContext context, AuthenticationState state) {
     if (state is Authenticated) {
-      final user = context.repository<UserRepository>().user;
-      final firestoreService = FirestoreService(userId: user.id);
-      final firebaseCrashlytics = context.repository<FirebaseCrashlytics>();
-      final edamamService = EdamamService(edamamFoodSearchService: CloudFunctionService('edamamFoodSearch'));
       // Wrap the child views in the global authenticated repositories/blocs.
       return MultiRepositoryProvider(
         providers: [
-          RepositoryProvider(create: (context) => BowelMovementEntryRepository(firestoreService: firestoreService)),
-          RepositoryProvider(
-            create: (context) => DiaryRepository(
-              firestoreService: firestoreService,
-              firebaseCrashlytics: firebaseCrashlytics,
-            ),
-          ),
-          RepositoryProvider(create: (context) => MealElementRepository(firestoreService: firestoreService)),
-          RepositoryProvider(
-            create: (context) => MealEntryRepository(
-              firestoreService: firestoreService,
-              mealElementRepository: context.repository<MealElementRepository>(),
-            ),
-          ),
-          RepositoryProvider(create: (context) => SymptomEntryRepository(firestoreService: firestoreService)),
-          RepositoryProvider(create: (context) => SymptomTypeRepository()),
-          RepositoryProvider(create: (context) => CustomFoodRepository(firestoreService: firestoreService)),
-          RepositoryProvider(create: (context) => EdamamFoodRepository(edamamService: edamamService)),
+          RepositoryProvider(create: (context) {
+            return FirestoreService(userId: context.read<UserRepository>().user.id);
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return BowelMovementEntryRepository(firestoreService: context.read<FirestoreService>());
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return DiaryRepository(
+              firestoreService: context.read<FirestoreService>(),
+              firebaseCrashlytics: context.read<FirebaseCrashlytics>(),
+            );
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return MealElementRepository(firestoreService: context.read<FirestoreService>());
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return MealEntryRepository(
+              firestoreService: context.read<FirestoreService>(),
+              mealElementRepository: context.read<MealElementRepository>(),
+            );
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return SymptomEntryRepository(firestoreService: context.read<FirestoreService>());
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return SymptomTypeRepository();
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return CustomFoodRepository(firestoreService: context.read<FirestoreService>());
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return EdamamFoodRepository(
+              edamamService: EdamamService(edamamFoodSearchService: CloudFunctionService('edamamFoodSearch')),
+            );
+          }),
         ],
-        child: MultiBlocProvider(
-          providers: [
-            // TODO move these into their most tightly nested widget trees
-            BlocProvider(create: (context) => FoodBloc.fromContext(context)),
-            BlocProvider(create: (context) => SymptomTypeBloc.fromContext(context)),
-          ],
-          child: child,
-        ),
+        child: MultiBlocProvider(providers: [
+          // TODO move these into their most tightly nested widget trees
+          BlocProvider(create: (context) => FoodBloc.fromContext(context)),
+          BlocProvider(create: (context) => SymptomTypeBloc.fromContext(context)),
+        ], child: child),
       );
     } else {
       return child;
@@ -89,7 +107,7 @@ class AuthenticatedResources extends StatelessWidget {
 
     if (state is Authenticated) {
       // Navigate to the verify email page if the user has not verified their email yet.
-      final user = context.repository<UserRepository>().user;
+      final user = context.read<UserRepository>().user;
 
       if (user.verified == false) {
         dest = Routes.of(context).verifyEmail(user.email);

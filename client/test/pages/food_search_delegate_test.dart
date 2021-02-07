@@ -16,7 +16,7 @@ import 'package:gutlogic/widgets/gl_icons.dart';
 import 'package:gutlogic/widgets/gl_scaffold.dart';
 import 'package:mockito/mockito.dart';
 
-class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
+class MockFoodBloc extends MockBloc<FoodState> implements FoodBloc {}
 
 void main() {
   FoodBloc foodBloc;

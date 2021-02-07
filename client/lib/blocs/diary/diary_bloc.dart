@@ -15,10 +15,9 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
 
   DiaryBloc({@required this.repository}) : super(DiaryLoading());
 
-  factory DiaryBloc.fromContext(BuildContext context) => DiaryBloc(
-        repository: context.repository<DiaryRepository>(),
-      );
-
+  factory DiaryBloc.fromContext(BuildContext context) {
+    return DiaryBloc(repository: context.read<DiaryRepository>());
+  }
   @override
   Stream<DiaryState> mapEventToState(
     DiaryEvent event,

@@ -25,7 +25,7 @@ class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
   }
 
   factory VerifyEmailBloc.fromContext(BuildContext context) {
-    return VerifyEmailBloc(userRepository: context.repository<UserRepository>());
+    return VerifyEmailBloc(userRepository: context.read<UserRepository>());
   }
 
   void _onUserRefreshTimeout(_) {

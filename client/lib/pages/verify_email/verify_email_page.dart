@@ -23,7 +23,7 @@ class VerifyEmailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final remoteConfig = context.repository<RemoteConfigService>();
+    final remoteConfig = context.read<RemoteConfigService>();
     final message = remoteConfig.get(_messageConfig);
 
     return GLScaffold(

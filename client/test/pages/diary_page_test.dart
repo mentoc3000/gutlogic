@@ -26,7 +26,7 @@ import 'package:timezone/timezone.dart';
 import '../mocks/mock_page_route.dart';
 import '../mocks/mock_router.dart';
 
-class MockDiaryBloc extends MockBloc<DiaryEvent, DiaryState> implements DiaryBloc {}
+class MockDiaryBloc extends MockBloc<DiaryState> implements DiaryBloc {}
 
 class DiaryPageWrapper extends StatelessWidget {
   @override

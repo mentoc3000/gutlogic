@@ -35,7 +35,7 @@ import 'screenshots/screenshots_handler.dart' as screenshots;
 
 class MockUserRepository extends Mock implements UserRepository {}
 
-class MockAuthenticationBloc extends MockBloc<AuthenticationEvent, AuthenticationState> implements AuthenticationBloc {}
+class MockAuthenticationBloc extends MockBloc<AuthenticationState> implements AuthenticationBloc {}
 
 class MockDiaryRepository extends Mock implements DiaryRepository {}
 
@@ -182,9 +182,9 @@ void main() {
     ],
     child: MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => AccountBloc(userRepository: context.repository<UserRepository>())),
+        BlocProvider(create: (context) => AccountBloc(userRepository: context.read<UserRepository>())),
         BlocProvider<AuthenticationBloc>(create: (context) => authenticationBloc),
-        BlocProvider(create: (context) => DiaryBloc(repository: context.repository<DiaryRepository>())),
+        BlocProvider(create: (context) => DiaryBloc(repository: context.read<DiaryRepository>())),
       ],
       child: MainTabsPageWrapper(),
     ),

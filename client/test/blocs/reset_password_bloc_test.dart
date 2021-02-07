@@ -10,18 +10,13 @@ void main() {
   group('ResetPasswordBloc', () {
     final mockUserRepository = MockUserRepository();
 
-    Future<ResetPasswordBloc> build() async {
+    ResetPasswordBloc build() {
       return ResetPasswordBloc(userRepository: mockUserRepository);
     }
 
-    blocTest(
-      'initial state is ready',
-      build: build,
-      skip: 0,
-      expect: [
-        const ResetPasswordReady(),
-      ],
-    );
+    test('initial state', () {
+      expect(build().state, const ResetPasswordReady());
+    });
 
     blocTest(
       'emits success with email',

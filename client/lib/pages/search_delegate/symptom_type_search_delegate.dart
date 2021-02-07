@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/symptom_type/symptom_type.dart';
 import '../../models/symptom_type.dart';
 import '../../pages/error_page.dart';
@@ -33,7 +34,7 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
   Widget buildList(SymptomTypeBloc symptomTypeBloc) {
     //Build the results based on the searchResults stream in the searchBloc
     return BlocBuilder<SymptomTypeBloc, SymptomTypeState>(
-      bloc: symptomTypeBloc,
+      cubit: symptomTypeBloc,
       builder: (BuildContext context, SymptomTypeState state) {
         if (state is SymptomTypesLoaded) {
           final items = state.items;

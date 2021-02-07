@@ -12,6 +12,7 @@ import '../mocks/mock_user_repository.dart';
 void main() {
   group('Authentication Bloc', () {
     final UserRepository userRepository = MockUserRepository();
+
     final user = ApplicationUser(
       id: '123',
       email: 'jim@aol.com',
@@ -20,27 +21,30 @@ void main() {
       providers: <AuthProvider>[].build(),
     );
 
-    void stubUserStream(ApplicationUser user) {
-      when(userRepository.stream).thenAnswer((_) => BehaviorSubject.seeded(user));
+    AuthenticationBloc build() {
+      return AuthenticationBloc(userRepository: userRepository);
     }
 
     blocTest(
-      'authenticates when UserRepository emits a user',
-      build: () async {
-        stubUserStream(user);
-        return AuthenticationBloc(userRepository: userRepository);
+      'authenticates when stream emits user',
+      build: () {
+        when(userRepository.stream).thenAnswer((_) => BehaviorSubject.seeded(user));
+        return build();
       },
-      skip: 0,
-      expect: [const AuthenticationUnknown(), const Authenticated()],
+      expect: [
+        const Authenticated(),
+      ],
     );
 
     blocTest(
-      'authenticates when UserRepository emits a null',
-      build: () async {
-        stubUserStream(null);
-        return AuthenticationBloc(userRepository: userRepository);
+      'deauthenticates when stream emits null',
+      build: () {
+        when(userRepository.stream).thenAnswer((_) => BehaviorSubject.seeded(null));
+        return build();
       },
-      expect: [const Unauthenticated()],
+      expect: [
+        const Unauthenticated(),
+      ],
     );
   });
 }

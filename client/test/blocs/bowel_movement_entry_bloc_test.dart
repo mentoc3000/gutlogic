@@ -4,11 +4,12 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/bowel_movement_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
-import 'package:gutlogic/models/diary_entry/diary_entry.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
+import 'package:gutlogic/models/diary_entry/diary_entry.dart';
 import 'package:gutlogic/resources/diary_repositories/bowel_movement_entry_repository.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+
 import '../mocks/mock_bloc_delegate.dart';
 
 void main() {
@@ -28,16 +29,13 @@ void main() {
       when(repository.stream(diaryEntry)).thenAnswer((_) => Stream<DiaryEntry>.fromIterable([diaryEntry]));
     });
 
-    blocTest(
-      'initial state is Loading',
-      build: () async => BowelMovementEntryBloc(repository: repository),
-      skip: 0,
-      expect: [BowelMovementEntryLoading()],
-    );
+    test('initial state', () {
+      expect(BowelMovementEntryBloc(repository: repository).state, BowelMovementEntryLoading());
+    });
 
     blocTest(
       'streams diary entry',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc.add(StreamBowelMovementEntry(diaryEntry)),
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -47,7 +45,7 @@ void main() {
 
     blocTest(
       'does not debounce streaming',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc..add(StreamBowelMovementEntry(diaryEntry))..add(StreamBowelMovementEntry(diaryEntry)),
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -57,7 +55,7 @@ void main() {
 
     blocTest(
       'enters error state when stream throws an error',
-      build: () async {
+      build: () {
         when(repository.stream(diaryEntry)).thenThrow(Exception());
         return BowelMovementEntryBloc(repository: repository);
       },
@@ -67,7 +65,7 @@ void main() {
 
     blocTest(
       'creates and streams diary entry',
-      build: () async {
+      build: () {
         when(repository.create()).thenAnswer((_) async => await diaryEntry);
         mockBlocDelegate();
         return BowelMovementEntryBloc(repository: repository);
@@ -84,7 +82,7 @@ void main() {
 
     blocTest(
       'loads diary entries',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc.add(LoadBowelMovementEntry(diaryEntry)),
       expect: [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -94,7 +92,7 @@ void main() {
 
     blocTest(
       'does not debounce loading',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadBowelMovementEntry(diaryEntry))
         ..add(LoadBowelMovementEntry(diaryEntry.rebuild((b) => b.notes = 'asdf'))),
@@ -109,7 +107,7 @@ void main() {
 
     blocTest(
       'deletes entry',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return BowelMovementEntryBloc(repository: repository);
       },
@@ -123,7 +121,7 @@ void main() {
 
     blocTest(
       'does not debounce deletion',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadBowelMovementEntry(diaryEntry))
         ..add(DeleteBowelMovementEntry(diaryEntry))
@@ -136,7 +134,7 @@ void main() {
 
     blocTest(
       'updates entry',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return BowelMovementEntryBloc(repository: repository);
       },
@@ -151,7 +149,7 @@ void main() {
 
     blocTest(
       'debounces entry updates',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadBowelMovementEntry(diaryEntry))
         ..add(UpdateBowelMovementEntry(diaryEntry))
@@ -166,7 +164,7 @@ void main() {
 
     blocTest(
       'updates datetime',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return BowelMovementEntryBloc(repository: repository);
       },
@@ -182,7 +180,7 @@ void main() {
 
     blocTest(
       'debounces datetime updates',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return BowelMovementEntryBloc(repository: repository);
       },
@@ -200,7 +198,7 @@ void main() {
 
     blocTest(
       'updates notes',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return BowelMovementEntryBloc(repository: repository);
       },
@@ -216,7 +214,7 @@ void main() {
 
     blocTest(
       'debounces notes updates',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadBowelMovementEntry(diaryEntry))
         ..add(const UpdateBowelMovementEntryNotes('noted'))
@@ -232,7 +230,7 @@ void main() {
 
     blocTest(
       'updates type',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return BowelMovementEntryBloc(repository: repository);
       },
@@ -247,7 +245,7 @@ void main() {
 
     blocTest(
       'debounces type updates',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadBowelMovementEntry(diaryEntry))
         ..add(const UpdateType(3))
@@ -264,7 +262,7 @@ void main() {
 
     blocTest(
       'updates volume',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return BowelMovementEntryBloc(repository: repository);
       },
@@ -279,7 +277,7 @@ void main() {
 
     blocTest(
       'debounces volume updates',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadBowelMovementEntry(diaryEntry))
         ..add(const UpdateVolume(3))
@@ -295,7 +293,7 @@ void main() {
 
     blocTest(
       'maps multiple debounced events',
-      build: () async => BowelMovementEntryBloc(repository: repository),
+      build: () => BowelMovementEntryBloc(repository: repository),
       act: (bloc) async => bloc
         ..add(LoadBowelMovementEntry(diaryEntry))
         ..add(const UpdateVolume(3))

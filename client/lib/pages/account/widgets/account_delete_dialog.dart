@@ -13,11 +13,11 @@ import '../../../widgets/gl_scaffold.dart';
 import '../../../widgets/snack_bars/error_snack_bar.dart';
 
 class AccountDeleteDialog extends StatefulWidget {
-  /// Show a dialog to confirm the user wants to delete their account. Returns a future which resolves to true if the
-  /// user confirmed the account deletion.
+  /// Show a dialog to confirm the user wants to delete their account.
+  ///
+  /// Returns a future which resolves to true if the user confirmed the account deletion.
   static Future<bool> show({@required BuildContext context}) {
-    final repo = context.repository<UserRepository>();
-    final user = repo.user;
+    final user = context.read<UserRepository>().user;
 
     assert(user != null); // this dialog makes no sense if we don't have a user
 
@@ -28,7 +28,7 @@ class AccountDeleteDialog extends StatefulWidget {
       context: context,
       builder: (context) => BlocProvider<AccountDeleteBloc>(
         create: (context) => AccountDeleteBloc(
-          userRepository: context.repository<UserRepository>(),
+          userRepository: context.read<UserRepository>(),
           authenticator: Authenticator.of(context),
         ),
         child: GLScaffold(body: AccountDeleteDialog(showPasswordEntry: showPasswordEntry)),
@@ -103,7 +103,7 @@ class AccountDeleteDialogState extends State<AccountDeleteDialog> {
         ? AccountDeletePasswordConfirm(password: passwordTextController.text)
         : const AccountDeleteFederatedConfirm();
 
-    context.bloc<AccountDeleteBloc>().add(event);
+    context.read<AccountDeleteBloc>().add(event);
   }
 
   /// Build an alert body with a password entry, for users with a password.

@@ -45,18 +45,18 @@ void main() {
           .thenAnswer((_) => Stream<BuiltList<DiaryEntry>>.fromIterable([allDiaryEntries]));
     });
 
-    blocTest(
-      'initial state is Loading',
-      build: () async => DiaryBloc(repository: diaryRepository),
-      skip: 0,
-      expect: [DiaryLoading()],
-    );
+    test('initial state', () {
+      expect(DiaryBloc(repository: diaryRepository).state, DiaryLoading());
+    });
 
     blocTest(
       'streams all diary entries',
-      build: () async => DiaryBloc(repository: diaryRepository),
+      build: () => DiaryBloc(repository: diaryRepository),
       act: (bloc) => bloc.add(const StreamAll()),
-      expect: [],
+      expect: [
+        DiaryLoading(),
+        DiaryLoaded(allDiaryEntries),
+      ],
       verify: (bloc) async {
         verify(diaryRepository.streamAll()).called(1);
       },
@@ -64,7 +64,7 @@ void main() {
 
     blocTest(
       'loads diary entries',
-      build: () async => DiaryBloc(repository: diaryRepository),
+      build: () => DiaryBloc(repository: diaryRepository),
       act: (bloc) => bloc.add(Load(diaryEntries: allDiaryEntries)),
       expect: [DiaryLoaded(allDiaryEntries)],
       verify: (bloc) async {
@@ -74,7 +74,7 @@ void main() {
 
     blocTest(
       'deletes meal entry',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return DiaryBloc(repository: diaryRepository);
       },
@@ -88,12 +88,16 @@ void main() {
 
     blocTest(
       'deletes symptom entry',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return DiaryBloc(repository: diaryRepository);
       },
-      act: (bloc) => bloc.add(Delete(symptomEntry)),
-      expect: [DiaryEntryDeleted(symptomEntry)],
+      act: (bloc) {
+        bloc.add(Delete(symptomEntry));
+      },
+      expect: [
+        DiaryEntryDeleted(symptomEntry),
+      ],
       verify: (bloc) async {
         verify(diaryRepository.delete(symptomEntry)).called(1);
         verify(analyticsService.logEvent('delete_symptom_entry')).called(1);
@@ -102,12 +106,16 @@ void main() {
 
     blocTest(
       'deletes bowel movement entry',
-      build: () async {
+      build: () {
         mockBlocDelegate();
         return DiaryBloc(repository: diaryRepository);
       },
-      act: (bloc) => bloc.add(Delete(bowelMovementEntry)),
-      expect: [DiaryEntryDeleted(bowelMovementEntry)],
+      act: (bloc) {
+        bloc.add(Delete(bowelMovementEntry));
+      },
+      expect: [
+        DiaryEntryDeleted(bowelMovementEntry),
+      ],
       verify: (bloc) async {
         verify(diaryRepository.delete(bowelMovementEntry)).called(1);
         verify(analyticsService.logEvent('delete_bowel_movement_entry')).called(1);
@@ -116,12 +124,17 @@ void main() {
 
     blocTest(
       'transitions to error state when stream throws error',
-      build: () async {
+      build: () {
         when(diaryRepository.streamAll()).thenThrow(Exception());
         return DiaryBloc(repository: diaryRepository);
       },
-      act: (bloc) => bloc.add(const StreamAll()),
-      expect: [isA<DiaryError>()],
+      act: (bloc) {
+        bloc.add(const StreamAll());
+      },
+      expect: [
+        DiaryLoading(),
+        isA<DiaryError>(),
+      ],
     );
   });
 }

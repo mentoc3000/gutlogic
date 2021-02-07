@@ -18,9 +18,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         _userRepository = userRepository,
         super(AccountReady(user: userRepository.user));
 
-  factory AccountBloc.fromContext(BuildContext context) => AccountBloc(
-        userRepository: context.repository<UserRepository>(),
-      );
+  factory AccountBloc.fromContext(BuildContext context) {
+    return AccountBloc(userRepository: context.read<UserRepository>());
+  }
 
   ApplicationUser get _user => _userRepository.user;
 

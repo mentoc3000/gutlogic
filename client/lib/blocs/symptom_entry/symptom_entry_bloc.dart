@@ -18,9 +18,9 @@ class SymptomEntryBloc extends Bloc<SymptomEntryEvent, SymptomEntryState> with S
     diaryEntryUpdater = repository;
   }
 
-  factory SymptomEntryBloc.fromContext(BuildContext context) => SymptomEntryBloc(
-        repository: context.repository<SymptomEntryRepository>(),
-      );
+  factory SymptomEntryBloc.fromContext(BuildContext context) {
+    return SymptomEntryBloc(repository: context.read<SymptomEntryRepository>());
+  }
 
   @override
   Stream<Transition<SymptomEntryEvent, SymptomEntryState>> transformEvents(

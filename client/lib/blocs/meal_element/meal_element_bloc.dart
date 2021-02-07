@@ -15,10 +15,9 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
 
   MealElementBloc({@required this.mealElementRepository}) : super(MealElementLoading());
 
-  factory MealElementBloc.fromContext(BuildContext context) => MealElementBloc(
-        mealElementRepository: context.repository<MealElementRepository>(),
-      );
-
+  factory MealElementBloc.fromContext(BuildContext context) {
+    return MealElementBloc(mealElementRepository: context.read<MealElementRepository>());
+  }
   @override
   Stream<Transition<MealElementEvent, MealElementState>> transformEvents(
     Stream<MealElementEvent> events,

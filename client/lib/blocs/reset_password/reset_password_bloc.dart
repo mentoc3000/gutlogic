@@ -11,9 +11,9 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
 
   ResetPasswordBloc({this.userRepository}) : super(const ResetPasswordReady());
 
-  factory ResetPasswordBloc.fromContext(BuildContext context) => ResetPasswordBloc(
-        userRepository: context.repository<UserRepository>(),
-      );
+  factory ResetPasswordBloc.fromContext(BuildContext context) {
+    return ResetPasswordBloc(userRepository: context.read<UserRepository>());
+  }
 
   @override
   Stream<ResetPasswordState> mapEventToState(ResetPasswordEvent event) async* {

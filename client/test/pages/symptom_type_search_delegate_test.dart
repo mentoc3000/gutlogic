@@ -13,7 +13,7 @@ import 'package:gutlogic/widgets/gl_icons.dart';
 import 'package:gutlogic/widgets/gl_scaffold.dart';
 import 'package:mockito/mockito.dart';
 
-class MockSymptomTypeBloc extends MockBloc<SymptomTypeEvent, SymptomTypeState> implements SymptomTypeBloc {}
+class MockSymptomTypeBloc extends MockBloc<SymptomTypeState> implements SymptomTypeBloc {}
 
 void main() {
   SymptomTypeBloc symptomTypeBloc;

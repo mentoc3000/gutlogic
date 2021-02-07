@@ -6,6 +6,9 @@
 .pub-cache/
 .pub/
 
+# FVM
+.fvm/flutter_sdk
+
 # Build
 build/
 

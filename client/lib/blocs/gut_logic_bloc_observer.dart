@@ -14,7 +14,7 @@ class GutLogicBlocObserver extends BlocObserver {
   GutLogicBlocObserver({@required this.analyticsService, @required this.firebaseCrashlytics});
 
   @override
-  void onEvent(Bloc<dynamic, dynamic> bloc, Object event) {
+  void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);
 
     if (event is TrackedEvent) {
@@ -25,7 +25,7 @@ class GutLogicBlocObserver extends BlocObserver {
   }
 
   @override
-  void onTransition(Bloc<dynamic, dynamic> bloc, Transition<dynamic, dynamic> transition) {
+  void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
     logger.d(transition);
 
@@ -39,8 +39,8 @@ class GutLogicBlocObserver extends BlocObserver {
   }
 
   @override
-  void onError(Bloc<dynamic, dynamic> bloc, Object error, StackTrace trace) {
-    super.onError(bloc, error, trace);
+  void onError(Cubit cubit, Object error, StackTrace trace) {
+    super.onError(cubit, error, trace);
     logger.e(error);
     logger.e(trace);
     unawaited(firebaseCrashlytics.recordError(error, trace));

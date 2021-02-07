@@ -44,11 +44,11 @@ class LandingPageButtons extends StatelessWidget {
   }
 
   void onGoogleButtonPressed(BuildContext context) {
-    context.bloc<LandingBloc>().add(const LandingContinueGoogle());
+    context.read<LandingBloc>().add(const LandingContinueGoogle());
   }
 
   void onAppleButtonPressed(BuildContext context) {
-    context.bloc<LandingBloc>().add(const LandingContinueApple());
+    context.read<LandingBloc>().add(const LandingContinueApple());
   }
 
   void onLoginButtonPressed(BuildContext context) {

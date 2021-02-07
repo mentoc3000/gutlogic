@@ -128,7 +128,7 @@ void main() {
 
       blocTest(
         'bloc events separately',
-        build: () async => PairBloc(),
+        build: () => PairBloc(),
         act: (bloc) async =>
             bloc..add(SetFirstEvent(5))..add(SetSecondEvent(5))..add(SetFirstEvent(3))..add(SetSecondEvent(3)),
         wait: const Duration(seconds: 2),

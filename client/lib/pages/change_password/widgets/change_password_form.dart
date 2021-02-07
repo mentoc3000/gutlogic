@@ -17,12 +17,9 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
   final TextEditingController _updatedPasswordTextController = TextEditingController();
   final TextEditingController _updatedRepeatedTextController = TextEditingController();
 
-  ChangePasswordBloc _bloc;
-
   @override
   void initState() {
     super.initState();
-    _bloc = context.bloc<ChangePasswordBloc>();
     _currentPasswordTextController.addListener(onCurrentPasswordChanged);
     _updatedPasswordTextController.addListener(onUpdatedPasswordChanged);
     _updatedRepeatedTextController.addListener(onUpdatedRepeatedChanged);
@@ -42,8 +39,10 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
   }
 
   void onCurrentPasswordChanged() {
-    if (_bloc.state is ChangePasswordEntry) {
-      _bloc.add(ChangePasswordUpdated(
+    final bloc = context.read<ChangePasswordBloc>();
+
+    if (bloc.state is ChangePasswordEntry) {
+      bloc.add(ChangePasswordUpdated(
         currentPassword: _currentPasswordTextController.text,
         updatedPassword: _updatedPasswordTextController.text,
         updatedRepeated: _updatedRepeatedTextController.text,
@@ -52,37 +51,29 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
   }
 
   void onUpdatedPasswordChanged() {
-    if (_bloc.state is ChangePasswordEntry) {
-      _bloc.add(ChangePasswordUpdated(
-        currentPassword: _currentPasswordTextController.text,
-        updatedPassword: _updatedPasswordTextController.text,
-        updatedRepeated: _updatedRepeatedTextController.text,
-      ));
-    }
+    context.read<ChangePasswordBloc>().add(ChangePasswordUpdated(
+          currentPassword: _currentPasswordTextController.text,
+          updatedPassword: _updatedPasswordTextController.text,
+          updatedRepeated: _updatedRepeatedTextController.text,
+        ));
   }
 
   void onUpdatedRepeatedChanged() {
-    if (_bloc.state is ChangePasswordEntry) {
-      _bloc.add(ChangePasswordUpdated(
-        currentPassword: _currentPasswordTextController.text,
-        updatedPassword: _updatedPasswordTextController.text,
-        updatedRepeated: _updatedRepeatedTextController.text,
-      ));
-    }
+    context.read<ChangePasswordBloc>().add(ChangePasswordUpdated(
+          currentPassword: _currentPasswordTextController.text,
+          updatedPassword: _updatedPasswordTextController.text,
+          updatedRepeated: _updatedRepeatedTextController.text,
+        ));
   }
 
   void onAcceptButtonPressed() {
-    if (_bloc.state is ChangePasswordEntry) {
-      _bloc.add(ChangePasswordSubmitted(
-        currentPassword: _currentPasswordTextController.text,
-        updatedPassword: _updatedPasswordTextController.text,
-      ));
-    }
+    context.read<ChangePasswordBloc>().add(ChangePasswordSubmitted(
+          currentPassword: _currentPasswordTextController.text,
+          updatedPassword: _updatedPasswordTextController.text,
+        ));
   }
 
-  bool _isPasswordValid(
-    ChangePasswordState state,
-  ) {
+  bool _isPasswordValid(ChangePasswordState state) {
     if (state is ChangePasswordEntry) {
       return _updatedPasswordTextController.text.isEmpty || state.isValid;
     } else {
@@ -102,11 +93,6 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
   void listener(BuildContext context, ChangePasswordState state) {
     if (state is ChangePasswordError) {
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-      context.bloc<ChangePasswordBloc>().add(ChangePasswordUpdated(
-            currentPassword: _currentPasswordTextController.text,
-            updatedPassword: _updatedPasswordTextController.text,
-            updatedRepeated: _updatedRepeatedTextController.text,
-          ));
     } else if (state is ChangePasswordSuccess) {
       Navigator.of(context).pop();
     }
