@@ -221,9 +221,6 @@ predeploy:client:screenshots:
       - client/android/fastlane
       - client/ios/fastlane
     expire_in: 1 day
-  needs:
-    - check:client
-    - test:client
   rules:
     - *client-deploy-rule
     - *manual-commit-rule
@@ -237,9 +234,6 @@ predeploy:client:tag:
   release:
     tag_name: "v$FLUTTER_APP_VERSION"
     description: "Release $FLUTTER_APP_VERSION"
-  needs:
-    - check:client
-    - test:client
   rules:
     - *client-deploy-rule
     - *manual-commit-rule
@@ -269,9 +263,6 @@ deploy:client:ios:
     - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
     # execute fastlane (archives and uploads app)
     - bundle exec fastlane $FASTLANE_CHANNEL
-  needs:
-    - predeploy:client:screenshots
-    - predeploy:client:tag
   rules:
     - *client-commit-rule
     - *manual-commit-rule
