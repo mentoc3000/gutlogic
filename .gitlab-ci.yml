@@ -32,7 +32,8 @@ compliance:
         - client/**/*
         - server/**/*
       when: never
-    - when: always
+    - if: $CI_MERGE_REQUEST_ID
+      when: always
 
 # Choose the pipeline channel (develop/staging/release) by commit branch and store it in PIPELINE_CHANNEL
 .pipeline-channel-variable: &pipeline-channel-variable >
