@@ -38,6 +38,9 @@ abstract class Quantity implements Built<Quantity, QuantityBuilder> {
   /// If either the weight of this measure or the new measure is null, the resulting [Quantity] will have the same
   /// amount as the input and a measure with a null weight.
   Quantity convertTo(Measure measure) {
+    if (this.measure == null) {
+      return Quantity(amount: this.amount, measure: measure);
+    }
     if (this.measure?.weight == null || measure?.weight == null) {
       return Quantity(amount: this.amount, measure: Measure(unit: measure.unit));
     }

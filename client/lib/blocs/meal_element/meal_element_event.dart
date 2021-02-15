@@ -1,4 +1,6 @@
+import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
+import '../../models/food/food.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../models/meal_element.dart';
 import '../../models/quantity.dart';
@@ -14,11 +16,12 @@ abstract class MealElementEvent extends Equatable {
 
 class Load extends MealElementEvent {
   final MealElement mealElement;
+  final Food food;
 
-  const Load(this.mealElement);
+  const Load({@required this.mealElement, this.food});
 
   @override
-  List<Object> get props => [mealElement];
+  List<Object> get props => [mealElement, food];
 
   @override
   String toString() => 'Load { mealElementId : ${mealElement?.id} }';
