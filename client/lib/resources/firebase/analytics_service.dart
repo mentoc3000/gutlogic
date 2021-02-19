@@ -27,11 +27,15 @@ class AnalyticsService {
     unawaited(analytics?.logEvent(name: name, parameters: condensedParameters));
   }
 
+  // NAVIGATION
+
   void subscribeToRoute(RouteAware routeAware, PageRoute route) => observer?.subscribe(routeAware, route);
 
   void unsubscribeFromRoute(RouteAware routeAware) => observer?.unsubscribe(routeAware);
 
   void setCurrentScreen(String screenName) => unawaited(analytics?.setCurrentScreen(screenName: screenName));
+
+  // AUTHENTICATION and USER
 
   void setUser(ApplicationUser user) => unawaited(analytics?.setUserId(user.id));
 

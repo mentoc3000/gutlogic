@@ -6,17 +6,18 @@ import '../models/diary_entry/meal_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
 import '../models/food/food.dart';
 import '../models/meal_element.dart';
+import '../models/pantry_entry.dart';
 import '../models/symptom_type.dart';
 import '../pages/account/account_page.dart';
 import '../pages/bowel_movement_entry/bowel_movement_entry_page.dart';
 import '../pages/change_password/change_password_page.dart';
 import '../pages/consent/consent_page.dart';
-import '../pages/food/food_page.dart';
 import '../pages/landing/landing_page.dart';
 import '../pages/login/login_page.dart';
 import '../pages/main_tabs.dart';
 import '../pages/meal_element_entry/meal_element_entry_page.dart';
 import '../pages/meal_entry/meal_entry_page.dart';
+import '../pages/pantry_entry/pantry_entry_page.dart';
 import '../pages/register/register_page.dart';
 import '../pages/reset_password/reset_password_page.dart';
 import '../pages/symptom_entry/symptom_entry_page.dart';
@@ -96,13 +97,6 @@ class Routes {
     );
   }
 
-  Route createFoodPageRoute({@required Food food}) {
-    return MaterialPageRoute(
-      builder: (context) => FoodPage(food: food),
-      settings: const RouteSettings(name: 'Food Page'),
-    );
-  }
-
   Route createMealEntryRoute({MealEntry entry}) {
     if (entry == null) {
       return MaterialPageRoute(
@@ -147,5 +141,13 @@ class Routes {
       builder: (context) => MealElementEntryPage.forMealElement(mealElement),
       settings: const RouteSettings(name: 'MealElement Entry Page'),
     );
+  }
+
+  Route createPantryEntryPageRoute({@required PantryEntry pantryEntry}) {
+    return MaterialPageRoute(builder: (context) => PantryEntryPage.forPantryEntry(pantryEntry));
+  }
+
+  Route createPantryEntryPageRouteForFood({@required Food food}) {
+    return MaterialPageRoute(builder: (context) => PantryEntryPage.forFood(food));
   }
 }

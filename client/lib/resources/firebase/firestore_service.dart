@@ -1,11 +1,13 @@
 import 'package:pedantic/pedantic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+export 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
   final String userId;
   FirebaseFirestore get instance => FirebaseFirestore.instance;
   CollectionReference get userDiaryCollection => instance.collection('user_data/$userId/diary');
   CollectionReference get customFoodCollection => instance.collection('user_data/$userId/foods');
+  CollectionReference get userPantryCollection => instance.collection('user_data/$userId/pantry');
 
   FirestoreService({this.userId}) {
     // Web.

@@ -5,10 +5,10 @@ import '../util/keys.dart';
 import '../widgets/gl_icons.dart';
 import '../widgets/gl_scaffold.dart';
 import 'diary/diary_page.dart';
+import 'pantry/pantry_page.dart';
 import 'settings/settings_page.dart';
 
 class MainTabs extends StatefulWidget {
-  static String tag = 'tabbed-page';
   final AnalyticsService analyticsService;
 
   MainTabs({@required this.analyticsService});
@@ -25,17 +25,28 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
   TabController _controller;
   int selectedIndex = 0;
 
-  final List<Tab> tabs = [
+  final tabs = [
     const Tab(
       key: Keys.diaryTab,
       text: 'Timeline',
       icon: Icon(GLIcons.diary),
     ),
     const Tab(
+      key: Keys.pantryTab,
+      text: 'Pantry',
+      icon: Icon(GLIcons.pantry),
+    ),
+    const Tab(
       key: Keys.accountTab,
       text: 'Settings',
       icon: Icon(GLIcons.settings),
     ),
+  ];
+
+  final pages = [
+    DiaryPage.provisioned(),
+    PantryPage.provisioned(),
+    SettingsPage(),
   ];
 
   @override
@@ -70,10 +81,13 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return GLScaffold(
-      body: buildTabBarView(context),
-      bottomNavigationBar: buildTabBar(context),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+    return DefaultTabController(
+      length: tabs.length,
+      child: GLScaffold(
+        body: buildTabBarView(context),
+        bottomNavigationBar: buildTabBar(context),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
     );
   }
 
@@ -91,10 +105,7 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
   Widget buildTabBarView(BuildContext context) {
     return TabBarView(
       controller: _controller,
-      children: [
-        DiaryPage.provisioned(),
-        SettingsPage(),
-      ],
+      children: pages,
     );
   }
 

@@ -2,10 +2,8 @@ import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 import '../../models/model_interfaces.dart';
 
-mixin FetchAll on Equatable {
-  @override
-  String toString() => 'FetchAll';
-}
+// TODO: remove this mixin?
+mixin FetchAll on Equatable {}
 
 mixin FetchQuery on Equatable {
   String get query;
@@ -17,10 +15,7 @@ mixin FetchQuery on Equatable {
   String toString() => 'FetchQuery { query: $query }';
 }
 
-mixin StreamAll on Equatable {
-  @override
-  String toString() => 'StreamAll';
-}
+mixin StreamAll on Equatable {}
 
 mixin StreamQuery on Equatable {
   String get query;

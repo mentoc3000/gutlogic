@@ -16,6 +16,7 @@ class GLIcons {
   static const clear = Icons.clear;
   static const delete = Icons.delete;
   static const diary = Icons.format_list_bulleted;
+  static const pantry = MdiIcons.chartBoxOutline;
   static const symptom = SickFaceIcon.sickFace;
   static const account = Icons.account_circle;
   static const dataSources = Icons.list;

@@ -52,7 +52,7 @@ void main() {
     blocTest(
       'streams all diary entries',
       build: () => DiaryBloc(repository: diaryRepository),
-      act: (bloc) => bloc.add(const StreamAll()),
+      act: (bloc) => bloc.add(const StreamAllDiary()),
       expect: [
         DiaryLoading(),
         DiaryLoaded(allDiaryEntries),
@@ -128,13 +128,11 @@ void main() {
         when(diaryRepository.streamAll()).thenThrow(Exception());
         return DiaryBloc(repository: diaryRepository);
       },
-      act: (bloc) {
-        bloc.add(const StreamAll());
-      },
       expect: [
         DiaryLoading(),
         isA<DiaryError>(),
       ],
+      act: (bloc) => bloc.add(const StreamAllDiary()),
     );
   });
 }

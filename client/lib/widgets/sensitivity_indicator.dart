@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../models/sensitivity.dart';
+import '../style/gl_colors.dart';
 
 class SensitivityIndicator extends StatelessWidget {
   final Sensitivity sensitivity;
@@ -7,63 +9,13 @@ class SensitivityIndicator extends StatelessWidget {
   final Color fillColor;
   final double size;
 
-  SensitivityIndicator({this.sensitivity, this.size})
+  SensitivityIndicator({this.sensitivity, this.size = 16})
       : borderColor = _borderColor(sensitivity),
         fillColor = _fillColor(sensitivity);
 
-  static Color _borderColor(Sensitivity sensitivity) {
-    Color color;
-    switch (sensitivity) {
-      case Sensitivity.unknown:
-        {
-          color = Colors.grey;
-          break;
-        }
-      case Sensitivity.none:
-        {
-          color = Colors.green;
-          break;
-        }
-      case Sensitivity.minor:
-        {
-          color = Colors.orange;
-          break;
-        }
-      case Sensitivity.major:
-        {
-          color = Colors.red;
-          break;
-        }
-    }
-    return color;
-  }
+  static Color _fillColor(Sensitivity sensitivity) => GLColors.fromSensitivity(sensitivity);
 
-  static Color _fillColor(Sensitivity sensitivity) {
-    Color color;
-    switch (sensitivity) {
-      case Sensitivity.unknown:
-        {
-          color = Colors.grey;
-          break;
-        }
-      case Sensitivity.none:
-        {
-          color = Colors.green;
-          break;
-        }
-      case Sensitivity.minor:
-        {
-          color = Colors.orange;
-          break;
-        }
-      case Sensitivity.major:
-        {
-          color = Colors.red;
-          break;
-        }
-    }
-    return color;
-  }
+  static Color _borderColor(Sensitivity sensitivity) => _fillColor(sensitivity);
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +35,7 @@ class SensitivityIndicator extends StatelessWidget {
 
 class SensitivityIndicatorLarge extends StatelessWidget {
   final Sensitivity sensitivity;
+
   SensitivityIndicatorLarge({this.sensitivity});
 
   @override

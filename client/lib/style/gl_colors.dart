@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../models/sensitivity.dart';
+
+export 'package:flutter/material.dart' show Color;
+
 // ignore: avoid_classes_with_only_static_members
 class GLColors {
   static const green = Color(0xFF0AD488);
@@ -30,4 +34,19 @@ class GLColors {
   static const transparent = Colors.transparent;
   static const black = Colors.black;
   static const white = Colors.white;
+
+  static Color fromSensitivity(Sensitivity sensitivity) {
+    switch (sensitivity) {
+      case Sensitivity.none:
+        return Colors.green;
+      case Sensitivity.mild:
+        return Colors.yellow;
+      case Sensitivity.moderate:
+        return Colors.orange;
+      case Sensitivity.severe:
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
 }

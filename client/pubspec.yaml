@@ -36,7 +36,7 @@ dependencies:
   intl: 0.16.1
   json_annotation: ^3.0.1
   logger: ^0.8.1
-  material_design_icons_flutter: ^3.4.4795
+  material_design_icons_flutter: 4.0.5555
   # pedantic: ^1.9.0
   rxdart: ^0.23.1
   scrollable_positioned_list: ^0.1.7

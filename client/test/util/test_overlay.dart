@@ -8,7 +8,7 @@ class TestOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MediaQuery(
-        data: const MediaQueryData(devicePixelRatio: 1.0),
+        data: const MediaQueryData(size: Size(600, 800), devicePixelRatio: 1.0),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Center(

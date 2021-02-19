@@ -128,21 +128,12 @@
       "problemMatcher": []
     },
     {
-      "label": "Run screenshot tests",
-      "type": "shell",
-      "options": {
-        "cwd": "${workspaceFolder}/client"
-      },
-      "command": "flutter drive --flavor=production --target=test_driver/screenshots/screenshots.dart",
-      "problemMatcher": []
-    },
-    {
       "label": "Generate iOS screenshots",
       "type": "shell",
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "command": "screenshots -v --flavor=production --config=test_driver/screenshots/ios_screenshots.yaml",
+      "command": "flutter pub run bin/screenshots",
       "problemMatcher": []
     },
     {

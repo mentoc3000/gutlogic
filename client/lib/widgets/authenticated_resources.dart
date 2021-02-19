@@ -15,6 +15,7 @@ import '../resources/firebase/firestore_service.dart';
 import '../resources/food/custom_food_repository.dart';
 import '../resources/food/edamam_food_repository.dart';
 import '../resources/food/edamam_service.dart';
+import '../resources/pantry_repository.dart';
 import '../resources/symptom_type_repository.dart';
 import '../resources/user_repository.dart';
 import '../routes/routes.dart';
@@ -89,6 +90,10 @@ class AuthenticatedResources extends StatelessWidget {
             return EdamamFoodRepository(
               edamamService: EdamamService(edamamFoodSearchService: CloudFunctionService('edamamFoodSearch')),
             );
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return PantryRepository(firestoreService: context.read<FirestoreService>());
           }),
         ],
         child: MultiBlocProvider(providers: [

@@ -19,11 +19,9 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
     return DiaryBloc(repository: context.read<DiaryRepository>());
   }
   @override
-  Stream<DiaryState> mapEventToState(
-    DiaryEvent event,
-  ) async* {
+  Stream<DiaryState> mapEventToState(DiaryEvent event) async* {
     try {
-      if (event is StreamAll) {
+      if (event is StreamAllDiary) {
         yield DiaryLoading();
         await streamSubscription?.cancel();
         streamSubscription = repository.streamAll().listen(

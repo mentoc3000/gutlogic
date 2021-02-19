@@ -7,6 +7,7 @@ import 'package:gutlogic/auth/auth_provider.dart';
 import 'package:gutlogic/blocs/account/account.dart';
 import 'package:gutlogic/blocs/authentication/authentication.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
+import 'package:gutlogic/blocs/pantry/pantry.dart';
 import 'package:gutlogic/models/application_user.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
@@ -14,7 +15,9 @@ import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
+import 'package:gutlogic/models/pantry_entry.dart';
 import 'package:gutlogic/models/quantity.dart';
+import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
@@ -24,6 +27,7 @@ import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_element_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_entry_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
+import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:gutlogic/resources/user_repository.dart';
 import 'package:gutlogic/routes/routes.dart';
 import 'package:gutlogic/style/gl_theme.dart';
@@ -46,6 +50,8 @@ class MockSymptomEntryRepository extends Mock implements SymptomEntryRepository 
 class MockBowelMovementEntryRepository extends Mock implements BowelMovementEntryRepository {}
 
 class MockMealElementRepository extends Mock implements MealElementRepository {}
+
+class MockPantryRepository extends Mock implements PantryRepository {}
 
 class MainTabsPageWrapper extends StatelessWidget {
   @override
@@ -167,6 +173,24 @@ void main() {
   final symptomEntry = diary.whereType<SymptomEntry>().first;
   when(symptomEntryRepository.stream(any)).thenAnswer((_) => Stream.fromIterable([symptomEntry]));
 
+  // Mock pantry
+  final pantryRepository = MockPantryRepository();
+  final pantryEntries = [
+    PantryEntry(id: '2', foodReference: CustomFoodReference(id: '2', name: 'Pasta'), sensitivity: Sensitivity.severe),
+    PantryEntry(
+      id: '1',
+      foodReference: CustomFoodReference(id: '1', name: 'Wheat Bread'),
+      sensitivity: Sensitivity.moderate,
+      notes: 'Makes me feel bloated the rest of the day.',
+    ),
+    PantryEntry(id: '5', foodReference: CustomFoodReference(id: '5', name: 'Pear'), sensitivity: Sensitivity.mild),
+    PantryEntry(id: '6', foodReference: CustomFoodReference(id: '6', name: 'Cola'), sensitivity: Sensitivity.mild),
+    PantryEntry(id: '4', foodReference: CustomFoodReference(id: '4', name: 'Onion'), sensitivity: Sensitivity.none),
+    PantryEntry(id: '3', foodReference: CustomFoodReference(id: '3', name: 'Garlic'), sensitivity: Sensitivity.none),
+  ].build();
+  when(pantryRepository.streamAll()).thenAnswer((_) => Stream.fromIterable([pantryEntries]));
+  when(pantryRepository.stream(any)).thenAnswer((_) => Stream.fromIterable([pantryEntries.first]));
+
   // remove debug banner for screenshots
   WidgetsApp.debugAllowBannerOverride = false;
 
@@ -177,6 +201,7 @@ void main() {
       RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
       RepositoryProvider<MealElementRepository>(create: (context) => mealElementRepository),
       RepositoryProvider<MealEntryRepository>(create: (context) => mealEntryRepository),
+      RepositoryProvider<PantryRepository>(create: (context) => pantryRepository),
       RepositoryProvider<SymptomEntryRepository>(create: (context) => symptomEntryRepository),
       RepositoryProvider<UserRepository>(create: (context) => userRepository),
     ],
@@ -185,6 +210,7 @@ void main() {
         BlocProvider(create: (context) => AccountBloc(userRepository: context.read<UserRepository>())),
         BlocProvider<AuthenticationBloc>(create: (context) => authenticationBloc),
         BlocProvider(create: (context) => DiaryBloc(repository: context.read<DiaryRepository>())),
+        BlocProvider(create: (context) => PantryBloc(repository: context.read<PantryRepository>())),
       ],
       child: MainTabsPageWrapper(),
     ),

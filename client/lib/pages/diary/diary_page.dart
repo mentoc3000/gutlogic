@@ -16,7 +16,7 @@ class DiaryPage extends StatelessWidget {
   /// Build a DiaryPage with its own DiaryBloc provider.
   static Widget provisioned() {
     return BlocProvider(
-      create: (context) => DiaryBloc.fromContext(context)..add(const StreamAll()),
+      create: (context) => DiaryBloc.fromContext(context)..add(const StreamAllDiary()),
       child: DiaryPage(),
     );
   }
@@ -26,29 +26,33 @@ class DiaryPage extends StatelessWidget {
     return GLScaffold(
       appBar: GLAppBar(title: 'Timeline'),
       body: BlocConsumer<DiaryBloc, DiaryState>(
-        builder: (BuildContext context, DiaryState state) {
-          if (state is DiaryLoading) {
-            return LoadingPage();
-          }
-          if (state is DiaryLoaded) {
-            return DiaryListView(diaryEntries: state.diaryEntries);
-          }
-          if (state is DiaryError) {
-            return ErrorPage(message: state.message);
-          }
-          return ErrorPage();
-        },
-        listener: (context, state) {
-          if (state is DiaryEntryDeleted) {
-            final snackBar = UndoDeleteSnackBar(
-              name: 'entry',
-              onUndelete: () => DiaryBloc.fromContext(context).add(Undelete(state.diaryEntry)),
-            );
-            Scaffold.of(context).showSnackBar(snackBar);
-          }
-        },
+        builder: builder,
+        listener: listener,
       ),
       floatingActionButton: const DiaryFloatingActionButton(key: Keys.diaryFab),
     );
+  }
+
+  Widget builder(BuildContext context, DiaryState state) {
+    if (state is DiaryLoading) {
+      return LoadingPage();
+    }
+    if (state is DiaryLoaded) {
+      return DiaryListView(diaryEntries: state.diaryEntries);
+    }
+    if (state is DiaryError) {
+      return ErrorPage(message: state.message);
+    }
+    return ErrorPage();
+  }
+
+  void listener(BuildContext context, DiaryState state) {
+    if (state is DiaryEntryDeleted) {
+      final snackBar = UndoDeleteSnackBar(
+        name: 'entry',
+        onUndelete: () => DiaryBloc.fromContext(context).add(Undelete(state.diaryEntry)),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
   }
 }

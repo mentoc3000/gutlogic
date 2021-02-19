@@ -6,6 +6,7 @@ class PushListTile extends StatelessWidget {
   final String heading;
   final String subheading;
   final Widget leading;
+  final Widget trailing;
   final VoidCallback onTap;
 
   const PushListTile({
@@ -13,6 +14,7 @@ class PushListTile extends StatelessWidget {
     this.heading,
     this.subheading,
     this.leading,
+    this.trailing,
     this.onTap,
   }) : super(key: key);
 
@@ -22,7 +24,13 @@ class PushListTile extends StatelessWidget {
       heading: heading,
       subheading: subheading,
       leading: leading,
-      trailing: const Icon(GLIcons.arrowRight),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (trailing != null) trailing,
+          const Icon(GLIcons.arrowRight),
+        ],
+      ),
       onTap: onTap,
     );
   }

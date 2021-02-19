@@ -14,11 +14,8 @@ abstract class DiaryEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class StreamAll extends DiaryEvent {
-  const StreamAll();
-
-  @override
-  String toString() => 'StreamAll';
+class StreamAllDiary extends DiaryEvent {
+  const StreamAllDiary();
 }
 
 class StreamRange extends DiaryEvent {
