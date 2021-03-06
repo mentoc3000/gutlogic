@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
+import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/models/diary_entry/diary_entry.dart';
@@ -134,6 +135,10 @@ void main() {
       ],
       act: (bloc) => bloc.add(const StreamAllDiary()),
     );
+
+    test('errors are recorded', () {
+      expect(DiaryError(message: '') is ErrorRecorder, true);
+    });
   });
 }
 

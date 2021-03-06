@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
+import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/pantry_entry.dart';
 import 'package:gutlogic/models/sensitivity.dart';
@@ -79,6 +80,10 @@ void main() {
       act: (bloc) async => bloc.add(const StreamAllPantry()),
       expect: [PantryLoading(), isA<PantryError>()],
     );
+
+    test('errors are recorded', () {
+      expect(PantryError(message: '') is ErrorRecorder, true);
+    });
   });
 }
 

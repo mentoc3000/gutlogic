@@ -351,6 +351,10 @@ void main() {
         verifyNoMoreInteractions(repository);
       },
     );
+
+    test('errors are recorded', () {
+      expect(MealEntryError(message: '') is ErrorRecorder, true);
+    });
   });
 }
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
+import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/symptom_type_repository.dart';
 import 'package:mockito/mockito.dart';
@@ -87,6 +88,10 @@ void main() {
         verify(analyticsService.logEvent('symptom_type_search')).called(1);
       },
     );
+
+    test('errors are recorded', () {
+      expect(SymptomTypeError(message: '') is ErrorRecorder, true);
+    });
   });
 }
 

@@ -308,6 +308,10 @@ void main() {
         verifyNoMoreInteractions(repository);
       },
     );
+
+    test('errors are recorded', () {
+      expect(BowelMovementEntryError(message: '') is ErrorRecorder, true);
+    });
   });
 }
 

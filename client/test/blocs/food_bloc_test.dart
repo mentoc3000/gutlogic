@@ -114,6 +114,10 @@ void main() {
         verify(analyticsService.logEvent('food_search')).called(1);
       },
     );
+
+    test('errors are recorded', () {
+      expect(FoodError(message: '') is ErrorRecorder, true);
+    });
   });
 }
 

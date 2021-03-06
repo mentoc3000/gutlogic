@@ -373,6 +373,10 @@ void main() {
         verifyNoMoreInteractions(repository);
       },
     );
+
+    test('errors are recorded', () {
+      expect(SymptomEntryError(message: '') is ErrorRecorder, true);
+    });
   });
 }
 

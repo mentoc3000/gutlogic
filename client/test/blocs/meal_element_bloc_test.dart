@@ -392,6 +392,10 @@ void main() {
         verifyNoMoreInteractions(mealElementRepository);
       },
     );
+
+    test('errors are recorded', () {
+      expect(MealElementError(message: '') is ErrorRecorder, true);
+    });
   });
 }
 

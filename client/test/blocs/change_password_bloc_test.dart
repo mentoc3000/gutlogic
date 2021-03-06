@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/auth/auth.dart';
 import 'package:gutlogic/blocs/change_password/change_password.dart';
+import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/models/application_user.dart';
 import 'package:gutlogic/resources/user_repository.dart';
 import 'package:mockito/mockito.dart';
@@ -157,5 +158,9 @@ void main() {
         )).called(1);
       },
     );
+
+    test('errors are recorded', () {
+      expect(const ChangePasswordError(message: '', user: null) is ErrorRecorder, true);
+    });
   });
 }

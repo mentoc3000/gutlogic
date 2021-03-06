@@ -13,8 +13,9 @@ void main() {
     EdamamFoodRepository foodRepository;
     EdamamService edamamService;
     EdamamFood food;
-    final foodResult = brownRiceCakeResult;
-    final queryResult = appleQueryResults;
+    const foodResult = brownRiceCakeResult;
+    const appleQueryResult = appleQueryResults;
+    const avocadoQueryResult = avocadoQueryResults;
 
     setUp(() async {
       final Map<String, Object> foodInfo = foodResult['food'];
@@ -34,13 +35,19 @@ void main() {
       );
       edamamService = MockEdamamService();
       when(edamamService.getById(foodId)).thenAnswer((_) => Future.value(foodResult));
-      when(edamamService.searchFood(any)).thenAnswer((_) => Future.value(queryResult));
+      when(edamamService.searchFood('apple')).thenAnswer((_) => Future.value(appleQueryResult));
+      when(edamamService.searchFood('avocado')).thenAnswer((_) => Future.value(avocadoQueryResult));
       foodRepository = EdamamFoodRepository(edamamService: edamamService);
     });
 
     test('fetches query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery(food.name);
-      expect(fetchedFoods.length, queryResult.length);
+      final fetchedFoods = await foodRepository.fetchQuery('apple');
+      expect(fetchedFoods.length, appleQueryResult.length);
+    });
+
+    test('fetches query with incomplete measures', () async {
+      final fetchedFoods = await foodRepository.fetchQuery('avocado');
+      expect(fetchedFoods.length, avocadoQueryResult.length);
     });
 
     test('fetches no food for empty query', () async {
@@ -54,8 +61,8 @@ void main() {
     });
 
     test('streams query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery(food.name);
-      await expectLater(foodRepository.streamQuery(food.name), emits(fetchedFoods));
+      final fetchedFoods = await foodRepository.fetchQuery('apple');
+      await expectLater(foodRepository.streamQuery('apple'), emits(fetchedFoods));
     });
   });
 }

@@ -8,7 +8,6 @@ import '../../widgets/list_tiles/gl_list_tile.dart';
 import '../../widgets/list_tiles/pantry_list_tile.dart';
 import '../../widgets/powered_by_edamam.dart';
 import 'searchable_search_delegate.dart';
-import 'widgets/search_result_tile.dart';
 
 class PantrySearchDelegate extends SearchableSearchDelegate<PantryEntry> {
   final PantryBloc pantryBloc;
