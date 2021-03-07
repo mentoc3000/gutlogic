@@ -1,9 +1,9 @@
-# Jobs are named [stage][subproject][task].
+# Jobs are named [subproject][task].
 
 # Reference: https://github.com/fezu54/flutter-gitlab-ci-example/blob/master/.gitlab-ci.yml
 
 stages:
-  - check
+  - prep
   - test
   - build
   - predeploy
@@ -22,7 +22,7 @@ workflow:
 # those files will still generate a pipeline and comply with "prevent merge unless a pipeline succeeded" rule.
 
 compliance:
-  stage: check
+  stage: prep
   tags:
     - docker
   script:
@@ -59,6 +59,13 @@ compliance:
   if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
   changes: [ server/**/* ]
 
+.server-cache: &server-cache
+  key:
+    files:
+      - server/package-lock.json
+  paths:
+    - server/.npm-cache
+
 .server:
   image: node:10-alpine
   tags:
@@ -71,14 +78,32 @@ compliance:
     # install alpine deps (ideally this would happen in a custom dockerfile)
     - apk add --quiet --no-cache openjdk8
     # install the server dependencies
-    - npm ci --log-level error
+    - npm ci --cache .npm-cache --prefer-offline --log-level error
     # add locally installed bins to the path so we can run firebase-tools
     - PATH="$(npm bin):$PATH"
     # configure the firebase environment
     - firebase use $PIPELINE_CHANNEL
+  cache:
+    <<: *server-cache
+    policy: pull
 
-check:server:
-  stage: check
+server:prep:
+  stage: prep
+  extends:
+    - .server
+  rules:
+    - *server-merge-request-rule
+    - *server-commit-rule
+    - *manual-commit-rule
+  script:
+    # before_script will automatically update npm cache
+    - echo "Updating server cache."
+  cache:
+    <<: *server-cache
+    policy: pull-push
+
+server:lint:
+  stage: test
   extends:
     - .server
   script:
@@ -87,9 +112,11 @@ check:server:
     - *server-merge-request-rule
     - *server-commit-rule
     - *manual-commit-rule
-  needs: []
+  dependencies:
+    - server:prep
+  allow_failure: true
 
-test:server:
+server:test:
   stage: test
   extends:
     - .server
@@ -99,9 +126,10 @@ test:server:
     - *server-merge-request-rule
     - *server-commit-rule
     - *manual-commit-rule
-  needs: []
+  dependencies:
+    - server:prep
 
-deploy:server:
+server:deploy:
   stage: deploy
   extends:
     - .server
@@ -110,7 +138,8 @@ deploy:server:
   rules:
     - *server-commit-rule
     - *manual-commit-rule
-  dependencies: [] # ignore flutter artifacts
+  dependencies:
+    - server:prep
 
 ### Client Jobs
 
@@ -138,6 +167,13 @@ deploy:server:
     alias flutter="flutter pub global run fvm:main flutter";
   fi;
 
+.client-cache: &client-cache
+  key:
+    files:
+      - client/pubspec.lock
+  paths:
+    - client/.pub-cache
+
 .client:
   image: cirrusci/flutter:1.22.6
   tags:
@@ -148,6 +184,8 @@ deploy:server:
     - *pipeline-channel-variable
     # move into the client directory
     - cd client
+    # configure pub to use a local cache directory
+    - export PUB_CACHE=./.pub-cache
     # alias flutter to use fvm
     - *flutter-fvm
     # print the flutter version for logs
@@ -156,12 +194,32 @@ deploy:server:
     - if   [ "$PIPELINE_CHANNEL" == "release" ]; then FLUTTER_FLAVOR="production";
       elif [ "$PIPELINE_CHANNEL" == "staging" ]; then FLUTTER_FLAVOR="production";
       else FLUTTER_FLAVOR="development"; fi
-    # install the client dependencies and generate code
+    # install dependencies
     - flutter pub get
-    - flutter pub run build_runner build --delete-conflicting-outputs
+  cache:
+    <<: *client-cache
+    policy: pull
 
-check:client:
-  stage: check
+client:prep:
+  stage: prep
+  extends:
+    - .client
+  script:
+    - flutter pub run build_runner build --delete-conflicting-outputs
+  rules:
+    - *client-merge-request-rule
+    - *client-commit-rule
+    - *manual-commit-rule
+  artifacts:
+    paths:
+      - client/lib/**/*.g.dart
+    expire_in: 1 day
+  cache:
+    <<: *client-cache
+    policy: pull-push
+
+client:lint:
+  stage: test
   extends:
     - .client
   script:
@@ -175,9 +233,11 @@ check:client:
     - *client-merge-request-rule
     - *client-commit-rule
     - *manual-commit-rule
-  needs: []
+  dependencies:
+    - client:prep
+  allow_failure: true
 
-test:client:
+client:test:
   stage: test
   extends:
     - .client
@@ -194,7 +254,8 @@ test:client:
     - *client-merge-request-rule
     - *client-commit-rule
     - *manual-commit-rule
-  needs: []
+  dependencies:
+    - client:prep
 
 # build:client:apk:
 #   stage: build
@@ -206,7 +267,7 @@ test:client:
 #     - *client-merge-request-rule
 #     - *manual-commit-rule
 
-build:client:ios:
+client:build:ios:
   stage: build
   extends:
     - .client
@@ -217,9 +278,10 @@ build:client:ios:
   rules:
     - *client-merge-request-rule
     - *manual-commit-rule
-  dependencies: [] # ignore server artifacts
+  dependencies:
+    - client:prep
 
-predeploy:client:screenshots:
+client:screenshots:
   stage: predeploy
   extends:
     - .client
@@ -235,9 +297,10 @@ predeploy:client:screenshots:
   rules:
     - *client-deploy-rule
     - *manual-commit-rule
-  dependencies: [] # ignore server artifacts
+  dependencies:
+    - client:prep
 
-predeploy:client:tag:
+client:tag:
   stage: predeploy
   extends:
     - .client
@@ -249,9 +312,9 @@ predeploy:client:tag:
   rules:
     - *client-deploy-rule
     - *manual-commit-rule
-  dependencies: [] # ignore server artifacts
+  dependencies: [] # ignore client artifacts
 
-deploy:client:ios:
+client:deploy:ios:
   stage: deploy
   extends:
     - .client
@@ -279,4 +342,5 @@ deploy:client:ios:
     - *client-commit-rule
     - *manual-commit-rule
   dependencies:
-    - predeploy:client:screenshots
+    - client:prep
+    - client:screenshots
