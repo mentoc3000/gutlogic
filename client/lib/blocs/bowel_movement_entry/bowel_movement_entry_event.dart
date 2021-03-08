@@ -118,7 +118,7 @@ class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implement
   String toString() => 'UpdateVolume { volume: $volume } }';
 }
 
-class ThrowBowelMovementEntryError extends BowelMovementEntryEvent with Throw {
+class ThrowBowelMovementEntryError extends BowelMovementEntryEvent with ErrorEvent {
   @override
   final Object error;
 

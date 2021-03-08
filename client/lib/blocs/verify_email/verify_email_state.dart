@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
+import '../bloc_helpers.dart';
+
 abstract class VerifyEmailState extends Equatable {
   @override
   List<Object> get props => [];
@@ -19,11 +21,9 @@ class VerifyEmailValue extends VerifyEmailState {
   List<Object> get props => [verified];
 }
 
-class VerifyEmailError extends VerifyEmailState {
+class VerifyEmailError extends VerifyEmailState with ErrorState {
+  @override
   final String message;
 
   VerifyEmailError({@required this.message});
-
-  @override
-  List<Object> get props => [message];
 }

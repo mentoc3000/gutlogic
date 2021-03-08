@@ -14,6 +14,7 @@ final ThemeData glTheme = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: TextStyle(color: glColorScheme.primary),
   ),
+  canvasColor: GLColors.transparent,
 );
 
 const tileHeadingTheme = TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);

@@ -34,7 +34,7 @@ class FoodsLoaded extends FoodState with SearchableLoaded {
   FoodsLoaded({@required this.edamamFoods, @required this.customFoods});
 }
 
-class FoodError extends FoodState with SearchableError, ErrorRecorder {
+class FoodError extends FoodState with ErrorState, ErrorRecorder {
   @override
   final String message;
 

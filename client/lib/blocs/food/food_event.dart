@@ -58,7 +58,7 @@ class LoadFoods extends FoodEvent {
   String toString() => 'LoadFoods { customFoods: ${customFoods.length}, edamamFoods: ${edamamFoods.length} }';
 }
 
-class ThrowFoodError extends FoodEvent with ThrowSearchableError {
+class ThrowFoodError extends FoodEvent with ErrorEvent {
   @override
   final Object error;
 

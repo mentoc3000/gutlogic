@@ -7,6 +7,7 @@ void main() {
   group('Sensitivity', () {
     test('constructs enums', () {
       Sensitivity.unknown;
+      Sensitivity.none;
       Sensitivity.mild;
       Sensitivity.moderate;
       Sensitivity.severe;

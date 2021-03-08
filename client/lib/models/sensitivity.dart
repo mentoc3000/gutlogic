@@ -4,7 +4,7 @@ import 'package:built_value/serializer.dart';
 
 part 'sensitivity.g.dart';
 
-class Sensitivity extends EnumClass {
+class Sensitivity extends EnumClass implements Comparable<Sensitivity> {
   @BuiltValueSerializer(custom: true)
   static Serializer<Sensitivity> get serializer => _severitySerializer;
 
@@ -18,19 +18,23 @@ class Sensitivity extends EnumClass {
 
   static BuiltSet<Sensitivity> get values => _$values;
   static Sensitivity valueOf(String name) => _$valueOf(name);
-}
+  static Sensitivity fromInt(int i) => Sensitivity.fromNum(i);
+  static Sensitivity fromNum(num i) {
+    if (i < 0) {
+      return Sensitivity.unknown;
+    } else if (i < 0.5) {
+      return Sensitivity.none;
+    } else if (i < 1.5) {
+      return Sensitivity.mild;
+    } else if (i < 2.5) {
+      return Sensitivity.moderate;
+    } else {
+      return Sensitivity.severe;
+    }
+  }
 
-final _severitySerializer = SeveritySerializer();
-
-class SeveritySerializer implements PrimitiveSerializer<Sensitivity> {
-  @override
-  final Iterable<Type> types = const <Type>[Sensitivity];
-  @override
-  final String wireName = 'Sensitivity';
-
-  @override
-  Object serialize(Serializers serializers, Sensitivity sensitivity, {FullType specifiedType = FullType.unspecified}) {
-    switch (sensitivity) {
+  int toInt() {
+    switch (this) {
       case Sensitivity.unknown:
         return -1;
       case Sensitivity.none:
@@ -42,23 +46,28 @@ class SeveritySerializer implements PrimitiveSerializer<Sensitivity> {
       case Sensitivity.severe:
         return 3;
       default:
-        throw ArgumentError(sensitivity);
+        throw ArgumentError(this);
     }
   }
 
   @override
-  Sensitivity deserialize(Serializers serializers, Object serialized, {FullType specifiedType = FullType.unspecified}) {
-    final numberSensitivity = serialized as num;
-    if (numberSensitivity < 0) {
-      return Sensitivity.unknown;
-    } else if (numberSensitivity < 0.5) {
-      return Sensitivity.none;
-    } else if (numberSensitivity < 1.5) {
-      return Sensitivity.mild;
-    } else if (numberSensitivity < 2.5) {
-      return Sensitivity.moderate;
-    } else {
-      return Sensitivity.severe;
-    }
-  }
+  int compareTo(Sensitivity other) => toInt().compareTo(other.toInt());
+}
+
+final _severitySerializer = SeveritySerializer();
+
+class SeveritySerializer implements PrimitiveSerializer<Sensitivity> {
+  @override
+  final Iterable<Type> types = const <Type>[Sensitivity];
+  @override
+  final String wireName = 'Sensitivity';
+
+  @override
+  Object serialize(Serializers serializers, Sensitivity sensitivity, {FullType specifiedType = FullType.unspecified}) =>
+      sensitivity.toInt();
+
+  @override
+  Sensitivity deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      Sensitivity.fromNum(serialized as num);
 }

@@ -54,10 +54,10 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
                   min: 0,
                   max: 3,
                   divisions: 3,
-                  value: _sensitivityToSliderValue(_sensitivity),
+                  value: _sensitivity.toInt().toDouble(),
                   activeColor: _color,
                   onChanged: (value) => setState(() {
-                    _sensitivity = _sliderValueToSensitivity(value);
+                    _sensitivity = Sensitivity.fromNum(value);
                   }),
                   onChangeEnd: onSensitivityChange,
                 ),
@@ -81,35 +81,5 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
         }
       });
 
-  void onSensitivityChange(double newValue) => setState(() => widget.onChanged(_sliderValueToSensitivity(newValue)));
-}
-
-Sensitivity _sliderValueToSensitivity(num value) {
-  switch (value) {
-    case 0:
-      return Sensitivity.none;
-    case 1:
-      return Sensitivity.mild;
-    case 2:
-      return Sensitivity.moderate;
-    case 3:
-      return Sensitivity.severe;
-    default:
-      return Sensitivity.unknown;
-  }
-}
-
-double _sensitivityToSliderValue(Sensitivity sensitivity) {
-  switch (sensitivity) {
-    case Sensitivity.none:
-      return 0;
-    case Sensitivity.mild:
-      return 1;
-    case Sensitivity.moderate:
-      return 2;
-    case Sensitivity.severe:
-      return 3;
-    default:
-      return 0;
-  }
+  void onSensitivityChange(double newValue) => setState(() => widget.onChanged(Sensitivity.fromNum(newValue)));
 }

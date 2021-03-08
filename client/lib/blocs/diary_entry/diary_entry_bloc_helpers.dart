@@ -5,14 +5,12 @@ import '../bloc_helpers.dart';
 import 'diary_entry_event.dart';
 import 'diary_entry_state.dart';
 
-mixin DiaryEntryMapper<E, S> on StreamSubscriber<E, S> {
+mixin DiaryEntryMapper<TStreamData, TEvent, TState> on StreamSubscriber<TStreamData, TState> {
   DiaryEntryStreamer diaryEntryStreamer;
   DiaryEntryDeleter diaryEntryDeleter;
   DiaryEntryUpdater diaryEntryUpdater;
 
-  Stream<S> mapDiaryEntryEventToState(
-    E event,
-  ) async* {
+  Stream<TState> mapDiaryEntryEventToState(TEvent event) async* {
     if (event is DeleteDiaryEntry) {
       unawaited(diaryEntryDeleter.delete(event.diaryEntry));
     }

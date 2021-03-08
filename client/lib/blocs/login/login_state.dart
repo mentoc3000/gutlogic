@@ -28,10 +28,11 @@ class LoginSuccess extends LoginState {
   const LoginSuccess();
 }
 
-class LoginError extends LoginState with ErrorRecorder {
+class LoginError extends LoginState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport report;
 
+  @override
   final String message;
 
   const LoginError({@required this.message}) : report = null;
@@ -42,10 +43,4 @@ class LoginError extends LoginState with ErrorRecorder {
   LoginError.fromError({@required dynamic error, @required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
-
-  @override
-  List<Object> get props => [message, report];
-
-  @override
-  String toString() => 'LoginError { message: $message }';
 }

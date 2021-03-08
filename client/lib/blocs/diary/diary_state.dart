@@ -41,10 +41,11 @@ class DiaryEntryDeleted extends DiaryState {
   String toString() => 'DiaryEntryDeleted { diaryEntry: ${diaryEntry.id} }';
 }
 
-class DiaryError extends DiaryState with ErrorRecorder {
+class DiaryError extends DiaryState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport report;
 
+  @override
   final String message;
 
   DiaryError({@required this.message}) : report = null;
@@ -52,10 +53,4 @@ class DiaryError extends DiaryState with ErrorRecorder {
   DiaryError.fromError({@required dynamic error, @required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
-
-  @override
-  List<Object> get props => [message, report];
-
-  @override
-  String toString() => 'DiaryError { message: $message }';
 }

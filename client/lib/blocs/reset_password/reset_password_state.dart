@@ -34,10 +34,11 @@ class ResetPasswordSuccess extends ResetPasswordState {
   List<Object> get props => [email];
 }
 
-class ResetPasswordError extends ResetPasswordState with ErrorRecorder {
+class ResetPasswordError extends ResetPasswordState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport report;
 
+  @override
   final String message;
 
   const ResetPasswordError({@required this.message}) : report = null;
@@ -45,10 +46,4 @@ class ResetPasswordError extends ResetPasswordState with ErrorRecorder {
   ResetPasswordError.fromError({@required dynamic error, @required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
-
-  @override
-  List<Object> get props => [message, report];
-
-  @override
-  String toString() => 'ResetPasswordError { message: $message }';
 }

@@ -30,9 +30,6 @@ class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with Stre
               onError: (error, StackTrace trace) => add(ThrowSymptomTypeError(error: error, trace: trace)),
             );
       }
-      if (event is ThrowSymptomTypeError) {
-        yield SymptomTypeError.fromError(error: event.error, trace: event.trace);
-      }
       if (event is FetchAllSymptomTypes) {
         // TODO: remove these loading pages? Or maybe only show them if the fetch takes a long time.
         // https://stackoverflow.com/questions/64885470/can-dart-streams-emit-a-value-if-the-stream-is-not-done-within-a-duration/64978139
@@ -47,6 +44,9 @@ class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with Stre
       }
       if (event is LoadSymptomTypes) {
         yield SymptomTypesLoaded(event.items);
+      }
+      if (event is ThrowSymptomTypeError) {
+        yield SymptomTypeError.fromError(error: event.error, trace: event.trace);
       }
     } catch (error, trace) {
       yield SymptomTypeError.fromError(error: error, trace: trace);

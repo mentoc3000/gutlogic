@@ -87,6 +87,7 @@ class GLButton extends StatelessWidget {
         materialTapTargetSize: materialTapTargetSize,
         animationDuration: animationDuration,
         child: child,
+        minWidth: height,
       ),
     );
   }

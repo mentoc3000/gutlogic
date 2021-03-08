@@ -64,15 +64,12 @@ class UndeletePantryEntry extends PantryEvent {
   List<Object> get props => [pantryEntry];
 }
 
-class ThrowPantryError extends PantryEvent {
+class ThrowPantryError extends PantryEvent with ErrorEvent {
+  @override
   final Object error;
+
+  @override
   final StackTrace trace;
 
   const ThrowPantryError({this.error, this.trace});
-
-  @override
-  List<Object> get props => [error, trace];
-
-  @override
-  String toString() => 'Throw { error: $error }';
 }

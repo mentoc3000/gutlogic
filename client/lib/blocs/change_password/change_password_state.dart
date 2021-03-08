@@ -50,11 +50,12 @@ class ChangePasswordSuccess extends ChangePasswordState {
   String toString() => 'ChangePasswordSuccess { id: ${user?.id} }';
 }
 
-class ChangePasswordError extends ChangePasswordState with ErrorRecorder {
+class ChangePasswordError extends ChangePasswordState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport report;
 
   /// The error message for the user.
+  @override
   final String message;
 
   const ChangePasswordError({
@@ -78,9 +79,6 @@ class ChangePasswordError extends ChangePasswordState with ErrorRecorder {
   ChangePasswordError.fromError({@required ApplicationUser user, @required dynamic error, @required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
-
-  @override
-  List<Object> get props => [message, report];
 
   @override
   String toString() => 'ChangePasswordError { id: ${user?.id}, message: $message }';

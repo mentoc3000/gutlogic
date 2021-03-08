@@ -27,7 +27,7 @@ class SymptomTypesLoaded extends SymptomTypeState with SearchableLoaded {
   SymptomTypesLoaded(this.items);
 }
 
-class SymptomTypeError extends SymptomTypeState with SearchableError, ErrorRecorder {
+class SymptomTypeError extends SymptomTypeState with ErrorState, ErrorRecorder {
   @override
   final String message;
 

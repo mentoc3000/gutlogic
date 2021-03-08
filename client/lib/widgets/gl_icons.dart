@@ -20,4 +20,7 @@ class GLIcons {
   static const symptom = SickFaceIcon.sickFace;
   static const account = Icons.account_circle;
   static const dataSources = Icons.list;
+  static const filter = Icons.filter_list;
+  static const sort = Icons.sort_by_alpha;
+  static const selected = Icons.check;
 }

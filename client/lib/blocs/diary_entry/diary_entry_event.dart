@@ -63,14 +63,3 @@ mixin UpdateDiaryEntryNotes on Equatable implements DebouncedEvent, TrackedEvent
   @override
   String toString() => 'UpdateNotes { newNotes: $notes } }';
 }
-
-mixin Throw on Equatable {
-  Object get error;
-  StackTrace get trace;
-
-  @override
-  List<Object> get props => [error, trace];
-
-  @override
-  String toString() => 'Throw { error: $error }';
-}

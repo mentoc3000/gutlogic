@@ -77,15 +77,12 @@ class Undelete extends DiaryEvent {
   List<Object> get props => [diaryEntry];
 }
 
-class Throw extends DiaryEvent {
+class Throw extends DiaryEvent with ErrorEvent {
+  @override
   final dynamic error;
+
+  @override
   final StackTrace trace;
 
   const Throw({@required this.error, @required this.trace});
-
-  @override
-  List<Object> get props => [error, trace];
-
-  @override
-  String toString() => 'Throw { error: $error }';
 }

@@ -16,6 +16,7 @@ mixin DiaryEntryLoaded on Equatable {
 }
 
 mixin DiaryEntryError on Equatable implements ErrorRecorder {
+  @override
   String get message;
 
   @override

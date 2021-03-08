@@ -34,10 +34,11 @@ class RegisterSuccess extends RegisterState {
   const RegisterSuccess();
 }
 
-class RegisterError extends RegisterState with ErrorRecorder {
+class RegisterError extends RegisterState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport report;
 
+  @override
   final String message;
 
   const RegisterError({@required this.message}) : report = null;
@@ -57,10 +58,4 @@ class RegisterError extends RegisterState with ErrorRecorder {
   RegisterError.fromError({@required dynamic error, @required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
-
-  @override
-  List<Object> get props => [message, report];
-
-  @override
-  String toString() => 'RegisterError { message: $message }';
 }

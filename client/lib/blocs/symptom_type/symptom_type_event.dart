@@ -57,7 +57,7 @@ class LoadSymptomTypes extends SymptomTypeEvent with LoadSearchables {
   const LoadSymptomTypes(this.items);
 }
 
-class ThrowSymptomTypeError extends SymptomTypeEvent with ThrowSearchableError {
+class ThrowSymptomTypeError extends SymptomTypeEvent with ErrorEvent {
   @override
   final Object error;
 

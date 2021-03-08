@@ -39,7 +39,7 @@ class PantryEntryDeleted extends PantryState {
   String toString() => 'PantryEntryDeleted { pantryEntry: ${pantryEntry.id} }';
 }
 
-class PantryError extends PantryState with SearchableError, ErrorRecorder {
+class PantryError extends PantryState with ErrorState, ErrorRecorder {
   @override
   final String message;
 

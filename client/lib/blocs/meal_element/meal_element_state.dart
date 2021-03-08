@@ -30,10 +30,11 @@ class MealElementLoaded extends MealElementState {
   String toString() => 'MealElementLoaded { MealElementId: ${mealElement?.id} }';
 }
 
-class MealElementError extends MealElementState with ErrorRecorder {
+class MealElementError extends MealElementState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport report;
 
+  @override
   final String message;
 
   MealElementError({@required this.message}) : report = null;
@@ -41,12 +42,6 @@ class MealElementError extends MealElementState with ErrorRecorder {
   MealElementError.fromError({@required dynamic error, @required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
-
-  @override
-  List<Object> get props => [message, report];
-
-  @override
-  String toString() => 'MealElementError { message: $message }';
 
   static String buildMessage(dynamic error) =>
       connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString;

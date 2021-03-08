@@ -12,7 +12,7 @@ mixin FetchQuery on Equatable {
   List<Object> get props => [query];
 
   @override
-  String toString() => 'FetchQuery { query: $query }';
+  String toString() => '$runtimeType { query: $query }';
 }
 
 mixin StreamAll on Equatable {}
@@ -24,7 +24,7 @@ mixin StreamQuery on Equatable {
   List<Object> get props => [query];
 
   @override
-  String toString() => 'StreamQuery { query: $query }';
+  String toString() => '$runtimeType { query: $query }';
 }
 
 mixin LoadSearchables on Equatable {
@@ -34,16 +34,5 @@ mixin LoadSearchables on Equatable {
   List<Object> get props => [items];
 
   @override
-  String toString() => 'LoadSearchables { item count: ${items.length} }';
-}
-
-mixin ThrowSearchableError on Equatable {
-  Object get error;
-  StackTrace get trace;
-
-  @override
-  List<Object> get props => [error, trace];
-
-  @override
-  String toString() => 'ThrowSearchableError { error: $error }';
+  String toString() => '$runtimeType { item count: ${items.length} }';
 }

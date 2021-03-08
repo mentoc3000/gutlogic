@@ -141,7 +141,7 @@ class UndeleteMealElement extends MealEntryEvent {
   String toString() => 'UndeleteMealElement { mealElementId: ${mealElement.id} }';
 }
 
-class ThrowMealEntryError extends MealEntryEvent with Throw {
+class ThrowMealEntryError extends MealEntryEvent with ErrorEvent {
   @override
   final Object error;
 

@@ -28,10 +28,11 @@ class LandingSuccess extends LandingState {
   const LandingSuccess();
 }
 
-class LandingError extends LandingState with ErrorRecorder {
+class LandingError extends LandingState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport report;
 
+  @override
   final String message;
 
   const LandingError({@required this.message}) : report = null;
@@ -41,10 +42,4 @@ class LandingError extends LandingState with ErrorRecorder {
   LandingError.fromError({@required dynamic error, @required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
-
-  @override
-  List<Object> get props => [message, report];
-
-  @override
-  String toString() => 'LandingError { message: $message }';
 }

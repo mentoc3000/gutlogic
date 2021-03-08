@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -41,8 +42,8 @@ Stream<E> debounceDebouncedByType<E>(Stream<E> events) {
   return MergeStream([nonDebounceStream, debouncedStreams]);
 }
 
-mixin StreamSubscriber<E, S> on Bloc<E, S> {
-  StreamSubscription streamSubscription;
+mixin StreamSubscriber<StreamData, State> on Cubit<State> {
+  StreamSubscription<StreamData> streamSubscription;
 
   @override
   Future<void> close() {
@@ -51,10 +52,34 @@ mixin StreamSubscriber<E, S> on Bloc<E, S> {
   }
 }
 
-mixin ErrorRecorder {
+mixin ErrorState on Equatable {
+  String get message;
+
+  @override
+  List<Object> get props => [message];
+
+  @override
+  String toString() => '$runtimeType { message: $message }';
+}
+
+mixin ErrorRecorder on ErrorState {
   ErrorReport get report;
+
+  @override
+  List<Object> get props => [message, report];
 
   void recordError(FirebaseCrashlytics firebaseCrashlytics) {
     if (report != null) firebaseCrashlytics.recordError(report.error, report.trace);
   }
+}
+
+mixin ErrorEvent on Equatable {
+  Object get error;
+  StackTrace get trace;
+
+  @override
+  List<Object> get props => [error, trace];
+
+  @override
+  String toString() => '$runtimeType { error: $error }';
 }

@@ -34,10 +34,11 @@ class AccountUpdated extends AccountState {}
 
 class AccountLoggedOut extends AccountState {}
 
-class AccountError extends AccountState with ErrorRecorder {
+class AccountError extends AccountState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport report;
 
+  @override
   final String message;
 
   AccountError({@required this.message}) : report = null;
@@ -45,10 +46,4 @@ class AccountError extends AccountState with ErrorRecorder {
   AccountError.fromError({@required dynamic error, @required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
-
-  @override
-  List<Object> get props => [message, report];
-
-  @override
-  String toString() => 'AccountError { message: $message }';
 }

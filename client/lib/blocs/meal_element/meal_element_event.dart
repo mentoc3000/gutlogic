@@ -12,6 +12,9 @@ abstract class MealElementEvent extends Equatable {
 
   @override
   List<Object> get props => [];
+
+  @override
+  bool get stringify => true;
 }
 
 class Load extends MealElementEvent {
@@ -29,9 +32,6 @@ class Load extends MealElementEvent {
 
 class Delete extends MealElementEvent implements TrackedEvent {
   const Delete();
-
-  @override
-  String toString() => 'Delete';
 
   @override
   void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_meal_element');
@@ -109,20 +109,14 @@ class UpdateFoodReference extends MealElementEvent with DebouncedEvent implement
   String toString() => 'Update { food: ${foodReference.name} }';
 }
 
-class Loading extends MealElementEvent {
-  @override
-  String toString() => 'Loading';
-}
+class Loading extends MealElementEvent {}
 
-class Throw extends MealElementEvent {
+class Throw extends MealElementEvent with ErrorEvent {
+  @override
   final Error error;
+
+  @override
   final StackTrace trace;
 
   const Throw({this.error, this.trace});
-
-  @override
-  List<Object> get props => [error, trace];
-
-  @override
-  String toString() => 'Throw { error: $error }';
 }

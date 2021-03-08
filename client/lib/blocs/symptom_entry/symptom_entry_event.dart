@@ -149,7 +149,7 @@ class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements Tr
   String toString() => 'UpdateSeverity { severity: $severity } }';
 }
 
-class ThrowSymptomEntryError extends SymptomEntryEvent with Throw {
+class ThrowSymptomEntryError extends SymptomEntryEvent with ErrorEvent {
   @override
   final Object error;
 
