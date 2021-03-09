@@ -24,6 +24,16 @@ class PantryEntryPage extends StatefulWidget {
     );
   }
 
+  /// Wrap an pantryentry page with the necessary bloc providers, given the pantryentry.
+  static Widget forId(String id) {
+    return BlocProvider(
+      create: (context) {
+        return PantryEntryBloc(repository: context.read<PantryRepository>())..add(StreamId(id));
+      },
+      child: PantryEntryPage(),
+    );
+  }
+
   /// Wrap an pantryentry page with the necessary bloc providers, given the meal entry.
   static Widget forFood(Food food) {
     return BlocProvider(

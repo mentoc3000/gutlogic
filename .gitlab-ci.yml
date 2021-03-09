@@ -121,6 +121,8 @@ server:test:
   extends:
     - .server
   script:
+    # copy GC_KEYS from environment into fastlane target
+    - cp "$GC_KEYS_DEV" "$(pwd)/gutlogic-dev-firebase-adminsdk.json"
     - npm run test
   rules:
     - *server-merge-request-rule

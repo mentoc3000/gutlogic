@@ -30,6 +30,13 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
               onError: (error, StackTrace trace) => add(ThrowPantryEntryError(error: error, trace: trace)),
             );
       }
+      if (event is StreamId) {
+        yield PantryEntryLoading();
+        streamSubscription = repository.streamId(event.id).listen(
+              (d) => add(Load(d)),
+              onError: (error, StackTrace trace) => add(ThrowPantryEntryError(error: error, trace: trace)),
+            );
+      }
       if (event is Load) {
         yield PantryEntryLoaded(event.pantryEntry);
       }

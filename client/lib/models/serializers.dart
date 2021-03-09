@@ -20,6 +20,7 @@ import 'irritant.dart';
 import 'meal_element.dart';
 import 'measure.dart';
 import 'pantry_entry.dart';
+import 'pantry_entry_reference.dart';
 import 'quantity.dart';
 import 'sensitivity.dart';
 import 'severity.dart';
@@ -44,6 +45,7 @@ part 'serializers.g.dart';
   Irritant,
   MealEntry,
   PantryEntry,
+  PantryEntryReference,
   Quantity,
   Sensitivity,
   Severity,

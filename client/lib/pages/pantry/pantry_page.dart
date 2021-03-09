@@ -44,7 +44,8 @@ class PantryPage extends StatelessWidget {
       context: context,
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
-        onSelect: (food) => Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food: food)),
+        onSelect: (food) =>
+            Navigator.push(context, Routes.of(context).createNewPantryEntryPageRouteForFood(food: food)),
       ),
     );
   }

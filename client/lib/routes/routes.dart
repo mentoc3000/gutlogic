@@ -147,7 +147,11 @@ class Routes {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forPantryEntry(pantryEntry));
   }
 
-  Route createPantryEntryPageRouteForFood({@required Food food}) {
+  Route createNewPantryEntryPageRouteForFood({@required Food food}) {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forFood(food));
+  }
+
+  Route createPantryEntryPageRouteForId({@required String id}) {
+    return MaterialPageRoute(builder: (context) => PantryEntryPage.forId(id));
   }
 }

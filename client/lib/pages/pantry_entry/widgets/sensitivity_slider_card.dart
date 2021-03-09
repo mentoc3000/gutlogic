@@ -54,7 +54,7 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
                   min: 0,
                   max: 3,
                   divisions: 3,
-                  value: _sensitivity.toInt().toDouble(),
+                  value: sensitivityToSliderValue(_sensitivity),
                   activeColor: _color,
                   onChanged: (value) => setState(() {
                     _sensitivity = Sensitivity.fromNum(value);
@@ -72,6 +72,12 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
         ],
       ),
     );
+  }
+
+  double sensitivityToSliderValue(Sensitivity sensitivity) {
+    final sensitivityInt = sensitivity.toInt();
+    final sliderInt = sensitivityInt < 0 ? 0 : sensitivityInt;
+    return sliderInt.toDouble();
   }
 
   void onSensitivityClear() => setState(() {

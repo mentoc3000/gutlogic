@@ -15,6 +15,7 @@ import 'firebase/firestore_service.dart';
 import 'searchable_repository.dart';
 
 class PantryRepository with FirestoreRepository implements SearchableRepository<PantryEntry> {
+  static const defaultSensitivity = Sensitivity.unknown;
   final FirebaseCrashlytics firebaseCrashlytics;
 
   PantryRepository({@required FirestoreService firestoreService, this.firebaseCrashlytics}) {
@@ -76,7 +77,7 @@ class PantryRepository with FirestoreRepository implements SearchableRepository<
 
   Future<PantryEntry> addFood(Food food) {
     final id = food.id;
-    final pantryEntry = PantryEntry(id: id, foodReference: food.toFoodReference(), sensitivity: Sensitivity.mild);
+    final pantryEntry = PantryEntry(id: id, foodReference: food.toFoodReference(), sensitivity: defaultSensitivity);
     return add(pantryEntry);
   }
 

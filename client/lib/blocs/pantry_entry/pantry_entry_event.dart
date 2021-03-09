@@ -51,6 +51,18 @@ class StreamEntry extends PantryEntryEvent {
   String toString() => 'StreamEntry { id: ${pantryEntry.id} }';
 }
 
+class StreamId extends PantryEntryEvent {
+  final String id;
+
+  const StreamId(this.id);
+
+  @override
+  List<Object> get props => [id];
+
+  @override
+  String toString() => 'StreamId { id: $id }';
+}
+
 class Delete extends PantryEntryEvent implements TrackedEvent {
   const Delete();
 

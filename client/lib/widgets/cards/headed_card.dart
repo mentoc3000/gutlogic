@@ -13,8 +13,8 @@ class HeadedCard extends StatelessWidget {
     return GLCard(
       child: Column(
         children: [
-          HeaderListTile(heading: heading),
-          content,
+          if (heading != null) HeaderListTile(heading: heading),
+          if (content != null) content,
         ],
       ),
     );

@@ -13,10 +13,12 @@
     "gut-logic-cloud-functions": "file:functions"
   },
   "devDependencies": {
+    "@firebase/testing": "^0.20.11",
     "ava": "^3.12.1",
     "eslint": "^7.8.1",
     "eslint-plugin-promise": "^4.2.1",
+    "firebase-functions-test": "^0.2.3",
     "firebase-tools": "^8.10.0",
-    "@firebase/testing": "^0.20.11"
+    "sinon": "^9.2.4"
   }
 }

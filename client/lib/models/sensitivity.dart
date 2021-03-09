@@ -33,6 +33,46 @@ class Sensitivity extends EnumClass implements Comparable<Sensitivity> {
     }
   }
 
+  /// Sensitivity addition
+  ///
+  /// Adding two sensitivities results in the higher sensitivity.
+  /// Adding an unknown sensitivity to a mild, moderate, or severe sensitivity results in that known sensitivity.
+  /// Adding an unknown sensitivity to a none sensitivity results in an unknown.
+  Sensitivity operator +(Sensitivity other) {
+    switch (this) {
+      case Sensitivity.unknown:
+        if (other == Sensitivity.none) {
+          return Sensitivity.unknown;
+        }
+        return other;
+      case Sensitivity.none:
+        if (other == Sensitivity.unknown) {
+          return Sensitivity.unknown;
+        }
+        return other;
+      case Sensitivity.mild:
+        if (other == Sensitivity.unknown || other == Sensitivity.none) {
+          return this;
+        }
+        return other;
+      case Sensitivity.moderate:
+        if (other == Sensitivity.unknown || other == Sensitivity.none || other == Sensitivity.mild) {
+          return this;
+        }
+        return other;
+      case Sensitivity.severe:
+        if (other == Sensitivity.unknown ||
+            other == Sensitivity.none ||
+            other == Sensitivity.mild ||
+            other == Sensitivity.moderate) {
+          return this;
+        }
+        return other;
+      default:
+        throw ArgumentError(this);
+    }
+  }
+
   int toInt() {
     switch (this) {
       case Sensitivity.unknown:

@@ -26,9 +26,12 @@ class MealElementsCard extends StatelessWidget {
         },
       );
     }).toList();
-    widgets.add(GLPrimaryButton(
-      onPressed: onAdd,
-      child: const ShrinkWrappedButtonContent(label: 'Add Food or Drink'),
+    widgets.add(Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      child: GLPrimaryButton(
+        onPressed: onAdd,
+        child: const StretchedButtonContent(label: 'Add Food or Drink'),
+      ),
     ));
 
     return ListCard(

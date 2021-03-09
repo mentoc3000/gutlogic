@@ -1,9 +1,12 @@
 import 'package:built_value/built_value.dart';
 import 'package:meta/meta.dart';
 import 'package:built_value/serializer.dart';
+
 import 'food_reference/food_reference.dart';
 import 'model_interfaces.dart';
+import 'pantry_entry_reference.dart';
 import 'quantity.dart';
+import 'sensitivity.dart';
 
 part 'meal_element.g.dart';
 
@@ -15,6 +18,9 @@ abstract class MealElement with Ided, Noted implements Built<MealElement, MealEl
   @nullable
   Quantity get quantity;
 
+  @nullable
+  PantryEntryReference get pantryEntryReference;
+
   String get mealEntryId => id.split('#').first;
 
   MealElement._();
@@ -23,6 +29,7 @@ abstract class MealElement with Ided, Noted implements Built<MealElement, MealEl
     @required String id,
     @required FoodReference foodReference,
     Quantity quantity,
+    PantryEntryReference pantryEntryReference,
     String notes,
   }) = _$MealElement._;
 
@@ -33,4 +40,6 @@ abstract class MealElement with Ided, Noted implements Built<MealElement, MealEl
 
   @override
   String queryText() => foodReference.name;
+
+  Sensitivity getSensitivity() => pantryEntryReference?.sensitivity ?? Sensitivity.unknown;
 }

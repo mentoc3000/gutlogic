@@ -12,22 +12,22 @@ const _defaultSort = PantrySort.alphabeticalAscending;
 
 class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber {
   final PantryFilterCubit pantryFilterCubit;
-  PantrySort get _currentSort => state is CurrentSort ? (state as CurrentSort).currentSort : _defaultSort;
+  PantrySort get _sort => state.sort;
 
   PantrySortCubit({@required this.pantryFilterCubit})
       : super(
           pantryFilterCubit.state is PantryFilterLoaded
               ? PantrySortLoaded(
                   items: _sortPantry((pantryFilterCubit.state as PantryFilterLoaded).items, _defaultSort),
-                  currentSort: _defaultSort)
-              : PantrySortLoading(currentSort: _defaultSort),
+                  sort: _defaultSort)
+              : PantrySortLoading(sort: _defaultSort),
         ) {
     streamSubscription = pantryFilterCubit.listen((state) {
       if (state is PantryFilterLoading) {
-        emit(PantrySortLoading(currentSort: _currentSort));
+        emit(PantrySortLoading(sort: _sort));
       } else if (state is PantryFilterLoaded) {
-        final sortedItems = _sortPantry(state.items, _currentSort);
-        emit(PantrySortLoaded(items: sortedItems, currentSort: _currentSort));
+        final sortedItems = _sortPantry(state.items, _sort);
+        emit(PantrySortLoaded(items: sortedItems, sort: _sort));
       } else if (state is PantryFilterError) {
         emit(PantrySortError.from(state));
       }
@@ -44,9 +44,9 @@ class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber {
     if (state is PantrySortLoaded) {
       final items = (state as PantrySortLoaded).items;
       final sortedItems = _sortPantry(items, pantrySort);
-      emit(PantrySortLoaded(items: sortedItems, currentSort: pantrySort));
+      emit(PantrySortLoaded(items: sortedItems, sort: pantrySort));
     } else if (state is PantrySortLoading) {
-      emit(PantrySortLoading(currentSort: pantrySort));
+      emit(PantrySortLoading(sort: pantrySort));
     }
   }
 }

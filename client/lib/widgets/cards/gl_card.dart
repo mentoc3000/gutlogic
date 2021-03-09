@@ -5,7 +5,7 @@ class GLCard extends StatelessWidget {
   final Key key;
   final Widget child;
 
-  GLCard({this.key, this.child});
+  GLCard({this.key, @required this.child});
 
   @override
   Widget build(BuildContext context) {

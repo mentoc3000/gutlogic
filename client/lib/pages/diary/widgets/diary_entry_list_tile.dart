@@ -14,6 +14,7 @@ class DiaryEntryListTile extends StatelessWidget {
   final DiaryEntry diaryEntry;
   final Color barColor;
   final void Function() onTap;
+  final Widget trailing;
 
   bool get hasSubheadings => subheadings?.fold(false, (prev, element) => prev || element.isNotEmpty) ?? false;
 
@@ -23,6 +24,7 @@ class DiaryEntryListTile extends StatelessWidget {
     this.diaryEntry,
     this.barColor,
     this.onTap,
+    this.trailing,
   });
 
   Widget buildTime(BuildContext context) {
@@ -63,10 +65,7 @@ class DiaryEntryListTile extends StatelessWidget {
         children: subheadings
             .map((s) => Container(
                   padding: const EdgeInsets.all(6),
-                  child: Text(
-                    s,
-                    style: tileSubheadingTheme,
-                  ),
+                  child: Text(s, style: tileSubheadingTheme),
                 ))
             .toList(),
       ),
@@ -109,7 +108,13 @@ class DiaryEntryListTile extends StatelessWidget {
         dense: true,
         leading: buildTime(context),
         title: buildCenter(),
-        trailing: const Icon(GLIcons.arrowRight),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (trailing != null) trailing,
+            const Icon(GLIcons.arrowRight),
+          ],
+        ),
         onTap: onTap,
       ),
       onDelete: () => diaryEntriesBloc.add(Delete(diaryEntry)),

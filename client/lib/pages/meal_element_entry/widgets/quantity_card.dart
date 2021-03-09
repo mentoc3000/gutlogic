@@ -69,7 +69,7 @@ class QuantityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GLCard(
       child: Container(
-        padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
         child: Row(
           children: [
             Flexible(child: _buildAmountInput(context)),

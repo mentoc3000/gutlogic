@@ -9,7 +9,7 @@ class SensitivityIndicator extends StatelessWidget {
   final Color fillColor;
   final double size;
 
-  SensitivityIndicator({this.sensitivity, this.size = 16})
+  SensitivityIndicator(this.sensitivity, {this.size = 16})
       : borderColor = _borderColor(sensitivity),
         fillColor = _fillColor(sensitivity);
 
@@ -39,5 +39,5 @@ class SensitivityIndicatorLarge extends StatelessWidget {
   SensitivityIndicatorLarge({this.sensitivity});
 
   @override
-  Widget build(BuildContext context) => SensitivityIndicator(sensitivity: sensitivity, size: 30.0);
+  Widget build(BuildContext context) => SensitivityIndicator(sensitivity, size: 30.0);
 }

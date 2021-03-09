@@ -7,6 +7,7 @@ import '../../../models/meal_element.dart';
 import '../../../widgets/alert_dialogs/confirm_delete_dialog.dart';
 import '../../../widgets/dismissible/delete_dismissible.dart';
 import '../../../widgets/list_tiles/push_list_tile.dart';
+import '../../../widgets/sensitivity_indicator.dart';
 
 class MealElementListTile extends StatelessWidget {
   final MealEntry mealEntry;
@@ -22,6 +23,7 @@ class MealElementListTile extends StatelessWidget {
         heading: mealElement.foodReference.name,
         // subheading: mealElement.foodReference.irritants.map((i) => i.name).join(', '),
         onTap: onTap,
+        trailing: SensitivityIndicator(mealElement.getSensitivity()),
       ),
       onDelete: () =>
           context.read<MealEntryBloc>().add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),

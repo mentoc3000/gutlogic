@@ -52,5 +52,15 @@ void main() {
       expect(pantryEntry.notes, pantryEntryJson['notes']);
       expect(pantryEntry.sensitivity, Sensitivity.moderate);
     });
+
+    test('converts to a reference', () {
+      final pantryEntry = PantryEntry(
+        id: 'id',
+        foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beams'),
+        sensitivity: Sensitivity.mild,
+      );
+      final pantryEntryReference = pantryEntry.toReference();
+      expect(pantryEntryReference.sensitivity, pantryEntry.sensitivity);
+    });
   });
 }

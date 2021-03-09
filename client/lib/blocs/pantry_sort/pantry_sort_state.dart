@@ -8,44 +8,39 @@ import '../bloc_helpers.dart';
 import '../searchable/searchable_state.dart';
 
 abstract class PantrySortState extends Equatable {
-  const PantrySortState();
+  final PantrySort sort;
+
+  const PantrySortState({@required this.sort});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [sort];
 
   @override
   bool get stringify => true;
 }
 
-mixin CurrentSort {
-  PantrySort get currentSort;
+class PantrySortLoading extends PantrySortState with SearchableLoading {
+  PantrySortLoading({@required PantrySort sort}) : super(sort: sort);
 }
 
-class PantrySortLoading extends PantrySortState with CurrentSort, SearchableLoading {
-  @override
-  final PantrySort currentSort;
-
-  PantrySortLoading({@required this.currentSort});
-
-  @override
-  List<Object> get props => [currentSort];
-}
-
-class PantrySortLoaded extends PantrySortState with CurrentSort, SearchableLoaded {
+class PantrySortLoaded extends PantrySortState with SearchableLoaded {
   @override
   final BuiltList<PantryEntry> items;
 
-  @override
-  final PantrySort currentSort;
+  PantrySortLoaded({@required this.items, @required PantrySort sort}) : super(sort: sort);
 
-  PantrySortLoaded({this.items, this.currentSort});
+  @override
+  List<Object> get props => [items, sort];
 }
 
 class PantrySortError extends PantrySortState with ErrorState {
   @override
   final String message;
 
-  PantrySortError({@required this.message});
+  PantrySortError({@required this.message, @required PantrySort sort}) : super(sort: sort);
 
-  factory PantrySortError.from(ErrorState errorState) => PantrySortError(message: errorState.message);
+  factory PantrySortError.from(ErrorState errorState) => PantrySortError(message: errorState.message, sort: null);
+
+  @override
+  List<Object> get props => [message, sort];
 }

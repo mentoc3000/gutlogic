@@ -3,15 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/meal_element/meal_element.dart';
 import '../../models/meal_element.dart';
-import '../../widgets/cards/notes_card.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../error_page.dart';
 import '../loading_page.dart';
+import 'widgets/meal_element_entry_list_view.dart';
 import 'widgets/quantity_card.dart';
 
-class MealElementEntryPage extends StatefulWidget {
+class MealElementEntryPage extends StatelessWidget {
   static String tag = 'meal-element-entry-page';
+  final TextEditingController _notesController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _unitController = TextEditingController();
 
   /// Wrap an meal element page with the necessary bloc providers, given the meal element.
   static Widget forMealElement(MealElement mealElement) {
@@ -19,28 +22,6 @@ class MealElementEntryPage extends StatefulWidget {
       create: (context) => MealElementBloc.fromContext(context)..add(StreamMealElement(mealElement)),
       child: MealElementEntryPage(),
     );
-  }
-
-  @override
-  _MealElementEntryPageState createState() => _MealElementEntryPageState();
-}
-
-class _MealElementEntryPageState extends State<MealElementEntryPage> {
-  final TextEditingController _notesController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _unitController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _notesController.dispose();
-    _amountController.dispose();
-    _unitController.dispose();
-    super.dispose();
   }
 
   @override
@@ -74,35 +55,17 @@ class _MealElementEntryPageState extends State<MealElementEntryPage> {
   }
 
   Widget bodyBuilder(BuildContext context, MealElementState state) {
-    final mealElementBloc = context.read<MealElementBloc>();
     if (state is MealElementLoading) {
       return LoadingPage();
     }
 
     if (state is MealElementLoaded) {
-      final mealElement = state.mealElement;
-
-      final cards = [
-        QuantityCard(
-          quantity: mealElement.quantity,
-          onChanged: (quantity) => mealElementBloc.add(UpdateQuantity(quantity)),
-          unitController: _unitController,
-          amountController: _amountController,
-          measureOptions: state.food?.measures,
-        ),
-        NotesCard(
-          controller: _notesController,
-          onChanged: (notes) => context.read<MealElementBloc>().add(UpdateNotes(notes)),
-        )
-      ];
-
-      return Form(
-        child: ListView.builder(
-          itemCount: cards.length,
-          itemBuilder: (BuildContext context, int index) =>
-              Padding(padding: const EdgeInsets.all(1.0), child: cards[index]),
-          padding: const EdgeInsets.all(0.0),
-        ),
+      return MealElementEntryListView(
+        mealElement: state.mealElement,
+        food: state.food,
+        notesController: _notesController,
+        amountController: _amountController,
+        unitController: _unitController,
       );
     }
 

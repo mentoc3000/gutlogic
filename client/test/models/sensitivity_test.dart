@@ -31,5 +31,18 @@ void main() {
       expect(serializers.serialize(Sensitivity.moderate, specifiedType: const FullType(Sensitivity)), 2);
       expect(serializers.serialize(Sensitivity.severe, specifiedType: const FullType(Sensitivity)), 3);
     });
+
+    test('is additive', () {
+      expect(Sensitivity.unknown + Sensitivity.unknown, Sensitivity.unknown);
+      expect(Sensitivity.unknown + Sensitivity.severe, Sensitivity.severe);
+      expect(Sensitivity.unknown + Sensitivity.none, Sensitivity.unknown);
+      expect(Sensitivity.none + Sensitivity.none, Sensitivity.none);
+      expect(Sensitivity.none + Sensitivity.mild, Sensitivity.mild);
+      expect(Sensitivity.mild + Sensitivity.mild, Sensitivity.mild);
+      expect(Sensitivity.mild + Sensitivity.moderate, Sensitivity.moderate);
+      expect(Sensitivity.moderate + Sensitivity.moderate, Sensitivity.moderate);
+      expect(Sensitivity.moderate + Sensitivity.severe, Sensitivity.severe);
+      expect(Sensitivity.severe + Sensitivity.severe, Sensitivity.severe);
+    });
   });
 }
