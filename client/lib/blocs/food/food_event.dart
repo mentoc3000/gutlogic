@@ -46,13 +46,14 @@ class DeleteCustomFood extends FoodEvent implements TrackedEvent {
 }
 
 class LoadFoods extends FoodEvent {
+  final String query;
   final BuiltList<CustomFood> customFoods;
   final BuiltList<EdamamFood> edamamFoods;
 
-  const LoadFoods({@required this.customFoods, @required this.edamamFoods});
+  const LoadFoods({@required this.query, @required this.customFoods, @required this.edamamFoods});
 
   @override
-  List<Object> get props => [customFoods, edamamFoods];
+  List<Object> get props => [query, customFoods, edamamFoods];
 
   @override
   String toString() => 'LoadFoods { customFoods: ${customFoods.length}, edamamFoods: ${edamamFoods.length} }';

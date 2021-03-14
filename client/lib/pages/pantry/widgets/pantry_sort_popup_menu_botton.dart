@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../models/pantry_sort.dart';
+import '../../../models/pantry/pantry_sort.dart';
 import '../../../widgets/gl_icons.dart';
 import '../../../widgets/popup_menu_button/gl_popup_menu_button.dart';
 import '../../../widgets/popup_menu_button/gl_popup_menu_item.dart';

@@ -22,16 +22,34 @@ abstract class FoodState extends Equatable {
 
 class FoodsLoading extends FoodState with SearchableLoading {}
 
-class NoFoodsFound extends FoodState {}
+mixin Query {
+  String get query;
+}
 
-class FoodsLoaded extends FoodState with SearchableLoaded {
+class NoFoodsFound extends FoodState with Query {
+  @override
+  final String query;
+
+  NoFoodsFound({@required this.query});
+
+  @override
+  List<Object> get props => [query];
+}
+
+class FoodsLoaded extends FoodState with Query, SearchableLoaded {
   @override
   BuiltList<Food> get items => <Food>[...customFoods, ...edamamFoods].build();
+
+  @override
+  final String query;
 
   final BuiltList<CustomFood> customFoods;
   final BuiltList<EdamamFood> edamamFoods;
 
-  FoodsLoaded({@required this.edamamFoods, @required this.customFoods});
+  FoodsLoaded({@required this.query, @required this.edamamFoods, @required this.customFoods});
+
+  @override
+  List<Object> get props => [query, customFoods, edamamFoods];
 }
 
 class FoodError extends FoodState with ErrorState, ErrorRecorder {

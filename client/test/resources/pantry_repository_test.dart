@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
-import 'package:gutlogic/models/pantry_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
@@ -65,6 +65,11 @@ void main() {
     test('fetches one entry', () async {
       final entry = await repository.fetchId(pantryEntryId);
       expect(entry, pantryEntry);
+    });
+
+    test('non-existant id returns null', () async {
+      final entry = await repository.fetchId('invalidid');
+      expect(entry, null);
     });
 
     test('adds a food', () async {

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../models/food/food.dart';
-import '../../models/pantry_entry.dart';
+import '../../models/pantry/pantry_entry.dart';
 import '../../models/sensitivity.dart';
 import '../../resources/firebase/analytics_service.dart';
 import '../bloc_helpers.dart';

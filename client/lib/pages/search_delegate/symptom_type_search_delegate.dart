@@ -13,7 +13,8 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
   final SymptomTypeBloc symptomTypeBloc;
   final String noResultsMessage = 'No results found.';
 
-  SymptomTypeSearchDelegate({this.symptomTypeBloc, void Function(SymptomType) onSelect}) : super(onSelect: onSelect);
+  SymptomTypeSearchDelegate({this.symptomTypeBloc, void Function(SymptomType) onSelect})
+      : super(onSelect: onSelect, searchFieldLabel: 'Search for symptom');
 
   @override
   Widget buildResults(BuildContext context) {
@@ -39,30 +40,28 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
         if (state is SymptomTypesLoaded) {
           final items = state.items;
           if (items.isEmpty) {
-            return addFab(Column(
+            return Column(
               children: [GLListTile(heading: noResultsMessage)],
-            ));
+            );
           } else {
-            return addFab(
-              ListView.builder(
-                itemCount: items.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  final result = items[index];
-                  return SearchResultTile(
-                    searchable: result,
-                    onTap: () {
-                      closeSearch(context);
-                      onSelect(result);
-                    },
-                  );
-                },
-              ),
+            return ListView.builder(
+              itemCount: items.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                final result = items[index];
+                return SearchResultTile(
+                  searchable: result,
+                  onTap: () {
+                    closeSearch(context);
+                    onSelect(result);
+                  },
+                );
+              },
             );
           }
         }
         if (state is SymptomTypesLoading) {
-          return addFab(LoadingPage());
+          return LoadingPage();
         }
         if (state is SymptomTypeError) {
           return ErrorPage(message: state.message);

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../../../blocs/pantry_filter/pantry_filter.dart';
-import '../../../models/pantry_filter.dart';
+import '../../../models/pantry/pantry_filter.dart';
 import '../../../models/sensitivity.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/gl_icons.dart';

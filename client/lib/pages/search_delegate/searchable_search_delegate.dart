@@ -1,31 +1,16 @@
-import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
 import '../../models/model_interfaces.dart';
-import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_icons.dart';
-import '../../widgets/gl_scaffold.dart';
 import '../../widgets/list_tiles/gl_list_tile.dart';
 
 abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDelegate<T> {
   final void Function(T) onSelect;
-  Widget floatingActionButton;
-  final FutureOr<String> Function(String) onAdd;
-  final FutureOr<void> Function(Searchable) onDelete;
 
   SearchableSearchDelegate({
-    this.onSelect,
-    this.onAdd,
-    this.onDelete,
-    String searchFieldLabel,
-  }) : super(searchFieldLabel: searchFieldLabel) {
-    floatingActionButton = onAdd == null
-        ? null
-        : AddFloatingActionButton(onPressed: () async {
-            final result = await onAdd(query);
-            if (result != null) query = result; // set the query to the newly added Searchable
-          });
-  }
+    @required String searchFieldLabel,
+    @required this.onSelect,
+  }) : super(searchFieldLabel: searchFieldLabel);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -49,12 +34,8 @@ abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDele
     );
   }
 
-  Widget addFab(Widget child) {
-    return GLScaffold(
-      body: child,
-      floatingActionButton: floatingActionButton,
-    );
-  }
+  @override
+  Widget buildSuggestions(BuildContext context) => Container();
 
   Widget buildListTile({
     @required BuildContext context,

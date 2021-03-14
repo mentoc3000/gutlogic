@@ -11,19 +11,18 @@ class MealElementSensitivityCard extends StatelessWidget {
 
   const MealElementSensitivityCard({Key key, @required this.sensitivity, @required this.onTap}) : super(key: key);
 
-  // move labels to Sensitivity class
   String get _label {
     switch (sensitivity) {
       case Sensitivity.none:
-        return 'None';
+        return 'No sensitivity';
       case Sensitivity.mild:
-        return 'Mild';
+        return 'Mild sensitivity';
       case Sensitivity.moderate:
-        return 'Moderate';
+        return 'Moderate sensitivity';
       case Sensitivity.severe:
-        return 'Severe';
+        return 'Severe sensitivity';
       default:
-        return 'Unknown';
+        return 'Unknown sensitivity';
     }
   }
 
@@ -35,7 +34,7 @@ class MealElementSensitivityCard extends StatelessWidget {
         children: [
           SensitivityIndicator(sensitivity ?? Sensitivity.unknown),
           const SizedBox(width: 8),
-          Text('$_label sensitivity', style: style),
+          Text(_label, style: style),
         ],
       ),
       onTap: onTap,

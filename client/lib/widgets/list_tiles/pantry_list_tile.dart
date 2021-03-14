@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/pantry/pantry.dart';
-import '../../models/pantry_entry.dart';
+import '../../models/pantry/pantry_entry.dart';
 import '../../routes/routes.dart';
 import '../../widgets/alert_dialogs/confirm_delete_dialog.dart';
 import '../../widgets/dismissible/delete_dismissible.dart';

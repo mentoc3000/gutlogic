@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/pantry_entry/pantry_entry.dart';
 import '../../models/food/food.dart';
-import '../../models/pantry_entry.dart';
+import '../../models/pantry/pantry_entry.dart';
 import '../../resources/pantry_repository.dart';
 import '../../widgets/cards/notes_card.dart';
 import '../../widgets/gl_app_bar.dart';

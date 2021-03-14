@@ -6,7 +6,7 @@ import '../models/diary_entry/meal_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
 import '../models/food/food.dart';
 import '../models/meal_element.dart';
-import '../models/pantry_entry.dart';
+import '../models/pantry/pantry_entry.dart';
 import '../models/symptom_type.dart';
 import '../pages/account/account_page.dart';
 import '../pages/bowel_movement_entry/bowel_movement_entry_page.dart';
@@ -147,7 +147,7 @@ class Routes {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forPantryEntry(pantryEntry));
   }
 
-  Route createNewPantryEntryPageRouteForFood({@required Food food}) {
+  Route createPantryEntryPageRouteForFood({@required Food food}) {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forFood(food));
   }
 

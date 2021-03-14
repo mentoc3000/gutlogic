@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
 import 'package:gutlogic/blocs/pantry_sort/pantry_sort.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
-import 'package:gutlogic/models/pantry_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/pages/pantry/pantry_page.dart';
 import 'package:gutlogic/pages/loading_page.dart';

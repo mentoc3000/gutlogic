@@ -15,7 +15,7 @@ class ConfirmDeleteDialog extends StatelessWidget {
       actions: <Widget>[
         GLSecondaryButton(
           child: const ShrinkWrappedButtonContent(label: 'Cancel'),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, false),
         ),
         GLWarningButton(
           child: const ShrinkWrappedButtonContent(label: 'Delete'),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/pantry_filter/pantry_filter.dart';
-import '../../../models/pantry_filter.dart';
+import '../../../models/pantry/pantry_filter.dart';
 import '../../../style/gl_theme.dart';
 import '../../../widgets/buttons/buttons.dart';
 import 'sensitivity_filter.dart';

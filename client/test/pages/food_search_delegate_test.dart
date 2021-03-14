@@ -68,7 +68,7 @@ void main() {
     });
 
     testWidgets('displays message when no results are found', (WidgetTester tester) async {
-      when(foodBloc.state).thenReturn(NoFoodsFound());
+      when(foodBloc.state).thenReturn(NoFoodsFound(query: ''));
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
@@ -92,8 +92,8 @@ void main() {
     });
 
     testWidgets('shows search results', (WidgetTester tester) async {
-      when(foodBloc.state)
-          .thenReturn(FoodsLoaded(customFoods: <CustomFood>[food].build(), edamamFoods: <EdamamFood>[].build()));
+      when(foodBloc.state).thenReturn(
+          FoodsLoaded(query: '', customFoods: <CustomFood>[food].build(), edamamFoods: <EdamamFood>[].build()));
 
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
@@ -113,12 +113,9 @@ void main() {
       await tester.tap(find.byIcon(GLIcons.search));
       await tester.pumpAndSettle();
 
-      // Shows suggestions
+      // Shows search results
       await tester.enterText(find.byType(TextField), 'Fruit');
       await tester.pumpAndSettle();
-      expect(find.text(food.name), findsOneWidget);
-
-      // Shows search results
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
       expect(find.text('HomeBody'), findsNothing);
@@ -127,8 +124,8 @@ void main() {
     });
 
     testWidgets('clears search', (WidgetTester tester) async {
-      when(foodBloc.state)
-          .thenReturn(FoodsLoaded(customFoods: <CustomFood>[food].build(), edamamFoods: <EdamamFood>[].build()));
+      when(foodBloc.state).thenReturn(
+          FoodsLoaded(query: '', customFoods: <CustomFood>[food].build(), edamamFoods: <EdamamFood>[].build()));
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
@@ -158,7 +155,7 @@ void main() {
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
-      when(foodBloc.state).thenReturn(FoodsLoading());
+      whenListen(foodBloc, Stream.fromIterable([FoodsLoading()]));
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
@@ -171,6 +168,10 @@ void main() {
 
       // Open search
       await tester.tap(find.byIcon(GLIcons.search));
+      await tester.pump();
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Fruit');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pump();
       await tester.pump();
       expect(find.byType(LoadingPage), findsOneWidget);

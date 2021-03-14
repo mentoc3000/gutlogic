@@ -4,7 +4,7 @@ import 'package:built_value/serializer.dart';
 
 import 'food_reference/food_reference.dart';
 import 'model_interfaces.dart';
-import 'pantry_entry_reference.dart';
+import 'pantry/pantry_entry_reference.dart';
 import 'quantity.dart';
 import 'sensitivity.dart';
 

@@ -15,7 +15,7 @@ import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
-import 'package:gutlogic/models/pantry_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/models/severity.dart';

@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:built_collection/built_collection.dart';
 
-import '../../models/pantry_entry.dart';
+import '../../models/pantry/pantry_entry.dart';
 import '../../util/error_report.dart';
 import '../../util/exception_messages.dart';
 import '../bloc_helpers.dart';

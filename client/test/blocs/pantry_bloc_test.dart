@@ -3,7 +3,7 @@ import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
-import 'package:gutlogic/models/pantry_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:mockito/mockito.dart';

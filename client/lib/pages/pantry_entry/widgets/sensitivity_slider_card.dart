@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../models/sensitivity.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/cards/headed_card.dart';
-import '../../../widgets/gl_icons.dart';
 
 class SensitivitySlider extends StatefulWidget {
   final Sensitivity sensitivityLevel;
@@ -45,30 +44,20 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
   Widget build(BuildContext context) {
     return HeadedCard(
       heading: 'Sensitivity',
-      content: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              children: [
-                Slider(
-                  min: 0,
-                  max: 3,
-                  divisions: 3,
-                  value: sensitivityToSliderValue(_sensitivity),
-                  activeColor: _color,
-                  onChanged: (value) => setState(() {
-                    _sensitivity = Sensitivity.fromNum(value);
-                  }),
-                  onChangeEnd: onSensitivityChange,
-                ),
-                Text(_label),
-              ],
-            ),
+      content: Column(
+        children: [
+          Slider(
+            min: 0,
+            max: 4,
+            divisions: 4,
+            value: sensitivityToSliderValue(_sensitivity),
+            activeColor: _color,
+            onChanged: (value) => setState(() {
+              _sensitivity = sliderValueToSensitivity(value);
+            }),
+            onChangeEnd: onSensitivityChange,
           ),
-          FlatButton(
-            onPressed: onSensitivityClear,
-            child: const Icon(GLIcons.clear),
-          ),
+          Text(_label),
         ],
       ),
     );
@@ -76,9 +65,11 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
 
   double sensitivityToSliderValue(Sensitivity sensitivity) {
     final sensitivityInt = sensitivity.toInt();
-    final sliderInt = sensitivityInt < 0 ? 0 : sensitivityInt;
+    final sliderInt = sensitivityInt + 1;
     return sliderInt.toDouble();
   }
+
+  Sensitivity sliderValueToSensitivity(double value) => Sensitivity.fromNum(value - 1);
 
   void onSensitivityClear() => setState(() {
         if (_sensitivity != Sensitivity.unknown) {
@@ -87,5 +78,5 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
         }
       });
 
-  void onSensitivityChange(double newValue) => setState(() => widget.onChanged(Sensitivity.fromNum(newValue)));
+  void onSensitivityChange(double newValue) => setState(() => widget.onChanged(sliderValueToSensitivity(newValue)));
 }

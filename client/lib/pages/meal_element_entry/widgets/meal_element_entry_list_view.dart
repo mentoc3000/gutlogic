@@ -30,7 +30,7 @@ class MealElementEntryListView extends StatelessWidget {
       Navigator.push(
           context, Routes.of(context).createPantryEntryPageRouteForId(id: mealElement.pantryEntryReference.id));
     } else {
-      Navigator.push(context, Routes.of(context).createNewPantryEntryPageRouteForFood(food: food));
+      Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food: food));
     }
   }
 

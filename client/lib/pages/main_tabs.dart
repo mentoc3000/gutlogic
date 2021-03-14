@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../resources/firebase/analytics_service.dart';
 import '../util/keys.dart';
 import '../widgets/gl_icons.dart';
@@ -92,13 +93,15 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
   }
 
   Widget buildTabBar(BuildContext context) {
-    return TabBar(
-      controller: _controller,
-      tabs: tabs,
-      labelColor: Theme.of(context).colorScheme.onPrimary,
-      indicatorSize: TabBarIndicatorSize.label,
-      indicatorPadding: const EdgeInsets.all(5.0),
-      indicatorColor: Theme.of(context).colorScheme.onPrimary,
+    return SafeArea(
+      child: TabBar(
+        controller: _controller,
+        tabs: tabs,
+        labelColor: Theme.of(context).colorScheme.onPrimary,
+        indicatorSize: TabBarIndicatorSize.label,
+        indicatorPadding: const EdgeInsets.all(5.0),
+        indicatorColor: Theme.of(context).colorScheme.onPrimary,
+      ),
     );
   }
 

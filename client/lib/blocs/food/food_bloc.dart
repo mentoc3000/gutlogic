@@ -36,6 +36,9 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
   Stream<FoodState> mapEventToState(FoodEvent event) async* {
     try {
       if (event is StreamFoodQuery) {
+        // Don't create a new stream if the query is the same
+        if (state is Query && (state as Query).query == event.query) return;
+
         // TODO: remove these loading pages? Or maybe only show them if the fetch takes a long time.
         // https://stackoverflow.com/questions/64885470/can-dart-streams-emit-a-value-if-the-stream-is-not-done-within-a-duration/64978139
         // This should be implemented as a general feature that could be applied to many blocs
@@ -48,7 +51,7 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
           (values) => {'custom': values.first, 'edamam': values.last},
         );
         streamSubscription = combinedStream.listen(
-          (foods) => add(LoadFoods(customFoods: foods['custom'], edamamFoods: foods['edamam'])),
+          (foods) => add(LoadFoods(query: event.query, customFoods: foods['custom'], edamamFoods: foods['edamam'])),
           onError: (error, StackTrace trace) => add(ThrowFoodError(error: error, trace: trace)),
         );
       }
@@ -56,9 +59,9 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
         final customFoods = event.customFoods;
         final edamamFoods = event.edamamFoods;
         if (customFoods.isEmpty && edamamFoods.isEmpty) {
-          yield NoFoodsFound();
+          yield NoFoodsFound(query: event.query);
         } else {
-          yield FoodsLoaded(customFoods: customFoods, edamamFoods: edamamFoods);
+          yield FoodsLoaded(query: event.query, customFoods: customFoods, edamamFoods: edamamFoods);
         }
       }
       if (event is CreateCustomFood) {

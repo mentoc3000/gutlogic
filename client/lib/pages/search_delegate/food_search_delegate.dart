@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,78 +6,87 @@ import '../../models/food/custom_food.dart';
 import '../../models/food/food.dart';
 import '../../pages/error_page.dart';
 import '../../pages/loading_page.dart';
+import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
+import '../../widgets/gl_scaffold.dart';
 import '../../widgets/list_tiles/gl_list_tile.dart';
 import '../../widgets/powered_by_edamam.dart';
 import 'searchable_search_delegate.dart';
+import 'widgets/add_food_dialog.dart';
 import 'widgets/search_result_tile.dart';
 
 class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
   final FoodBloc foodBloc;
   final String noResultsMessage = 'No matches found. Try adding a food!';
 
-  FoodSearchDelegate({
-    this.foodBloc,
-    @required void Function(Food) onSelect,
-    FutureOr<String> Function(String) onAdd,
-    FutureOr<void> Function(Food) onDelete,
-  }) : super(
-          onSelect: onSelect,
-          onAdd: onAdd,
-          onDelete: (food) => onDelete(food),
-          searchFieldLabel: 'Search for food',
-        );
+  FoodSearchDelegate({this.foodBloc, @required void Function(Food) onSelect})
+      : super(onSelect: onSelect, searchFieldLabel: 'Search for food');
 
   @override
   Widget buildResults(BuildContext context) {
     foodBloc.add(StreamFoodQuery(query));
-    return buildList(foodBloc);
+    return buildList(context, foodBloc);
   }
 
-  @override
-  // Widget buildSuggestions(BuildContext context) => buildResults(context);
-  Widget buildSuggestions(BuildContext context) {
-    foodBloc.add(StreamFoodQuery(query));
-    return buildList(foodBloc);
+  Widget buildAddFab(BuildContext context) {
+    return AddFloatingActionButton(onPressed: () async {
+      final foodBloc = context.read<FoodBloc>();
+
+      final foodName = await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AddFoodDialog(initialFoodName: query),
+      );
+
+      if (foodName != null) {
+        foodBloc.add(CreateCustomFood(foodName));
+        query = foodName;
+      }
+    });
   }
 
-  Widget buildList(FoodBloc foodBloc) {
+  Widget buildList(BuildContext context, FoodBloc foodBloc) {
     return BlocBuilder<FoodBloc, FoodState>(
       cubit: foodBloc,
       builder: (BuildContext context, FoodState state) {
+        if (query.isEmpty) {
+          return Column(children: []);
+        }
         if (state is FoodsLoaded) {
           final items = state.items;
-          if (query.isEmpty) {
-            return Column(children: []);
-          } else {
-            return addFab(
-              PoweredByEdamam(
-                child: ListView.builder(
-                  itemCount: items.length,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    final result = items[index];
-                    return SearchResultTile(
-                      searchable: result,
-                      onTap: () {
-                        closeSearch(context);
-                        onSelect(result);
-                      },
-                      onDelete: onDelete,
-                      isCustom: result is CustomFood,
-                    );
-                  },
-                ),
+          return GLScaffold(
+            floatingActionButton: buildAddFab(context),
+            body: PoweredByEdamam(
+              child: ListView.builder(
+                itemCount: items.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  final result = items[index];
+                  return SearchResultTile(
+                    searchable: result,
+                    onTap: () {
+                      closeSearch(context);
+                      onSelect(result);
+                    },
+                    onDelete: (food) => foodBloc.add(DeleteCustomFood(food)),
+                    isCustom: result is CustomFood,
+                  );
+                },
               ),
-            );
-          }
+            ),
+          );
         }
         if (state is NoFoodsFound) {
-          return addFab(Column(
-            children: [GLListTile(heading: noResultsMessage)],
-          ));
+          return GLScaffold(
+            floatingActionButton: buildAddFab(context),
+            body: Column(
+              children: [GLListTile(heading: noResultsMessage)],
+            ),
+          );
         }
         if (state is FoodsLoading) {
-          return addFab(LoadingPage());
+          return GLScaffold(
+            floatingActionButton: buildAddFab(context),
+            body: LoadingPage(),
+          );
         }
         if (state is FoodError) {
           return ErrorPage(message: state.message);

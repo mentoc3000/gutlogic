@@ -9,7 +9,7 @@ import 'package:gutlogic/pages/settings/settings_page.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:mockito/mockito.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
-import 'package:gutlogic/models/pantry_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_entry.dart';
 
 import '../mocks/mock_analytics_service.dart';
 import '../util/test_overlay.dart';

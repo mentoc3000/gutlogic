@@ -6,7 +6,7 @@ import 'package:built_value/serializer.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../models/food/food.dart';
-import '../models/pantry_entry.dart';
+import '../models/pantry/pantry_entry.dart';
 import '../models/sensitivity.dart';
 import '../models/serializers.dart';
 import '../util/logger.dart';
@@ -75,10 +75,11 @@ class PantryRepository with FirestoreRepository implements SearchableRepository<
     return await fetchId(id);
   }
 
-  Future<PantryEntry> addFood(Food food) {
+  Future<PantryEntry> addFood(Food food) async {
     final id = food.id;
     final pantryEntry = PantryEntry(id: id, foodReference: food.toFoodReference(), sensitivity: defaultSensitivity);
-    return add(pantryEntry);
+    final existingEntry = await fetchId(id);
+    return existingEntry ?? await add(pantryEntry);
   }
 
   Future<void> updateEntry(PantryEntry pantryEntry) {

@@ -1,7 +1,7 @@
 import 'package:built_value/built_value.dart';
 
+import '../sensitivity.dart';
 import 'pantry_entry.dart';
-import 'sensitivity.dart';
 
 part 'pantry_filter.g.dart';
 

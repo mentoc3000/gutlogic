@@ -57,8 +57,6 @@ void main() {
           MealElementLoading());
     });
 
-    // TODO: test mealElements with edamam food with no measures
-
     blocTest(
       'streams mealElement with Edamam food',
       build: () => MealElementBloc(

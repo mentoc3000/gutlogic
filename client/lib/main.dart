@@ -43,6 +43,8 @@ void main() async {
   // development.
   if (isDebug) {
     unawaited(FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false));
+  } else {
+    unawaited(FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true));
   }
 
   // Pass all uncaught errors to Crashlytics.

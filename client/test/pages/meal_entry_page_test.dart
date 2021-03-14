@@ -153,18 +153,20 @@ void main() {
 
       final newFood = CustomFood(id: '919', name: 'Hoisin Sauce');
       final foods = [newFood].build();
-      when(foodBloc.state).thenReturn(FoodsLoaded(customFoods: foods, edamamFoods: <EdamamFood>[].build()));
+      when(foodBloc.state).thenReturn(FoodsLoaded(query: '', customFoods: foods, edamamFoods: <EdamamFood>[].build()));
 
       // Show initial mealentry
       await tester.pumpWidget(mealEntryPage);
       await tester.pumpAndSettle();
 
       // Tap search icon
-      final searchIcon = find.text('Add Food or Drink');
-      expect(searchIcon, findsOneWidget);
-      await tester.tap(searchIcon);
+      final searchButton = find.text('Add Food or Drink');
+      expect(searchButton, findsOneWidget);
+      await tester.tap(searchButton);
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), 'Ho');
+      await tester.pumpAndSettle();
+      await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
       expect(find.text(newFood.name), findsOneWidget);
     });

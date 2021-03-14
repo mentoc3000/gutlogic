@@ -40,29 +40,40 @@ class GutLogicApp extends StatelessWidget {
         RepositoryProvider.value(value: remoteConfigService),
         RepositoryProvider(create: (context) => UserRepository()),
       ],
-      child: createRootWidget(),
+      child: createRootWidget(context),
     );
   }
 
-  Widget createRootWidget() {
-    return MaterialApp(
-      home: LandingPage.provisioned(),
-      builder: (context, child) {
-        return GLWidgetConfig(
-          child: Stack(
-            children: [
-              Container(color: GLColors.lightestGray),
-              AuthenticatedResources(child: child, navigatorKey: _navigatorKey),
-              if (AppConfig.of(context).buildmode != BuildMode.release) FlavorBanner(),
-            ],
-          ),
-        );
-      },
-      theme: glTheme,
-      navigatorKey: _navigatorKey,
-      navigatorObservers: [
-        analyticsService.observer,
-      ],
+  Widget createRootWidget(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _unfocus(context),
+      child: MaterialApp(
+        home: LandingPage.provisioned(),
+        builder: (context, child) {
+          return GLWidgetConfig(
+            child: Stack(
+              children: [
+                Container(color: GLColors.lightestGray),
+                AuthenticatedResources(child: child, navigatorKey: _navigatorKey),
+                if (AppConfig.of(context).buildmode != BuildMode.release) FlavorBanner(),
+              ],
+            ),
+          );
+        },
+        theme: glTheme,
+        navigatorKey: _navigatorKey,
+        navigatorObservers: [
+          analyticsService.observer,
+        ],
+      ),
     );
+  }
+
+  /// Dismiss the keyboard when tapping outside of the focused widget
+  void _unfocus(BuildContext context) {
+    final currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+      FocusManager.instance.primaryFocus.unfocus();
+    }
   }
 }

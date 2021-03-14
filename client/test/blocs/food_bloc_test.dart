@@ -85,7 +85,7 @@ void main() {
       wait: debounceWaitDuration,
       expect: [
         FoodsLoading(),
-        FoodsLoaded(customFoods: justBread, edamamFoods: justBacon),
+        FoodsLoaded(query: 'B', customFoods: justBread, edamamFoods: justBacon),
       ],
       verify: (bloc) async {
         verify(customFoodRepository.streamQuery('B')).called(1);
@@ -106,8 +106,8 @@ void main() {
       wait: debounceWaitDuration,
       expect: [
         FoodsLoading(),
-        FoodsLoaded(customFoods: justBread, edamamFoods: justBacon),
-        FoodsLoaded(customFoods: breadAndBeer, edamamFoods: justBacon),
+        FoodsLoaded(query: 'B', customFoods: justBread, edamamFoods: justBacon),
+        FoodsLoaded(query: 'B', customFoods: breadAndBeer, edamamFoods: justBacon),
       ],
       verify: (bloc) async {
         verify(customFoodRepository.streamQuery('B')).called(1);

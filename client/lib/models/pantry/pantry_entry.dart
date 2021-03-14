@@ -1,14 +1,12 @@
 import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'food_reference/food_reference.dart';
-import 'model_interfaces.dart';
+import '../food_reference/food_reference.dart';
+import '../model_interfaces.dart';
+import '../sensitivity.dart';
 import 'pantry_entry_reference.dart';
-import 'sensitivity.dart';
 
 part 'pantry_entry.g.dart';
-
-// TODO: move all pantry-related models into subdirectory
 
 abstract class PantryEntry with Ided, Noted implements Built<PantryEntry, PantryEntryBuilder>, Searchable {
   static Serializer<PantryEntry> get serializer => _$pantryEntrySerializer;

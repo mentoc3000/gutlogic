@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:built_collection/built_collection.dart';
 
-import '../../models/pantry_entry.dart';
-import '../../models/pantry_filter.dart';
+import '../../models/pantry/pantry_entry.dart';
+import '../../models/pantry/pantry_filter.dart';
 import '../../models/sensitivity.dart';
 import '../bloc_helpers.dart';
 import '../pantry/pantry.dart';
