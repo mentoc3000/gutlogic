@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../style/gl_color_scheme.dart';
+
 class UnitDropdown extends StatefulWidget {
   final String initialUnit;
   final void Function(String) onChanged;
@@ -32,6 +34,7 @@ class _UnitDropdownState extends State<UnitDropdown> {
         .toList();
 
     return DropdownButtonFormField(
+      dropdownColor: glColorScheme.onSecondary,
       items: items,
       value: _unit,
       onChanged: (newValue) {

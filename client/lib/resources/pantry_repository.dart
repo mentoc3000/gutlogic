@@ -58,7 +58,7 @@ class PantryRepository with FirestoreRepository implements SearchableRepository<
 
   Future<PantryEntry> fetchId(String id) async {
     final snapshot = await firestoreService.userPantryCollection.doc(id).get();
-    return document2pantryEntry(snapshot);
+    return snapshot.exists ? document2pantryEntry(snapshot) : null;
   }
 
   Future<void> delete(PantryEntry pantryEntry) => deleteById(pantryEntry.id);

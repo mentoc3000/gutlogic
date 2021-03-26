@@ -8,7 +8,7 @@ void main() {
     test('fetches all symptom types', () async {
       final symptomTypeRepository = SymptomTypeRepository();
       final Iterable<SymptomType> symptomTypes = await symptomTypeRepository.fetchAll();
-      expect(symptomTypes.length, 13);
+      expect(symptomTypes.length, 15);
       final names = symptomTypes.map((t) => t.name).toList();
       expect(names.contains('Gas'), true);
       expect(names.contains('Constipation'), true);
@@ -26,7 +26,7 @@ void main() {
     test('fetches all when no query is provided', () async {
       final symptomTypeRepository = SymptomTypeRepository();
       final Iterable<SymptomType> symptomTypes = await symptomTypeRepository.fetchQuery('');
-      expect(symptomTypes.length, 13);
+      expect(symptomTypes.length, 15);
       final names = symptomTypes.map((t) => t.name).toList();
       expect(names.contains('Gas'), true);
       expect(names.contains('Constipation'), true);

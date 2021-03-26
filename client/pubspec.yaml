@@ -2,9 +2,9 @@ name: gutlogic
 description: Gut Logic app
 
 # Prevent accidentally publishing the package to pub.dev
-publish_to: "none"
+publish_to: 'none'
 
-version: 1.0.0
+version: 1.1.0
 
 environment:
   sdk: ^2.10.0
@@ -46,7 +46,7 @@ dependencies:
   quiver: ^2.1.5
 
   # Firebase
-  cloud_firestore: '>=0.14.1+1 <0.14.3' 
+  cloud_firestore: '>=0.14.1+1 <0.14.3'
   cloud_functions: ^0.6.0
   firebase_analytics: ^6.0.0
   firebase_auth: ^0.18.1+1
@@ -79,11 +79,11 @@ dev_dependencies:
 flutter_icons:
   android: true # can specify file name here e.g. "ic_launcher"
   ios: true # can specify file name here e.g. "My-Launcher-Icon"
-  image_path: "assets/app_icon/logo_green.png"
+  image_path: 'assets/app_icon/logo_green.png'
   # image_path_android: "assets/logo_green.png"
   # image_path_ios: "assets/logo_green.png"
-  adaptive_icon_background: "assets/app_icon/logo_android_background.png" # only available for Android 8.0 devices and above
-  adaptive_icon_foreground: "assets/app_icon/logo_android_foreground.png" # only available for Android 8.0 devices and above
+  adaptive_icon_background: 'assets/app_icon/logo_android_background.png' # only available for Android 8.0 devices and above
+  adaptive_icon_foreground: 'assets/app_icon/logo_android_foreground.png' # only available for Android 8.0 devices and above
 
 # The following section is specific to Flutter.
 flutter:
@@ -114,29 +114,29 @@ flutter:
         - asset: assets/fonts/SF-Pro-Italic.ttf
           style: italic
     - family: Quicksand410
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-410.ttf
     - family: Quicksand420
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-420.ttf
     - family: Quicksand430
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-430.ttf
     - family: Quicksand440
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-440.ttf
     - family: Quicksand450
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-450.ttf
     - family: Quicksand460
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-460.ttf
     - family: Quicksand470
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-470.ttf
     - family: Quicksand480
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-480.ttf
     - family: Quicksand490
-      fonts: 
+      fonts:
         - asset: assets/fonts/Quicksand-VariableFont_wght-490.ttf
