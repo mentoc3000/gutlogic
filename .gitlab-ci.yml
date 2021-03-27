@@ -310,6 +310,7 @@ client:tag:
     - macos # required for release tagging
   script:
     - export FLUTTER_APP_VERSION=$(flutter pub run bin/version)
+    - echo "Version v$FLUTTER_APP_VERSION"
   release:
     tag_name: "v$FLUTTER_APP_VERSION"
     description: "Release $FLUTTER_APP_VERSION"
