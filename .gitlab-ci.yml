@@ -217,7 +217,7 @@ client:prep:
     - *manual-commit-rule
   artifacts:
     reports:
-      dotenv: version.env
+      dotenv: client/version.env
     paths:
       - client/lib/**/*.g.dart
     expire_in: 1 day
