@@ -306,6 +306,8 @@ client:tag:
   stage: predeploy
   extends:
     - .client
+  tags:
+    - macos # required for release tagging
   script:
     - FLUTTER_APP_VERSION=$(flutter pub run bin/version)
   release:
