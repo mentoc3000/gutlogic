@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:built_collection/built_collection.dart';
 import '../../models/food/edamam_food.dart';
+import '../../models/food_reference/edamam_food_reference.dart';
 import '../../models/serializers.dart';
 import '../food/edamam_service.dart';
 import 'food_repository.dart';
@@ -39,9 +40,13 @@ class EdamamFoodRepository implements FoodRepository {
         edamamData.map((x) => serializers.deserializeWith(EdamamFood.serializer, _reformFoodMap(x))));
   }
 
-  Future<EdamamFood> fetchItem(String id) async {
-    final edamamData = await edamamService.getById(id);
-    return serializers.deserializeWith(EdamamFood.serializer, _reformFoodMap(edamamData));
+  Future<EdamamFood> fetchItem(EdamamFoodReference foodReference) async {
+    final edamamData = await edamamService.getById(foodReference.id);
+    final edamamFood = serializers.deserializeWith(EdamamFood.serializer, _reformFoodMap(edamamData));
+
+    // Multiple edamam foods refer to the same database entry. Replace the generic label with the specific
+    // one.
+    return edamamFood.rebuild((b) => b.name = foodReference.name);
   }
 
   @override

@@ -27,14 +27,15 @@ void main() {
       name: 'silken tofu',
       measures: [measure].build(),
     );
+    final edamamFoodReference = edamamFood.toFoodReference();
     final edamamFoodMealElement = MealElement(
       id: '2',
-      foodReference: edamamFood.toFoodReference(),
+      foodReference: edamamFoodReference,
       quantity: Quantity(amount: 1, measure: measure),
     );
     final quantitylessMealElement = MealElement(
       id: '7',
-      foodReference: edamamFood.toFoodReference(),
+      foodReference: edamamFoodReference,
     );
     final customFood = CustomFood(id: '123', name: 'Arugula');
     final customFoodMealElement = MealElement(id: '3', foodReference: customFood.toFoodReference());
@@ -45,7 +46,7 @@ void main() {
       when(mealElementRepository.stream(edamamFoodMealElement))
           .thenAnswer((_) => Stream<MealElement>.fromIterable([edamamFoodMealElement]));
       edamamFoodRepository = MockEdamamFoodRepository();
-      when(edamamFoodRepository.fetchItem(edamamFood.id)).thenAnswer((_) async => await edamamFood);
+      when(edamamFoodRepository.fetchItem(edamamFoodReference)).thenAnswer((_) async => await edamamFood);
     });
 
     test('initial state', () {
@@ -95,7 +96,7 @@ void main() {
     blocTest(
       'streams mealElement with Edamam food with no measures',
       build: () {
-        when(edamamFoodRepository.fetchItem(edamamFood.id))
+        when(edamamFoodRepository.fetchItem(edamamFoodReference))
             .thenAnswer((_) async => await edamamFood.rebuild((b) => b..measures = null));
         return MealElementBloc(
           mealElementRepository: mealElementRepository,

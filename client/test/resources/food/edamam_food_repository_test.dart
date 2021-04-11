@@ -1,6 +1,7 @@
 import 'package:gutlogic/resources/food/edamam_food_repository.dart';
 import 'package:gutlogic/resources/food/edamam_service.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
+import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/measure.dart';
 import 'package:mockito/mockito.dart';
 import 'package:built_collection/built_collection.dart';
@@ -10,6 +11,7 @@ import 'edamam_sample_data.dart';
 void main() {
   group('EdamamFoodRepository', () {
     String foodId;
+    EdamamFoodReference foodReference;
     EdamamFoodRepository foodRepository;
     EdamamService edamamService;
     EdamamFood food;
@@ -33,6 +35,7 @@ void main() {
           Measure(unit: 'Kilogram', weight: 1000),
         ].build(),
       );
+      foodReference = food.toFoodReference();
       edamamService = MockEdamamService();
       when(edamamService.getById(foodId)).thenAnswer((_) => Future.value(foodResult));
       when(edamamService.searchFood('apple')).thenAnswer((_) => Future.value(appleQueryResult));
@@ -56,7 +59,7 @@ void main() {
     });
 
     test('fetches single food', () async {
-      final fetchedFood = await foodRepository.fetchItem(foodId);
+      final fetchedFood = await foodRepository.fetchItem(foodReference);
       expect(fetchedFood, food);
     });
 

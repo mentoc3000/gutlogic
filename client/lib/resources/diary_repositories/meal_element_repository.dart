@@ -11,9 +11,12 @@ import '../../models/quantity.dart';
 import '../../models/serializers.dart';
 import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
+import '../pantry_repository.dart';
 
 class MealElementRepository with FirestoreRepository {
-  MealElementRepository({@required FirestoreService firestoreService}) {
+  PantryRepository pantryRepository;
+
+  MealElementRepository({@required FirestoreService firestoreService, @required this.pantryRepository}) {
     this.firestoreService = firestoreService;
   }
 
@@ -71,10 +74,15 @@ class MealElementRepository with FirestoreRepository {
   Future<void> updateNotes(MealElement mealElement, String notes) =>
       update(mealElement.rebuild((b) => b..notes = notes));
 
-  Future<MealElement> addNewMealElementTo(MealEntry mealEntry, {@required Food food}) {
+  Future<MealElement> addNewMealElementTo(MealEntry mealEntry, {@required Food food}) async {
     final mealElementId = newMealElementId(mealEntry);
     final foodReference = food.toFoodReference();
-    final mealElement = MealElement(id: mealElementId, foodReference: foodReference);
+    final pantryEntry = await pantryRepository.findByFood(food);
+    final mealElement = MealElement(
+      id: mealElementId,
+      foodReference: foodReference,
+      pantryEntryReference: pantryEntry?.toReference(),
+    );
     return addMealElementTo(mealEntry, mealElement: mealElement);
   }
 

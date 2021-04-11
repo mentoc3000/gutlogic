@@ -2,6 +2,7 @@ import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
 import 'package:gutlogic/resources/food/custom_food_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
+import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -9,6 +10,7 @@ import 'package:test/test.dart';
 void main() {
   group('CustomFoodRepository', () {
     String customFoodId;
+    CustomFoodReference foodReference;
     MockFirestoreInstance instance;
     CustomFoodRepository foodRepository;
     FirestoreService firestoreService;
@@ -18,6 +20,7 @@ void main() {
       customFoodId = '7';
       const customFoodId2 = '8';
       food = CustomFood(id: customFoodId, name: 'Escargot');
+      foodReference = food.toFoodReference();
       instance = MockFirestoreInstance();
       await instance.collection('foods').doc(customFoodId).set(serializers.serialize(food));
       await instance.collection('foods').doc(customFoodId2).set(serializers.serialize(food));
@@ -38,7 +41,7 @@ void main() {
     });
 
     test('fetches single food', () async {
-      final fetchedFood = await foodRepository.fetchItem(customFoodId);
+      final fetchedFood = await foodRepository.fetchItem(foodReference);
       expect(fetchedFood, food);
     });
 

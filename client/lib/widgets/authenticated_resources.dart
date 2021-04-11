@@ -64,7 +64,14 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
-            return MealElementRepository(firestoreService: context.read<FirestoreService>());
+            return PantryRepository(firestoreService: context.read<FirestoreService>());
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return MealElementRepository(
+              firestoreService: context.read<FirestoreService>(),
+              pantryRepository: context.read<PantryRepository>(),
+            );
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
@@ -90,10 +97,6 @@ class AuthenticatedResources extends StatelessWidget {
             return EdamamFoodRepository(
               edamamService: EdamamService(edamamFoodSearchService: CloudFunctionService('edamamFoodSearch')),
             );
-          }),
-          RepositoryProvider(create: (context) {
-            // TODO move this into its most tightly nested widget tree
-            return PantryRepository(firestoreService: context.read<FirestoreService>());
           }),
         ],
         child: MultiBlocProvider(providers: [

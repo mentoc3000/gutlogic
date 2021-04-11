@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/food/custom_food.dart';
+import '../../models/food_reference/custom_food_reference.dart';
 import '../../models/serializers.dart';
 import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
@@ -31,7 +32,8 @@ class CustomFoodRepository with FirestoreRepository implements FoodRepository {
     return BuiltList<CustomFood>(_documentSnapshotToResults(querySnapshot.docs, query));
   }
 
-  Future<CustomFood> fetchItem(String id) async {
+  Future<CustomFood> fetchItem(CustomFoodReference foodReference) async {
+    final id = foodReference.id;
     final documentSnapshot = await firestoreService.customFoodCollection.doc(id).get();
     return _documentSnapshotToCustomFood(documentSnapshot);
   }
@@ -42,7 +44,8 @@ class CustomFoodRepository with FirestoreRepository implements FoodRepository {
     return stream.map((querySnapshot) => BuiltList<CustomFood>(_documentSnapshotToResults(querySnapshot.docs, query)));
   }
 
-  Stream<CustomFood> streamItem(String id) {
+  Stream<CustomFood> streamItem(CustomFoodReference foodReference) {
+    final id = foodReference.id;
     final stream = firestoreService.customFoodCollection.doc(id).snapshots();
     return stream.map(_documentSnapshotToCustomFood);
   }

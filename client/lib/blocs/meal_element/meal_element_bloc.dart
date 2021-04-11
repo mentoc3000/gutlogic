@@ -46,18 +46,16 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
         // If the meal element uses an Edamam food, fetch that food to get the measure options
         if (mealElement.foodReference is EdamamFoodReference) {
           yield MealElementLoading();
-          food = await edamamFoodRepository.fetchItem(mealElement.foodReference.id);
+          food = await edamamFoodRepository.fetchItem(mealElement.foodReference);
 
           // If the meal element doesn't have a measure yet, set it to the first option
           if (mealElement.quantity?.measure == null && food.measures.isNotEmpty) {
             mealElement = mealElement.rebuild((b) => b..quantity.measure = food.measures.first.toBuilder());
             add(Update(mealElement));
           }
-
-          yield MealElementLoaded(mealElement: mealElement, food: food);
-        } else {
-          yield MealElementLoaded(mealElement: mealElement);
         }
+
+        yield MealElementLoaded(mealElement: mealElement, food: food);
 
         // Subscribe to the stream, updating the mealElement but using the same food value, which cannot change.
         streamSubscription = mealElementRepository.stream(event.mealElement).listen(

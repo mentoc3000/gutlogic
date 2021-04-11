@@ -8,16 +8,16 @@ firebase login
 
 ## Deployment
 
-The server is deployed automatically after commits to `develop` or `master`. To manually deploy the server to the development environment, use:
+The server is deployed automatically after commits to `develop` or `release`. To manually deploy the server to the development environment, use:
 
 ```sh
-firebase deploy --project=development
+firebase deploy --project=develop
 ```
 
 Likewise, to deploy the backend to the production environment, use:
 
 ```sh
-firebase deploy --project=production
+firebase deploy --project=release
 ```
 
 The default environment is the development environment.

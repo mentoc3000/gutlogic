@@ -15,22 +15,26 @@ test.after.always(async () => {
 
 test('updates pantry entry references when pantry entry is created', async (t) => {
   const foodId = 'food-id-1';
+  const foodName = 'chickpea';
+  const pantryId = 'pantry-id-1';
 
   // Create diary
   const diary = db.collection(`user_data/${testUserId}/diary`);
   const mealEntryId = 'meal-entry-id-1';
+  const foodReference = { id: foodId, name: foodName };
   await diary.doc(mealEntryId).set({
     $: 'MealEntry',
-    mealElements: [{ foodReference: { id: foodId } }, { foodReference: { id: 'food-id-0' } }],
+    mealElements: [{ foodReference }, { foodReference: { id: 'food-id-0' } }],
   });
   const symptomEntryId = 'symptom-entry-id-1';
   await diary.doc(symptomEntryId).set({ $: 'SymptomEntry' });
 
   // Add a pantry entry
   const sensitivity = 2;
-  const snap = fft.firestore.makeDocumentSnapshot({ sensitivity }, `user_data/${testUserId}/pantry/${foodId}`);
+  const pantryEntry = { id: pantryId, foodReference, sensitivity };
+  const snap = fft.firestore.makeDocumentSnapshot(pantryEntry, `user_data/${testUserId}/pantry/${pantryId}`);
   const wrapped = fft.wrap(myFunctions.onPantryEntryCreated);
-  const context = { params: { userId: testUserId, pantryId: foodId } };
+  const context = { params: { userId: testUserId, pantryId: pantryId } };
   await wrapped(snap, context);
 
   // Check that pantry entry reference has been created
@@ -42,14 +46,17 @@ test('updates pantry entry references when pantry entry is created', async (t) =
 
 test('updates pantry entry references when pantry entry is updated', async (t) => {
   const foodId = 'food-id-2';
+  const foodName = 'chickpea';
+  const pantryId = 'pantry-id-2';
 
   // Create diary
   const diary = db.collection(`user_data/${testUserId}/diary`);
   const mealEntryId = 'meal-entry-id-2';
+  const foodReference = { id: foodId, name: foodName };
   await diary.doc(mealEntryId).set({
     $: 'MealEntry',
     mealElements: [
-      { foodReference: { id: foodId, pantryEntryReference: { sensitivity: 0 } } },
+      { foodReference, pantryEntryReference: { id: pantryId, sensitivity: 0 } },
       { foodReference: { id: 'food-id-0' } },
     ],
   });
@@ -58,12 +65,16 @@ test('updates pantry entry references when pantry entry is updated', async (t) =
 
   // Add a pantry entry
   const sensitivity = 2;
-  const beforeSnap = fft.firestore.makeDocumentSnapshot({ sensitivity: 0 }, `user_data/${testUserId}/pantry/${foodId}`);
-  const afterSnap = fft.firestore.makeDocumentSnapshot({ sensitivity }, `user_data/${testUserId}/pantry/${foodId}`);
+  const pantryEntry = { id: pantryId, foodReference, sensitivity };
+  const beforeSnap = fft.firestore.makeDocumentSnapshot(
+    { foodReference, sensitivity: 0 },
+    `user_data/${testUserId}/pantry/${pantryId}`
+  );
+  const afterSnap = fft.firestore.makeDocumentSnapshot(pantryEntry, `user_data/${testUserId}/pantry/${pantryId}`);
   const change = fft.makeChange(beforeSnap, afterSnap);
 
   const wrapped = fft.wrap(myFunctions.onPantryEntryUpdated);
-  const context = { params: { userId: testUserId, pantryId: foodId } };
+  const context = { params: { userId: testUserId, pantryId: pantryId } };
   await wrapped(change, context);
 
   // Check that pantry entry reference has been updated
@@ -75,23 +86,30 @@ test('updates pantry entry references when pantry entry is updated', async (t) =
 
 test('deletes pantry entry references when pantry entry is deleted', async (t) => {
   const foodId = 'food-id-3';
+  const foodName = 'chickpea';
+  const pantryId = 'pantry-id-3';
+  const pantryId2 = 'pantry-id-4';
 
   // Create diary
   const diary = db.collection(`user_data/${testUserId}/diary`);
   const mealEntryId = 'meal-entry-id-3';
+  const foodReference = { id: foodId, name: foodName };
   await diary.doc(mealEntryId).set({
     $: 'MealEntry',
     mealElements: [
-      { foodReference: { id: foodId, pantryEntryReference: { sensitivity: 0 } } },
+      { foodReference, pantryEntryReference: { id: pantryId, sensitivity: 0 } },
       { foodReference: { id: 'food-id-0' } },
     ],
   });
 
   // Add a pantry entry
-  const snap = fft.firestore.makeDocumentSnapshot({ sensitivity: 0 }, `user_data/${testUserId}/pantry/${foodId}`);
+  const sensitivity = 2;
+  const pantryEntry = { id: pantryId, foodReference, sensitivity };
+  const snap = fft.firestore.makeDocumentSnapshot(pantryEntry, `user_data/${testUserId}/pantry/${pantryId}`);
+  fft.firestore.makeDocumentSnapshot({ sensitivity: 0 }, `user_data/${testUserId}/pantry/${pantryId2}`);
 
   const wrapped = fft.wrap(myFunctions.onPantryEntryDeleted);
-  const context = { params: { userId: testUserId, pantryId: foodId } };
+  const context = { params: { userId: testUserId, pantryId: pantryId } };
   await wrapped(snap, context);
 
   // Check that pantry entry reference has been deleted

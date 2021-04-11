@@ -16,6 +16,7 @@ class MockFirestoreService extends Mock implements FirestoreService {}
 void main() {
   group('PantryRepository', () {
     String pantryEntryId;
+    CustomFood food;
     PantryEntry pantryEntry;
     BuiltList<PantryEntry> pantryEntries;
     MockFirestoreInstance instance;
@@ -24,24 +25,22 @@ void main() {
 
     setUp(() async {
       pantryEntryId = 'entry1Id';
-      final food = CustomFoodReference(id: 'foodId', name: 'Corned Beef');
+      food = CustomFood(id: 'foodId', name: 'Corned Beef');
       const sensitivity = Sensitivity.moderate;
       const notes = 'easy';
       pantryEntry = PantryEntry(
         id: pantryEntryId,
-        foodReference: food,
+        foodReference: food.toFoodReference(),
         sensitivity: sensitivity,
         notes: notes,
       );
       pantryEntries = [pantryEntry].build();
       instance = MockFirestoreInstance();
-      await instance
-          .collection('pantry')
-          .doc(pantryEntryId)
-          .set(serializers.serializeWith(PantryEntry.serializer, pantryEntry));
+      final pantryCollection = instance.collection('pantry');
+      await pantryCollection.doc(pantryEntryId).set(serializers.serializeWith(PantryEntry.serializer, pantryEntry));
       firestoreService = MockFirestoreService();
       when(firestoreService.instance).thenReturn(instance);
-      when(firestoreService.userPantryCollection).thenReturn(instance.collection('pantry'));
+      when(firestoreService.userPantryCollection).thenReturn(pantryCollection);
       repository = PantryRepository(firestoreService: firestoreService);
     });
 
@@ -72,11 +71,36 @@ void main() {
       expect(entry, null);
     });
 
+    test('finds a food', () async {
+      final foundEntry = await repository.findByFood(food);
+      expect(foundEntry, pantryEntry);
+    });
+
+    test('adds an entry', () async {
+      pantryEntryId = 'entry2Id';
+      final foodReference = CustomFoodReference(id: 'foodId', name: 'Corned Beef');
+      const sensitivity = Sensitivity.moderate;
+      const notes = 'easy';
+      final pantryEntry2 = PantryEntry(
+        id: pantryEntryId,
+        foodReference: foodReference,
+        sensitivity: sensitivity,
+        notes: notes,
+      );
+      final newPantryEntry = await repository.add(pantryEntry2);
+      expect(newPantryEntry.foodReference, foodReference);
+    });
+
     test('adds a food', () async {
       final food = CustomFood(id: 'food2', name: 'spinach');
       final newPantryEntry = await repository.addFood(food);
-      expect(newPantryEntry.id, food.id);
       expect(newPantryEntry.foodReference, food.toFoodReference());
+    });
+
+    test('returns existing entry if adding food with existing entry', () async {
+      final existingPantryEntry = await repository.addFood(food);
+      expect(existingPantryEntry.foodReference.id, food.id);
+      expect(existingPantryEntry.notes, pantryEntry.notes);
     });
 
     test('deletes entry by id', () async {

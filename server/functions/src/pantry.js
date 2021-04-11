@@ -16,8 +16,8 @@ exports.onPantryEntryCreated = (snap, context) => {
  */
 exports.onPantryEntryUpdated = (change, context) => {
   const userId = context.params.userId;
-  const pantryId = context.params.pantryId;
   const pantryData = change.after.data();
+  const pantryId = context.params.pantryId;
   return updatePantryEntryRefs(userId, pantryId, pantryData);
 };
 
@@ -35,6 +35,9 @@ exports.onPantryEntryDeleted = (snap, context) => {
  */
 const updatePantryEntryRefs = async (userId, pantryId, pantryData) => {
   const querySnapshot = await db.collection(`user_data/${userId}/diary`).where('$', '==', 'MealEntry').get();
+  const foodReference = pantryData.foodReference;
+  const foodId = foodReference.id;
+  const foodName = foodReference.name;
   const batch = db.batch();
 
   querySnapshot.docs.forEach((doc) => {
@@ -42,7 +45,7 @@ const updatePantryEntryRefs = async (userId, pantryId, pantryData) => {
     var containsUpdates = false;
 
     mealEntry.mealElements.forEach((mealElement, index) => {
-      if (mealElement.foodReference.id === pantryId) {
+      if (mealElement.foodReference.id === foodId && mealElement.foodReference.name === foodName) {
         if (!('pantryEntryReference' in mealElement)) {
           // Create pantry reference if it doesn't exist
           mealEntry.mealElements[index].pantryEntryReference = {
@@ -83,11 +86,9 @@ const deletePantryEntryRefs = async (userId, pantryId) => {
     var containsUpdates = false;
 
     mealEntry.mealElements.forEach((mealElement, index) => {
-      if (mealElement.foodReference.id === pantryId) {
-        if ('pantryEntryReference' in mealElement) {
-          delete mealEntry.mealElements[index].pantryEntryReference;
-          containsUpdates = true;
-        }
+      if ('pantryEntryReference' in mealElement && mealElement.pantryEntryReference.id === pantryId) {
+        delete mealEntry.mealElements[index].pantryEntryReference;
+        containsUpdates = true;
       }
     });
 
