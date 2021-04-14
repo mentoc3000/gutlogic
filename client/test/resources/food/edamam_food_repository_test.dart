@@ -2,55 +2,35 @@ import 'package:gutlogic/resources/food/edamam_food_repository.dart';
 import 'package:gutlogic/resources/food/edamam_service.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
-import 'package:gutlogic/models/measure.dart';
 import 'package:mockito/mockito.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:test/test.dart';
 import 'edamam_sample_data.dart';
 
 void main() {
   group('EdamamFoodRepository', () {
-    String foodId;
     EdamamFoodReference foodReference;
     EdamamFoodRepository foodRepository;
     EdamamService edamamService;
     EdamamFood food;
-    const foodResult = brownRiceCakeResult;
-    const appleQueryResult = appleQueryResults;
-    const avocadoQueryResult = avocadoQueryResults;
 
     setUp(() async {
-      final Map<String, Object> foodInfo = foodResult['food'];
-      foodId = foodInfo['foodId'];
-      food = EdamamFood(
-        id: foodId,
-        name: foodInfo['label'],
-        measures: [
-          Measure(unit: 'Whole', weight: 9),
-          Measure(unit: 'Serving', weight: 18),
-          Measure(unit: 'Cake', weight: 9),
-          Measure(unit: 'Gram', weight: 1),
-          Measure(unit: 'Ounce', weight: 28.349524),
-          Measure(unit: 'Pound', weight: 453.59238),
-          Measure(unit: 'Kilogram', weight: 1000),
-        ].build(),
-      );
+      food = brownRiceCakeEntry.toEdamamFood();
       foodReference = food.toFoodReference();
       edamamService = MockEdamamService();
-      when(edamamService.getById(foodId)).thenAnswer((_) => Future.value(foodResult));
-      when(edamamService.searchFood('apple')).thenAnswer((_) => Future.value(appleQueryResult));
-      when(edamamService.searchFood('avocado')).thenAnswer((_) => Future.value(avocadoQueryResult));
+      when(edamamService.getById(any)).thenAnswer((_) => Future.value(brownRiceCakeEntry));
+      when(edamamService.searchFood('apple')).thenAnswer((_) => Future.value(appleQueryEntries));
+      when(edamamService.searchFood('avocado')).thenAnswer((_) => Future.value(avocadoQueryEntries));
       foodRepository = EdamamFoodRepository(edamamService: edamamService);
     });
 
     test('fetches query', () async {
       final fetchedFoods = await foodRepository.fetchQuery('apple');
-      expect(fetchedFoods.length, appleQueryResult.length);
+      expect(fetchedFoods.length, appleQueryEntries.length);
     });
 
     test('fetches query with incomplete measures', () async {
       final fetchedFoods = await foodRepository.fetchQuery('avocado');
-      expect(fetchedFoods.length, avocadoQueryResult.length);
+      expect(fetchedFoods.length, avocadoQueryEntries.length);
     });
 
     test('fetches no food for empty query', () async {

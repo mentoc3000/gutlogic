@@ -10,6 +10,12 @@ import 'diary_entry/bowel_movement_entry.dart';
 import 'diary_entry/diary_entry.dart';
 import 'diary_entry/meal_entry.dart';
 import 'diary_entry/symptom_entry.dart';
+import 'edamam_api/edamam_api_entry.dart';
+import 'edamam_api/edamam_api_food.dart';
+import 'edamam_api/edamam_api_measure.dart';
+import 'edamam_api/edamam_api_nutrients.dart';
+import 'edamam_api/edamam_api_qualified_measure.dart';
+import 'edamam_api/edamam_api_qualifier.dart';
 import 'food/custom_food.dart';
 import 'food/edamam_food.dart';
 import 'food/food.dart';
@@ -36,6 +42,12 @@ part 'serializers.g.dart';
   CustomFood,
   CustomFoodReference,
   DiaryEntry,
+  EdamamApiEntry,
+  EdamamApiFood,
+  EdamamApiMeasure,
+  EdamamApiNutrients,
+  EdamamApiQualifiedMeasure,
+  EdamamApiQualifier,
   EdamamFood,
   EdamamFoodReference,
   Food,

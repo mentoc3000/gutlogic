@@ -35,6 +35,7 @@ class _UnitDropdownState extends State<UnitDropdown> {
 
     return DropdownButtonFormField(
       dropdownColor: glColorScheme.onSecondary,
+      isExpanded: true,
       items: items,
       value: _unit,
       onChanged: (newValue) {

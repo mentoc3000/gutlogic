@@ -1,5 +1,8 @@
 import 'package:meta/meta.dart';
 
+import '../../models/edamam_api/edamam_api_entry.dart';
+import '../../models/serializers.dart';
+
 import '../firebase/cloud_function_service.dart';
 
 class EdamamService {
@@ -10,7 +13,7 @@ class EdamamService {
   /// Search for food on Edamam
   ///
   /// Empty query returns no results
-  Future<List<Map<String, dynamic>>> searchFood(String query) async {
+  Future<List<EdamamApiEntry>> searchFood(String query) async {
     if (query.isEmpty) {
       return [];
     }
@@ -19,9 +22,8 @@ class EdamamService {
       case 200:
         try {
           final jsonResponse = response['data'];
-          final List<dynamic> foods = jsonResponse['hints'];
-          final mappedFoods = foods.map((e) => Map<String, dynamic>.from(e)).toList();
-          return mappedFoods;
+          final List<dynamic> entries = jsonResponse['hints'];
+          return entries.map((e) => serializers.deserializeWith(EdamamApiEntry.serializer, e)).toList();
         } catch (e) {
           throw EdamamException(message: 'Parsing error');
         }
@@ -35,7 +37,7 @@ class EdamamService {
   /// Get Edamam food by Id
   ///
   /// No match returns null.
-  Future<Map<String, dynamic>> getById(String id) async {
+  Future<EdamamApiEntry> getById(String id) async {
     final searchResults = await searchFood(id);
     if (searchResults.isEmpty) {
       return null;

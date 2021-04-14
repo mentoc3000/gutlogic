@@ -29,14 +29,14 @@ void main() {
     });
 
     test('gets food by id', () async {
-      final food = await edamamService.getById(riceCakeId);
-      expect(food['food']['label'], 'brown rice cake');
+      final edamamEntry = await edamamService.getById(riceCakeId);
+      expect(edamamEntry.food.label, 'brown rice cake');
     });
 
     test('searches foods', () async {
       final results = await edamamService.searchFood(query);
       expect(results.length, 22);
-      expect(results[0]['food']['foodId'], 'food_a1gb9ubb72c7snbuxr3weagwv0dd');
+      expect(results[0].food.foodId, 'food_a1gb9ubb72c7snbuxr3weagwv0dd');
     });
   });
 }
