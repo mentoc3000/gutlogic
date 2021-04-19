@@ -28,7 +28,7 @@ class MealElementSensitivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = tileSubheadingTheme;
+    const style = tileSubheadingTheme;
     return PushCard(
       child: Row(
         children: [

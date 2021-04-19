@@ -44,6 +44,8 @@ const updatePantryEntryRefs = async (userId, pantryId, pantryData) => {
     const mealEntry = doc.data();
     var containsUpdates = false;
 
+    if (mealEntry.mealElements === null || mealEntry.mealElements === undefined) return;
+
     mealEntry.mealElements.forEach((mealElement, index) => {
       if (mealElement.foodReference.id === foodId && mealElement.foodReference.name === foodName) {
         if (!('pantryEntryReference' in mealElement)) {
@@ -84,6 +86,8 @@ const deletePantryEntryRefs = async (userId, pantryId) => {
   querySnapshot.docs.forEach((doc) => {
     const mealEntry = doc.data();
     var containsUpdates = false;
+
+    if (mealEntry.mealElements === null || mealEntry.mealElements === undefined) return;
 
     mealEntry.mealElements.forEach((mealElement, index) => {
       if ('pantryEntryReference' in mealElement && mealElement.pantryEntryReference.id === pantryId) {
