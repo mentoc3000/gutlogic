@@ -11,6 +11,7 @@ lane :certificate_develop_local do |options|
   force = options.fetch(:force, false)
 
   match(
+    api_key_path: "fastlane/app_store_connect_api_key.json",
     app_identifier: ["com.gutlogic.app.dev"],
     type: "development",
     force: force,
@@ -27,6 +28,7 @@ lane :certificate_develop_adhoc do |options|
   force = options.fetch(:force, false)
 
   match(
+    api_key_path: "fastlane/app_store_connect_api_key.json",
     app_identifier: ["com.gutlogic.app.dev"],
     type: "adhoc",
     force: force,
@@ -43,6 +45,7 @@ lane :certificate_release do |options|
   force = options.fetch(:force, false)
 
   match(
+    api_key_path: "fastlane/app_store_connect_api_key.json",
     app_identifier: ["com.gutlogic.app"],
     type: "appstore",
     force: force,
@@ -107,6 +110,7 @@ platform :ios do
     build_release()
 
     testflight(
+      api_key_path: "fastlane/app_store_connect_api_key.json",
       demo_account_required: true,
       distribute_external: true,
       groups: ["Family and Friends"],
@@ -122,7 +126,9 @@ platform :ios do
   
     build_release()
 
-    app_store
+    appstore(
+      api_key_path: "fastlane/app_store_connect_api_key.json"
+    )
 
   end
 
