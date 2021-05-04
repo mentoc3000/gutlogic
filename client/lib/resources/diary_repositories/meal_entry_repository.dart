@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:meta/meta.dart';
+
 import 'package:built_collection/built_collection.dart';
+
 import '../../models/diary_entry/meal_entry.dart';
 import '../../models/food/food.dart';
 import '../../models/meal_element.dart';
@@ -10,18 +11,18 @@ import '../firebase/firestore_service.dart';
 import 'diary_repository_helpers.dart';
 import 'meal_element_repository.dart';
 
-MealEntry deserialize(Map<String, dynamic> object) {
+MealEntry? deserialize(Map<String, dynamic> object) {
   return serializers.deserializeWith(MealEntry.serializer, object);
 }
 
 class MealEntryRepository
     with FirestoreRepository, DiaryEntryStreamer, DiaryEntryAdder, DiaryEntryDeleter, DiaryEntryUpdater {
   MealElementRepository mealElementRepository;
-  MealEntryRepository({@required FirestoreService firestoreService, @required this.mealElementRepository}) {
+  MealEntryRepository({required FirestoreService firestoreService, required this.mealElementRepository}) {
     this.firestoreService = firestoreService;
   }
 
-  Future<MealEntry> create() async {
+  Future<MealEntry?> create() async {
     final mealEntry = MealEntry(
       id: '',
       datetime: DateTime.now().toUtc(),
@@ -30,11 +31,11 @@ class MealEntryRepository
     return add(mealEntry);
   }
 
-  Future<MealElement> createMealElement(MealEntry mealEntry, Food food) =>
+  Future<MealElement?> createMealElement(MealEntry mealEntry, Food food) =>
       mealElementRepository.addNewMealElementTo(mealEntry, food: food);
 
-  Future<MealElement> addMealElement(MealEntry mealEntry, MealElement mealElement) async {
-    final mealEntryLatest = await getLatest(mealEntry);
+  Future<MealElement?> addMealElement(MealEntry mealEntry, MealElement mealElement) async {
+    final mealEntryLatest = await getLatest(mealEntry) as MealEntry;
     return mealElementRepository.addMealElementTo(mealEntryLatest, mealElement: mealElement);
   }
 

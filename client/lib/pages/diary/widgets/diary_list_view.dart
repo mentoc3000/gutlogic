@@ -1,6 +1,7 @@
+import 'package:built_collection/built_collection.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:built_collection/built_collection.dart';
 
 import '../../../models/diary_entry/bowel_movement_entry.dart';
 import '../../../models/diary_entry/diary_entry.dart';
@@ -15,7 +16,7 @@ import 'symptom_entry_list_tile.dart';
 class DiaryListView extends StatelessWidget {
   final BuiltList<DiaryEntry> diaryEntries;
 
-  const DiaryListView({Key key, @required this.diaryEntries}) : super(key: key);
+  const DiaryListView({Key? key, required this.diaryEntries}) : super(key: key);
 
   Widget _buildDiaryEntryTile(BuildContext context, DiaryEntry entry) {
     if (entry is MealEntry) {
@@ -27,26 +28,29 @@ class DiaryListView extends StatelessWidget {
     if (entry is SymptomEntry) {
       return SymptomEntryListTile(entry: entry);
     }
-    return null;
+    throw ArgumentError.value(entry, 'Diary entry has no corresponding widget tile.');
   }
 
   List<Widget> _buildDiaryTiles(BuildContext context, List<DiaryEntry> entries) {
-    final groupedDiaryEntries = _groupDiaryEntries(entries);
+    // Sort and group by entry date.
+    final groups = entries.sortedBy((e) => e.datetime).groupListsBy((e) => e.datetime.toLocal().toMidnight());
 
     // If there are no entries for today, add an empty list
     final today = DateTime.now().toLocal().toMidnight();
-    groupedDiaryEntries.putIfAbsent(today, () => []);
 
-    final dates = groupedDiaryEntries.keys.toList()..sort();
+    groups.putIfAbsent(today, () => []);
 
+    final dates = groups.keys.sorted().toList();
     final tiles = <Widget>[];
 
     for (var i = 0; i < dates.length; i++) {
+      final date = dates[i];
+
       // Add date tile for entry
-      tiles.add(DateTile(datetime: dates[i].toLocal()));
+      tiles.add(DateTile(datetime: date.toLocal()));
 
       // Add entry tiles
-      for (final entry in groupedDiaryEntries[dates[i]]) {
+      for (final entry in groups[date]!) {
         tiles.add(_buildDiaryEntryTile(context, entry));
       }
 
@@ -60,8 +64,8 @@ class DiaryListView extends StatelessWidget {
           tiles.add(DateTile(datetime: emptyDate.toLocal()));
 
           // Add no entries tile
-          final showElipses = deltaDays > const Duration(days: 1);
-          tiles.add(NoEntriesTile(showElipses: showElipses));
+          final showEllipses = deltaDays > const Duration(days: 1);
+          tiles.add(NoEntriesTile(showElipses: showEllipses));
         }
       }
     }
@@ -75,7 +79,8 @@ class DiaryListView extends StatelessWidget {
 
   int _initialPosition(List<Widget> tiles) {
     final now = DateTime.now().toUtc();
-    int lastDay;
+    var lastDay = 0;
+    // TODO revisit this loop
     for (var i = 0; i < tiles.length; i++) {
       DateTime datetime;
       final tile = tiles[i];
@@ -106,21 +111,6 @@ class DiaryListView extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
     );
   }
-}
-
-Map<DateTime, List<DiaryEntry>> _groupDiaryEntries(List<DiaryEntry> diaryEntries) {
-  diaryEntries.sort((a, b) => a.datetime.compareTo(b.datetime));
-
-  return diaryEntries.fold({}, (groupedEntries, entry) {
-    final date = entry.datetime.toLocal().toMidnight();
-
-    return groupedEntries
-      ..update(
-        date,
-        (value) => value..add(entry),
-        ifAbsent: () => [entry],
-      );
-  });
 }
 
 extension Date on DateTime {

@@ -16,7 +16,7 @@ void main() {
 
     test('is deserializable', () {
       final irritantJson = {'name': 'Fructan'};
-      final irritant = serializers.deserializeWith(Irritant.serializer, irritantJson);
+      final irritant = serializers.deserializeWith(Irritant.serializer, irritantJson)!;
       expect(irritant.name, 'Fructan');
     });
 

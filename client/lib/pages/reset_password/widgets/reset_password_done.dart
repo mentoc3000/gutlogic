@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class ResetPasswordDone extends StatelessWidget {
   final String email;
 
-  ResetPasswordDone({this.email});
+  ResetPasswordDone({required this.email});
 
   @override
   Widget build(BuildContext context) {

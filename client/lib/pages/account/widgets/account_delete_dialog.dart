@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import '../../../auth/auth.dart';
 import '../../../blocs/account_delete/account_delete.dart';
 import '../../../resources/user_repository.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/buttons/buttons.dart';
-import '../../../widgets/form_fields/password_form_field.dart';
+import '../../../widgets/form_fields/password_field.dart';
 import '../../../widgets/gl_scaffold.dart';
 import '../../../widgets/snack_bars/error_snack_bar.dart';
 
@@ -16,15 +15,15 @@ class AccountDeleteDialog extends StatefulWidget {
   /// Show a dialog to confirm the user wants to delete their account.
   ///
   /// Returns a future which resolves to true if the user confirmed the account deletion.
-  static Future<bool> show({@required BuildContext context}) {
+  static Future<bool?> show({required BuildContext context}) {
     final user = context.read<UserRepository>().user;
 
     assert(user != null); // this dialog makes no sense if we don't have a user
 
     // Check if the user has a password they can use to reauthenticate.
-    final showPasswordEntry = user.providers.contains(AuthProvider.password);
+    final showPasswordEntry = user!.providers.contains(AuthProvider.password);
 
-    return showDialog(
+    return showDialog<bool>(
       context: context,
       builder: (context) => BlocProvider<AccountDeleteBloc>(
         create: (context) => AccountDeleteBloc(
@@ -39,7 +38,7 @@ class AccountDeleteDialog extends StatefulWidget {
 
   final bool showPasswordEntry;
 
-  AccountDeleteDialog({this.showPasswordEntry});
+  AccountDeleteDialog({required this.showPasswordEntry});
 
   @override
   AccountDeleteDialogState createState() => AccountDeleteDialogState(showPasswordEntry: showPasswordEntry);
@@ -49,7 +48,7 @@ class AccountDeleteDialogState extends State<AccountDeleteDialog> {
   final TextEditingController passwordTextController = TextEditingController();
   final bool showPasswordEntry;
 
-  AccountDeleteDialogState({this.showPasswordEntry});
+  AccountDeleteDialogState({required this.showPasswordEntry});
 
   @override
   void dispose() {
@@ -64,11 +63,8 @@ class AccountDeleteDialogState extends State<AccountDeleteDialog> {
 
   void listener(BuildContext context, AccountDeleteState state) {
     if (state is AccountDeleteError) {
-      final snackbar = ErrorSnackBar(text: state.message);
-      Scaffold.of(context).showSnackBar(snackbar);
-    }
-
-    if (state is AccountDeleteDone) {
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackBar(text: state.message));
+    } else if (state is AccountDeleteDone) {
       Navigator.pushAndRemoveUntil(context, Routes.of(context).login, (_) => false);
     }
   }
@@ -107,10 +103,10 @@ class AccountDeleteDialogState extends State<AccountDeleteDialog> {
   }
 
   /// Build an alert body with a password entry, for users with a password.
-  Widget buildPasswordBody({bool enabled}) {
+  Widget buildPasswordBody({required bool enabled}) {
     return ListBody(children: [
       const Text('Are you sure you want to delete your account? Please re-enter your password to continue.'),
-      PasswordFormField(controller: passwordTextController, enabled: enabled),
+      PasswordField(controller: passwordTextController, enabled: enabled),
     ]);
   }
 

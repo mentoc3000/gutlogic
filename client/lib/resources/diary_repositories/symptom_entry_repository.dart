@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:meta/meta.dart';
+
 import '../../models/diary_entry/symptom_entry.dart';
 import '../../models/serializers.dart';
 import '../../models/severity.dart';
@@ -9,7 +9,7 @@ import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
 import 'diary_repository_helpers.dart';
 
-SymptomEntry deserialize(Map<String, dynamic> object) {
+SymptomEntry? deserialize(Map<String, dynamic> object) {
   return serializers.deserializeWith(SymptomEntry.serializer, object);
 }
 
@@ -17,11 +17,11 @@ class SymptomEntryRepository
     with FirestoreRepository, DiaryEntryStreamer, DiaryEntryAdder, DiaryEntryDeleter, DiaryEntryUpdater {
   static Severity defaultSeverity = Severity.moderate;
 
-  SymptomEntryRepository({@required FirestoreService firestoreService}) {
+  SymptomEntryRepository({required FirestoreService firestoreService}) {
     this.firestoreService = firestoreService;
   }
 
-  Future<SymptomEntry> createFrom(SymptomType symptomType) async {
+  Future<SymptomEntry?> createFrom(SymptomType symptomType) async {
     final symptomEntry = SymptomEntry(
       id: '',
       datetime: DateTime.now().toUtc(),

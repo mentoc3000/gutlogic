@@ -19,7 +19,7 @@ void main() {
         'id': '1234',
         'name': 'Pizza',
       };
-      final food = serializers.deserializeWith(CustomFood.serializer, foodJson);
+      final food = serializers.deserializeWith(CustomFood.serializer, foodJson)!;
       expect(food.name, foodJson['name']);
     });
 

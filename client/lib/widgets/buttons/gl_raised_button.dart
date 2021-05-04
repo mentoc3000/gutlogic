@@ -3,30 +3,30 @@ import 'package:flutter/material.dart';
 import 'gl_button.dart';
 
 class GLRaisedButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final ButtonTextTheme textTheme;
-  final Color textColor;
-  final Color disabledTextColor;
-  final Color color;
-  final Color disabledColor;
-  final double elevation = null;
-  final double focusElevation = null;
-  final double hoverElevation = null;
-  final double highlightElevation = null;
-  final double disabledElevation = null;
-  final TextStyle textStyle;
-  final Widget child;
+  final VoidCallback? onPressed;
+  final ButtonTextTheme? textTheme;
+  final Color? textColor;
+  final Color? disabledTextColor;
+  final Color? color;
+  final Color? disabledColor;
+  final double? elevation = null;
+  final double? focusElevation = null;
+  final double? hoverElevation = null;
+  final double? highlightElevation = null;
+  final double? disabledElevation = null;
+  final TextStyle? textStyle;
+  final Widget? child;
 
   GLRaisedButton({
-    Key key,
-    @required this.onPressed,
+    Key? key,
+    this.onPressed,
     this.textTheme,
     this.textColor,
     this.disabledTextColor,
     this.color,
     this.disabledColor,
     this.textStyle,
-    @required this.child,
+    this.child,
   }) : super(key: key);
 
   @override

@@ -1,10 +1,11 @@
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../models/diary_entry/symptom_entry.dart';
 import '../../models/severity.dart';
 import '../../models/symptom.dart';
 import '../../models/symptom_type.dart';
 import '../../resources/firebase/analytics_service.dart';
+import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
 import '../diary_entry/diary_entry.dart';
 
@@ -12,7 +13,7 @@ abstract class SymptomEntryEvent extends Equatable {
   const SymptomEntryEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -31,10 +32,10 @@ class CreateFromAndStreamSymptomEntry extends SymptomEntryEvent implements Track
   const CreateFromAndStreamSymptomEntry(this.symptomType);
 
   @override
-  List<Object> get props => [symptomType];
+  List<Object?> get props => [symptomType];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_symptom_entry');
+  void track(AnalyticsService analytics) => analytics.logEvent('create_symptom_entry');
 }
 
 class StreamSymptomEntry extends SymptomEntryEvent with StreamDiaryEntry {
@@ -51,7 +52,7 @@ class DeleteSymptomEntry extends SymptomEntryEvent with DeleteDiaryEntry impleme
   const DeleteSymptomEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_symptom_entry');
+  void track(AnalyticsService analytics) => analytics.logEvent('delete_symptom_entry');
 }
 
 class UpdateSymptomEntry extends SymptomEntryEvent with UpdateDiaryEntry implements DebouncedEvent, TrackedEvent {
@@ -61,7 +62,7 @@ class UpdateSymptomEntry extends SymptomEntryEvent with UpdateDiaryEntry impleme
   const UpdateSymptomEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry');
 }
 
 class UpdateSymptomEntryDateTime extends SymptomEntryEvent
@@ -73,7 +74,7 @@ class UpdateSymptomEntryDateTime extends SymptomEntryEvent
   const UpdateSymptomEntryDateTime(this.dateTime);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'dateTime');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry', 'dateTime');
 }
 
 class UpdateSymptomEntryNotes extends SymptomEntryEvent
@@ -85,7 +86,7 @@ class UpdateSymptomEntryNotes extends SymptomEntryEvent
   const UpdateSymptomEntryNotes(this.notes);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'notes');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry', 'notes');
 }
 
 class UpdateSymptomType extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -94,13 +95,13 @@ class UpdateSymptomType extends SymptomEntryEvent with DebouncedEvent implements
   const UpdateSymptomType(this.symptomType);
 
   @override
-  List<Object> get props => [symptomType];
+  List<Object?> get props => [symptomType];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'type');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry', 'type');
 
   @override
-  String toString() => 'UpdateSymptomType { symptomName: ${symptomType?.name} } }';
+  String toString() => 'UpdateSymptomType { symptomName: ${symptomType.name} } }';
 }
 
 class UpdateSymptomName extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -109,11 +110,10 @@ class UpdateSymptomName extends SymptomEntryEvent with DebouncedEvent implements
   const UpdateSymptomName(this.symptomName);
 
   @override
-  List<Object> get props => [symptomName];
+  List<Object?> get props => [symptomName];
 
   @override
-  void track(AnalyticsService analyticsService) =>
-      analyticsService.logUpdateEvent('update_symptom_entry', 'symptom_name');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry', 'symptom_name');
 
   @override
   String toString() => 'UpdateSymptomName { symptomName: $symptomName } }';
@@ -125,13 +125,13 @@ class UpdateSymptom extends SymptomEntryEvent with DebouncedEvent implements Tra
   const UpdateSymptom(this.symptom);
 
   @override
-  List<Object> get props => [symptom];
+  List<Object?> get props => [symptom];
 
   @override
   void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'symptom');
 
   @override
-  String toString() => 'UpdateSymptom { symptomName: ${symptom?.symptomType?.name} }';
+  String toString() => 'UpdateSymptom { symptomName: ${symptom.symptomType.name} }';
 }
 
 class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -140,7 +140,7 @@ class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements Tr
   const UpdateSeverity(this.severity);
 
   @override
-  List<Object> get props => [severity];
+  List<Object?> get props => [severity];
 
   @override
   void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'severity');
@@ -151,10 +151,10 @@ class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements Tr
 
 class ThrowSymptomEntryError extends SymptomEntryEvent with ErrorEvent {
   @override
-  final Object error;
+  final ErrorReport report;
 
-  @override
-  final StackTrace trace;
+  const ThrowSymptomEntryError({required this.report});
 
-  const ThrowSymptomEntryError({@required this.error, @required this.trace});
+  factory ThrowSymptomEntryError.fromError({required dynamic error, required StackTrace trace}) =>
+      ThrowSymptomEntryError(report: ErrorReport(error: error, trace: trace));
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../../resources/diary_repositories/diary_repository.dart';
@@ -13,7 +12,7 @@ import 'diary_state.dart';
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
   final DiaryRepository repository;
 
-  DiaryBloc({@required this.repository}) : super(DiaryLoading());
+  DiaryBloc({required this.repository}) : super(DiaryLoading());
 
   factory DiaryBloc.fromContext(BuildContext context) {
     return DiaryBloc(repository: context.read<DiaryRepository>());
@@ -26,7 +25,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
         await streamSubscription?.cancel();
         streamSubscription = repository.streamAll().listen(
               (diaryEntries) => add(Load(diaryEntries: diaryEntries)),
-              onError: (error, StackTrace trace) => add(Throw(error: error, trace: trace)),
+              onError: (error, StackTrace trace) => add(ThrowDiaryError.fromError(error: error, trace: trace)),
             );
       }
       if (event is Load) {
@@ -39,8 +38,8 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
       if (event is Undelete) {
         unawaited(repository.add(event.diaryEntry));
       }
-      if (event is Throw) {
-        yield DiaryError.fromError(error: event.error, trace: event.trace);
+      if (event is ThrowDiaryError) {
+        yield DiaryError.fromReport(event.report);
       }
     } catch (error, trace) {
       yield DiaryError.fromError(error: error, trace: trace);

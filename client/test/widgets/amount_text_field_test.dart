@@ -6,9 +6,9 @@ import '../util/test_overlay.dart';
 
 void main() {
   group('AmountTextField', () {
-    TextEditingController controller;
-    Widget widget;
-    double amount;
+    late TextEditingController controller;
+    late Widget widget;
+    double? amount;
 
     setUp(() {
       controller = TextEditingController();

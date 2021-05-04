@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import '../../resources/symptom_type_repository.dart';
 import '../bloc_helpers.dart';
@@ -10,7 +9,7 @@ import 'symptom_type_state.dart';
 class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with StreamSubscriber {
   final SymptomTypeRepository repository;
 
-  SymptomTypeBloc({@required this.repository}) : super(SymptomTypesLoading());
+  SymptomTypeBloc({required this.repository}) : super(SymptomTypesLoading());
 
   factory SymptomTypeBloc.fromContext(BuildContext context) {
     return SymptomTypeBloc(repository: context.read<SymptomTypeRepository>());
@@ -27,7 +26,7 @@ class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with Stre
         await streamSubscription?.cancel();
         streamSubscription = repository.streamQuery(event.query).listen(
               (symptomTypes) => add(LoadSymptomTypes(symptomTypes)),
-              onError: (error, StackTrace trace) => add(ThrowSymptomTypeError(error: error, trace: trace)),
+              onError: (error, StackTrace trace) => add(ThrowSymptomTypeError.fromError(error: error, trace: trace)),
             );
       }
       if (event is FetchAllSymptomTypes) {
@@ -46,7 +45,7 @@ class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with Stre
         yield SymptomTypesLoaded(event.items);
       }
       if (event is ThrowSymptomTypeError) {
-        yield SymptomTypeError.fromError(error: event.error, trace: event.trace);
+        yield SymptomTypeError.fromReport(event.report);
       }
     } catch (error, trace) {
       yield SymptomTypeError.fromError(error: error, trace: trace);

@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
+import '../../models/diary_entry/meal_entry.dart';
 import '../../resources/diary_repositories/meal_entry_repository.dart';
 import '../bloc_helpers.dart';
 import '../diary_entry/diary_entry.dart';
@@ -12,7 +12,7 @@ import 'meal_entry_state.dart';
 class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubscriber, DiaryEntryMapper {
   final MealEntryRepository repository;
 
-  MealEntryBloc({@required this.repository}) : super(MealEntryLoading()) {
+  MealEntryBloc({required this.repository}) : super(MealEntryLoading()) {
     diaryEntryStreamer = repository;
     diaryEntryDeleter = repository;
     diaryEntryUpdater = repository;
@@ -35,8 +35,8 @@ class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubs
       if (event is StreamMealEntry) {
         yield MealEntryLoaded(event.diaryEntry);
         streamSubscription = diaryEntryStreamer.stream(event.diaryEntry).listen(
-              (d) => add(LoadMealEntry(d)),
-              onError: (error, StackTrace trace) => add(ThrowMealEntryError(error: error, trace: trace)),
+              (d) => add(LoadMealEntry(d as MealEntry)),
+              onError: (error, StackTrace trace) => add(ThrowMealEntryError.fromError(error: error, trace: trace)),
             );
       }
       if (event is LoadMealEntry) {
@@ -44,14 +44,18 @@ class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubs
       }
       if (event is CreateAndStreamDiaryEntry) {
         final mealEntry = await repository.create();
-        add(StreamMealEntry(mealEntry));
+        if (mealEntry != null) {
+          add(StreamMealEntry(mealEntry));
+        } else {
+          yield MealEntryError(message: 'Failed to create meal entry');
+        }
       }
       if (event is AddMealElement) {
-        final mealEntry = (state as DiaryEntryLoaded).diaryEntry;
+        final mealEntry = (state as DiaryEntryLoaded).diaryEntry as MealEntry;
         unawaited(repository.createMealElement(mealEntry, event.food));
       }
       if (event is MoveMealElement) {
-        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry;
+        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as MealEntry;
         unawaited(repository.reorderMealElement(diaryEntry, event.fromIndex, event.toIndex));
       }
       if (event is DeleteMealElement) {
@@ -62,6 +66,9 @@ class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubs
         unawaited(repository.addMealElement(event.mealEntry, event.mealElement));
       }
       yield* mapDiaryEntryEventToState(event);
+      if (event is ThrowMealEntryError) {
+        yield MealEntryError.fromReport(event.report);
+      }
     } catch (error, trace) {
       yield MealEntryError.fromError(error: error, trace: trace);
     }

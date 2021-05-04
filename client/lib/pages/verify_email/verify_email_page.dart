@@ -6,15 +6,17 @@ import '../../resources/firebase/remote_config_service.dart';
 import '../../widgets/gl_scaffold.dart';
 import 'widgets/verify_email_form.dart';
 
-final _messageConfig =
-    RemoteConfiguration(key: 'email_verification_message', defaultValue: 'Please check your email to verify');
+final _messageConfig = RemoteConfiguration(
+  key: 'email_verification_message',
+  defaultValue: 'Please check your email to verify',
+);
 
 class VerifyEmailPage extends StatelessWidget {
   final String email;
 
-  VerifyEmailPage({@required this.email});
+  VerifyEmailPage({required this.email});
 
-  static Widget provisioned({@required String email}) {
+  static Widget provisioned({required String email}) {
     return BlocProvider<VerifyEmailBloc>(
       create: (context) => VerifyEmailBloc.fromContext(context),
       child: VerifyEmailPage(email: email),

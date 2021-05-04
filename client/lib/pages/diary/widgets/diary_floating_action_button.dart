@@ -9,7 +9,7 @@ import '../../../widgets/gl_icons.dart';
 import '../../search_delegate/symptom_type_search_delegate.dart';
 
 class DiaryFloatingActionButton extends StatelessWidget {
-  const DiaryFloatingActionButton({Key key}) : super(key: key);
+  const DiaryFloatingActionButton({Key? key}) : super(key: key);
 
   void showSymptomTypeSearch(BuildContext context) {
     final symptomTypeBloc = BlocProvider.of<SymptomTypeBloc>(context);

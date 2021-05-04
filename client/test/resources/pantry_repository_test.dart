@@ -8,20 +8,24 @@ import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
+import 'package:gutlogic/resources/firebase/crashlytics_service.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-class MockFirestoreService extends Mock implements FirestoreService {}
+import '../flutter_test_config.dart';
+import 'pantry_repository_test.mocks.dart';
 
+@GenerateMocks([FirestoreService, CrashlyticsService])
 void main() {
   group('PantryRepository', () {
-    String pantryEntryId;
-    CustomFood food;
-    PantryEntry pantryEntry;
-    BuiltList<PantryEntry> pantryEntries;
-    MockFirestoreInstance instance;
-    FirestoreService firestoreService;
-    PantryRepository repository;
+    late String pantryEntryId;
+    late CustomFood food;
+    late PantryEntry pantryEntry;
+    late BuiltList<PantryEntry> pantryEntries;
+    late MockFirestoreInstance instance;
+    late FirestoreService firestoreService;
+    late PantryRepository repository;
 
     setUp(() async {
       pantryEntryId = 'entry1Id';
@@ -37,11 +41,13 @@ void main() {
       pantryEntries = [pantryEntry].build();
       instance = MockFirestoreInstance();
       final pantryCollection = instance.collection('pantry');
-      await pantryCollection.doc(pantryEntryId).set(serializers.serializeWith(PantryEntry.serializer, pantryEntry));
+      await pantryCollection
+          .doc(pantryEntryId)
+          .set(serializers.serializeWith(PantryEntry.serializer, pantryEntry) as Map<String, dynamic>);
       firestoreService = MockFirestoreService();
       when(firestoreService.instance).thenReturn(instance);
       when(firestoreService.userPantryCollection).thenReturn(pantryCollection);
-      repository = PantryRepository(firestoreService: firestoreService);
+      repository = PantryRepository(firestoreService: firestoreService, crashlytics: crashlyticsService);
     });
 
     test('streams all entries', () async {
@@ -72,7 +78,7 @@ void main() {
     });
 
     test('finds a food', () async {
-      final foundEntry = await repository.findByFood(food);
+      final foundEntry = await repository.findByFood(food.toFoodReference());
       expect(foundEntry, pantryEntry);
     });
 
@@ -88,18 +94,18 @@ void main() {
         notes: notes,
       );
       final newPantryEntry = await repository.add(pantryEntry2);
-      expect(newPantryEntry.foodReference, foodReference);
+      expect(newPantryEntry!.foodReference, foodReference);
     });
 
     test('adds a food', () async {
       final food = CustomFood(id: 'food2', name: 'spinach');
-      final newPantryEntry = await repository.addFood(food);
-      expect(newPantryEntry.foodReference, food.toFoodReference());
+      final newPantryEntry = await repository.addFood(food.toFoodReference());
+      expect(newPantryEntry!.foodReference, food.toFoodReference());
     });
 
     test('returns existing entry if adding food with existing entry', () async {
-      final existingPantryEntry = await repository.addFood(food);
-      expect(existingPantryEntry.foodReference.id, food.id);
+      final existingPantryEntry = await repository.addFood(food.toFoodReference());
+      expect(existingPantryEntry!.foodReference.id, food.id);
       expect(existingPantryEntry.notes, pantryEntry.notes);
     });
 
@@ -124,21 +130,21 @@ void main() {
       final updatedDiaryEntry = pantryEntry.rebuild((b) => b..notes = notes);
       await repository.updateEntry(updatedDiaryEntry);
       final retrievedEntry = (await instance.collection('pantry').doc(pantryEntryId).get()).data();
-      expect(retrievedEntry['notes'], notes);
+      expect(retrievedEntry!['notes'], notes);
     });
 
     test('updates sensitivity', () async {
       const newSensitivity = Sensitivity.none;
       await repository.updateSensitivity(pantryEntry, newSensitivity);
       final retrievedEntry = (await instance.collection('pantry').doc(pantryEntryId).get()).data();
-      expect(retrievedEntry['sensitivity'], serializers.serializeWith(Sensitivity.serializer, newSensitivity));
+      expect(retrievedEntry!['sensitivity'], serializers.serializeWith(Sensitivity.serializer, newSensitivity));
     });
 
     test('updates notes', () async {
       const notes = 'new notes';
       await repository.updateNotes(pantryEntry, notes);
       final retrievedEntry = (await instance.collection('pantry').doc(pantryEntryId).get()).data();
-      expect(retrievedEntry['notes'], notes);
+      expect(retrievedEntry!['notes'], notes);
     });
 
     test('removes corrupt entry', () async {

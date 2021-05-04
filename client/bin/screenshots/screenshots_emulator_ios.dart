@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:meta/meta.dart';
 import 'package:quiver/iterables.dart';
 
 import 'screenshots_process.dart';
@@ -38,9 +37,9 @@ Future<List<AppleSimulatorDevice>> devices() async {
 
     if (match == null) return [];
 
-    final runtimePlatformName = match.group(1);
-    final runtimeMajorVersion = int.parse(match.group(2));
-    final runtimeMinorVersion = int.parse(match.group(3));
+    final runtimePlatformName = match.group(1)!;
+    final runtimeMajorVersion = int.parse(match.group(2)!);
+    final runtimeMinorVersion = int.parse(match.group(3)!);
 
     final platform = AppleSimulatorPlatform(runtimePlatformName);
     final version = AppleSimulatorVersion(runtimeMajorVersion, runtimeMinorVersion);
@@ -62,10 +61,10 @@ class AppleSimulatorDevice {
   final AppleSimulatorPlatform platform;
 
   const AppleSimulatorDevice({
-    @required this.udid,
-    @required this.name,
-    @required this.platform,
-    @required this.version,
+    required this.udid,
+    required this.name,
+    required this.platform,
+    required this.version,
   });
 
   @override

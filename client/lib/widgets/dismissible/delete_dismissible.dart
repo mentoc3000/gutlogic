@@ -1,18 +1,17 @@
-import 'dart:async';
-import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
+
 import '../gl_icons.dart';
 
 class DeleteDismissible extends StatelessWidget {
   final Widget child;
   final void Function() onDelete;
   final dismissThreshold = 0.7;
-  final FutureOr<bool> Function() confirmDismiss;
+  final ConfirmDismissCallback? confirmDismiss;
 
   const DeleteDismissible({
-    Key key,
-    @required this.child,
-    @required this.onDelete,
+    Key? key,
+    required this.child,
+    required this.onDelete,
     this.confirmDismiss,
   }) : super(key: key);
 
@@ -23,7 +22,7 @@ class DeleteDismissible extends StatelessWidget {
     return Dismissible(
       key: UniqueKey(),
       child: child,
-      confirmDismiss: (_) async => await confirmDismiss == null ? true : confirmDismiss(),
+      confirmDismiss: confirmDismiss,
       direction: DismissDirection.endToStart,
       dismissThresholds: dismissThresholds,
       onDismissed: (_) => onDelete(),

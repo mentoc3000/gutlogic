@@ -8,13 +8,13 @@ void main() {
   group('EdamamEntry', () {
     test('is serializable', () {
       final asparagus = serializers.deserializeWith(EdamamApiEntry.serializer, asparagusResult);
-      expect(asparagus.measures[2].qualified[1].weight, 16.0);
+      expect(asparagus!.measures[2].qualified![1].weight, 16.0);
     });
 
     test('converts to EdamamFood', () {
       final asparagusNative = serializers.deserializeWith(EdamamApiEntry.serializer, asparagusResult);
-      final asparagus = asparagusNative.toEdamamFood();
-      expect(asparagus.measures[4].unit, 'Spear, extra large');
+      final asparagus = asparagusNative!.toEdamamFood();
+      expect(asparagus!.measures[4].unit, 'Spear, extra large');
     });
 
     test('converts with empty measure data', () {
@@ -54,8 +54,8 @@ void main() {
       };
 
       final nativeFood = serializers.deserializeWith(EdamamApiEntry.serializer, incompleteResult);
-      final food = nativeFood.toEdamamFood();
-      expect(food.measures.length, 2);
+      final food = nativeFood!.toEdamamFood();
+      expect(food!.measures.length, 2);
     });
   });
 }

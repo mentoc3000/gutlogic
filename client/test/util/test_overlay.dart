@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TestOverlay extends StatelessWidget {
   final Widget child;
-  const TestOverlay({Key key, this.child}) : super(key: key);
+  const TestOverlay({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

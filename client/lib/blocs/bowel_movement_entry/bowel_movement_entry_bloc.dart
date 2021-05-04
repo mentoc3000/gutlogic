@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
+import '../../models/diary_entry/bowel_movement_entry.dart';
 import '../../resources/diary_repositories/bowel_movement_entry_repository.dart';
 import '../bloc_helpers.dart';
 import '../diary_entry/diary_entry.dart';
@@ -13,7 +13,7 @@ class BowelMovementEntryBloc extends Bloc<BowelMovementEntryEvent, BowelMovement
     with StreamSubscriber, DiaryEntryMapper {
   final BowelMovementEntryRepository repository;
 
-  BowelMovementEntryBloc({@required this.repository}) : super(BowelMovementEntryLoading()) {
+  BowelMovementEntryBloc({required this.repository}) : super(BowelMovementEntryLoading()) {
     diaryEntryStreamer = repository;
     diaryEntryDeleter = repository;
     diaryEntryUpdater = repository;
@@ -36,8 +36,9 @@ class BowelMovementEntryBloc extends Bloc<BowelMovementEntryEvent, BowelMovement
       if (event is StreamBowelMovementEntry) {
         yield BowelMovementEntryLoaded(event.diaryEntry);
         streamSubscription = diaryEntryStreamer.stream(event.diaryEntry).listen(
-              (d) => add(LoadBowelMovementEntry(d)),
-              onError: (error, StackTrace trace) => add(ThrowBowelMovementEntryError(error: error, trace: trace)),
+              (d) => add(LoadBowelMovementEntry(d as BowelMovementEntry)),
+              onError: (error, StackTrace trace) =>
+                  add(ThrowBowelMovementEntryError.fromError(error: error, trace: trace)),
             );
       }
       if (event is LoadBowelMovementEntry) {
@@ -45,17 +46,24 @@ class BowelMovementEntryBloc extends Bloc<BowelMovementEntryEvent, BowelMovement
       }
       if (event is CreateAndStreamDiaryEntry) {
         final bowelMovementEntry = await repository.create();
-        add(StreamBowelMovementEntry(bowelMovementEntry));
+        if (bowelMovementEntry != null) {
+          add(StreamBowelMovementEntry(bowelMovementEntry));
+        } else {
+          yield BowelMovementEntryError(message: 'Faild to create bowel movement entry');
+        }
       }
       if (event is UpdateType) {
-        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry;
-        unawaited(repository.updateType(diaryEntry, event.type));
+        final bowelMovementEntry = (state as DiaryEntryLoaded).diaryEntry as BowelMovementEntry;
+        unawaited(repository.updateType(bowelMovementEntry, event.type));
       }
       if (event is UpdateVolume) {
-        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry;
-        unawaited(repository.updateVolume(diaryEntry, event.volume));
+        final bowelMovementEntry = (state as DiaryEntryLoaded).diaryEntry as BowelMovementEntry;
+        unawaited(repository.updateVolume(bowelMovementEntry, event.volume));
       }
       yield* mapDiaryEntryEventToState(event);
+      if (event is ThrowBowelMovementEntryError) {
+        yield BowelMovementEntryError.fromReport(event.report);
+      }
     } catch (error, trace) {
       yield BowelMovementEntryError.fromError(error: error, trace: trace);
     }

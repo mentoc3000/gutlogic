@@ -13,8 +13,10 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
   final SymptomTypeBloc symptomTypeBloc;
   final String noResultsMessage = 'No results found.';
 
-  SymptomTypeSearchDelegate({this.symptomTypeBloc, void Function(SymptomType) onSelect})
-      : super(onSelect: onSelect, searchFieldLabel: 'Search for symptom');
+  SymptomTypeSearchDelegate({
+    required this.symptomTypeBloc,
+    required void Function(SymptomType) onSelect,
+  }) : super(onSelect: onSelect, searchFieldLabel: 'Search for symptom');
 
   @override
   Widget buildResults(BuildContext context) {
@@ -35,7 +37,7 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
   Widget buildList(SymptomTypeBloc symptomTypeBloc) {
     //Build the results based on the searchResults stream in the searchBloc
     return BlocBuilder<SymptomTypeBloc, SymptomTypeState>(
-      cubit: symptomTypeBloc,
+      bloc: symptomTypeBloc,
       builder: (BuildContext context, SymptomTypeState state) {
         if (state is SymptomTypesLoaded) {
           final items = state.items;

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/diary_entry/meal_entry.dart';
 import '../../models/food/food.dart';
@@ -16,16 +15,17 @@ import '../pantry_repository.dart';
 class MealElementRepository with FirestoreRepository {
   PantryRepository pantryRepository;
 
-  MealElementRepository({@required FirestoreService firestoreService, @required this.pantryRepository}) {
+  MealElementRepository({required FirestoreService firestoreService, required this.pantryRepository}) {
     this.firestoreService = firestoreService;
   }
 
   static String newMealElementId(MealEntry mealEntry) => '${mealEntry.id}#${DateTime.now().toUtc().toIso8601String()}';
 
-  Stream<MealElement> stream(MealElement mealElement) {
+  Stream<MealElement?> stream(MealElement mealElement) {
     final stream = firestoreService.userDiaryCollection.doc(mealElement.mealEntryId).snapshots();
     return stream.map((document) {
       final data = FirestoreService.getDocumentData(document);
+      if (data == null) return null;
       final List serializedMealElements = data['mealElements'];
       final serializedMealElement =
           serializedMealElements.firstWhere((i) => (i as Map<String, dynamic>)['id'] == mealElement.id);
@@ -40,6 +40,7 @@ class MealElementRepository with FirestoreRepository {
       final mealEntrySnapshot = await tx.get(mealEntryRef);
       if (mealEntrySnapshot.exists) {
         final serializedMealEntry = mealEntrySnapshot.data();
+        if (serializedMealEntry == null) return null;
         await tx.update(mealEntryRef, updater(serializedMealEntry));
       }
     });
@@ -74,10 +75,10 @@ class MealElementRepository with FirestoreRepository {
   Future<void> updateNotes(MealElement mealElement, String notes) =>
       update(mealElement.rebuild((b) => b..notes = notes));
 
-  Future<MealElement> addNewMealElementTo(MealEntry mealEntry, {@required Food food}) async {
+  Future<MealElement?> addNewMealElementTo(MealEntry mealEntry, {required Food food}) async {
     final mealElementId = newMealElementId(mealEntry);
     final foodReference = food.toFoodReference();
-    final pantryEntry = await pantryRepository.findByFood(food);
+    final pantryEntry = await pantryRepository.findByFood(foodReference);
     final mealElement = MealElement(
       id: mealElementId,
       foodReference: foodReference,
@@ -86,10 +87,12 @@ class MealElementRepository with FirestoreRepository {
     return addMealElementTo(mealEntry, mealElement: mealElement);
   }
 
-  Future<MealElement> addMealElementTo(MealEntry mealEntry, {@required MealElement mealElement}) async {
+  Future<MealElement?> addMealElementTo(MealEntry mealEntry, {required MealElement mealElement}) async {
     final updatedEntry = mealEntry
         .rebuild((b) => b..mealElements = mealEntry.mealElements.rebuild((b) => b..add(mealElement)).toBuilder());
-    await firestoreService.userDiaryCollection.doc(mealEntry.id).update(serializers.serialize(updatedEntry));
+    final serialized = serializers.serialize(updatedEntry) as Map<String, dynamic>?;
+    if (serialized == null) return null;
+    await firestoreService.userDiaryCollection.doc(mealEntry.id).update(serialized);
     return mealElement;
   }
 }

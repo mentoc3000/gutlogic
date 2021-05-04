@@ -44,7 +44,8 @@ class PantryPage extends StatelessWidget {
       context: context,
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
-        onSelect: (food) => Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food)),
+        onSelect: (food) =>
+            Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food.toFoodReference())),
       ),
     );
   }
@@ -115,11 +116,10 @@ class PantryPage extends StatelessWidget {
 
   void listener(BuildContext context, PantryState state) {
     if (state is PantryEntryDeleted) {
-      final snackbar = UndoDeleteSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(UndoDeleteSnackBar(
         name: state.pantryEntry.foodReference.name,
         onUndelete: () => context.read<PantryBloc>().add(UndeletePantryEntry(state.pantryEntry)),
-      );
-      Scaffold.of(context).showSnackBar(snackbar);
+      ));
     }
   }
 }

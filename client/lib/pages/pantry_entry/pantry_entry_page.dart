@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/pantry_entry/pantry_entry.dart';
-import '../../models/food/food.dart';
+import '../../models/food_reference/food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../resources/pantry_repository.dart';
 import '../../widgets/cards/notes_card.dart';
@@ -35,10 +36,10 @@ class PantryEntryPage extends StatefulWidget {
   }
 
   /// Wrap an pantryentry page with the necessary bloc providers, given the meal entry.
-  static Widget forFood(Food food) {
+  static Widget forFood(FoodReference foodReference) {
     return BlocProvider(
       create: (context) {
-        return PantryEntryBloc(repository: context.read<PantryRepository>())..add(CreateAndStreamEntry(food));
+        return PantryEntryBloc(repository: context.read<PantryRepository>())..add(CreateAndStreamEntry(foodReference));
       },
       child: PantryEntryPage(),
     );
@@ -64,7 +65,7 @@ class _PantryEntryPageState extends State<PantryEntryPage> {
 
   void listener(BuildContext context, PantryEntryState state) {
     if (state is PantryEntryLoaded) {
-      _notesController.text = state.pantryEntry.notes;
+      _notesController.text = state.pantryEntry.notes ?? '';
     }
   }
 
@@ -75,7 +76,7 @@ class _PantryEntryPageState extends State<PantryEntryPage> {
     List<Widget> buildCards(PantryEntry pantryEntry) {
       return [
         SensitivitySlider(
-          sensitivityLevel: pantryEntry.sensitivity,
+          sensitivity: pantryEntry.sensitivity,
           onChanged: (sensitivity) => pantryBloc.add(UpdateSensitivity(sensitivity)),
         ),
         NotesCard(

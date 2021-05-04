@@ -10,7 +10,7 @@ abstract class ConsentState extends Equatable {
   const ConsentState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -30,14 +30,14 @@ class ConsentDone extends ConsentState {
 
 class ConsentError extends ConsentState with ErrorState, ErrorRecorder {
   @override
-  final ErrorReport report;
-
-  @override
   final String message;
 
-  const ConsentError({@required this.message}) : report = null;
+  @override
+  final ErrorReport? report;
 
-  ConsentError.fromError({@required dynamic error, @required StackTrace trace, bool isMinimumAge})
+  const ConsentError({required this.message}) : report = null;
+
+  ConsentError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 }

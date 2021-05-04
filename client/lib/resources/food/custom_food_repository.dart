@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'package:meta/meta.dart';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../models/food/custom_food.dart';
 import '../../models/food_reference/custom_food_reference.dart';
 import '../../models/serializers.dart';
@@ -10,20 +11,28 @@ import '../firebase/firestore_service.dart';
 import 'food_repository.dart';
 
 class CustomFoodRepository with FirestoreRepository implements FoodRepository {
-  CustomFoodRepository({@required FirestoreService firestoreService}) {
+  CustomFoodRepository({required FirestoreService firestoreService}) {
     this.firestoreService = firestoreService;
   }
 
-  CustomFood _documentSnapshotToCustomFood(DocumentSnapshot documentSnapshot) => serializers.deserializeWith(
-        CustomFood.serializer,
-        FirestoreService.getDocumentData(documentSnapshot),
-      );
+  CustomFood? _documentSnapshotToCustomFood(DocumentSnapshot documentSnapshot) {
+    return serializers.deserializeWith(
+      CustomFood.serializer,
+      FirestoreService.getDocumentData(documentSnapshot),
+    );
+  }
 
   bool _foodMatchesQuery(CustomFood food, String query) => food.queryText().toLowerCase().contains(query.toLowerCase());
 
-  Iterable<CustomFood> _documentSnapshotToResults(Iterable<DocumentSnapshot> documentSnapshots, String query) =>
-      documentSnapshots.map(_documentSnapshotToCustomFood).where((food) => _foodMatchesQuery(food, query)).toList()
-        ..sort((a, b) => a.queryText().compareTo(b.queryText()));
+  Iterable<CustomFood> _documentSnapshotToResults(Iterable<DocumentSnapshot> documentSnapshots, String query) {
+    return documentSnapshots
+        .map(_documentSnapshotToCustomFood)
+        .where((food) => food != null)
+        .cast<CustomFood>()
+        .where((food) => _foodMatchesQuery(food, query))
+        .toList()
+          ..sort((a, b) => a.queryText().compareTo(b.queryText()));
+  }
 
   @override
   Future<BuiltList<CustomFood>> fetchQuery(String query) async {
@@ -32,7 +41,7 @@ class CustomFoodRepository with FirestoreRepository implements FoodRepository {
     return BuiltList<CustomFood>(_documentSnapshotToResults(querySnapshot.docs, query));
   }
 
-  Future<CustomFood> fetchItem(CustomFoodReference foodReference) async {
+  Future<CustomFood?> fetchItem(CustomFoodReference foodReference) async {
     final id = foodReference.id;
     final documentSnapshot = await firestoreService.customFoodCollection.doc(id).get();
     return _documentSnapshotToCustomFood(documentSnapshot);
@@ -44,13 +53,13 @@ class CustomFoodRepository with FirestoreRepository implements FoodRepository {
     return stream.map((querySnapshot) => BuiltList<CustomFood>(_documentSnapshotToResults(querySnapshot.docs, query)));
   }
 
-  Stream<CustomFood> streamItem(CustomFoodReference foodReference) {
+  Stream<CustomFood?> streamItem(CustomFoodReference foodReference) {
     final id = foodReference.id;
     final stream = firestoreService.customFoodCollection.doc(id).snapshots();
     return stream.map(_documentSnapshotToCustomFood);
   }
 
-  Future<CustomFood> add({@required String name}) async {
+  Future<CustomFood?> add({required String name}) async {
     if (name == '') return null;
 
     // If a food with a case-insensitive matching name already exists, use that.
@@ -60,10 +69,11 @@ class CustomFoodRepository with FirestoreRepository implements FoodRepository {
     }
 
     final food = CustomFood(id: '', name: name);
-    final Map<String, dynamic> serializedFood = serializers.serialize(food);
+    final serializedFood = serializers.serialize(food) as Map<String, dynamic>?;
+    if (serializedFood == null) return null;
     serializedFood.remove('id');
     final doc = await firestoreService.customFoodCollection.addUnawaited(serializedFood).get();
-    return serializers.deserialize(FirestoreService.getDocumentData(doc));
+    return serializers.deserialize(FirestoreService.getDocumentData(doc)) as CustomFood?;
   }
 
   Future<void> delete(CustomFood food) => deleteById(food.id);

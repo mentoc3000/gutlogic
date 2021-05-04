@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/pantry/pantry.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../pages/error_page.dart';
@@ -13,7 +14,7 @@ class PantrySearchDelegate extends SearchableSearchDelegate<PantryEntry> {
   final PantryBloc pantryBloc;
   final String noResultsMessage = 'No matches found. Try adding a food!';
 
-  PantrySearchDelegate({@required this.pantryBloc, void Function(PantryEntry) onSelect})
+  PantrySearchDelegate({required this.pantryBloc, required void Function(PantryEntry) onSelect})
       : super(onSelect: onSelect, searchFieldLabel: 'Search for food');
 
   @override
@@ -29,7 +30,7 @@ class PantrySearchDelegate extends SearchableSearchDelegate<PantryEntry> {
 
   Widget buildList(PantryBloc pantryBloc) {
     return BlocBuilder<PantryBloc, PantryState>(
-      cubit: pantryBloc,
+      bloc: pantryBloc,
       builder: (BuildContext context, PantryState state) {
         if (state is PantryLoaded) {
           final items = state.items;

@@ -1,6 +1,6 @@
-import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+
 import '../bowel_movement.dart';
 import 'diary_entry.dart';
 
@@ -14,9 +14,9 @@ abstract class BowelMovementEntry implements DiaryEntry, Built<BowelMovementEntr
   BowelMovementEntry._();
 
   factory BowelMovementEntry({
-    @required String id,
-    @required DateTime datetime,
-    @required BowelMovement bowelMovement,
+    required String id,
+    required DateTime datetime,
+    required BowelMovement bowelMovement,
     String notes,
   }) = _$BowelMovementEntry._;
 

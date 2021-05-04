@@ -10,7 +10,7 @@ abstract class RegisterState extends Equatable {
   const RegisterState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -27,7 +27,7 @@ class RegisterReady extends RegisterState {
 class RegisterAwaitingEmailVerification extends RegisterState {
   final String username;
 
-  const RegisterAwaitingEmailVerification({this.username});
+  const RegisterAwaitingEmailVerification({required this.username});
 }
 
 class RegisterSuccess extends RegisterState {
@@ -36,12 +36,12 @@ class RegisterSuccess extends RegisterState {
 
 class RegisterError extends RegisterState with ErrorState, ErrorRecorder {
   @override
-  final ErrorReport report;
-
-  @override
   final String message;
 
-  const RegisterError({@required this.message}) : report = null;
+  @override
+  final ErrorReport? report;
+
+  const RegisterError({required this.message}) : report = null;
 
   factory RegisterError.duplicateUsername() => const RegisterError(message: 'Sorry, that email is already in use.');
 
@@ -55,7 +55,7 @@ class RegisterError extends RegisterState with ErrorState, ErrorRecorder {
   factory RegisterError.passwordTooLong() =>
       const RegisterError(message: 'Sorry, your password must be less than 64 characters.');
 
-  RegisterError.fromError({@required dynamic error, @required StackTrace trace})
+  RegisterError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 }

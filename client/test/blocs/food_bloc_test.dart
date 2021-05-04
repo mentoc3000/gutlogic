@@ -9,15 +9,18 @@ import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/resources/food/custom_food_repository.dart';
 import 'package:gutlogic/resources/food/edamam_food_repository.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-import '../mocks/mock_bloc_delegate.dart';
+import '../flutter_test_config.dart';
 import '../util/test_helpers.dart';
+import 'food_bloc_test.mocks.dart';
 
+@GenerateMocks([CustomFoodRepository, EdamamFoodRepository])
 void main() {
   group('Food Bloc', () {
-    CustomFoodRepository customFoodRepository;
-    EdamamFoodRepository edamamFoodRepository;
+    late MockCustomFoodRepository customFoodRepository;
+    late MockEdamamFoodRepository edamamFoodRepository;
     final bread = CustomFood(id: '123', name: 'Bread');
     final beer = CustomFood(id: '120', name: 'Beer');
     final justBread = BuiltList<CustomFood>([bread]);
@@ -47,10 +50,9 @@ void main() {
       );
     });
 
-    blocTest(
+    blocTest<FoodBloc, FoodState>(
       'creates custom food',
       build: () {
-        mockBlocDelegate();
         return FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository);
       },
       act: (bloc) async => bloc.add(const CreateCustomFood('new food name')),
@@ -60,10 +62,9 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<FoodBloc, FoodState>(
       'deletes custom food',
       build: () {
-        mockBlocDelegate();
         return FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository);
       },
       act: (bloc) async => bloc.add(DeleteCustomFood(bread)),
@@ -73,17 +74,16 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<FoodBloc, FoodState>(
       'streams queried foods',
       build: () {
-        mockBlocDelegate();
         return FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository);
       },
       act: (bloc) async {
         bloc.add(const StreamFoodQuery('B'));
       },
       wait: debounceWaitDuration,
-      expect: [
+      expect: () => [
         FoodsLoading(),
         FoodsLoaded(query: 'B', customFoods: justBread, edamamFoods: justBacon),
       ],
@@ -93,10 +93,9 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<FoodBloc, FoodState>(
       'updates results when one source emits event',
       build: () {
-        mockBlocDelegate();
         when(customFoodRepository.streamQuery('B')).thenAnswer((i) => Stream.fromIterable([justBread, breadAndBeer]));
         return FoodBloc(customFoodRepository: customFoodRepository, edamamFoodRepository: edamamFoodRepository);
       },
@@ -104,7 +103,7 @@ void main() {
         bloc.add(const StreamFoodQuery('B'));
       },
       wait: debounceWaitDuration,
-      expect: [
+      expect: () => [
         FoodsLoading(),
         FoodsLoaded(query: 'B', customFoods: justBread, edamamFoods: justBacon),
         FoodsLoaded(query: 'B', customFoods: breadAndBeer, edamamFoods: justBacon),
@@ -120,7 +119,3 @@ void main() {
     });
   });
 }
-
-class MockCustomFoodRepository extends Mock implements CustomFoodRepository {}
-
-class MockEdamamFoodRepository extends Mock implements EdamamFoodRepository {}

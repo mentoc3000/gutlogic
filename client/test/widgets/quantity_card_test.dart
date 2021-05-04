@@ -83,7 +83,7 @@ void main() {
 
       expect(find.text(initUnit), findsNothing);
       expect(find.text(newUnit), findsOneWidget);
-      expect(quantity.measure.unit, newUnit);
+      expect(quantity.measure!.unit, newUnit);
     });
 
     testWidgets('updates unit with dropdown', (WidgetTester tester) async {
@@ -119,15 +119,15 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(seconds: 1)); // finish the menu animation
 
-      expect(quantity.measure.unit, newUnit);
+      expect(quantity.measure!.unit, newUnit);
     });
 
     test('formats amount', () {
-      expect(QuantityCard.formatAmount(null), null);
+      expect(QuantityCard.formatAmount(null), '');
       expect(QuantityCard.formatAmount(0), '0');
       expect(QuantityCard.formatAmount(3), '3');
       expect(QuantityCard.formatAmount(3.0), '3');
-      expect(QuantityCard.formatAmount(3.1), '3.1');
+      expect(QuantityCard.formatAmount(3.1), '3.10');
       expect(QuantityCard.formatAmount(3.14159), '3.14');
       expect(QuantityCard.formatAmount(3.148), '3.15');
       expect(QuantityCard.formatAmount(1243.148), '1243.15');

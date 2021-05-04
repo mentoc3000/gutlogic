@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ChangePasswordUpgradeWarning extends StatelessWidget {
   final String email;
 
-  ChangePasswordUpgradeWarning({this.email});
+  ChangePasswordUpgradeWarning({required this.email});
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ class AccountDeleteBloc extends Bloc<AccountDeleteEvent, AccountDeleteState> {
   final UserRepository _userRepository;
   final Authenticator _authenticator;
 
-  AccountDeleteBloc({Authenticator authenticator, UserRepository userRepository})
+  AccountDeleteBloc({required Authenticator authenticator, required UserRepository userRepository})
       : _authenticator = authenticator,
         _userRepository = userRepository,
         super(const AccountDeleteReady());
@@ -31,7 +31,7 @@ class AccountDeleteBloc extends Bloc<AccountDeleteEvent, AccountDeleteState> {
 
       final auth = await _authenticator.authenticate(
         provider: AuthProvider.password,
-        username: _userRepository.user.username,
+        username: _userRepository.user!.username,
         password: event.password,
       );
 

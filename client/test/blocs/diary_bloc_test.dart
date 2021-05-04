@@ -15,13 +15,16 @@ import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-import '../mocks/mock_bloc_delegate.dart';
+import '../flutter_test_config.dart';
+import 'diary_bloc_test.mocks.dart';
 
+@GenerateMocks([DiaryRepository])
 void main() {
   group('DiaryBloc', () {
-    MockDiaryRepository diaryRepository;
+    late MockDiaryRepository diaryRepository;
     final mealEntry = MealEntry(
       id: '1',
       datetime: DateTime.now().toUtc(),
@@ -50,11 +53,11 @@ void main() {
       expect(DiaryBloc(repository: diaryRepository).state, DiaryLoading());
     });
 
-    blocTest(
+    blocTest<DiaryBloc, DiaryState>(
       'streams all diary entries',
       build: () => DiaryBloc(repository: diaryRepository),
       act: (bloc) => bloc.add(const StreamAllDiary()),
-      expect: [
+      expect: () => [
         DiaryLoading(),
         DiaryLoaded(allDiaryEntries),
       ],
@@ -63,40 +66,38 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<DiaryBloc, DiaryState>(
       'loads diary entries',
       build: () => DiaryBloc(repository: diaryRepository),
       act: (bloc) => bloc.add(Load(diaryEntries: allDiaryEntries)),
-      expect: [DiaryLoaded(allDiaryEntries)],
+      expect: () => [DiaryLoaded(allDiaryEntries)],
       verify: (bloc) async {
         verifyNever(diaryRepository.streamAll());
       },
     );
 
-    blocTest(
+    blocTest<DiaryBloc, DiaryState>(
       'deletes meal entry',
       build: () {
-        mockBlocDelegate();
         return DiaryBloc(repository: diaryRepository);
       },
       act: (bloc) => bloc.add(Delete(mealEntry)),
-      expect: [DiaryEntryDeleted(mealEntry)],
+      expect: () => [DiaryEntryDeleted(mealEntry)],
       verify: (bloc) async {
         verify(diaryRepository.delete(mealEntry)).called(1);
         verify(analyticsService.logEvent('delete_meal_entry')).called(1);
       },
     );
 
-    blocTest(
+    blocTest<DiaryBloc, DiaryState>(
       'deletes symptom entry',
       build: () {
-        mockBlocDelegate();
         return DiaryBloc(repository: diaryRepository);
       },
       act: (bloc) {
         bloc.add(Delete(symptomEntry));
       },
-      expect: [
+      expect: () => [
         DiaryEntryDeleted(symptomEntry),
       ],
       verify: (bloc) async {
@@ -105,16 +106,15 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<DiaryBloc, DiaryState>(
       'deletes bowel movement entry',
       build: () {
-        mockBlocDelegate();
         return DiaryBloc(repository: diaryRepository);
       },
       act: (bloc) {
         bloc.add(Delete(bowelMovementEntry));
       },
-      expect: [
+      expect: () => [
         DiaryEntryDeleted(bowelMovementEntry),
       ],
       verify: (bloc) async {
@@ -123,13 +123,13 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<DiaryBloc, DiaryState>(
       'transitions to error state when stream throws error',
       build: () {
         when(diaryRepository.streamAll()).thenThrow(Exception());
         return DiaryBloc(repository: diaryRepository);
       },
-      expect: [
+      expect: () => [
         DiaryLoading(),
         isA<DiaryError>(),
       ],
@@ -141,5 +141,3 @@ void main() {
     });
   });
 }
-
-class MockDiaryRepository extends Mock implements DiaryRepository {}

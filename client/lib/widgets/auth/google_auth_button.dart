@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:meta/meta.dart';
 
 import '../buttons/button_helpers.dart';
 import '../buttons/buttons.dart';
@@ -17,7 +16,7 @@ class GoogleAuthButton extends StatelessWidget {
   /// The button action.
   final VoidCallback onPressed;
 
-  GoogleAuthButton({Key key, @required this.label, @required this.onPressed}) : super(key: key);
+  GoogleAuthButton({Key? key, required this.label, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

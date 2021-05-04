@@ -1,6 +1,6 @@
-import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+
 import '../symptom.dart';
 import 'diary_entry.dart';
 
@@ -14,9 +14,9 @@ abstract class SymptomEntry implements DiaryEntry, Built<SymptomEntry, SymptomEn
   SymptomEntry._();
 
   factory SymptomEntry({
-    @required String id,
-    @required DateTime datetime,
-    @required Symptom symptom,
+    required String id,
+    required DateTime datetime,
+    required Symptom symptom,
     String notes,
   }) = _$SymptomEntry._;
 

@@ -6,7 +6,7 @@ import 'gl_alert_dialog.dart';
 class ConfirmDeleteDialog extends StatelessWidget {
   final String itemName;
 
-  const ConfirmDeleteDialog({Key key, @required this.itemName}) : super(key: key);
+  const ConfirmDeleteDialog({Key? key, required this.itemName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

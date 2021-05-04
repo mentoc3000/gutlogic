@@ -11,25 +11,25 @@ import 'quantity_card.dart';
 
 class MealElementEntryListView extends StatelessWidget {
   final MealElement mealElement;
-  final Food food;
+  final Food? food;
   final TextEditingController notesController;
   final TextEditingController amountController;
   final TextEditingController unitController;
 
-  const MealElementEntryListView(
-      {Key key,
-      @required this.mealElement,
-      @required this.food,
-      @required this.notesController,
-      @required this.amountController,
-      @required this.unitController})
-      : super(key: key);
+  const MealElementEntryListView({
+    Key? key,
+    required this.mealElement,
+    required this.food,
+    required this.notesController,
+    required this.amountController,
+    required this.unitController,
+  }) : super(key: key);
 
   void addFoodToPantry(BuildContext context) {
     if (mealElement.pantryEntryReference != null) {
-      Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForId(mealElement.pantryEntryReference.id));
+      Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForId(mealElement.pantryEntryReference!.id));
     } else {
-      Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food));
+      Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(mealElement.foodReference));
     }
   }
 
@@ -45,7 +45,7 @@ class MealElementEntryListView extends StatelessWidget {
       ),
       MealElementSensitivityCard(
         sensitivity: mealElement.pantryEntryReference?.sensitivity,
-        onTap: food == null ? null : () => addFoodToPantry(context),
+        onTap: () => addFoodToPantry(context),
       ),
       NotesCard(
         controller: notesController,

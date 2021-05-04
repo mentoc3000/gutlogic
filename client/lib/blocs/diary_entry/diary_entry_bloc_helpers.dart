@@ -6,9 +6,9 @@ import 'diary_entry_event.dart';
 import 'diary_entry_state.dart';
 
 mixin DiaryEntryMapper<TStreamData, TEvent, TState> on StreamSubscriber<TStreamData, TState> {
-  DiaryEntryStreamer diaryEntryStreamer;
-  DiaryEntryDeleter diaryEntryDeleter;
-  DiaryEntryUpdater diaryEntryUpdater;
+  late final DiaryEntryStreamer diaryEntryStreamer;
+  late final DiaryEntryDeleter diaryEntryDeleter;
+  late final DiaryEntryUpdater diaryEntryUpdater;
 
   Stream<TState> mapDiaryEntryEventToState(TEvent event) async* {
     if (event is DeleteDiaryEntry) {

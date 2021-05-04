@@ -8,18 +8,21 @@ import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
+import 'package:gutlogic/resources/firebase/crashlytics_service.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-class MockFirestoreService extends Mock implements FirestoreService {}
+import 'diary_repository_test.mocks.dart';
 
+@GenerateMocks([FirestoreService, CrashlyticsService])
 void main() {
   group('DiaryRepository', () {
-    String diaryEntryId;
-    SymptomEntry diaryEntry;
-    MockFirestoreInstance instance;
-    FirestoreService firestoreService;
-    DiaryRepository repository;
+    late String diaryEntryId;
+    late SymptomEntry diaryEntry;
+    late MockFirestoreInstance instance;
+    late FirestoreService firestoreService;
+    late DiaryRepository repository;
 
     setUp(() async {
       diaryEntryId = 'entry1Id';
@@ -49,7 +52,7 @@ void main() {
       firestoreService = MockFirestoreService();
       when(firestoreService.instance).thenReturn(instance);
       when(firestoreService.userDiaryCollection).thenReturn(instance.collection('diary'));
-      repository = DiaryRepository(firestoreService: firestoreService);
+      repository = DiaryRepository(firestoreService: firestoreService, crashlytics: MockCrashlyticsService());
     });
 
     test('streams all entries', () async {

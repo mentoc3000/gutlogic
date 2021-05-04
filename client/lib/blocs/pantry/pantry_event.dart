@@ -1,9 +1,9 @@
-import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../models/pantry/pantry_entry.dart';
 import '../../resources/firebase/analytics_service.dart';
+import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
 import '../searchable/searchable_event.dart';
 
@@ -13,7 +13,7 @@ abstract class PantryEvent extends Equatable {
   const PantryEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -27,7 +27,7 @@ class LoadPantry extends PantryEvent with LoadSearchables {
   @override
   final BuiltList<PantryEntry> items;
 
-  const LoadPantry({@required this.items});
+  const LoadPantry({required this.items});
 }
 
 class StreamPantryQuery extends PantryEvent with StreamQuery implements TrackedEvent {
@@ -37,7 +37,7 @@ class StreamPantryQuery extends PantryEvent with StreamQuery implements TrackedE
   const StreamPantryQuery(this.query);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('pantry_search');
+  void track(AnalyticsService analytics) => analytics.logEvent('pantry_search');
 }
 
 class DeletePantryEntry extends PantryEvent implements TrackedEvent {
@@ -46,13 +46,13 @@ class DeletePantryEntry extends PantryEvent implements TrackedEvent {
   const DeletePantryEntry(this.pantryEntry);
 
   @override
-  List<Object> get props => [pantryEntry];
+  List<Object?> get props => [pantryEntry];
 
   @override
   String toString() => 'Delete { id: ${pantryEntry.id} }';
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_pantry_entry');
+  void track(AnalyticsService analytics) => analytics.logEvent('delete_pantry_entry');
 }
 
 class UndeletePantryEntry extends PantryEvent {
@@ -61,15 +61,15 @@ class UndeletePantryEntry extends PantryEvent {
   const UndeletePantryEntry(this.pantryEntry);
 
   @override
-  List<Object> get props => [pantryEntry];
+  List<Object?> get props => [pantryEntry];
 }
 
 class ThrowPantryError extends PantryEvent with ErrorEvent {
   @override
-  final Object error;
+  final ErrorReport report;
 
-  @override
-  final StackTrace trace;
+  const ThrowPantryError({required this.report});
 
-  const ThrowPantryError({this.error, this.trace});
+  factory ThrowPantryError.fromError({required dynamic error, required StackTrace trace}) =>
+      ThrowPantryError(report: ErrorReport(error: error, trace: trace));
 }

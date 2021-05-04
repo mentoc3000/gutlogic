@@ -62,7 +62,7 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
 
   void listener(BuildContext context, SymptomEntryState state) {
     if (state is SymptomEntryLoaded) {
-      _notesController.text = state.diaryEntry.notes;
+      _notesController.text = state.diaryEntry.notes ?? '';
     }
   }
 
@@ -75,12 +75,13 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
       return [
         DateTimeCard(
           dateTime: entry.datetime,
-          onChanged: (DateTime datetime) {
+          onChanged: (DateTime? datetime) {
+            if (datetime == null) return;
             context.read<SymptomEntryBloc>().add(UpdateSymptomEntryDateTime(datetime));
           },
         ),
         SeverityCard(
-          severity: entry.symptom?.severity ?? 1,
+          severity: entry.symptom.severity,
           onChanged: (Severity newValue) => context.read<SymptomEntryBloc>().add(UpdateSeverity(newValue)),
         ),
         NotesCard(
@@ -120,9 +121,7 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
         final entry = state.diaryEntry as SymptomEntry;
         final items = buildItems(context, entry);
 
-        final symptomName = (entry.symptom.symptomType.name == null || entry.symptom.symptomType.name == '')
-            ? 'Symptom'
-            : entry.symptom.symptomType.name;
+        final symptomName = entry.symptom.symptomType.name == '' ? 'Symptom' : entry.symptom.symptomType.name;
         return GLScaffold(
           appBar: GLAppBar(title: symptomName),
           body: Form(

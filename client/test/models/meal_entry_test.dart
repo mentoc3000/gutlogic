@@ -29,7 +29,7 @@ void main() {
         'id': id,
         'datetime': Timestamp.fromDate(datetime),
         'mealElements': mealElements.map((i) {
-          final Map<String, dynamic> irritantJson = serializers.serialize(i);
+          final irritantJson = serializers.serialize(i) as Map<String, dynamic>;
           return irritantJson..remove('\$');
         }).toList(),
         'notes': mealEntry.notes,
@@ -58,7 +58,7 @@ void main() {
         ],
         'notes': 'Tasty!'
       };
-      final mealEntry = serializers.deserializeWith(MealEntry.serializer, mealEntryJson);
+      final mealEntry = serializers.deserializeWith(MealEntry.serializer, mealEntryJson)!;
       expect(mealEntry.mealElements[0].foodReference.name, 'Bread');
       expect(mealEntry.notes, mealEntryJson['notes']);
       expect(mealEntry.datetime, datetime);
@@ -87,7 +87,7 @@ void main() {
         ],
         'notes': 'Tasty!'
       };
-      final mealEntry = serializers.deserializeWith(MealEntry.serializer, mealEntryJson);
+      final mealEntry = serializers.deserializeWith(MealEntry.serializer, mealEntryJson)!;
       expect(mealEntry.mealElements[0].foodReference.name, 'Bread');
       expect(mealEntry.notes, mealEntryJson['notes']);
       expect(mealEntry.datetime, datetime);

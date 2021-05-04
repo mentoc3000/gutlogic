@@ -1,59 +1,68 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import 'package:pedantic/pedantic.dart';
 
 import 'auth/apple/apple_auth.dart';
+import 'resources/firebase/analytics_service.dart';
+import 'resources/firebase/crashlytics_service.dart';
 import 'resources/firebase/remote_config_service.dart';
 import 'util/app_config.dart';
 import 'util/logger.dart';
 import 'widgets/app.dart';
 
 void main() async {
-  final env = await getEnvironmentFromBuildFlavor();
+  final env = await AppConfig.lookupEnvironment();
+  final build = await AppConfig.lookupBuildMode();
+
+  final isDevelopment = env == Environment.development;
+  final isDebug = build == BuildMode.debug;
 
   // Initialize the default Firebase app for all dependencies.
-  final firebaseApp = await Firebase.initializeApp();
-  logger.i('Initialized Firebase project ${firebaseApp.options.projectId}');
+  final firebase = await Firebase.initializeApp();
 
-  // Create and intialize [RemoteConfigService] in load screen
+  logger.i('Initialized Firebase project ${firebase.options.projectId}');
+
+  // TODO: prompt users to opt in, save to user profile
+  // check with analytics database:
+  // https://github.com/FirebaseExtended/flutterfire/blob/1daaea78dcb61d423444fccc2238db27bf7d281e/packages/firebase_analytics/firebase_analytics/lib/firebase_analytics.dart#L50
+
+  final analytics = AnalyticsService(enabled: true);
+
+  // Set `enableInDevMode` to true to see reports while in debug mode. This is only to be used for confirming that
+  // reports are being submitted as expected. It is not intended to be used for everyday development.
+
+  final crashlytics = await CrashlyticsService.initialize(enabled: !isDebug);
+
+  // Create and initialize [RemoteConfigService] in load screen
   // https://firebase.google.com/docs/remote-config/loading
-  final remoteConfigService = await RemoteConfigService.createAndInitialize(debugMode: env == Environment.development);
 
-  // Cache Sign in with Apple availability so it can be used synchronously.
-  await AppleAuth.queryAndCacheAvailability();
+  final remoteConfigService = await RemoteConfigService.initialize(enabled: !isDevelopment);
 
   final app = AppConfig(
     name: env == Environment.development ? 'dev' : 'prod',
     environment: env,
-    child: GutLogicApp(remoteConfigService: remoteConfigService),
+    child: GutLogicApp(
+      analytics: analytics,
+      crashlytics: crashlytics,
+      remoteConfigService: remoteConfigService,
+    ),
   );
 
-  // Log debug logs for dev/debug builds.
-  final isDevelopment = env == Environment.development;
-  final isDebug = app.buildmode == BuildMode.debug;
-  Logger.level = isDevelopment || isDebug ? Level.debug : Level.error;
+  // Enable debug logs for development or debug builds.
+  Logger.level = (isDevelopment || isDebug) ? Level.debug : Level.error;
 
-  // Set `enableInDevMode` to true to see reports while in debug mode
-  // This is only to be used for confirming that reports are being
-  // submitted as expected. It is not intended to be used for everyday
-  // development.
-  if (isDebug) {
-    unawaited(FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false));
-  } else {
-    unawaited(FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true));
-  }
+  // Cache Sign in with Apple availability so it can be used synchronously.
+  await AppleAuth.queryAndCacheAvailability();
 
-  // Pass all uncaught errors to Crashlytics.
-  final originalOnError = FlutterError.onError;
-  FlutterError.onError = (FlutterErrorDetails errorDetails) async {
-    await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    // Forward to original handler.
-    originalOnError(errorDetails);
+  // Forward flutter errors to Crashlytics.
+  FlutterError.onError = (FlutterErrorDetails details) async {
+    await crashlytics.recordFlutterError(details);
+    FlutterError.presentError(details);
   };
 
-  runZonedGuarded(() => runApp(app), FirebaseCrashlytics.instance.recordError);
+  // Forward zone errors to Crashlytics.
+  runZonedGuarded(() => runApp(app), (error, trace) => unawaited(crashlytics.record(error, trace)));
 }

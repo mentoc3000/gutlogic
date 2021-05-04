@@ -1,6 +1,6 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/widgets.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/pantry/pantry_entry.dart';
 import '../../models/pantry/pantry_filter.dart';
@@ -15,7 +15,7 @@ class PantryFilterCubit extends Cubit<PantryFilterState> with StreamSubscriber {
   final PantryBloc pantryBloc;
   PantryFilter get _filter => state is Filter ? (state as Filter).filter : _defaultFilter;
 
-  PantryFilterCubit({@required this.pantryBloc})
+  PantryFilterCubit({required this.pantryBloc})
       : super(
           pantryBloc.state is PantryLoaded
               ? PantryFilterLoaded(
@@ -24,7 +24,7 @@ class PantryFilterCubit extends Cubit<PantryFilterState> with StreamSubscriber {
                 )
               : PantryFilterLoading(filter: _defaultFilter),
         ) {
-    streamSubscription = pantryBloc.listen((state) => _updateFilter(_filter));
+    streamSubscription = pantryBloc.stream.listen((state) => _updateFilter(_filter));
   }
 
   factory PantryFilterCubit.fromContext(BuildContext context) {

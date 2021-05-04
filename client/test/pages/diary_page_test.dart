@@ -17,8 +17,9 @@ import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/pages/diary/diary_page.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/routes/routes.dart';
+import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:intl/intl.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:timezone/timezone.dart';
@@ -26,7 +27,9 @@ import 'package:timezone/timezone.dart';
 import '../mocks/mock_page_route.dart';
 import '../mocks/mock_router.dart';
 
-class MockDiaryBloc extends MockBloc<DiaryState> implements DiaryBloc {}
+class MockDiaryBloc extends MockBloc<DiaryEvent, DiaryState> implements DiaryBloc {}
+
+class MockDiaryRepository extends Mock implements DiaryRepository {}
 
 class DiaryPageWrapper extends StatelessWidget {
   @override
@@ -39,15 +42,16 @@ Future<void> scrollToTop(WidgetTester tester) async {
 }
 
 void main() {
-  DiaryBloc diaryBloc;
-  Widget diaryPage;
-  Routes routes;
+  late DiaryBloc diaryBloc;
+  late Widget diaryPage;
+  late Routes routes;
 
   initializeTimeZones();
 
   setUp(() {
     routes = MockRoutes();
     diaryBloc = MockDiaryBloc();
+    when(() => diaryBloc.repository).thenReturn(MockDiaryRepository());
     diaryPage = Provider<Routes>.value(
       value: routes,
       child: BlocProvider<DiaryBloc>.value(
@@ -59,27 +63,27 @@ void main() {
 
   group('DiaryPage', () {
     testWidgets('shows empty diary', (WidgetTester tester) async {
-      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[].build()));
+      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[].build())), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
       expect(find.text('Timeline'), findsOneWidget);
-      verifyNever(diaryBloc.add(any));
+      verifyNever(() => diaryBloc.add(any()));
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
-      when(diaryBloc.state).thenReturn(DiaryLoading());
+      whenListen(diaryBloc, Stream.value(DiaryLoading()), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
       expect(find.text('Timeline'), findsOneWidget);
       expect(find.byType(LoadingPage), findsOneWidget);
-      verifyNever(diaryBloc.add(any));
+      verifyNever(() => diaryBloc.add(any()));
     });
 
     testWidgets('shows error', (WidgetTester tester) async {
       const message = 'Oh no! Something TERRIBLE happened!';
-      when(diaryBloc.state).thenReturn(DiaryError(message: message));
+      whenListen(diaryBloc, Stream.value(DiaryError(message: message)), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
       expect(find.text(message), findsOneWidget);
-      verifyNever(diaryBloc.add(any));
+      verifyNever(() => diaryBloc.add(any()));
     });
 
     testWidgets('removes meal entry when dragging diary entry tile left', (WidgetTester tester) async {
@@ -88,8 +92,9 @@ void main() {
         datetime: DateTime(2019, 3, 4, 11, 23),
         mealElements: BuiltList<MealElement>([]),
       );
-      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[mealEntry].build()));
+      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[mealEntry].build())), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
       await scrollToTop(tester);
       await tester.pumpAndSettle();
 
@@ -103,7 +108,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(entryTile, findsNothing);
-      verify(diaryBloc.add(Delete(mealEntry))).called(1);
+      verify(() => diaryBloc.add(Delete(mealEntry))).called(1);
     });
 
     testWidgets('shows an undo snackbar after deleting an entry', (WidgetTester tester) async {
@@ -117,8 +122,10 @@ void main() {
           Stream.fromIterable([
             DiaryLoaded(<DiaryEntry>[mealEntry].build()),
             DiaryEntryDeleted(mealEntry),
-          ]));
+          ]),
+          initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
       await scrollToTop(tester);
       await tester.pumpAndSettle();
 
@@ -132,8 +139,9 @@ void main() {
         datetime: DateTime(2019, 3, 4, 11, 23),
         mealElements: BuiltList<MealElement>([]),
       );
-      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[mealEntry].build()));
+      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[mealEntry].build())), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
       await scrollToTop(tester);
       await tester.pumpAndSettle();
 
@@ -142,12 +150,12 @@ void main() {
       await tester.drag(entryTile, const Offset(500, 0));
       await tester.pumpAndSettle();
       expect(entryTile, findsOneWidget);
-      verifyNever(diaryBloc.add(Delete(mealEntry)));
+      verifyNever(() => diaryBloc.add(Delete(mealEntry)));
     });
 
     testWidgets('always shows today', (WidgetTester tester) async {
       final today = DateTime.now();
-      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[].build()));
+      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[].build())), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
 
@@ -170,10 +178,13 @@ void main() {
         datetime: today,
         mealElements: BuiltList<MealElement>([]),
       );
-      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[
-        ...List<MealEntry>.filled(5, yesterdayMealEntry),
-        ...List<MealEntry>.filled(5, todayMealEntry),
-      ].build()));
+      whenListen(
+          diaryBloc,
+          Stream.value(DiaryLoaded(<DiaryEntry>[
+            ...List<MealEntry>.filled(5, yesterdayMealEntry),
+            ...List<MealEntry>.filled(5, todayMealEntry),
+          ].build())),
+          initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
 
@@ -194,8 +205,10 @@ void main() {
         datetime: datetime,
         mealElements: BuiltList<MealElement>([]),
       );
-      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[todayMealEntry].build()));
+      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[todayMealEntry].build())),
+          initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
       await scrollToTop(tester);
       await tester.pumpAndSettle();
 
@@ -223,10 +236,14 @@ void main() {
         datetime: lastMonth,
         mealElements: BuiltList<MealElement>([]),
       );
-      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[
-        ...List<MealEntry>.filled(2, lastMonthMealEntry),
-      ].build()));
+      whenListen(
+          diaryBloc,
+          Stream.value(DiaryLoaded(<DiaryEntry>[
+            ...List<MealEntry>.filled(2, lastMonthMealEntry),
+          ].build())),
+          initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
       await scrollToTop(tester);
       await tester.pumpAndSettle();
 
@@ -246,15 +263,17 @@ void main() {
         datetime: afternoon,
         mealElements: BuiltList<MealElement>([]),
       );
-      when(diaryBloc.state).thenReturn(DiaryLoaded(<DiaryEntry>[morningMealEntry, afternoonMealEntry].build()));
+      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[morningMealEntry, afternoonMealEntry].build())),
+          initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
       await scrollToTop(tester);
       await tester.pumpAndSettle();
 
       final morningTitle = (find.byType(ListTile).first.evaluate().single.widget as ListTile).title;
       final afternoonTitle = (find.byType(ListTile).last.evaluate().single.widget as ListTile).title;
-      final morningDx = tester.getBottomLeft(find.byWidget(morningTitle)).dx;
-      final afternoonDx = tester.getBottomLeft(find.byWidget(afternoonTitle)).dx;
+      final morningDx = tester.getBottomLeft(find.byWidget(morningTitle!)).dx;
+      final afternoonDx = tester.getBottomLeft(find.byWidget(afternoonTitle!)).dx;
       expect(morningDx, afternoonDx);
     });
 
@@ -266,11 +285,13 @@ void main() {
           mealElements: BuiltList<MealElement>([]),
           notes: 'notes',
         );
-        when(diaryBloc.state).thenReturn(DiaryLoaded(BuiltList<DiaryEntry>([mealEntry])));
+        whenListen(diaryBloc, Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([mealEntry]))),
+            initialState: DiaryLoading());
       });
 
       testWidgets('shows tile', (WidgetTester tester) async {
         await tester.pumpWidget(diaryPage);
+        await tester.pumpAndSettle();
         await scrollToTop(tester);
         await tester.pumpAndSettle();
         expect(find.text('Mon, Mar 4'), findsOneWidget);
@@ -281,9 +302,11 @@ void main() {
       testWidgets('tile routes to page', (WidgetTester tester) async {
         final navigationKey = UniqueKey();
 
-        when(routes.createMealEntryRoute(entry: anyNamed('entry'))).thenReturn(MockPageRoute(key: navigationKey));
+        when(() => routes.createMealEntryRoute(entry: any(named: 'entry')))
+            .thenReturn(MockPageRoute(key: navigationKey));
 
         await tester.pumpWidget(diaryPage);
+        await tester.pumpAndSettle();
         await scrollToTop(tester);
         await tester.pumpAndSettle();
 
@@ -302,11 +325,13 @@ void main() {
           bowelMovement: BowelMovement(volume: 3, type: 4),
           notes: 'notes',
         );
-        when(diaryBloc.state).thenReturn(DiaryLoaded(BuiltList<DiaryEntry>([bowelMovementEntry])));
+        whenListen(diaryBloc, Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([bowelMovementEntry]))),
+            initialState: DiaryLoading());
       });
 
       testWidgets('shows bowel movement entry', (WidgetTester tester) async {
         await tester.pumpWidget(diaryPage);
+        await tester.pumpAndSettle();
         await scrollToTop(tester);
         await tester.pumpAndSettle();
         expect(find.text('Mon, Mar 4'), findsOneWidget);
@@ -317,10 +342,11 @@ void main() {
       testWidgets('tile routes to page', (WidgetTester tester) async {
         final navigationKey = UniqueKey();
 
-        when(routes.createBowelMovementEntryRoute(entry: anyNamed('entry')))
+        when(() => routes.createBowelMovementEntryRoute(entry: any(named: 'entry')))
             .thenReturn(MockPageRoute(key: navigationKey));
 
         await tester.pumpWidget(diaryPage);
+        await tester.pumpAndSettle();
         await scrollToTop(tester);
         await tester.pumpAndSettle();
 
@@ -342,11 +368,13 @@ void main() {
               Symptom(symptomType: SymptomType(id: 'symptomType1', name: symptomName), severity: Severity.moderate),
           notes: 'notes',
         );
-        when(diaryBloc.state).thenReturn(DiaryLoaded(BuiltList<DiaryEntry>([symptomEntry])));
+        whenListen(diaryBloc, Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([symptomEntry]))),
+            initialState: DiaryLoading());
       });
 
       testWidgets('shows symptom entry', (WidgetTester tester) async {
         await tester.pumpWidget(diaryPage);
+        await tester.pumpAndSettle();
         await scrollToTop(tester);
         await tester.pumpAndSettle();
         expect(find.text('Mon, Mar 4'), findsOneWidget);
@@ -357,9 +385,11 @@ void main() {
       testWidgets('tile routes to page', (WidgetTester tester) async {
         final navigationKey = UniqueKey();
 
-        when(routes.createSymptomEntryRoute(entry: anyNamed('entry'))).thenReturn(MockPageRoute(key: navigationKey));
+        when(() => routes.createSymptomEntryRoute(entry: any(named: 'entry')))
+            .thenReturn(MockPageRoute(key: navigationKey));
 
         await tester.pumpWidget(diaryPage);
+        await tester.pumpAndSettle();
         await scrollToTop(tester);
         await tester.pumpAndSettle();
 
@@ -372,7 +402,7 @@ void main() {
 
     group('floating action button', () {
       setUp(() {
-        when(diaryBloc.state).thenReturn(DiaryLoaded(BuiltList<DiaryEntry>([])));
+        whenListen(diaryBloc, Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([]))), initialState: DiaryLoading());
       });
 
       testWidgets('shows speed dial', (WidgetTester tester) async {

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../../resources/user_repository.dart';
@@ -12,14 +11,14 @@ import 'verify_email_state.dart';
 class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
   final UserRepository _userRepository;
 
-  StreamSubscription _userValueSubscription;
-  StreamSubscription _userRefreshSubscription;
+  late final StreamSubscription _userValueSubscription;
+  late final StreamSubscription _userRefreshSubscription;
 
-  VerifyEmailBloc({@required UserRepository userRepository})
-      : _userRepository = userRepository,
-        super(VerifyEmailValue(verified: userRepository.user.verified)) {
-    assert(userRepository.authenticated);
-
+  VerifyEmailBloc({required UserRepository userRepository})
+      : assert(userRepository.authenticated),
+        assert(userRepository.user != null),
+        _userRepository = userRepository,
+        super(VerifyEmailValue(verified: userRepository.user!.verified)) {
     // Refresh the bloc state every two seconds, because verifying the email does not emit a new user value.
     _userRefreshSubscription = Stream.periodic(const Duration(seconds: 2)).listen(_onUserRefreshTimeout);
   }
@@ -34,8 +33,8 @@ class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
 
   @override
   Future close() {
-    _userRefreshSubscription?.cancel();
-    _userValueSubscription?.cancel();
+    _userRefreshSubscription.cancel();
+    _userValueSubscription.cancel();
     return super.close();
   }
 
@@ -60,7 +59,7 @@ class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
         unawaited(_userRepository.sendEmailVerification());
       }
 
-      final isVerified = _userRepository.user.verified;
+      final isVerified = _userRepository.user!.verified;
       yield VerifyEmailValue(verified: isVerified);
 
       if (isVerified) {

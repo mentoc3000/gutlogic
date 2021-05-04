@@ -46,7 +46,7 @@ void main() {
         'symptomType': {'id': 'id', 'name': 'Gas'},
         'severity': serializers.serialize(Severity.moderate, specifiedType: const FullType(Severity)),
       };
-      final symptom = serializers.deserializeWith(Symptom.serializer, symptomJson);
+      final symptom = serializers.deserializeWith(Symptom.serializer, symptomJson)!;
       expect(symptom.symptomType.name, 'Gas');
     });
 
@@ -55,7 +55,7 @@ void main() {
       final symptom = Symptom.fromBuilder((b) => b
         ..symptomType = symptomType.toBuilder()
         ..severity = Severity.moderate);
-      final Map<String, dynamic> symptomTypeJson = serializers.serialize(symptomType);
+      final symptomTypeJson = serializers.serialize(symptomType) as Map<String, dynamic>;
       expect(serializers.serialize(symptom), {
         '\$': 'Symptom',
         'symptomType': symptomTypeJson..remove('\$'),

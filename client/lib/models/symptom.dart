@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -15,7 +14,7 @@ abstract class Symptom implements Built<Symptom, SymptomBuilder> {
 
   Symptom._();
 
-  factory Symptom({@required SymptomType symptomType, @required Severity severity}) = _$Symptom._;
+  factory Symptom({required SymptomType symptomType, required Severity severity}) = _$Symptom._;
 
   factory Symptom.fromBuilder([SymptomBuilder Function(SymptomBuilder) updates]) = _$Symptom;
 }

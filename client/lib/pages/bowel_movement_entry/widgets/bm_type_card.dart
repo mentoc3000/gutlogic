@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+
 import '../../../widgets/cards/headed_card.dart';
 import '../../../widgets/gl_slider.dart';
 
@@ -6,18 +7,16 @@ class BMTypeCard extends StatefulWidget {
   final int minimum = 1;
   final int maximum = 7;
   final int type;
-  final void Function(int) onChanged;
+  final void Function(int)? onChanged;
 
-  BMTypeCard({this.type, this.onChanged});
+  BMTypeCard({required this.type, this.onChanged});
 
   @override
-  _BMTypeCardState createState() => _BMTypeCardState();
+  _BMTypeCardState createState() => _BMTypeCardState(value: type);
 }
 
 class _BMTypeCardState extends State<BMTypeCard> {
-  int value;
-  String description;
-  final List<String> descriptions = [
+  static const List<String> descriptions = [
     'Separate, hard lumps',
     'Lumpy and sausage-like',
     'Sausage shape with cracks',
@@ -27,12 +26,9 @@ class _BMTypeCardState extends State<BMTypeCard> {
     'Watery, no solid pieces',
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    value = widget.type;
-    description = descriptions[widget.type - 1];
-  }
+  int value;
+
+  _BMTypeCardState({required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +41,14 @@ class _BMTypeCardState extends State<BMTypeCard> {
             min: widget.minimum,
             max: widget.maximum,
             value: value,
-            onChanged: (int newValue) {
-              setState(() {
-                description = descriptions[newValue - 1];
-              });
+            onChanged: (int value) => setState(() {
+              this.value = value;
+            }),
+            onChangeEnd: (value) {
+              widget.onChanged?.call(value);
             },
-            onChangeEnd: widget.onChanged,
           ),
-          Text(description)
+          Text(descriptions[value - 1])
         ],
       ),
     );

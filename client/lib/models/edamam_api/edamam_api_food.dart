@@ -8,20 +8,15 @@ part 'edamam_api_food.g.dart';
 abstract class EdamamApiFood implements Built<EdamamApiFood, EdamamApiFoodBuilder> {
   static Serializer<EdamamApiFood> get serializer => _$edamamApiFoodSerializer;
 
-  @nullable
-  String get foodId;
+  String? get foodId;
 
-  @nullable
-  String get label;
+  String? get label;
 
-  @nullable
-  EdamamApiNutrients get nutrients;
+  EdamamApiNutrients? get nutrients;
 
-  @nullable
-  String get category;
+  String? get category;
 
-  @nullable
-  String get image;
+  String? get image;
 
   EdamamApiFood._();
 

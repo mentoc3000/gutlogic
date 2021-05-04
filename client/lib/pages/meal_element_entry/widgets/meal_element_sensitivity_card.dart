@@ -7,9 +7,11 @@ import '../../../widgets/sensitivity_indicator.dart';
 
 class MealElementSensitivityCard extends StatelessWidget {
   final Sensitivity sensitivity;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const MealElementSensitivityCard({Key key, @required this.sensitivity, @required this.onTap}) : super(key: key);
+  const MealElementSensitivityCard({Key? key, Sensitivity? sensitivity, this.onTap})
+      : sensitivity = sensitivity ?? Sensitivity.unknown,
+        super(key: key);
 
   String get _label {
     switch (sensitivity) {
@@ -32,7 +34,7 @@ class MealElementSensitivityCard extends StatelessWidget {
     return PushCard(
       child: Row(
         children: [
-          SensitivityIndicator(sensitivity ?? Sensitivity.unknown),
+          SensitivityIndicator(sensitivity),
           const SizedBox(width: 8),
           Text(_label, style: style),
         ],

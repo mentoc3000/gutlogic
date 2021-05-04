@@ -8,11 +8,9 @@ part 'edamam_api_qualifier.g.dart';
 abstract class EdamamApiQualifier implements Built<EdamamApiQualifier, EdamamApiQualifierBuilder> {
   static Serializer<EdamamApiQualifier> get serializer => _$edamamApiQualifierSerializer;
 
-  @nullable
-  String get uri;
+  String? get uri;
 
-  @nullable
-  String get label;
+  String? get label;
 
   EdamamApiQualifier._();
 

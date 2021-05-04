@@ -1,17 +1,18 @@
 import 'dart:async';
-import 'package:equatable/equatable.dart';
+
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../resources/firebase/analytics_service.dart';
+import '../resources/firebase/crashlytics_service.dart';
 import '../util/error_report.dart';
 import '../util/logger.dart';
 
 mixin DebouncedEvent {}
 
 abstract class TrackedEvent {
-  void track(AnalyticsService analyticsService) {
+  void track(AnalyticsService analytics) {
     logger.w('Unimplemented method $runtimeType.track().');
   }
 }
@@ -42,8 +43,8 @@ Stream<E> debounceDebouncedByType<E>(Stream<E> events) {
   return MergeStream([nonDebounceStream, debouncedStreams]);
 }
 
-mixin StreamSubscriber<StreamData, State> on Cubit<State> {
-  StreamSubscription<StreamData> streamSubscription;
+mixin StreamSubscriber<StreamData, State> on BlocBase<State> {
+  StreamSubscription<StreamData>? streamSubscription;
 
   @override
   Future<void> close() {
@@ -56,30 +57,32 @@ mixin ErrorState on Equatable {
   String get message;
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 
   @override
   String toString() => '$runtimeType { message: $message }';
 }
 
 mixin ErrorRecorder on ErrorState {
-  ErrorReport get report;
+  ErrorReport? get report;
 
   @override
-  List<Object> get props => [message, report];
+  List<Object?> get props => [message, report];
 
-  void recordError(FirebaseCrashlytics firebaseCrashlytics) {
-    if (report != null) firebaseCrashlytics.recordError(report.error, report.trace);
+  void recordError(CrashlyticsService crashlytics) {
+    if (report == null) return;
+    final error = report!.error;
+    final trace = report!.trace;
+    crashlytics.record(error, trace);
   }
 }
 
 mixin ErrorEvent on Equatable {
-  Object get error;
-  StackTrace get trace;
+  ErrorReport get report;
 
   @override
-  List<Object> get props => [error, trace];
+  List<Object?> get props => [report];
 
   @override
-  String toString() => '$runtimeType { error: $error }';
+  String toString() => '$runtimeType { error: ${report.error} }';
 }

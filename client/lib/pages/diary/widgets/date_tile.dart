@@ -1,12 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+
 import '../../../style/gl_colors.dart';
 import '../../../style/gl_theme.dart';
 
 class DateTile extends StatelessWidget {
   final DateTime datetime;
 
-  const DateTile({this.datetime});
+  const DateTile({required this.datetime});
 
   @override
   Widget build(BuildContext context) {

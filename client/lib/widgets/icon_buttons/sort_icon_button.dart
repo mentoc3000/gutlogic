@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../gl_icons.dart';
 
 class SortIconButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  const SortIconButton({Key key, this.onPressed}) : super(key: key);
+  final VoidCallback? onPressed;
+  const SortIconButton({Key? key, this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

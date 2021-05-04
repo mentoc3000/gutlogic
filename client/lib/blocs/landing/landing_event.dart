@@ -10,7 +10,7 @@ abstract class LandingEvent extends Equatable {
   const LandingEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -20,12 +20,12 @@ class LandingContinueGoogle extends LandingEvent implements TrackedEvent {
   const LandingContinueGoogle();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logLogin(AuthProvider.google);
+  void track(AnalyticsService analytics) => analytics.logLogin(AuthProvider.google);
 }
 
 class LandingContinueApple extends LandingEvent implements TrackedEvent {
   const LandingContinueApple();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logLogin(AuthProvider.apple);
+  void track(AnalyticsService analytics) => analytics.logLogin(AuthProvider.apple);
 }

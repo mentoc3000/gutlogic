@@ -16,7 +16,7 @@ void main() {
 
     test('is deserializable', () {
       final symptomTypeJson = {'id': 'id1', 'name': 'Pro-8'};
-      final symptomType = serializers.deserializeWith(SymptomType.serializer, symptomTypeJson);
+      final symptomType = serializers.deserializeWith(SymptomType.serializer, symptomTypeJson)!;
       expect(symptomType.name, 'Pro-8');
     });
 

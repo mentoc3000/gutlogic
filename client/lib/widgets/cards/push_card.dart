@@ -5,9 +5,9 @@ import 'gl_card.dart';
 
 class PushCard extends StatelessWidget {
   final Widget child;
-  final VoidCallback onTap;
+  final void Function()? onTap;
 
-  const PushCard({Key key, @required this.child, this.onTap}) : super(key: key);
+  const PushCard({Key? key, required this.child, this.onTap}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

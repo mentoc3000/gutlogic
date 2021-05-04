@@ -18,7 +18,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
   final FoodBloc foodBloc;
   final String noResultsMessage = 'No matches found. Try adding a food!';
 
-  FoodSearchDelegate({this.foodBloc, @required void Function(Food) onSelect})
+  FoodSearchDelegate({required this.foodBloc, required void Function(Food) onSelect})
       : super(onSelect: onSelect, searchFieldLabel: 'Search for food');
 
   @override
@@ -45,7 +45,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
 
   Widget buildList(BuildContext context, FoodBloc foodBloc) {
     return BlocBuilder<FoodBloc, FoodState>(
-      cubit: foodBloc,
+      bloc: foodBloc,
       builder: (BuildContext context, FoodState state) {
         if (query.isEmpty) {
           return Column(children: []);
@@ -66,7 +66,9 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
                       closeSearch(context);
                       onSelect(result);
                     },
-                    onDelete: (food) => foodBloc.add(DeleteCustomFood(food)),
+                    onDelete: (food) {
+                      if (food is CustomFood) foodBloc.add(DeleteCustomFood(food));
+                    },
                     isCustom: result is CustomFood,
                   );
                 },

@@ -7,13 +7,16 @@ import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/symptom_type_repository.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-import '../mocks/mock_bloc_delegate.dart';
+import '../flutter_test_config.dart';
+import 'symptom_type_bloc_test.mocks.dart';
 
+@GenerateMocks([SymptomTypeRepository])
 void main() {
   group('SymptomType Bloc', () {
-    MockSymptomTypeRepository symptomTypeRepository;
+    late MockSymptomTypeRepository symptomTypeRepository;
     final constipation = SymptomType(id: 'symptomType1', name: 'Constipation');
     final gas = SymptomType(id: 'symptomType1', name: 'Gas');
     final allSymptomTypes = BuiltList<SymptomType>([constipation, gas]);
@@ -33,7 +36,7 @@ void main() {
       expect(SymptomTypeBloc(repository: symptomTypeRepository).state, SymptomTypesLoading());
     });
 
-    blocTest(
+    blocTest<SymptomTypeBloc, SymptomTypeState>(
       'fetches all symptom types',
       build: () {
         return SymptomTypeBloc(repository: symptomTypeRepository);
@@ -41,7 +44,7 @@ void main() {
       act: (bloc) async {
         bloc.add(const FetchAllSymptomTypes());
       },
-      expect: [
+      expect: () => [
         SymptomTypesLoading(),
         SymptomTypesLoaded(allSymptomTypes),
       ],
@@ -50,16 +53,15 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<SymptomTypeBloc, SymptomTypeState>(
       'fetches queried symptom types',
       build: () {
-        mockBlocDelegate();
         return SymptomTypeBloc(repository: symptomTypeRepository);
       },
       act: (bloc) async {
         bloc.add(const FetchSymptomTypeQuery('Gas'));
       },
-      expect: [
+      expect: () => [
         SymptomTypesLoading(),
         SymptomTypesLoaded(justGas),
       ],
@@ -69,17 +71,16 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<SymptomTypeBloc, SymptomTypeState>(
       'streams queried symptom types',
       build: () {
-        mockBlocDelegate();
         return SymptomTypeBloc(repository: symptomTypeRepository);
       },
       act: (bloc) async {
         bloc.add(const StreamSymptomTypeQuery('Gas'));
       },
       wait: const Duration(milliseconds: 100),
-      expect: [
+      expect: () => [
         SymptomTypesLoading(),
         SymptomTypesLoaded(justGas),
       ],
@@ -94,5 +95,3 @@ void main() {
     });
   });
 }
-
-class MockSymptomTypeRepository extends Mock implements SymptomTypeRepository {}

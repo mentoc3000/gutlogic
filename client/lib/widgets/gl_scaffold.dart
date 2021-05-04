@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../style/gl_theme.dart';
 
 class GLScaffold extends StatelessWidget {
-  final AppBar appBar;
-  final Widget body;
-  final Widget floatingActionButton;
-  final Widget bottomNavigationBar;
-  final Color backgroundColor;
+  final AppBar? appBar;
+  final Widget? body;
+  final Widget? floatingActionButton;
+  final Widget? bottomNavigationBar;
+  final Color? backgroundColor;
 
   const GLScaffold({
-    Key key,
+    Key? key,
     this.appBar,
     this.body,
     this.floatingActionButton,

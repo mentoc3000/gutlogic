@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/register/register.dart';
 import '../../../widgets/buttons/buttons.dart';
-import '../../../widgets/form_fields/email_form_field.dart';
-import '../../../widgets/form_fields/password_form_field.dart';
 import '../../../widgets/snack_bars/error_snack_bar.dart';
+import 'register_form_password.dart';
+import 'register_form_username.dart';
 
 class RegisterForm extends StatefulWidget {
   @override
@@ -17,8 +17,6 @@ class RegisterFormState extends State<RegisterForm> {
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   bool _isValidForm = false;
-  final String Function(String) _usernameValidator = EmailValidators.full;
-  final String Function(String) _passwordValidator = PasswordValidators.isNotEmpty;
 
   @override
   void initState() {
@@ -36,11 +34,7 @@ class RegisterFormState extends State<RegisterForm> {
 
   void validateForm() {
     setState(() {
-      // Check if the email and password will be valid after typing is complete
-      final isValidUsername = _usernameValidator(_usernameTextController.text) == null;
-      final isValidPassword = _passwordValidator(_passwordTextController.text) == null;
-
-      _isValidForm = (_formKey.currentState?.validate() ?? false) && isValidPassword && isValidUsername;
+      _isValidForm = (_formKey.currentState?.validate() ?? false);
     });
   }
 
@@ -51,15 +45,12 @@ class RegisterFormState extends State<RegisterForm> {
 
   void listener(BuildContext context, RegisterState state) {
     if (state is RegisterError) {
-      Scaffold.of(context).showSnackBar(buildErrorSnackBar(state.message));
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackBar(text: state.message));
     }
   }
 
   Widget builder(BuildContext context, RegisterState state) {
-    final isSubmittable = state is RegisterReady &&
-        _isValidForm &&
-        _usernameTextController.text.isNotEmpty &&
-        _passwordTextController.text.isNotEmpty;
+    final isSubmittable = state is RegisterReady && _isValidForm;
 
     return Form(
       key: _formKey,
@@ -67,15 +58,8 @@ class RegisterFormState extends State<RegisterForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Spacer(),
-          EmailFormField(
-            controller: _usernameTextController,
-            validator: _usernameValidator,
-          ),
-          PasswordFormField(
-            controller: _passwordTextController,
-            validator: _passwordValidator,
-            showStrengthBar: true,
-          ),
+          RegisterFormUsername(controller: _usernameTextController),
+          RegisterFormPassword(controller: _passwordTextController),
           const Spacer(),
           GLPrimaryButton(
             child: const StretchedButtonContent(label: 'Register'),
@@ -96,6 +80,4 @@ class RegisterFormState extends State<RegisterForm> {
   void cancel() {
     Navigator.pop(context);
   }
-
-  static Widget buildErrorSnackBar(String error) => ErrorSnackBar(text: error);
 }

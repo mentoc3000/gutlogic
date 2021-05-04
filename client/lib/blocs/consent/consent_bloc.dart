@@ -13,7 +13,7 @@ class ConsentBloc extends Bloc<ConsentEvent, ConsentState> {
     return ConsentBloc(userRepository: context.read<UserRepository>());
   }
 
-  ConsentBloc({@required this.userRepository}) : super(const ConsentReady());
+  ConsentBloc({required this.userRepository}) : super(const ConsentReady());
 
   @override
   Stream<ConsentState> mapEventToState(ConsentEvent event) async* {
@@ -25,7 +25,7 @@ class ConsentBloc extends Bloc<ConsentEvent, ConsentState> {
   Stream<ConsentState> _mapConsentSubmittedToState(ConsentSubmitted event) async* {
     try {
       yield const ConsentLoading();
-      await userRepository.updateMetadata(updatedUser: userRepository.user.rebuild((b) => b..consented = true));
+      await userRepository.updateMetadata(updatedUser: userRepository.user!.rebuild((b) => b..consented = true));
       yield const ConsentDone();
     } catch (error, trace) {
       yield ConsentError.fromError(error: error, trace: trace);

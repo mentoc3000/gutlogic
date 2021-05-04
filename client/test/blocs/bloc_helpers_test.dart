@@ -126,13 +126,13 @@ void main() {
         await expectLater(debouncedStream, emitsInOrder([Foo(0), Foo(3), Bar(4), Baz(5), emitsDone]));
       });
 
-      blocTest(
+      blocTest<PairBloc, Pair>(
         'bloc events separately',
         build: () => PairBloc(),
         act: (bloc) async =>
             bloc..add(SetFirstEvent(5))..add(SetSecondEvent(5))..add(SetFirstEvent(3))..add(SetSecondEvent(3)),
         wait: const Duration(seconds: 2),
-        expect: [Pair(3, 0), Pair(3, 3)],
+        expect: () => [Pair(3, 0), Pair(3, 3)],
       );
     });
   });

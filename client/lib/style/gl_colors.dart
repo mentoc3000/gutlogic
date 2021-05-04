@@ -14,9 +14,9 @@ class GLColors {
   static const lightGold = Color(0xFFFFE560);
   static const darkGold = Color(0xFFBF8400);
   static const gray = Colors.grey;
-  static Color lightestGray = Colors.grey[50];
-  static Color lighterGray = Colors.grey[300];
-  static Color darkGray = Colors.grey[850];
+  static Color lightestGray = Colors.grey.shade50;
+  static Color lighterGray = Colors.grey.shade300;
+  static Color darkGray = Colors.grey.shade800;
   static const red = Color(0xFFA30000);
   static const purple = Color(0xFF4C1E4F);
   static const blue = Color(0xFF004777);

@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/reset_password/reset_password.dart';
 import '../../../widgets/buttons/buttons.dart';
-import '../../../widgets/form_fields/email_form_field.dart';
 import 'reset_password_done.dart';
+import 'reset_password_email.dart';
 
 class ResetPasswordForm extends StatefulWidget {
   @override
@@ -14,9 +14,7 @@ class ResetPasswordForm extends StatefulWidget {
 
 class ResetPasswordFormState extends State<ResetPasswordForm> {
   final _formKey = GlobalKey<FormState>();
-
   final _emailTextController = TextEditingController();
-  final _emailValidator = EmailValidators.full;
 
   bool _isValidForm = false;
 
@@ -34,14 +32,12 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
 
   void validateForm() {
     setState(() {
-      final isValidEmail = _emailValidator(_emailTextController.text) == null;
-
-      _isValidForm = (_formKey.currentState?.validate() ?? false) && isValidEmail;
+      _isValidForm = _formKey.currentState?.validate() ?? false;
     });
   }
 
   void onSubmitButtonPressed() {
-    if (_formKey.currentState.validate() == false) return;
+    if (_formKey.currentState?.validate() == false) return;
 
     context.read<ResetPasswordBloc>().add(ResetPasswordSubmitted(email: _emailTextController.text));
   }
@@ -60,14 +56,11 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
 
     return Form(
       key: _formKey,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.always,
       child: Column(
         children: [
           const Text('No problem, we all forget things sometimes. Where should we send your reset link?'),
-          EmailFormField(
-            controller: _emailTextController,
-            validator: _emailValidator,
-          ),
+          ResetPasswordEmail(controller: _emailTextController),
           GLPrimaryButton(
             child: const StretchedButtonContent(label: 'Send Reset Link'),
             onPressed: isSubmittable ? onSubmitButtonPressed : null,

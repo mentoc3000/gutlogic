@@ -9,7 +9,7 @@ abstract class RegisterEvent extends Equatable {
   const RegisterEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -20,15 +20,15 @@ class RegisterSubmitted extends RegisterEvent implements TrackedEvent {
   final String password;
 
   const RegisterSubmitted({
-    @required this.username,
-    @required this.password,
+    required this.username,
+    required this.password,
   });
 
   @override
-  List<Object> get props => [username, password];
+  List<Object?> get props => [username, password];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('register_with_email');
+  void track(AnalyticsService analytics) => analytics.logEvent('register_with_email');
 }
 
 class RegisterResendEmailVerification extends RegisterEvent {

@@ -36,7 +36,7 @@ class SensitivityIndicator extends StatelessWidget {
 class SensitivityIndicatorLarge extends StatelessWidget {
   final Sensitivity sensitivity;
 
-  SensitivityIndicatorLarge({this.sensitivity});
+  SensitivityIndicatorLarge({required this.sensitivity});
 
   @override
   Widget build(BuildContext context) => SensitivityIndicator(sensitivity, size: 30.0);

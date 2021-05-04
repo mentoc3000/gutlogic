@@ -1,15 +1,16 @@
-import 'package:pedantic/pedantic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pedantic/pedantic.dart';
+
 export 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
-  final String userId;
+  final String userID;
   FirebaseFirestore get instance => FirebaseFirestore.instance;
-  CollectionReference get userDiaryCollection => instance.collection('user_data/$userId/diary');
-  CollectionReference get customFoodCollection => instance.collection('user_data/$userId/foods');
-  CollectionReference get userPantryCollection => instance.collection('user_data/$userId/pantry');
+  CollectionReference get userDiaryCollection => instance.collection('user_data/$userID/diary');
+  CollectionReference get customFoodCollection => instance.collection('user_data/$userID/foods');
+  CollectionReference get userPantryCollection => instance.collection('user_data/$userID/pantry');
 
-  FirestoreService({this.userId}) {
+  FirestoreService({required this.userID}) {
     // Web.
     // await FirebaseFirestore.instance.enablePersistence();
 
@@ -18,12 +19,15 @@ class FirestoreService {
   }
 
   /// Returns the [documentSnapshot] data and adds the document id to the 'id' field
-  static Map<String, dynamic> getDocumentData(DocumentSnapshot documentSnapshot) {
+  static Map<String, dynamic>? getDocumentData(DocumentSnapshot documentSnapshot) {
     final data = documentSnapshot.data();
 
     if (data == null) return null;
 
+    // TODO should we assert data.containsKey('id') == false?
+
     data['id'] = documentSnapshot.id;
+
     return data;
   }
 
@@ -32,7 +36,6 @@ class FirestoreService {
 
 extension Synchronous on CollectionReference {
   DocumentReference addUnawaited(Map<String, dynamic> data) {
-    assert(data != null);
     final newDocument = doc();
     unawaited(newDocument.set(data));
     return newDocument;

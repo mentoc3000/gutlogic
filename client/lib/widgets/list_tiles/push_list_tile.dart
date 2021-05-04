@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+
 import '../gl_icons.dart';
 import 'gl_list_tile.dart';
 
 class PushListTile extends StatelessWidget {
   final String heading;
-  final String subheading;
-  final Widget leading;
-  final Widget trailing;
-  final VoidCallback onTap;
+  final String? subheading;
+  final Widget? leading;
+  final Widget? trailing;
+  final VoidCallback? onTap;
 
   const PushListTile({
-    Key key,
-    this.heading,
+    Key? key,
+    required this.heading,
     this.subheading,
     this.leading,
     this.trailing,
@@ -27,7 +28,7 @@ class PushListTile extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (trailing != null) trailing,
+          if (trailing != null) trailing!,
           const Icon(GLIcons.arrowRight),
         ],
       ),

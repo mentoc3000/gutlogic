@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
 import '../../../blocs/diary/diary.dart';
 import '../../../models/diary_entry/diary_entry.dart';
 import '../../../style/gl_theme.dart';
@@ -13,23 +14,21 @@ class DiaryEntryListTile extends StatelessWidget {
   final Iterable<String> subheadings;
   final DiaryEntry diaryEntry;
   final Color barColor;
-  final void Function() onTap;
-  final Widget trailing;
-
-  bool get hasSubheadings => subheadings?.fold(false, (prev, element) => prev || element.isNotEmpty) ?? false;
+  final VoidCallback? onTap;
+  final Widget? trailing;
 
   const DiaryEntryListTile({
-    this.heading,
-    this.subheadings,
-    this.diaryEntry,
-    this.barColor,
+    required this.heading,
+    this.subheadings = const <String>[],
+    required this.diaryEntry,
+    required this.barColor,
     this.onTap,
     this.trailing,
   });
 
   Widget buildTime(BuildContext context) {
     final dateFormatter = DateFormat.jm();
-    final topInset = hasSubheadings ? 1.0 : 6.0;
+    final topInset = subheadings.any((s) => s.isNotEmpty) ? 1.0 : 6.0;
     final scale = MediaQuery.textScaleFactorOf(context);
     const defaultWidth = 65;
 
@@ -53,10 +52,6 @@ class DiaryEntryListTile extends StatelessWidget {
   }
 
   Widget buildSubheading() {
-    if (subheadings.isEmpty) {
-      return Container();
-    }
-
     return Container(
       padding: const EdgeInsets.fromLTRB(10, 4, 0, 0),
       child: Column(
@@ -73,18 +68,6 @@ class DiaryEntryListTile extends StatelessWidget {
   }
 
   Widget buildCenter() {
-    List<Widget> children;
-    if (subheadings == null) {
-      children = [
-        buildHeading(),
-      ];
-    } else {
-      children = [
-        buildHeading(),
-        buildSubheading(),
-      ];
-    }
-
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 5, 8),
       decoration: BoxDecoration(
@@ -95,7 +78,10 @@ class DiaryEntryListTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
+        children: [
+          buildHeading(),
+          if (subheadings.isNotEmpty) buildSubheading(),
+        ],
       ),
     );
   }
@@ -111,14 +97,14 @@ class DiaryEntryListTile extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (trailing != null) trailing,
+            if (trailing != null) trailing!,
             const Icon(GLIcons.arrowRight),
           ],
         ),
         onTap: onTap,
       ),
       onDelete: () => diaryEntriesBloc.add(Delete(diaryEntry)),
-      confirmDismiss: () => showDialog(
+      confirmDismiss: (_) => showDialog(
         context: context,
         builder: (_) => const ConfirmDeleteDialog(itemName: 'entry'),
       ),

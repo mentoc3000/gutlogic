@@ -11,9 +11,9 @@ import 'push_list_tile.dart';
 
 class PantryListTile extends StatelessWidget {
   final PantryEntry pantryEntry;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const PantryListTile({Key key, @required this.pantryEntry, this.onTap}) : super(key: key);
+  const PantryListTile({Key? key, required this.pantryEntry, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class PantryListTile extends StatelessWidget {
         onTap: onTap,
       ),
       onDelete: () => context.read<PantryBloc>().add(DeletePantryEntry(pantryEntry)),
-      confirmDismiss: () => showDialog(
+      confirmDismiss: (_) => showDialog(
         context: context,
         builder: (_) => ConfirmDeleteDialog(itemName: pantryEntry.foodReference.name),
       ),

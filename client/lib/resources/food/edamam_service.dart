@@ -1,14 +1,12 @@
-import 'package:meta/meta.dart';
-
 import '../../models/edamam_api/edamam_api_entry.dart';
 import '../../models/serializers.dart';
-
+import '../../util/null_utils.dart';
 import '../firebase/cloud_function_service.dart';
 
 class EdamamService {
   CloudFunctionService edamamFoodSearchService;
 
-  EdamamService({@required this.edamamFoodSearchService});
+  EdamamService({required this.edamamFoodSearchService});
 
   /// Search for food on Edamam
   ///
@@ -21,13 +19,11 @@ class EdamamService {
     switch (response['status']) {
       case 200:
         try {
-          final jsonResponse = response['data'];
-          final List<dynamic> entries = jsonResponse['hints'];
-          return entries.map((e) => serializers.deserializeWith(EdamamApiEntry.serializer, e)).toList();
+          final List<dynamic> entries = response['data']['hints'];
+          return entries.map((e) => serializers.deserializeWith(EdamamApiEntry.serializer, e)).whereNotNull().toList();
         } catch (e) {
           throw EdamamException(message: 'Parsing error');
         }
-        break;
       case 443:
         return [];
     }
@@ -37,17 +33,14 @@ class EdamamService {
   /// Get Edamam food by Id
   ///
   /// No match returns null.
-  Future<EdamamApiEntry> getById(String id) async {
+  Future<EdamamApiEntry?> getById(String id) async {
     final searchResults = await searchFood(id);
-    if (searchResults.isEmpty) {
-      return null;
-    }
-    return searchResults[0];
+    return searchResults.isNotEmpty ? searchResults[0] : null;
   }
 }
 
 class EdamamException implements Exception {
   final String message;
 
-  EdamamException({@required this.message});
+  EdamamException({required this.message});
 }

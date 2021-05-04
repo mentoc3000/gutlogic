@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 
-typedef StringValidator = String Function(String);
+typedef StringValidator = String? Function(String?);
 
 bool isValidUsername(String username) => isValidEmail(username);
 

@@ -1,6 +1,6 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/widgets.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/pantry/pantry_entry.dart';
 import '../../models/pantry/pantry_sort.dart';
@@ -14,7 +14,7 @@ class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber {
   final PantryFilterCubit pantryFilterCubit;
   PantrySort get _sort => state.sort;
 
-  PantrySortCubit({@required this.pantryFilterCubit})
+  PantrySortCubit({required this.pantryFilterCubit})
       : super(
           pantryFilterCubit.state is PantryFilterLoaded
               ? PantrySortLoaded(
@@ -22,14 +22,14 @@ class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber {
                   sort: _defaultSort)
               : PantrySortLoading(sort: _defaultSort),
         ) {
-    streamSubscription = pantryFilterCubit.listen((state) {
+    streamSubscription = pantryFilterCubit.stream.listen((state) {
       if (state is PantryFilterLoading) {
         emit(PantrySortLoading(sort: _sort));
       } else if (state is PantryFilterLoaded) {
         final sortedItems = _sortPantry(state.items, _sort);
         emit(PantrySortLoaded(items: sortedItems, sort: _sort));
       } else if (state is PantryFilterError) {
-        emit(PantrySortError.from(state));
+        emit(PantrySortError.from(errorState: state, sort: _sort));
       }
     });
   }

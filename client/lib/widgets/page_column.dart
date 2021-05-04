@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 class PageColumn extends StatelessWidget {
   final Widget Function(BuildContext context, BoxConstraints constraints) builder;
 
-  PageColumn({Key key, this.builder}) : super(key: key);
+  PageColumn({Key? key, required this.builder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

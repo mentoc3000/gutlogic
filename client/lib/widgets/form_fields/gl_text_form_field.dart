@@ -1,48 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class GLTextFormField extends StatelessWidget {
-  final String labelText;
-  final IconData decorationIcon;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final TextInputType keyboardType;
+  final String? labelText;
+  final InputDecoration? decoration;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final TextInputType? keyboardType;
   final bool enabled;
   final bool obscureText;
-  final bool autovalidate;
   final bool autocorrect;
-  final String Function(String) validator;
+  final AutovalidateMode autovalidateMode;
+  final String? Function(String?)? validator;
 
   const GLTextFormField({
-    Key key,
+    Key? key,
     this.controller,
     this.labelText,
-    this.decorationIcon,
+    this.decoration,
     this.keyboardType,
     this.enabled = true,
     this.obscureText = false,
-    this.autovalidate = false,
-    this.autocorrect = false,
+    this.autocorrect = true,
+    this.autovalidateMode = AutovalidateMode.always,
     this.validator,
     this.focusNode,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final icon = decorationIcon == null ? null : Icon(decorationIcon);
-
     return TextFormField(
-      decoration: InputDecoration(
-        icon: icon,
-        labelText: labelText,
-        // border: const OutlineInputBorder(),
-      ),
+      decoration: decoration,
       controller: controller,
       focusNode: focusNode,
       keyboardType: keyboardType,
       enabled: enabled,
       obscureText: obscureText,
-      autovalidate: autovalidate,
       autocorrect: autocorrect,
+      autovalidateMode: autovalidateMode,
       validator: validator,
     );
   }

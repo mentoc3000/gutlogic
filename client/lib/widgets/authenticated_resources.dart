@@ -1,4 +1,3 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,6 +10,7 @@ import '../resources/diary_repositories/meal_element_repository.dart';
 import '../resources/diary_repositories/meal_entry_repository.dart';
 import '../resources/diary_repositories/symptom_entry_repository.dart';
 import '../resources/firebase/cloud_function_service.dart';
+import '../resources/firebase/crashlytics_service.dart';
 import '../resources/firebase/firestore_service.dart';
 import '../resources/food/custom_food_repository.dart';
 import '../resources/food/edamam_food_repository.dart';
@@ -24,7 +24,7 @@ class AuthenticatedResources extends StatelessWidget {
   final Widget child;
   final GlobalKey navigatorKey;
 
-  AuthenticatedResources({@required this.child, @required this.navigatorKey});
+  AuthenticatedResources({required this.child, required this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class AuthenticatedResources extends StatelessWidget {
       return MultiRepositoryProvider(
         providers: [
           RepositoryProvider(create: (context) {
-            return FirestoreService(userId: context.read<UserRepository>().user.id);
+            return FirestoreService(userID: context.read<UserRepository>().user!.id);
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
@@ -59,12 +59,15 @@ class AuthenticatedResources extends StatelessWidget {
             // TODO move this into its most tightly nested widget tree
             return DiaryRepository(
               firestoreService: context.read<FirestoreService>(),
-              firebaseCrashlytics: context.read<FirebaseCrashlytics>(),
+              crashlytics: context.read<CrashlyticsService>(),
             );
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
-            return PantryRepository(firestoreService: context.read<FirestoreService>());
+            return PantryRepository(
+              firestoreService: context.read<FirestoreService>(),
+              crashlytics: context.read<CrashlyticsService>(),
+            );
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
@@ -115,7 +118,7 @@ class AuthenticatedResources extends StatelessWidget {
 
     if (state is Authenticated) {
       // Navigate to the verify email page if the user has not verified their email yet.
-      final user = context.read<UserRepository>().user;
+      final user = context.read<UserRepository>().user!;
 
       if (user.verified == false) {
         dest = Routes.of(context).verifyEmail(user.email);
@@ -134,8 +137,7 @@ class AuthenticatedResources extends StatelessWidget {
     final navigatorContext = navigatorKey.currentContext;
 
     // TODO make sure we aren't navigating to the same page
-
     // When the authentication state changes, we replace the entire navigation stack.
-    Navigator.of(navigatorContext).pushAndRemoveUntil(dest, (route) => false);
+    Navigator.of(navigatorContext!).pushAndRemoveUntil(dest, (route) => false);
   }
 }

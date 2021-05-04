@@ -16,7 +16,7 @@ class AppleAuthButton extends StatelessWidget {
   /// The button action.
   final VoidCallback onPressed;
 
-  AppleAuthButton({Key key, @required this.label, @required this.onPressed}) : super(key: key);
+  AppleAuthButton({Key? key, required this.label, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

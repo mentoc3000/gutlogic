@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -11,12 +10,11 @@ abstract class Measure implements Built<Measure, MeasureBuilder> {
   String get unit;
 
   // EdamamFoods will have measure with weights to allow for unit conversion, but CustomFoods will only have the unit.
-  @nullable
-  double get weight; // in grams
+  double? get weight; // in grams
 
   Measure._();
 
-  factory Measure({@required String unit, double weight}) = _$Measure._;
+  factory Measure({required String unit, double weight}) = _$Measure._;
 
   factory Measure.fromBuilder([MeasureBuilder Function(MeasureBuilder) updates]) = _$Measure;
 
@@ -36,8 +34,9 @@ class MeasureSerializer implements StructuredSerializer<Measure> {
   final String wireName = 'Measure';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Measure object, {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+  Iterable<Object?> serialize(Serializers serializers, Measure object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object?>[
       'unit',
       serializers.serialize(object.unit, specifiedType: const FullType(String)),
     ];
@@ -48,7 +47,7 @@ class MeasureSerializer implements StructuredSerializer<Measure> {
   }
 
   @override
-  Measure deserialize(Serializers serializers, Iterable<Object> serialized,
+  Measure deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = MeasureBuilder();
 

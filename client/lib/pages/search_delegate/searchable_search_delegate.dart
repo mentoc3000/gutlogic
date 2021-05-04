@@ -1,15 +1,15 @@
-import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
+
 import '../../models/model_interfaces.dart';
 import '../../widgets/gl_icons.dart';
 import '../../widgets/list_tiles/gl_list_tile.dart';
 
-abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDelegate<T> {
+abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDelegate<T?> {
   final void Function(T) onSelect;
 
   SearchableSearchDelegate({
-    @required String searchFieldLabel,
-    @required this.onSelect,
+    required String searchFieldLabel,
+    required this.onSelect,
   }) : super(searchFieldLabel: searchFieldLabel);
 
   @override
@@ -38,9 +38,9 @@ abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDele
   Widget buildSuggestions(BuildContext context) => Container();
 
   Widget buildListTile({
-    @required BuildContext context,
-    @required Searchable searchable,
-    Widget trailing,
+    required BuildContext context,
+    required T searchable,
+    Widget? trailing,
   }) =>
       GLListTile(
         heading: searchable.searchHeading(),
@@ -53,12 +53,10 @@ abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDele
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    assert(context != null);
     final theme = Theme.of(context);
-    assert(theme != null);
     return theme.copyWith(
       textTheme: theme.textTheme.copyWith(
-        headline6: theme.textTheme.headline6.copyWith(color: theme.colorScheme.onPrimary),
+        headline6: theme.textTheme.headline6?.copyWith(color: theme.colorScheme.onPrimary),
       ),
     );
   }

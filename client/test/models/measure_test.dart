@@ -28,7 +28,7 @@ void main() {
         'unit': 'Cup',
         'weight': 240,
       };
-      final measure = serializers.deserializeWith(Measure.serializer, quantityJson);
+      final measure = serializers.deserializeWith(Measure.serializer, quantityJson)!;
       expect(measure.unit, 'Cup');
       expect(measure.weight, 240);
     });
@@ -38,7 +38,7 @@ void main() {
         'label': 'Cup',
         'weight': 240,
       };
-      final measure = serializers.deserializeWith(Measure.serializer, quantityJson);
+      final measure = serializers.deserializeWith(Measure.serializer, quantityJson)!;
       expect(measure.unit, 'Cup');
       expect(measure.weight, 240);
     });

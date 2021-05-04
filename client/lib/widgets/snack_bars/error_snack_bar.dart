@@ -5,8 +5,8 @@ import 'gl_snack_bar.dart';
 
 class ErrorSnackBar extends GLSnackBar {
   ErrorSnackBar({
-    Key key,
-    @required String text,
+    Key? key,
+    required String text,
   }) : super(
           key: key,
           text: text,

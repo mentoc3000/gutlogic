@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
+
 import '../widgets/gl_scaffold.dart';
 
 class ErrorPage extends StatelessWidget {
-  final String message;
+  final String? message;
 
   ErrorPage({this.message});
 

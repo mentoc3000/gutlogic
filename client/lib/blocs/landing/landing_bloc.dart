@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import '../../auth/auth.dart';
 import '../../auth/auth_provider.dart';
@@ -15,8 +14,8 @@ class LandingBloc extends Bloc<LandingEvent, LandingState> {
   final Authenticator authenticator;
 
   LandingBloc({
-    @required this.userRepository,
-    @required this.authenticator,
+    required this.userRepository,
+    required this.authenticator,
   }) : super(const LandingReady());
 
   factory LandingBloc.fromContext(BuildContext context) {

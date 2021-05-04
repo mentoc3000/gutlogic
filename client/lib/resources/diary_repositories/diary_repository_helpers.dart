@@ -10,7 +10,7 @@ import 'bowel_movement_entry_repository.dart' as bmer;
 import 'meal_entry_repository.dart' as mer;
 import 'symptom_entry_repository.dart' as ser;
 
-DiaryEntry deserialize(Map<String, dynamic> object) {
+DiaryEntry? deserialize(Map<String, dynamic>? object) {
   if (object == null) return null;
 
   switch (object['\$'] as String) {
@@ -26,26 +26,27 @@ DiaryEntry deserialize(Map<String, dynamic> object) {
 }
 
 mixin DiaryEntryStreamer on FirestoreRepository {
-  Stream<DiaryEntry> stream(DiaryEntry diaryEntry) => streamById(diaryEntry.id);
+  Stream<DiaryEntry?> stream(DiaryEntry diaryEntry) => streamById(diaryEntry.id);
 
-  Stream<DiaryEntry> streamById(String diaryEntryId) {
+  Stream<DiaryEntry?> streamById(String diaryEntryId) {
     final stream = firestoreService.userDiaryCollection.doc(diaryEntryId).snapshots();
     return stream.map((document) => deserialize(FirestoreService.getDocumentData(document)));
   }
 
-  Future<DiaryEntry> getLatest(DiaryEntry diaryEntry) => stream(diaryEntry).first;
+  Future<DiaryEntry?> getLatest(DiaryEntry diaryEntry) => stream(diaryEntry).first;
 
-  Future<DiaryEntry> getLatestById(String diaryEntryId) => streamById(diaryEntryId).first;
+  Future<DiaryEntry?> getLatestById(String diaryEntryId) => streamById(diaryEntryId).first;
 }
 
 mixin DiaryEntryAdder on FirestoreRepository {
   /// Add a diary entry to the collection.
   /// Any `id` will be stripped and a new one assigned.
-  Future<T> add<T extends DiaryEntry>(T diaryEntry) async {
-    final Map<String, dynamic> data = serializers.serialize(diaryEntry);
+  Future<T?> add<T extends DiaryEntry>(T diaryEntry) async {
+    final data = serializers.serialize(diaryEntry) as Map<String, dynamic>?;
+    if (data == null) return null;
     data.remove('id');
     final doc = await firestoreService.userDiaryCollection.addUnawaited(data).get();
-    return serializers.deserialize(FirestoreService.getDocumentData(doc));
+    return serializers.deserialize(FirestoreService.getDocumentData(doc)) as T;
   }
 }
 
@@ -63,7 +64,8 @@ mixin DiaryEntryUpdater on FirestoreRepository {
       final mealEntrySnapshot = await tx.get(diaryEntryRef);
       if (mealEntrySnapshot.exists) {
         // TODO: version check the snapshot
-        final Map<String, dynamic> serialized = serializers.serialize(diaryEntry);
+        final serialized = serializers.serialize(diaryEntry) as Map<String, dynamic>?;
+        if (serialized == null) return null;
         final serializedWithoutId = serialized..remove('id');
         await tx.update(diaryEntryRef, serializedWithoutId);
       }

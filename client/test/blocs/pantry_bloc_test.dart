@@ -7,11 +7,15 @@ import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
+import 'pantry_bloc_test.mocks.dart';
+
+@GenerateMocks([PantryRepository])
 void main() {
   group('PantryBloc', () {
-    PantryRepository pantryRepository;
+    late MockPantryRepository pantryRepository;
     const pantryEntry1Id = 'entry1Id';
     final foodReference = CustomFoodReference(id: 'foodId', name: 'Corned Beef');
     const sensitivity = Sensitivity.moderate;
@@ -41,44 +45,44 @@ void main() {
       expect(PantryBloc(repository: pantryRepository).state, PantryLoading());
     });
 
-    blocTest(
+    blocTest<PantryBloc, PantryState>(
       'streams all pantry entries',
       build: () => PantryBloc(repository: pantryRepository),
       act: (bloc) async => bloc.add(const StreamAllPantry()),
-      expect: [PantryLoading(), PantryLoaded(allPantryEntries)],
+      expect: () => [PantryLoading(), PantryLoaded(allPantryEntries)],
       verify: (bloc) {
         verify(pantryRepository.streamAll()).called(1);
       },
     );
 
-    blocTest(
+    blocTest<PantryBloc, PantryState>(
       'loads pantry entries',
       build: () => PantryBloc(repository: pantryRepository),
       act: (bloc) async => bloc.add(LoadPantry(items: allPantryEntries)),
-      expect: [PantryLoaded(allPantryEntries)],
+      expect: () => [PantryLoaded(allPantryEntries)],
       verify: (bloc) {
         verifyNever(pantryRepository.streamAll());
       },
     );
 
-    blocTest(
+    blocTest<PantryBloc, PantryState>(
       'deletes entry',
       build: () => PantryBloc(repository: pantryRepository),
       act: (bloc) async => bloc.add(DeletePantryEntry(pantryEntry2)),
-      expect: [PantryEntryDeleted(pantryEntry2)],
+      expect: () => [PantryEntryDeleted(pantryEntry2)],
       verify: (bloc) {
         verify(pantryRepository.delete(pantryEntry2)).called(1);
       },
     );
 
-    blocTest(
+    blocTest<PantryBloc, PantryState>(
       'transitions to error state when stream throws error',
       build: () {
         when(pantryRepository.streamAll()).thenThrow(Exception());
         return PantryBloc(repository: pantryRepository);
       },
       act: (bloc) async => bloc.add(const StreamAllPantry()),
-      expect: [PantryLoading(), isA<PantryError>()],
+      expect: () => [PantryLoading(), isA<PantryError>()],
     );
 
     test('errors are recorded', () {
@@ -86,5 +90,3 @@ void main() {
     });
   });
 }
-
-class MockPantryRepository extends Mock implements PantryRepository {}

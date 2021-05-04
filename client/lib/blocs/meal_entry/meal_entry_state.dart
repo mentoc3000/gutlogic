@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/diary_entry/diary_entry.dart';
 import '../../models/diary_entry/meal_entry.dart';
@@ -11,7 +10,7 @@ import '../diary_entry/diary_entry_state.dart';
 
 abstract class MealEntryState extends Equatable {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class MealEntryLoading extends MealEntryState with DiaryEntryLoading {}
@@ -27,10 +26,10 @@ class MealElementDeleted extends MealEntryState {
   final MealEntry mealEntry;
   final MealElement mealElement;
 
-  MealElementDeleted({@required this.mealEntry, @required this.mealElement});
+  MealElementDeleted({required this.mealEntry, required this.mealElement});
 
   @override
-  List<Object> get props => [mealEntry, mealElement];
+  List<Object?> get props => [mealEntry, mealElement];
 
   @override
   String toString() => 'MealElementDeleted { mealElement.id: ${mealElement.id} }';
@@ -38,14 +37,17 @@ class MealElementDeleted extends MealEntryState {
 
 class MealEntryError extends MealEntryState with DiaryEntryError, ErrorRecorder {
   @override
-  final ErrorReport report;
-
-  @override
   final String message;
 
-  MealEntryError({@required this.message}) : report = null;
+  @override
+  final ErrorReport? report;
 
-  MealEntryError.fromError({@required dynamic error, @required StackTrace trace})
+  MealEntryError({required this.message}) : report = null;
+
+  MealEntryError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
+
+  factory MealEntryError.fromReport(ErrorReport report) =>
+      MealEntryError.fromError(error: report.error, trace: report.trace);
 }

@@ -7,7 +7,7 @@ import 'pantry_entry.dart';
 class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with StreamSubscriber {
   final PantryRepository repository;
 
-  PantryEntryBloc({this.repository}) : super(PantryEntryLoading());
+  PantryEntryBloc({required this.repository}) : super(PantryEntryLoading());
 
   @override
   Stream<Transition<PantryEntryEvent, PantryEntryState>> transformEvents(
@@ -20,21 +20,25 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
   Stream<PantryEntryState> mapEventToState(PantryEntryEvent event) async* {
     try {
       if (event is CreateAndStreamEntry) {
-        final pantryEntry = await repository.addFood(event.food);
-        add(StreamEntry(pantryEntry));
+        final pantryEntry = await repository.addFood(event.foodReference);
+        if (pantryEntry != null) {
+          add(StreamEntry(pantryEntry));
+        } else {
+          yield PantryEntryError(message: 'Failed to create pantry entry');
+        }
       }
       if (event is StreamEntry) {
         yield PantryEntryLoaded(event.pantryEntry);
         streamSubscription = repository.stream(event.pantryEntry).listen(
-              (d) => add(Load(d)),
-              onError: (error, StackTrace trace) => add(ThrowPantryEntryError(error: error, trace: trace)),
+              (pantryEntry) => add(Load(pantryEntry!)),
+              onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
             );
       }
       if (event is StreamId) {
         yield PantryEntryLoading();
         streamSubscription = repository.streamId(event.id).listen(
-              (d) => add(Load(d)),
-              onError: (error, StackTrace trace) => add(ThrowPantryEntryError(error: error, trace: trace)),
+              (pantryEntry) => add(Load(pantryEntry!)),
+              onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
             );
       }
       if (event is Load) {
@@ -57,7 +61,7 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
         unawaited(repository.updateSensitivity(pantryEntry, event.sensitivity));
       }
       if (event is ThrowPantryEntryError) {
-        yield PantryEntryError.fromError(error: event.error, trace: event.trace);
+        yield PantryEntryError.fromReport(event.report);
       }
     } catch (error, trace) {
       yield PantryEntryError.fromError(error: error, trace: trace);

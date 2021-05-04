@@ -58,7 +58,7 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
 
   void listener(BuildContext context, BowelMovementEntryState state) {
     if (state is BowelMovementEntryLoaded) {
-      _notesController.text = state.diaryEntry.notes;
+      _notesController.text = state.diaryEntry.notes ?? '';
     }
   }
 
@@ -71,26 +71,27 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
       return [
         DateTimeCard(
           dateTime: entry.datetime,
-          onChanged: (newValue) {
-            context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryDateTime(newValue));
+          onChanged: (value) {
+            if (value == null) return; // TODO is this correct?
+            context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryDateTime(value));
           },
         ),
         BMVolumeCard(
-          volume: entry.bowelMovement?.volume ?? 3,
-          onChanged: (newValue) {
-            context.read<BowelMovementEntryBloc>().add(UpdateVolume(newValue));
+          volume: entry.bowelMovement.volume,
+          onChanged: (value) {
+            context.read<BowelMovementEntryBloc>().add(UpdateVolume(value));
           },
         ),
         BMTypeCard(
-          type: entry.bowelMovement?.type ?? 5,
-          onChanged: (newValue) {
-            context.read<BowelMovementEntryBloc>().add(UpdateType(newValue));
+          type: entry.bowelMovement.type,
+          onChanged: (value) {
+            context.read<BowelMovementEntryBloc>().add(UpdateType(value));
           },
         ),
         NotesCard(
           controller: _notesController,
-          onChanged: (newValue) {
-            context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryNotes(newValue));
+          onChanged: (value) {
+            context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryNotes(value));
           },
         ),
       ];
@@ -102,7 +103,7 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
       }
 
       if (state is BowelMovementEntryLoaded) {
-        final tiles = bmTiles(state.diaryEntry);
+        final tiles = bmTiles(state.diaryEntry as BowelMovementEntry);
         return ListView.builder(
           itemCount: tiles.length,
           itemBuilder: (context, index) => Padding(padding: const EdgeInsets.all(1.0), child: tiles[index]),

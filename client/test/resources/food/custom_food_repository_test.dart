@@ -5,16 +5,20 @@ import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
+import 'custom_food_repository_test.mocks.dart';
+
+@GenerateMocks([FirestoreService])
 void main() {
   group('CustomFoodRepository', () {
-    String customFoodId;
-    CustomFoodReference foodReference;
-    MockFirestoreInstance instance;
-    CustomFoodRepository foodRepository;
-    FirestoreService firestoreService;
-    CustomFood food;
+    late String customFoodId;
+    late CustomFoodReference foodReference;
+    late MockFirestoreInstance instance;
+    late CustomFoodRepository foodRepository;
+    late MockFirestoreService firestoreService;
+    late CustomFood food;
 
     setUp(() async {
       customFoodId = '7';
@@ -22,8 +26,8 @@ void main() {
       food = CustomFood(id: customFoodId, name: 'Escargot');
       foodReference = food.toFoodReference();
       instance = MockFirestoreInstance();
-      await instance.collection('foods').doc(customFoodId).set(serializers.serialize(food));
-      await instance.collection('foods').doc(customFoodId2).set(serializers.serialize(food));
+      await instance.collection('foods').doc(customFoodId).set(serializers.serialize(food) as Map<String, dynamic>);
+      await instance.collection('foods').doc(customFoodId2).set(serializers.serialize(food) as Map<String, dynamic>);
       firestoreService = MockFirestoreService();
       when(firestoreService.instance).thenReturn(instance);
       when(firestoreService.customFoodCollection).thenReturn(instance.collection('foods'));
@@ -69,5 +73,3 @@ void main() {
     });
   });
 }
-
-class MockFirestoreService extends Mock implements FirestoreService {}

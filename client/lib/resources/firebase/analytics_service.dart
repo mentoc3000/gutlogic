@@ -1,47 +1,72 @@
-import 'package:flutter/widgets.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/widgets.dart';
 
 import '../../auth/auth.dart';
 import '../../models/application_user.dart';
 
 class AnalyticsService {
-  FirebaseAnalytics _analytics;
-  FirebaseAnalytics get analytics => isEnabled ? _analytics ??= FirebaseAnalytics() : null;
+  FirebaseAnalytics? _analytics;
+  FirebaseAnalyticsObserver? _observer;
 
-  FirebaseAnalyticsObserver _observer;
-  FirebaseAnalyticsObserver get observer =>
-      isEnabled ? _observer ??= FirebaseAnalyticsObserver(analytics: analytics) : null;
+  AnalyticsService({bool enabled = true}) {
+    if (enabled) {
+      _analytics = FirebaseAnalytics();
+      _observer = FirebaseAnalyticsObserver(analytics: _analytics!);
+    } else {
+      _analytics = null;
+      _observer = null;
+    }
+  }
 
-  // TODO: prompt users to opt in, save to user profile
-  // check with analytics database:
-  // https://github.com/FirebaseExtended/flutterfire/blob/1daaea78dcb61d423444fccc2238db27bf7d281e/packages/firebase_analytics/firebase_analytics/lib/firebase_analytics.dart#L50
-  bool isEnabled = true;
+  /// Create a new analytics observer.
+  AnalyticsObserver observer() {
+    return AnalyticsObserver(_observer);
+  }
 
-  AnalyticsService();
-
-  void _logEvent({@required String name, Map<String, dynamic> parameters}) {
-    final condensedParameters =
-        parameters == null ? null : (Map<String, dynamic>.from(parameters)..removeWhere((key, value) => value == null));
-    unawaited(analytics?.logEvent(name: name, parameters: condensedParameters));
+  /// Track an analytics event, with optional [parameters].
+  void _track({required String name, Map<String, Object>? parameters}) {
+    _analytics?.logEvent(name: name, parameters: parameters);
   }
 
   // NAVIGATION
 
-  void subscribeToRoute(RouteAware routeAware, PageRoute route) => observer?.subscribe(routeAware, route);
+  void subscribeToRoute(RouteAware routeAware, PageRoute route) => _observer?.subscribe(routeAware, route);
 
-  void unsubscribeFromRoute(RouteAware routeAware) => observer?.unsubscribe(routeAware);
+  void unsubscribeFromRoute(RouteAware routeAware) => _observer?.unsubscribe(routeAware);
 
-  void setCurrentScreen(String screenName) => unawaited(analytics?.setCurrentScreen(screenName: screenName));
+  void setCurrentScreen(String screenName) => _analytics?.setCurrentScreen(screenName: screenName);
 
   // AUTHENTICATION and USER
 
-  void setUser(ApplicationUser user) => unawaited(analytics?.setUserId(user.id));
+  void setUser(ApplicationUser user) => _analytics?.setUserId(user.id);
 
-  void logEvent(String name) => _logEvent(name: name);
+  void logEvent(String name) => _track(name: name);
 
-  void logLogin([AuthProvider authProvider]) => unawaited(analytics?.logLogin(loginMethod: authProvider?.toString()));
+  void logLogin(AuthProvider provider) => _analytics?.logLogin(loginMethod: provider.toString());
 
-  void logUpdateEvent(String name, [String field]) => _logEvent(name: name, parameters: {'field': field});
+  void logUpdateEvent(String name, [String? field]) {
+    _track(name: name, parameters: field == null ? null : {field: field});
+  }
+}
+
+class AnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
+  final FirebaseAnalyticsObserver? _firebaseAnalyticsObserver;
+
+  AnalyticsObserver(FirebaseAnalyticsObserver? observer) : _firebaseAnalyticsObserver = observer;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    _firebaseAnalyticsObserver?.didPush(route, previousRoute);
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    _firebaseAnalyticsObserver?.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    _firebaseAnalyticsObserver?.didPop(route, previousRoute);
+  }
 }

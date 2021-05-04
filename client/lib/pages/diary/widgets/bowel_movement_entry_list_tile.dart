@@ -8,7 +8,7 @@ import 'diary_entry_list_tile.dart';
 class BowelMovementEntryListTile extends StatelessWidget {
   final BowelMovementEntry entry;
 
-  const BowelMovementEntryListTile({@required this.entry});
+  const BowelMovementEntryListTile({required this.entry});
 
   @override
   Widget build(BuildContext context) {

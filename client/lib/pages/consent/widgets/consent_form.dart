@@ -83,12 +83,12 @@ class ConsentFormState extends State<ConsentForm> {
     ]);
   }
 
-  void onAgeCheckboxChanged({bool value}) {
-    setState(() => {_isMinimumAge = value});
+  void onAgeCheckboxChanged({bool? value}) {
+    setState(() => {_isMinimumAge = value ?? false});
   }
 
-  void onPrivacyCheckboxChanged({bool value}) {
-    setState(() => {_isPrivacyReviewed = value});
+  void onPrivacyCheckboxChanged({bool? value}) {
+    setState(() => {_isPrivacyReviewed = value ?? false});
   }
 
   void onAgreeButtonPressed(BuildContext context) {
@@ -100,7 +100,7 @@ class ConsentFormState extends State<ConsentForm> {
       Navigator.of(context).pushAndRemoveUntil(Routes.of(context).main, (_) => false);
     }
     if (state is ConsentError) {
-      Scaffold.of(context).showSnackBar(ErrorSnackBar(text: state.message));
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackBar(text: state.message));
     }
   }
 }

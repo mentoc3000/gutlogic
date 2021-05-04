@@ -1,4 +1,3 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,40 +26,38 @@ import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_element_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_entry_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
+import 'package:gutlogic/resources/firebase/analytics_service.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:gutlogic/resources/user_repository.dart';
 import 'package:gutlogic/routes/routes.dart';
 import 'package:gutlogic/style/gl_theme.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:timezone/timezone.dart';
 
 import 'screenshots/screenshots_handler.dart' as screenshots;
-
-class MockUserRepository extends Mock implements UserRepository {}
-
-class MockAuthenticationBloc extends MockBloc<AuthenticationState> implements AuthenticationBloc {}
-
-class MockDiaryRepository extends Mock implements DiaryRepository {}
-
-class MockMealEntryRepository extends Mock implements MealEntryRepository {}
-
-class MockSymptomEntryRepository extends Mock implements SymptomEntryRepository {}
-
-class MockBowelMovementEntryRepository extends Mock implements BowelMovementEntryRepository {}
-
-class MockMealElementRepository extends Mock implements MealElementRepository {}
-
-class MockPantryRepository extends Mock implements PantryRepository {}
+import 'screenshots_target.mocks.dart';
 
 class MainTabsPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
-        home: MainTabs(analyticsService: null),
+        home: MainTabs(analytics: MockAnalyticsService()),
         theme: glTheme,
       );
 }
 
+@GenerateMocks([
+  AnalyticsService,
+  AuthenticationBloc,
+  BowelMovementEntryRepository,
+  DiaryRepository,
+  MealElementRepository,
+  MealEntryRepository,
+  PantryRepository,
+  SymptomEntryRepository,
+  UserRepository,
+])
 void main() {
   // Pass the screenshots data request handler to the driver extension. This is required by the screenshot driver.
   enableFlutterDriverExtension(handler: screenshots.handler);

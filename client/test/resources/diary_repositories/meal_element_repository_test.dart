@@ -5,36 +5,39 @@ import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/meal_element.dart';
+import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/quantity.dart';
+import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_element_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-class MockFirestoreService extends Mock implements FirestoreService {}
+import 'meal_element_repository_test.mocks.dart';
 
-class MockPantryRepository extends Mock implements PantryRepository {}
-
+@GenerateMocks([FirestoreService, PantryRepository])
 void main() {
   group('MealElementRepository', () {
-    String diaryEntryId;
-    MealElement mealElement1;
-    MealElement mealElement2;
-    MealEntry diaryEntry;
-    MockFirestoreInstance instance;
-    FirestoreService firestoreService;
-    MealElementRepository mealElementRepository;
-    PantryRepository pantryRepository;
+    late String diaryEntryId;
+    late MealElement mealElement1;
+    late MealElement mealElement2;
+    late MealEntry diaryEntry;
+    late MockFirestoreInstance instance;
+    late FirestoreService firestoreService;
+    late MealElementRepository mealElementRepository;
+    late MockPantryRepository pantryRepository;
 
     setUp(() {
       diaryEntryId = 'entry1Id';
       final dateTime = DateTime.now().toUtc();
       const notes = 'easy';
+      final food = CustomFood(id: 'food1', name: 'Eggs');
       mealElement1 = MealElement(
         id: '$diaryEntryId#mealElement1',
-        foodReference: CustomFoodReference(id: 'food1', name: 'Eggs'),
+        foodReference: food.toFoodReference(),
         quantity: Quantity.unweighed(amount: 2, unit: 'each'),
       );
       mealElement2 = MealElement(
@@ -49,6 +52,7 @@ void main() {
         mealElements: mealElements,
         notes: notes,
       );
+
       instance = MockFirestoreInstance();
       instance.collection('diary').doc(diaryEntryId).set({
         '\$': 'MealEntry',
@@ -56,10 +60,19 @@ void main() {
         'datetime': Timestamp.fromDate(dateTime),
         'notes': notes,
       });
+
       firestoreService = MockFirestoreService();
       when(firestoreService.instance).thenReturn(instance);
       when(firestoreService.userDiaryCollection).thenReturn(instance.collection('diary'));
+
       pantryRepository = MockPantryRepository();
+      final pantryEntry = PantryEntry(
+        id: 'pantry1',
+        foodReference: food.toFoodReference(),
+        sensitivity: Sensitivity.mild,
+      );
+      when(pantryRepository.findByFood(any)).thenAnswer((_) async => pantryEntry);
+
       mealElementRepository = MealElementRepository(
         firestoreService: firestoreService,
         pantryRepository: pantryRepository,
@@ -74,12 +87,12 @@ void main() {
       final food = CustomFood(id: 'food1', name: 'Brownie');
       final foodReference = food.toFoodReference();
       final mealElement = await mealElementRepository.addNewMealElementTo(diaryEntry, food: food);
-      expect(mealElement.id.startsWith('$diaryEntryId#'), true);
+      expect(mealElement!.id.startsWith('$diaryEntryId#'), true);
       expect(mealElement.foodReference, foodReference);
       expect(mealElement.quantity, isNull);
       expect(mealElement.notes, isNull);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntry['mealElements'] as List).length, 3);
+      expect((retrievedEntry!['mealElements'] as List).length, 3);
     });
 
     test('adds a mealElement', () async {
@@ -89,17 +102,17 @@ void main() {
         quantity: Quantity.unweighed(amount: 1, unit: 'slice'),
       );
       final mealElement = await mealElementRepository.addMealElementTo(diaryEntry, mealElement: mealElement3);
-      expect(mealElement.id.startsWith('$diaryEntryId#'), true);
+      expect(mealElement!.id.startsWith('$diaryEntryId#'), true);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntry['mealElements'] as List).length, 3);
+      expect((retrievedEntry!['mealElements'] as List).length, 3);
     });
 
     test('deletes mealElement', () async {
       final retrievedEntryBefore = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntryBefore['mealElements'] as List).length, 2);
+      expect((retrievedEntryBefore!['mealElements'] as List).length, 2);
       await mealElementRepository.delete(mealElement1);
       final retrievedEntryAfter = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntryAfter['mealElements'] as List).length, 1);
+      expect((retrievedEntryAfter!['mealElements'] as List).length, 1);
       expect((retrievedEntryAfter['mealElements'] as List).first['id'], mealElement2.id);
     });
 
@@ -108,28 +121,28 @@ void main() {
       final updatedMealElement = mealElement1.rebuild((b) => b..notes = notes);
       await mealElementRepository.update(updatedMealElement);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntry['mealElements'] as List).first['notes'], notes);
+      expect((retrievedEntry!['mealElements'] as List).first['notes'], notes);
     });
 
     test('updates food reference', () async {
       final foodReference = CustomFoodReference(id: '1234', name: 'Burger');
       await mealElementRepository.updateFoodReference(mealElement1, foodReference);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntry['mealElements'] as List).first['foodReference']['id'], foodReference.id);
+      expect((retrievedEntry!['mealElements'] as List).first['foodReference']['id'], foodReference.id);
     });
 
     test('updates quantity', () async {
       final quantity = Quantity.unweighed(amount: 3, unit: 'patties');
       await mealElementRepository.updateQuantity(mealElement1, quantity);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntry['mealElements'] as List).first['quantity']['measure']['unit'], quantity.measure.unit);
+      expect((retrievedEntry!['mealElements'] as List).first['quantity']['measure']['unit'], quantity.measure!.unit);
     });
 
     test('updates notes', () async {
       const notes = 'new notes';
       await mealElementRepository.updateNotes(mealElement1, notes);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntry['mealElements'] as List).first['notes'], notes);
+      expect((retrievedEntry!['mealElements'] as List).first['notes'], notes);
     });
   });
 }

@@ -1,5 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../models/model_interfaces.dart';
 
 // TODO: remove this mixin?
@@ -9,7 +10,7 @@ mixin FetchQuery on Equatable {
   String get query;
 
   @override
-  List<Object> get props => [query];
+  List<Object?> get props => [query];
 
   @override
   String toString() => '$runtimeType { query: $query }';
@@ -21,7 +22,7 @@ mixin StreamQuery on Equatable {
   String get query;
 
   @override
-  List<Object> get props => [query];
+  List<Object?> get props => [query];
 
   @override
   String toString() => '$runtimeType { query: $query }';
@@ -31,7 +32,7 @@ mixin LoadSearchables on Equatable {
   BuiltList<Searchable> get items;
 
   @override
-  List<Object> get props => [items];
+  List<Object?> get props => [items];
 
   @override
   String toString() => '$runtimeType { item count: ${items.length} }';

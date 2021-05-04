@@ -1,13 +1,17 @@
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 import 'package:gutlogic/resources/food/edamam_service.dart';
 import 'package:gutlogic/resources/firebase/cloud_function_service.dart';
-import 'edamam_sample_data.dart';
 
+import 'edamam_sample_data.dart';
+import 'edamam_service_test.mocks.dart';
+
+@GenerateMocks([CloudFunctionService])
 void main() {
-  EdamamService edamamService;
+  late EdamamService edamamService;
   group('EdamamService', () {
-    CloudFunctionService edamamFoodSearchService;
+    late MockCloudFunctionService edamamFoodSearchService;
     const riceCakeId = 'food_a7t4ob2aynrl25ayhq4n8adgykn5';
     const riceCakeResponse = {
       'status': 200,
@@ -30,7 +34,7 @@ void main() {
 
     test('gets food by id', () async {
       final edamamEntry = await edamamService.getById(riceCakeId);
-      expect(edamamEntry.food.label, 'brown rice cake');
+      expect(edamamEntry!.food.label, 'brown rice cake');
     });
 
     test('searches foods', () async {
@@ -40,5 +44,3 @@ void main() {
     });
   });
 }
-
-class MockCloudFunctionService extends Mock implements CloudFunctionService {}

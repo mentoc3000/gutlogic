@@ -9,7 +9,7 @@ class AuthButtonLeader extends StatelessWidget {
   /// The leader widget.
   final Widget child;
 
-  const AuthButtonLeader({this.size, this.child});
+  const AuthButtonLeader({required this.size, required this.child});
 
   @override
   Widget build(BuildContext context) {

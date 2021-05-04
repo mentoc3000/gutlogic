@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GLCircularProgressIndicator extends StatelessWidget {
-  const GLCircularProgressIndicator({Key key}) : super(key: key);
+  const GLCircularProgressIndicator({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

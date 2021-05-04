@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import '../../auth/auth.dart';
 import '../../auth/auth_provider.dart';
@@ -14,7 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository userRepository;
   final Authenticator authenticator;
 
-  LoginBloc({@required this.userRepository, @required this.authenticator}) : super(const LoginReady());
+  LoginBloc({required this.userRepository, required this.authenticator}) : super(const LoginReady());
 
   factory LoginBloc.fromContext(BuildContext context) {
     return LoginBloc(
@@ -31,6 +30,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Stream<LoginState> _mapSubmittedToState(LoginSubmitted event) async* {
+    if (event.username.isEmpty || event.password.isEmpty) {
+      yield LoginError.rejected();
+      yield const LoginReady();
+      return;
+    }
+
     try {
       yield const LoginLoading();
 

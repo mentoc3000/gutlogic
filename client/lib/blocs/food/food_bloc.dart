@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../models/food/custom_food.dart';
+import '../../models/food/edamam_food.dart';
 import '../../resources/food/custom_food_repository.dart';
 import '../../resources/food/edamam_food_repository.dart';
 import '../bloc_helpers.dart';
@@ -16,7 +18,7 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
   final CustomFoodRepository customFoodRepository;
   final EdamamFoodRepository edamamFoodRepository;
 
-  FoodBloc({@required this.customFoodRepository, @required this.edamamFoodRepository}) : super(FoodsLoading());
+  FoodBloc({required this.customFoodRepository, required this.edamamFoodRepository}) : super(FoodsLoading());
 
   factory FoodBloc.fromContext(BuildContext context) {
     return FoodBloc(
@@ -43,16 +45,23 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
         // https://stackoverflow.com/questions/64885470/can-dart-streams-emit-a-value-if-the-stream-is-not-done-within-a-duration/64978139
         // This should be implemented as a general feature that could be applied to many blocs
         yield FoodsLoading();
+
         await streamSubscription?.cancel();
         final customFoodStream = customFoodRepository.streamQuery(event.query);
         final edamamFoodStream = edamamFoodRepository.streamQuery(event.query);
+
         final combinedStream = CombineLatestStream(
           [customFoodStream, edamamFoodStream],
-          (values) => {'custom': values.first, 'edamam': values.last},
+          (values) => _Results(
+            edamam: values.last as BuiltList<EdamamFood>,
+            custom: values.first as BuiltList<CustomFood>,
+          ),
         );
+
         streamSubscription = combinedStream.listen(
-          (foods) => add(LoadFoods(query: event.query, customFoods: foods['custom'], edamamFoods: foods['edamam'])),
-          onError: (error, StackTrace trace) => add(ThrowFoodError(error: error, trace: trace)),
+          (combinedFoods) =>
+              add(LoadFoods(query: event.query, customFoods: combinedFoods.custom, edamamFoods: combinedFoods.edamam)),
+          onError: (error, StackTrace trace) => add(ThrowFoodError.fromError(error: error, trace: trace)),
         );
       }
       if (event is LoadFoods) {
@@ -71,10 +80,17 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
         unawaited(customFoodRepository.delete(event.customFood));
       }
       if (event is ThrowFoodError) {
-        yield FoodError.fromError(error: event.error, trace: event.trace);
+        yield FoodError.fromReport(event.report);
       }
     } catch (error, trace) {
       yield FoodError.fromError(error: error, trace: trace);
     }
   }
+}
+
+class _Results {
+  final BuiltList<EdamamFood> edamam;
+  final BuiltList<CustomFood> custom;
+
+  const _Results({required this.edamam, required this.custom});
 }

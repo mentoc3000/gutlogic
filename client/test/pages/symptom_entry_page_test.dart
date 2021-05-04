@@ -13,17 +13,17 @@ import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/symptom_entry/symptom_entry_page.dart';
 import 'package:gutlogic/pages/symptom_entry/widgets/severity_slider.dart';
 import 'package:gutlogic/widgets/gl_icons.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-class MockSymptomEntryBloc extends MockBloc<SymptomEntryState> implements SymptomEntryBloc {}
+class MockSymptomEntryBloc extends MockBloc<SymptomEntryEvent, SymptomEntryState> implements SymptomEntryBloc {}
 
-class MockSymptomTypeBloc extends MockBloc<SymptomTypeState> implements SymptomTypeBloc {}
+class MockSymptomTypeBloc extends MockBloc<SymptomTypeEvent, SymptomTypeState> implements SymptomTypeBloc {}
 
 void main() {
-  SymptomEntryBloc symptomEntryBloc;
-  SymptomTypeBloc symptomTypeBloc;
-  Widget symptomEntryPage;
-  SymptomEntry symptomEntry;
+  late SymptomEntryBloc symptomEntryBloc;
+  late SymptomTypeBloc symptomTypeBloc;
+  late Widget symptomEntryPage;
+  late SymptomEntry symptomEntry;
 
   setUp(() {
     symptomEntryBloc = MockSymptomEntryBloc();
@@ -60,30 +60,29 @@ void main() {
           SymptomEntryLoading(),
           SymptomEntryLoaded(symptomEntry),
         ]),
+        initialState: SymptomEntryLoading(),
       );
 
       await tester.pumpWidget(symptomEntryPage);
       await tester.pumpAndSettle();
       expect(find.text(symptomEntry.symptom.symptomType.name), findsOneWidget);
-      expect(find.text(symptomEntry.notes), findsOneWidget);
+      expect(find.text(symptomEntry.notes!), findsOneWidget);
       expect(find.byType(FloatingActionButton), findsOneWidget);
-      verifyNever(symptomEntryBloc.add(any));
+      verifyNever(() => symptomEntryBloc.add(any()));
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
       whenListen(
         symptomEntryBloc,
-        Stream.fromIterable([
-          null, // bloc_test skips first state. https://github.com/felangel/bloc/issues/796
-          SymptomEntryLoading(),
-        ]),
+        Stream.value(SymptomEntryLoading()),
+        initialState: SymptomEntryLoading(),
       );
 
       await tester.pumpWidget(symptomEntryPage);
       await tester.pump(const Duration(milliseconds: 100));
       expect(find.text('Symptom'), findsOneWidget);
       expect(find.byType(LoadingPage), findsOneWidget);
-      verifyNever(symptomEntryBloc.add(any));
+      verifyNever(() => symptomEntryBloc.add(any()));
     });
 
     testWidgets('shows error', (WidgetTester tester) async {
@@ -94,13 +93,14 @@ void main() {
           SymptomEntryLoading(),
           SymptomEntryError(message: message),
         ]),
+        initialState: SymptomEntryLoading(),
       );
 
       await tester.pumpWidget(symptomEntryPage);
       await tester.pumpAndSettle();
       expect(find.text('Symptom'), findsOneWidget);
       expect(find.text(message), findsOneWidget);
-      verifyNever(symptomEntryBloc.add(any));
+      verifyNever(() => symptomEntryBloc.add(any()));
     });
 
     testWidgets('updates symptom type', (WidgetTester tester) async {
@@ -110,11 +110,12 @@ void main() {
           SymptomEntryLoading(),
           SymptomEntryLoaded(symptomEntry),
         ]),
+        initialState: SymptomEntryLoading(),
       );
 
       final newSymptomType = SymptomType(id: 'symptomType1', name: 'Bloat');
       final symptomTypes = [newSymptomType].build();
-      when(symptomTypeBloc.state).thenReturn(SymptomTypesLoaded(symptomTypes));
+      whenListen(symptomTypeBloc, Stream.value(SymptomTypesLoaded(symptomTypes)), initialState: SymptomTypesLoading());
 
       // Show initial symptomEntry
       await tester.pumpWidget(symptomEntryPage);
@@ -134,13 +135,13 @@ void main() {
       await tester.enterText(searchField, search);
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      verify(symptomTypeBloc.add(const FetchSymptomTypeQuery(search))).called(1);
+      verify(() => symptomTypeBloc.add(const FetchSymptomTypeQuery(search))).called(1);
 
       // Select new symptom type
       expect(find.text(newSymptomType.name), findsOneWidget);
       await tester.tap(find.text(newSymptomType.name));
       await tester.pumpAndSettle();
-      verify(symptomEntryBloc.add(UpdateSymptomType(newSymptomType))).called(1);
+      verify(() => symptomEntryBloc.add(UpdateSymptomType(newSymptomType))).called(1);
     });
 
     testWidgets('updates severity', (WidgetTester tester) async {
@@ -150,6 +151,7 @@ void main() {
           SymptomEntryLoading(),
           SymptomEntryLoaded(symptomEntry),
         ]),
+        initialState: SymptomEntryLoading(),
       );
 
       await tester.pumpWidget(symptomEntryPage);
@@ -159,7 +161,7 @@ void main() {
       final moderateLabel = find.text('Moderate');
       await tester.tap(moderateLabel);
       await tester.pumpAndSettle();
-      verify(symptomEntryBloc.add(const UpdateSeverity(Severity.moderate))).called(1);
+      verify(() => symptomEntryBloc.add(const UpdateSeverity(Severity.moderate))).called(1);
     });
 
     testWidgets('updates notes', (WidgetTester tester) async {
@@ -169,17 +171,18 @@ void main() {
           SymptomEntryLoading(),
           SymptomEntryLoaded(symptomEntry),
         ]),
+        initialState: SymptomEntryLoading(),
       );
 
       await tester.pumpWidget(symptomEntryPage);
       await tester.pumpAndSettle();
-      final notesField = find.text(symptomEntry.notes);
+      final notesField = find.text(symptomEntry.notes!);
       expect(notesField, findsOneWidget);
       const newNote = 'new notes';
       await tester.enterText(notesField, newNote);
-      expect(find.text(symptomEntry.notes), findsNothing);
+      expect(find.text(symptomEntry.notes!), findsNothing);
       expect(find.text(newNote), findsOneWidget);
-      verify(symptomEntryBloc.add(const UpdateSymptomEntryNotes(newNote))).called(1);
+      verify(() => symptomEntryBloc.add(const UpdateSymptomEntryNotes(newNote))).called(1);
     });
   });
 }

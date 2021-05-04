@@ -8,17 +8,19 @@ import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-class MockFirestoreService extends Mock implements FirestoreService {}
+import 'symptom_entry_repository_test.mocks.dart';
 
+@GenerateMocks([FirestoreService])
 void main() {
   group('SymptomEntryRepository', () {
-    String diaryEntryId;
-    SymptomEntry diaryEntry;
-    MockFirestoreInstance instance;
-    FirestoreService firestoreService;
-    SymptomEntryRepository repository;
+    late String diaryEntryId;
+    late SymptomEntry diaryEntry;
+    late MockFirestoreInstance instance;
+    late FirestoreService firestoreService;
+    late SymptomEntryRepository repository;
 
     setUp(() {
       diaryEntryId = 'entry1Id';
@@ -62,7 +64,7 @@ void main() {
     test('creates entry', () async {
       final now = DateTime.now();
       final newEntry = await repository.createFrom(SymptomType(id: 'id', name: 'Gas'));
-      expect(newEntry.datetime.difference(now).inSeconds < 1, true);
+      expect(newEntry!.datetime.difference(now).inSeconds < 1, true);
       expect(newEntry.symptom.severity, SymptomEntryRepository.defaultSeverity);
       expect(newEntry.notes, isNull);
     });
@@ -71,7 +73,7 @@ void main() {
       final now = DateTime.now();
       final symptomType = SymptomType(id: 'symptomType1', name: 'type');
       final newEntry = await repository.createFrom(symptomType);
-      expect(newEntry.datetime.difference(now).inSeconds < 1, true);
+      expect(newEntry!.datetime.difference(now).inSeconds < 1, true);
       expect(newEntry.symptom.symptomType, symptomType);
       expect(newEntry.notes, isNull);
     });
@@ -97,49 +99,49 @@ void main() {
       final updatedDiaryEntry = diaryEntry.rebuild((b) => b..notes = notes);
       await repository.updateEntry(updatedDiaryEntry);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['notes'], notes);
+      expect(retrievedEntry!['notes'], notes);
     });
 
     test('updates datetime', () async {
       final datetime = DateTime.now().toUtc();
       await repository.updateDateTime(diaryEntry, datetime);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['datetime'], Timestamp.fromDate(datetime));
+      expect(retrievedEntry!['datetime'], Timestamp.fromDate(datetime));
     });
 
     test('updates notes', () async {
       const notes = 'new notes';
       await repository.updateNotes(diaryEntry, notes);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['notes'], notes);
+      expect(retrievedEntry!['notes'], notes);
     });
 
     test('updates severity', () async {
       const severity = Severity.intense;
       await repository.updateSeverity(diaryEntry, severity);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['symptom']['severity'], serializers.serializeWith(Severity.serializer, severity));
+      expect(retrievedEntry!['symptom']['severity'], serializers.serializeWith(Severity.serializer, severity));
     });
 
     test('updates symptom type', () async {
       final symptomType = SymptomType(id: 'symptomType1', name: 'Bloat');
       await repository.updateSymptomType(diaryEntry, symptomType);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['symptom']['symptomType']['name'], symptomType.name);
+      expect(retrievedEntry!['symptom']['symptomType']['name'], symptomType.name);
     });
 
     test('updates symptom name', () async {
       const symptomName = 'Bloat';
       await repository.updateSymptomName(diaryEntry, symptomName);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['symptom']['symptomType']['name'], symptomName);
+      expect(retrievedEntry!['symptom']['symptomType']['name'], symptomName);
     });
 
     test('updates symptom', () async {
       final symptom = Symptom(symptomType: SymptomType(id: 'symptomType1', name: 'Bloat'), severity: Severity.intense);
       await repository.updateSymptom(diaryEntry, symptom);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['symptom']['severity'], serializers.serializeWith(Severity.serializer, symptom.severity));
+      expect(retrievedEntry!['symptom']['severity'], serializers.serializeWith(Severity.serializer, symptom.severity));
     });
   });
 }

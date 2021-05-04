@@ -1,6 +1,5 @@
-import 'package:meta/meta.dart';
-import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 import '../food_reference/edamam_food_reference.dart';
@@ -15,9 +14,9 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
   EdamamFood._();
 
   factory EdamamFood({
-    @required String id,
-    @required String name,
-    BuiltList<Measure> measures,
+    required String id,
+    required String name,
+    BuiltList<Measure>? measures,
   }) =>
       _$EdamamFood._(
         id: id,

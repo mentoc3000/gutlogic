@@ -1,6 +1,5 @@
-import 'package:meta/meta.dart';
-import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 import '../meal_element.dart';
@@ -17,9 +16,9 @@ abstract class MealEntry implements DiaryEntry, Built<MealEntry, MealEntryBuilde
   MealEntry._();
 
   factory MealEntry({
-    @required String id,
-    @required DateTime datetime,
-    @required BuiltList<MealElement> mealElements,
+    required String id,
+    required DateTime datetime,
+    required BuiltList<MealElement> mealElements,
     String notes,
   }) = _$MealEntry._;
 

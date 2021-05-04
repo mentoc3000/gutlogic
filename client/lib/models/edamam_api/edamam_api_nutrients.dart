@@ -8,20 +8,15 @@ part 'edamam_api_nutrients.g.dart';
 abstract class EdamamApiNutrients implements Built<EdamamApiNutrients, EdamamApiNutrientsBuilder> {
   static Serializer<EdamamApiNutrients> get serializer => _$edamamApiNutrientsSerializer;
 
-  @nullable
-  double get ENERC_KCAL;
+  double? get ENERC_KCAL;
 
-  @nullable
-  double get PROCNT;
+  double? get PROCNT;
 
-  @nullable
-  double get FAT;
+  double? get FAT;
 
-  @nullable
-  double get CHOCDF;
+  double? get CHOCDF;
 
-  @nullable
-  double get FIBTG;
+  double? get FIBTG;
 
   EdamamApiNutrients._();
 

@@ -4,43 +4,35 @@ import '../../../style/gl_color_scheme.dart';
 
 class UnitDropdown extends StatefulWidget {
   final String initialUnit;
-  final void Function(String) onChanged;
   final Iterable<String> unitOptions;
+  final void Function(String)? onChanged;
 
-  UnitDropdown({Key key, String initialUnit, @required this.unitOptions, @required this.onChanged})
-      : initialUnit = initialUnit ?? unitOptions.first,
-        super(key: key);
+  UnitDropdown({Key? key, required this.initialUnit, required this.unitOptions, this.onChanged}) : super(key: key);
 
   @override
-  _UnitDropdownState createState() => _UnitDropdownState();
+  _UnitDropdownState createState() => _UnitDropdownState(unit: initialUnit);
 }
 
 class _UnitDropdownState extends State<UnitDropdown> {
-  String _unit;
+  String unit;
 
-  @override
-  void initState() {
-    super.initState();
-    _unit = widget.initialUnit;
-  }
+  _UnitDropdownState({required this.unit});
 
   @override
   Widget build(BuildContext context) {
     final items = widget.unitOptions
-        .map((value) => DropdownMenuItem(
-              value: value,
-              child: Text(value, textAlign: TextAlign.center),
-            ))
+        .map((value) => DropdownMenuItem(value: value, child: Text(value, textAlign: TextAlign.center)))
         .toList();
 
     return DropdownButtonFormField(
       dropdownColor: glColorScheme.onSecondary,
       isExpanded: true,
       items: items,
-      value: _unit,
-      onChanged: (newValue) {
-        setState(() => _unit = newValue);
-        widget.onChanged(newValue);
+      value: unit,
+      onChanged: (value) {
+        if (value is! String) return;
+        setState(() => unit = value);
+        widget.onChanged?.call(value);
       },
       hint: const Text('Unit'),
     );

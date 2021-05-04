@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../../models/food/food.dart';
@@ -17,7 +16,7 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
   final MealElementRepository mealElementRepository;
   final EdamamFoodRepository edamamFoodRepository;
 
-  MealElementBloc({@required this.mealElementRepository, @required this.edamamFoodRepository})
+  MealElementBloc({required this.mealElementRepository, required this.edamamFoodRepository})
       : super(MealElementLoading());
 
   factory MealElementBloc.fromContext(BuildContext context) {
@@ -41,16 +40,16 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
     try {
       if (event is StreamMealElement) {
         var mealElement = event.mealElement;
-        Food food;
+        Food? food;
 
         // If the meal element uses an Edamam food, fetch that food to get the measure options
         if (mealElement.foodReference is EdamamFoodReference) {
           yield MealElementLoading();
-          food = await edamamFoodRepository.fetchItem(mealElement.foodReference);
+          food = await edamamFoodRepository.fetchItem(mealElement.foodReference as EdamamFoodReference);
 
           // If the meal element doesn't have a measure yet, set it to the first option
-          if (mealElement.quantity?.measure == null && food.measures.isNotEmpty) {
-            mealElement = mealElement.rebuild((b) => b..quantity.measure = food.measures.first.toBuilder());
+          if (mealElement.quantity?.measure == null && (food?.measures.isNotEmpty ?? false)) {
+            mealElement = mealElement.rebuild((b) => b..quantity.measure = food!.measures.first.toBuilder());
             add(Update(mealElement));
           }
         }
@@ -59,8 +58,8 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
 
         // Subscribe to the stream, updating the mealElement but using the same food value, which cannot change.
         streamSubscription = mealElementRepository.stream(event.mealElement).listen(
-              (mealElement) => add(Load(mealElement: mealElement, food: food)),
-              onError: (error, StackTrace trace) => add(Throw(error: error, trace: trace)),
+              (mealElement) => add(Load(mealElement: mealElement!, food: food)),
+              onError: (error, StackTrace trace) => add(ThrowMealElementError.fromError(error: error, trace: trace)),
             );
       }
       if (event is Load) {
@@ -85,8 +84,8 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
         final mealElement = (state as MealElementLoaded).mealElement;
         unawaited(mealElementRepository.updateNotes(mealElement, event.notes));
       }
-      if (event is Throw) {
-        yield MealElementError.fromError(error: event.error, trace: event.trace);
+      if (event is ThrowMealElementError) {
+        yield MealElementError.fromReport(event.report);
       }
     } catch (error, trace) {
       yield MealElementError.fromError(error: error, trace: trace);

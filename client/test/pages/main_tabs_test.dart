@@ -1,17 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/models/diary_entry/diary_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/pages/diary/diary_page.dart';
 import 'package:gutlogic/pages/main_tabs.dart';
 import 'package:gutlogic/pages/settings/settings_page.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
-import 'package:mockito/mockito.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
-import 'package:gutlogic/models/pantry/pantry_entry.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:mockito/mockito.dart' as mockito;
 
-import '../mocks/mock_analytics_service.dart';
+import '../flutter_test_config.dart';
 import '../util/test_overlay.dart';
 
 class MockDiaryRepository extends Mock implements DiaryRepository {}
@@ -19,23 +20,21 @@ class MockDiaryRepository extends Mock implements DiaryRepository {}
 class MockPantryRepository extends Mock implements PantryRepository {}
 
 void main() {
-  Widget homepage;
-  AnalyticsService analyticsService;
-  DiaryRepository diaryRepository;
-  PantryRepository pantryRepository;
+  late Widget homepage;
+  late DiaryRepository diaryRepository;
+  late PantryRepository pantryRepository;
 
   setUp(() {
-    analyticsService = MockAnalyticsService();
     diaryRepository = MockDiaryRepository();
-    when(diaryRepository.streamAll()).thenAnswer((realInvocation) => Stream.value(BuiltList<DiaryEntry>([])));
+    when(() => diaryRepository.streamAll()).thenAnswer((_) => Stream.value(BuiltList<DiaryEntry>([])));
     pantryRepository = MockPantryRepository();
-    when(pantryRepository.streamAll()).thenAnswer((realInvocation) => Stream.value(BuiltList<PantryEntry>([])));
+    when(() => pantryRepository.streamAll()).thenAnswer((_) => Stream.value(BuiltList<PantryEntry>([])));
     homepage = MultiRepositoryProvider(
       providers: [
         RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
         RepositoryProvider<PantryRepository>(create: (context) => pantryRepository),
       ],
-      child: TestOverlay(child: MainTabs(analyticsService: analyticsService)),
+      child: TestOverlay(child: MainTabs(analytics: analyticsService)),
     );
   });
 
@@ -62,7 +61,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(DiaryPage), findsNothing);
       expect(find.byType(SettingsPage), findsOneWidget);
-      verify(analyticsService.setCurrentScreen(any)).called(1);
+      mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
 
       // Switch back to diary page
       final diaryTab = find.text('Timeline');
@@ -72,7 +71,7 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
       expect(find.byType(DiaryPage), findsOneWidget);
       expect(find.byType(SettingsPage), findsNothing);
-      verify(analyticsService.setCurrentScreen(any)).called(1);
+      mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
     });
   });
 }

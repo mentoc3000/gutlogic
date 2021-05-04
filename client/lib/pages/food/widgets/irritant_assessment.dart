@@ -4,7 +4,7 @@ class IrritantAssessment extends StatelessWidget {
   final String name;
   final int sensitivity;
 
-  const IrritantAssessment({this.name, this.sensitivity});
+  const IrritantAssessment({required this.name, required this.sensitivity});
 
   @override
   Widget build(BuildContext context) {

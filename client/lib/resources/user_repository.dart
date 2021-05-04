@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../auth/auth.dart';
 import '../models/application_user.dart';
+import '../models/serializers.dart';
 
 class UserRepository {
   final FirebaseFirestore _firebaseData;
@@ -15,19 +15,19 @@ class UserRepository {
 
   /// The _currentUserStream emits every time the FirebaseUser or its associated metadata document is updated with
   /// distinct values. It will always contain the most recent distinct value of our application user.
-  BehaviorSubject<ApplicationUser> _currentUserStream;
+  late final BehaviorSubject<ApplicationUser?> _currentUserStream;
 
   /// True if there is an authenticated user available.
   bool get authenticated => _currentUserStream.value != null;
 
   /// A stream of distinct users. This emits a new value when the user logs in or out, but also when the user
   /// metadata or auth providers are changed. If there is no authenticated user, the stream value will be null.
-  BehaviorSubject<ApplicationUser> get stream => _currentUserStream;
+  BehaviorSubject<ApplicationUser?> get stream => _currentUserStream;
 
   /// The current user, or null.
-  ApplicationUser get user => _currentUserStream.value;
+  ApplicationUser? get user => _currentUserStream.value;
 
-  UserRepository({FirebaseFirestore firebaseData, FirebaseAuth firebaseAuth, Authenticator authenticator})
+  UserRepository({FirebaseFirestore? firebaseData, FirebaseAuth? firebaseAuth, Authenticator? authenticator})
       : _firebaseData = firebaseData ?? FirebaseFirestore.instance,
         _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _authenticator = authenticator ?? Authenticator() {
@@ -35,12 +35,12 @@ class UserRepository {
   }
 
   /// Transform a stream of FirebaseUsers into a stream of ApplicationUsers.
-  BehaviorSubject<ApplicationUser> _createApplicationUserStream(Stream<User> users) {
-    bool isFirebaseUIDDistinct(User prev, User next) {
+  BehaviorSubject<ApplicationUser?> _createApplicationUserStream(Stream<User?> users) {
+    bool isFirebaseUIDDistinct(User? prev, User? next) {
       return prev?.uid == next?.uid;
     }
 
-    Stream<DocumentSnapshot> mapUserToSnapshotStream(User user) {
+    Stream<DocumentSnapshot?> mapUserToSnapshotStream(User? user) {
       return user == null ? Stream.value(null) : _getUserMetaDocumentReference(user.uid).snapshots();
     }
 
@@ -52,10 +52,10 @@ class UserRepository {
     // creates a new ApplicationUser each time either value changes. We end up with a stream of ApplicationUsers that
     // emits whenever the Firebase User or metadata document is meaningfully changed.
     final applicationUserStream = CombineLatestStream.list([users, snapshots]).asyncMap((values) async {
+      if (values[0] == null || values[1] == null) return null;
+
       final user = values[0] as User;
       final snap = values[1] as DocumentSnapshot;
-
-      if (user == null || snap == null) return null;
 
       final data = snap.data() ?? {};
 
@@ -64,7 +64,7 @@ class UserRepository {
       data['providers'] = user.providerData.map((data) => data.providerId);
       data['verified'] = user.emailVerified;
 
-      return ApplicationUser.fromJSON(data);
+      return serializers.deserializeWith(ApplicationUser.serializer, data);
     });
 
     // Filter out identical application users. This can happen when the FirebaseUser stream emits a new user with the
@@ -72,13 +72,13 @@ class UserRepository {
     final distinctApplicationUserStream = applicationUserStream.distinct();
 
     // Pipe the user stream into an rxdart BehaviorSubject, which has better stream features.
-    final applicationUserSubject = BehaviorSubject<ApplicationUser>.seeded(null);
+    final applicationUserSubject = BehaviorSubject<ApplicationUser?>.seeded(null);
     applicationUserSubject.addStream(distinctApplicationUserStream);
     return applicationUserSubject;
   }
 
   /// Create a future that waits for the first user that passes the filter lambda.
-  Future<void> _firstUserWhere(bool Function(ApplicationUser) where) {
+  Future<void> _firstUserWhere(bool Function(ApplicationUser?) where) {
     return _currentUserStream.firstWhere(where);
   }
 
@@ -105,7 +105,7 @@ class UserRepository {
   /// [DisabledUserException] if the [credential] is for a disabled account. Throws a [MissingUserException] if the
   /// [credential] is for an account that does not exist. Throws a [WrongPasswordException] if the [credential] has the
   /// wrong password for the account.
-  Future<void> login({@required AuthCredential credential}) async {
+  Future<void> login({required AuthCredential credential}) async {
     _requireUnauthenticatedState();
 
     UserCredential result;
@@ -131,7 +131,7 @@ class UserRepository {
   /// in use. Throws an [InvalidUsernameException] if the [username] is invalid. Throws an [InvalidPasswordException] if
   /// the [password] is invalid or weak. Throws an [InvalidOperationException] if the [password] auth provider is
   /// disabled.
-  Future<void> register({@required String username, @required String password}) async {
+  Future<void> register({required String username, required String password}) async {
     _requireUnauthenticatedState();
 
     try {
@@ -156,7 +156,7 @@ class UserRepository {
     _requireAuthenticatedState();
 
     try {
-      await _firebaseAuth.currentUser.sendEmailVerification();
+      await _firebaseAuth.currentUser!.sendEmailVerification();
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
@@ -168,23 +168,23 @@ class UserRepository {
   Future<bool> refreshEmailVerification() async {
     _requireAuthenticatedState();
 
-    final isEmailVerified = _firebaseAuth.currentUser.emailVerified;
+    final isEmailVerified = _firebaseAuth.currentUser!.emailVerified;
 
     // Skip reloading the user if we already have a verified user.
     if (isEmailVerified) return true;
 
     try {
-      await _firebaseAuth.currentUser.reload();
+      await _firebaseAuth.currentUser!.reload();
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
 
     // Wait for the user stream to update with the user change if we reloaded a verified user.
-    if (_firebaseAuth.currentUser.emailVerified) {
-      await _firstUserWhere((user) => user.verified);
+    if (_firebaseAuth.currentUser!.emailVerified) {
+      await _firstUserWhere((user) => user?.verified == true);
     }
 
-    return user.verified;
+    return user?.verified == true;
   }
 
   /// Update the [username] associated with the current user.
@@ -195,18 +195,18 @@ class UserRepository {
   /// password provider. Throws an [InvalidUsernameException] if the [username] is not a valid email. Throws a
   /// [DuplicateUsernameException] if the username is already used. Throws a [StaleAuthenticationException] if the user
   /// has not recently authenticated.
-  Future<void> updateUsername({@required String username}) async {
+  Future<void> updateUsername({required String username}) async {
     _requireAuthenticatedState();
 
-    if (user.providers.contains(AuthProvider.password) == false) throw MissingProviderException();
+    if (user!.providers.contains(AuthProvider.password) == false) throw MissingProviderException();
 
     try {
-      await _firebaseAuth.currentUser.updateEmail(username);
+      await _firebaseAuth.currentUser!.updateEmail(username);
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
 
-    await _firstUserWhere((user) => user.username == username);
+    await _firstUserWhere((user) => user?.username == username);
   }
 
   /// Update the [currentPassword] for the current user to [updatedPassword].
@@ -216,13 +216,13 @@ class UserRepository {
   /// Throws a [StateError] if not authenticated. Throws a [MissingProviderException] if the user is not linked to a
   /// password provider. Throws an [InvalidPasswordException] if the [updatedPassword] is an invalid or weak
   /// password. Throws a [StaleAuthenticationException] if the user has not recently authenticated.
-  Future<void> updatePassword({@required String currentPassword, @required String updatedPassword}) async {
+  Future<void> updatePassword({required String currentPassword, required String updatedPassword}) async {
     _requireAuthenticatedState();
 
-    if (user.providers.contains(AuthProvider.password) == false) throw MissingProviderException();
+    if (user!.providers.contains(AuthProvider.password) == false) throw MissingProviderException();
 
     try {
-      await _firebaseAuth.currentUser.updatePassword(updatedPassword);
+      await _firebaseAuth.currentUser!.updatePassword(updatedPassword);
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
@@ -235,30 +235,30 @@ class UserRepository {
   /// This cannot be used to update the user ID, email, or auth providers.
   ///
   /// Throws a [StateError] if not authenticated.
-  Future<void> updateMetadata({@required ApplicationUser updatedUser}) async {
+  Future<void> updateMetadata({required ApplicationUser updatedUser}) async {
     _requireAuthenticatedState();
 
     if (user == updatedUser) return;
 
-    final json = updatedUser.toJSON();
+    final json = serializers.serializeWith(ApplicationUser.serializer, updatedUser) as Map<String, dynamic>;
 
     // These properties need to be changed through other methods.
-    assert(user.id == updatedUser.id);
-    assert(user.email == updatedUser.email);
-    assert(user.providers == updatedUser.providers);
+    assert(user!.id == updatedUser.id);
+    assert(user!.email == updatedUser.email);
+    assert(user!.providers == updatedUser.providers);
 
     // Manually strip the document JSON of properties we don't want to saved to the user document.
     json.remove('id');
     json.remove('email');
     json.remove('providers');
 
-    await _getUserMetaDocumentReference(user.id).set(json);
+    await _getUserMetaDocumentReference(user!.id).set(json);
 
     await _firstUserWhere((user) => user == updatedUser);
   }
 
   /// Get the set of auth providers linked to an account [username].
-  Future<Set<AuthProvider>> getAvailableAuthProviders({@required String username}) async {
+  Future<Set<AuthProvider>> getAvailableAuthProviders({required String username}) async {
     List<String> methods;
 
     try {
@@ -278,18 +278,18 @@ class UserRepository {
   /// [InvalidCredentialException] if the [credential] is malformed or invalid. Throws an [InvalidUsernameException] if
   /// the [credential] has an invalid username. Throws an [InvalidPasswordException] if the [credential] has an
   /// invalid password. Throws a [WrongPasswordException] if the [credential] has the wrong password for the account.
-  Future<void> reauthenticate({@required AuthCredential credential}) async {
+  Future<void> reauthenticate({required AuthCredential credential}) async {
     _requireAuthenticatedState();
 
     try {
-      await _firebaseAuth.currentUser.reauthenticateWithCredential(credential);
+      await _firebaseAuth.currentUser!.reauthenticateWithCredential(credential);
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
   }
 
   /// Returns true if the [username] is linked with a certain auth [provider].
-  Future<bool> isAuthProviderLinked({@required String username, @required AuthProvider provider}) async {
+  Future<bool> isAuthProviderLinked({required String username, required AuthProvider provider}) async {
     final providers = await getAvailableAuthProviders(username: username);
     return providers.contains(provider);
   }
@@ -298,43 +298,43 @@ class UserRepository {
   ///
   /// Throws a [StateError] if not authenticated. Throws a [DuplicateProviderException] if the user is already linked to
   /// the auth [provider].
-  Future<void> linkAuthProvider({@required AuthProvider provider, @required AuthCredential credential}) async {
+  Future<void> linkAuthProvider({required AuthProvider provider, required AuthCredential credential}) async {
     _requireAuthenticatedState();
 
-    if (user.providers.contains(provider)) throw DuplicateProviderException();
+    if (user!.providers.contains(provider)) throw DuplicateProviderException();
 
     try {
-      await _firebaseAuth.currentUser.linkWithCredential(credential);
+      await _firebaseAuth.currentUser!.linkWithCredential(credential);
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
 
-    await _firstUserWhere((user) => user.providers.contains(provider));
+    await _firstUserWhere((user) => user?.providers.contains(provider) == true);
   }
 
   /// Unlink the current user from the auth [provider]. This requires a recent reauthentication.
   ///
   /// Throws a [StateError] if not authenticated. Throws a [MissingProviderException] if the user is not linked to the
   /// auth [provider].
-  Future<void> unlinkAuthProvider({@required AuthProvider provider}) async {
+  Future<void> unlinkAuthProvider({required AuthProvider provider}) async {
     _requireAuthenticatedState();
 
-    if (user.providers.contains(provider) == false) throw MissingProviderException();
+    if (user!.providers.contains(provider) == false) throw MissingProviderException();
 
     try {
-      await _firebaseAuth.currentUser.unlink(toFirebaseProviderID(provider));
+      await _firebaseAuth.currentUser!.unlink(toFirebaseProviderID(provider));
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
 
-    await _firstUserWhere((user) => user.providers.contains(provider) == false);
+    await _firstUserWhere((user) => user?.providers.contains(provider) == false);
   }
 
   /// Send a password reset email to [email].
   ///
   /// Throws a [StateError] if not authenticated. Throws an [MissingUserException] if the email is not registered with
   /// an account. Throws an [InvalidUsernameException] if the email is invalid.
-  Future<void> resetPassword({String email}) async {
+  Future<void> resetPassword({required String email}) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (ex) {
@@ -352,7 +352,7 @@ class UserRepository {
     _requireAuthenticatedState();
 
     try {
-      await _firebaseAuth.currentUser.delete();
+      await _firebaseAuth.currentUser!.delete();
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/diary/diary.dart';
 import '../../util/keys.dart';
 import '../../widgets/gl_app_bar.dart';
@@ -48,11 +49,10 @@ class DiaryPage extends StatelessWidget {
 
   void listener(BuildContext context, DiaryState state) {
     if (state is DiaryEntryDeleted) {
-      final snackBar = UndoDeleteSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(UndoDeleteSnackBar(
         name: 'entry',
         onUndelete: () => DiaryBloc.fromContext(context).add(Undelete(state.diaryEntry)),
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
+      ));
     }
   }
 }

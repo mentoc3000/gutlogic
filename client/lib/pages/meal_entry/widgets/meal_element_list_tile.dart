@@ -14,7 +14,7 @@ class MealElementListTile extends StatelessWidget {
   final MealElement mealElement;
   final void Function() onTap;
 
-  const MealElementListTile({@required this.mealElement, @required this.mealEntry, @required this.onTap});
+  const MealElementListTile({required this.mealElement, required this.mealEntry, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class MealElementListTile extends StatelessWidget {
       ),
       onDelete: () =>
           context.read<MealEntryBloc>().add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),
-      confirmDismiss: () => showDialog(
+      confirmDismiss: (_) => showDialog(
         context: context,
         builder: (_) => ConfirmDeleteDialog(itemName: mealElement.foodReference.name),
       ),

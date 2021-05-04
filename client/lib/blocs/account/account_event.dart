@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/application_user.dart';
 import '../../resources/firebase/analytics_service.dart';
@@ -9,7 +8,7 @@ abstract class AccountEvent extends Equatable {
   const AccountEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -18,21 +17,21 @@ abstract class AccountEvent extends Equatable {
 class AccountUpdate extends AccountEvent implements TrackedEvent {
   final ApplicationUser user;
 
-  AccountUpdate({@required this.user});
+  AccountUpdate({required this.user});
 
   @override
-  List<Object> get props => [user];
+  List<Object?> get props => [user];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('profile_updated');
+  void track(AnalyticsService analytics) => analytics.logEvent('profile_updated');
 
   @override
-  String toString() => 'AccountUpdate { user.id: ${user?.id} }';
+  String toString() => 'AccountUpdate { user.id: ${user.id} }';
 }
 
 class AccountLogOut extends AccountEvent implements TrackedEvent {
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('log_out');
+  void track(AnalyticsService analytics) => analytics.logEvent('log_out');
 }
 
 class AccountDelete extends AccountEvent {}

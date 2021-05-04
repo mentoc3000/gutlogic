@@ -10,7 +10,7 @@ abstract class LoginState extends Equatable {
   const LoginState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -30,17 +30,17 @@ class LoginSuccess extends LoginState {
 
 class LoginError extends LoginState with ErrorState, ErrorRecorder {
   @override
-  final ErrorReport report;
-
-  @override
   final String message;
 
-  const LoginError({@required this.message}) : report = null;
+  @override
+  final ErrorReport? report;
+
+  const LoginError({required this.message}) : report = null;
 
   factory LoginError.rejected() => const LoginError(message: 'Sorry, either your email or password is incorrect.');
   factory LoginError.disabled() => const LoginError(message: 'Sorry, that account has been disabled.');
 
-  LoginError.fromError({@required dynamic error, @required StackTrace trace})
+  LoginError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 }

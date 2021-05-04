@@ -1,6 +1,5 @@
-import 'package:meta/meta.dart';
-import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 import '../food_reference/custom_food_reference.dart';
@@ -18,8 +17,8 @@ abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>,
   CustomFood._();
 
   factory CustomFood({
-    @required String id,
-    @required String name,
+    required String id,
+    required String name,
   }) =>
       _$CustomFood._(id: id, name: name, measures: CustomFood.defaultMeasures);
 

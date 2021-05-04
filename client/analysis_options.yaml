@@ -39,6 +39,7 @@ analyzer:
   exclude:
     - "bin/cache/**"
     - "**/*.g.dart"
+    - "**/*.mocks.dart"
 
 enable-experiment:
   - extension-methods

@@ -13,7 +13,7 @@ class VerifyEmailForm extends StatelessWidget {
   final String email;
   final String message;
 
-  VerifyEmailForm({@required this.message, @required this.email});
+  VerifyEmailForm({required this.message, required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class VerifyEmailForm extends StatelessWidget {
     }
 
     if (state is VerifyEmailValue && state.verified) {
-      if (context.read<UserRepository>().user.consented) {
+      if (context.read<UserRepository>().user?.consented == true) {
         Navigator.of(context).pushAndRemoveUntil(Routes.of(context).main, (_) => false);
       } else {
         Navigator.of(context).pushReplacement(Routes.of(context).consent);
@@ -62,6 +62,6 @@ class VerifyEmailForm extends StatelessWidget {
   }
 
   void showErrorSnackBar(BuildContext context, String message) {
-    Scaffold.of(context).showSnackBar(SnackBar(backgroundColor: GLColors.red, content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: GLColors.red, content: Text(message)));
   }
 }

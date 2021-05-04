@@ -19,7 +19,7 @@ void main() {
 
     test('is deserializable', () {
       final bmJson = {'type': 3, 'volume': 4};
-      final bm = serializers.deserializeWith(BowelMovement.serializer, bmJson);
+      final bm = serializers.deserializeWith(BowelMovement.serializer, bmJson)!;
       expect(bm.type, 3);
       expect(bm.volume, 4);
     });

@@ -13,7 +13,7 @@ class MealEntryListView extends StatelessWidget {
   final MealEntry mealEntry;
   final TextEditingController notesController;
 
-  const MealEntryListView({Key key, @required this.mealEntry, @required this.notesController}) : super(key: key);
+  const MealEntryListView({Key? key, required this.mealEntry, required this.notesController}) : super(key: key);
 
   void addMealElement(BuildContext context) {
     final foodBloc = BlocProvider.of<FoodBloc>(context);
@@ -32,7 +32,8 @@ class MealEntryListView extends StatelessWidget {
     return [
       DateTimeCard(
         dateTime: entry.datetime,
-        onChanged: (DateTime datetime) {
+        onChanged: (DateTime? datetime) {
+          if (datetime == null) return;
           context.read<MealEntryBloc>().add(UpdateMealEntryDateTime(datetime));
         },
       ),

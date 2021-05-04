@@ -15,8 +15,8 @@ void main() {
         ..foodReference = foodReference
         ..sensitivity = sensitivity
         ..notes = 'Tasty!');
-      final Map<String, dynamic> serializedFoodReference = serializers.serialize(foodReference);
-      final int serializedSensitivity = serializers.serializeWith(Sensitivity.serializer, sensitivity);
+      final serializedFoodReference = serializers.serialize(foodReference) as Map<String, dynamic>;
+      final serializedSensitivity = serializers.serializeWith(Sensitivity.serializer, sensitivity) as int;
       expect(serializers.serialize(pantryEntry), {
         '\$': 'PantryEntry',
         'foodReference': serializedFoodReference,
@@ -33,7 +33,7 @@ void main() {
         'sensitivity': 2,
         'notes': 'Tasty!'
       };
-      final pantryEntry = serializers.deserializeWith(PantryEntry.serializer, pantryEntryJson);
+      final pantryEntry = serializers.deserializeWith(PantryEntry.serializer, pantryEntryJson)!;
       expect(pantryEntry.foodReference.name, 'Crepe');
       expect(pantryEntry.notes, pantryEntryJson['notes']);
       expect(pantryEntry.sensitivity, Sensitivity.moderate);
@@ -47,7 +47,7 @@ void main() {
         'sensitivity': 2,
         'notes': 'Tasty!'
       };
-      final pantryEntry = serializers.deserializeWith(PantryEntry.serializer, pantryEntryJson);
+      final pantryEntry = serializers.deserializeWith(PantryEntry.serializer, pantryEntryJson)!;
       expect(pantryEntry.foodReference.name, 'Crepe');
       expect(pantryEntry.notes, pantryEntryJson['notes']);
       expect(pantryEntry.sensitivity, Sensitivity.moderate);

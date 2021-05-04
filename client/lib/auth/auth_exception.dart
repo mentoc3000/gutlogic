@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
-import 'package:meta/meta.dart';
 
 /// AuthException translates the weakly typed PlatformExceptions from firebase_auth into strongly typed exceptions.
 class AuthException implements Exception {
   final String message;
   final String code;
 
-  AuthException({@required this.message, this.code = 'unknown'});
+  AuthException({required this.message, this.code = 'unknown'});
 }
 
 /// Thrown when attempting to register or update a username to a username already in use by another account.

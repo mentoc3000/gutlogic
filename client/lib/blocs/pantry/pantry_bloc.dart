@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../../resources/pantry_repository.dart';
@@ -12,7 +12,7 @@ import 'pantry_state.dart';
 class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
   final PantryRepository repository;
 
-  PantryBloc({@required this.repository}) : super(PantryLoading());
+  PantryBloc({required this.repository}) : super(PantryLoading());
 
   factory PantryBloc.fromContext(BuildContext context) {
     return PantryBloc(
@@ -35,7 +35,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
         await streamSubscription?.cancel();
         streamSubscription = repository.streamAll().listen(
               (pantryEntries) => add(LoadPantry(items: pantryEntries)),
-              onError: (error, StackTrace trace) => add(ThrowPantryError(error: error, trace: trace)),
+              onError: (error, StackTrace trace) => add(ThrowPantryError.fromError(error: error, trace: trace)),
             );
       }
       if (event is StreamPantryQuery) {
@@ -43,7 +43,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
         await streamSubscription?.cancel();
         streamSubscription = repository.streamQuery(event.query).listen(
               (pantryEntries) => add(LoadPantry(items: pantryEntries)),
-              onError: (error, StackTrace trace) => add(ThrowPantryError(error: error, trace: trace)),
+              onError: (error, StackTrace trace) => add(ThrowPantryError.fromError(error: error, trace: trace)),
             );
       }
       if (event is LoadPantry) {
@@ -57,7 +57,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
         unawaited(repository.add(event.pantryEntry));
       }
       if (event is ThrowPantryError) {
-        yield PantryError.fromError(error: event.error, trace: event.trace);
+        yield PantryError.fromReport(event.report);
       }
     } catch (error, trace) {
       yield PantryError.fromError(error: error, trace: trace);

@@ -5,7 +5,7 @@ import 'package:device_info/device_info.dart';
 import 'screenshots_util.dart';
 
 /// A DataHandler for enableFlutterDriverExtension so the screenshots driver can request data while driving.
-Future<String> handler(String message) async {
+Future<String> handler(String? message) async {
   if (message == requestPlatformMessage) {
     if (Platform.isAndroid) return 'android';
     if (Platform.isIOS) return 'ios';

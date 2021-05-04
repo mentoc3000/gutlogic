@@ -4,11 +4,11 @@ import 'button_helpers.dart';
 
 class StretchedButtonContent extends StatelessWidget {
   final String label;
-  final Widget leader;
+  final Widget? leader;
 
-  const StretchedButtonContent({Key key, @required this.label, this.leader}) : super(key: key);
+  const StretchedButtonContent({Key? key, required this.label, this.leader}) : super(key: key);
 
-  factory StretchedButtonContent.icon({Key key, @required String label, @required IconData iconData}) =>
+  factory StretchedButtonContent.icon({Key? key, required String label, required IconData iconData}) =>
       StretchedButtonContent(key: key, label: label, leader: Icon(iconData));
 
   @override
@@ -21,13 +21,13 @@ class StretchedButtonContent extends StatelessWidget {
       height: height,
       child: Row(
         children: [
-          if (showLeader) leader,
+          if (showLeader) leader!,
           const Spacer(),
           text,
           const Spacer(),
           if (showLeader) // empty widget of size of leader
             Visibility(
-              child: leader,
+              child: leader!,
               visible: false,
               maintainAnimation: true,
               maintainState: true,

@@ -9,10 +9,10 @@ mixin DiaryEntryLoaded on Equatable {
   DiaryEntry get diaryEntry;
 
   @override
-  List<Object> get props => [diaryEntry];
+  List<Object?> get props => [diaryEntry];
 
   @override
-  String toString() => 'DiaryEntryLoaded { diaryEntry: ${diaryEntry?.id} }';
+  String toString() => 'DiaryEntryLoaded { diaryEntry: ${diaryEntry.id} }';
 }
 
 mixin DiaryEntryError on Equatable implements ErrorRecorder {
@@ -20,7 +20,7 @@ mixin DiaryEntryError on Equatable implements ErrorRecorder {
   String get message;
 
   @override
-  List<Object> get props => [message, report];
+  List<Object?> get props => [message, report];
 
   @override
   String toString() => 'DiaryEntryError { message: $message }';

@@ -61,14 +61,14 @@ Severity _valueToSeverity(int value) {
 }
 
 class SeveritySlider extends StatefulWidget {
-  const SeveritySlider(
-      {Key key,
-      @required this.onChange,
-      this.initialSeverity = Severity.moderate,
-      this.optionStyle,
-      this.width,
-      this.circleDiameter = 60})
-      : super(key: key);
+  const SeveritySlider({
+    Key? key,
+    required this.onChange,
+    this.initialSeverity = Severity.moderate,
+    this.optionStyle,
+    this.width,
+    this.circleDiameter = 60,
+  }) : super(key: key);
 
   /// The onChange callback calls every time when a pointer have changed
   /// the value of the slider and is no longer in contact with the screen.
@@ -86,20 +86,20 @@ class SeveritySlider extends StatefulWidget {
   final OnChange onChange;
   final Severity initialSeverity;
   static const options = ['Mild', 'Moderate', 'Intense', 'Severe'];
-  final TextStyle optionStyle;
-  final double width;
+  final TextStyle? optionStyle;
+  final double? width;
   final double circleDiameter;
   @override
   _SeveritySliderState createState() => _SeveritySliderState();
 }
 
 class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProviderStateMixin {
-  Animation<double> _animation;
-  double _animationValue;
-  double _xOffset;
+  late Animation<double> _animation;
+  late double _animationValue;
+  double _xOffset = 0.0;
 
-  AnimationController _controller;
-  Tween<double> _tween;
+  late AnimationController _controller;
+  late Tween<double> _tween;
 
   @override
   void dispose() {
@@ -128,7 +128,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
         });
       });
     _animationValue = initValue;
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    WidgetsBinding.instance?.addPostFrameCallback(_afterLayout);
   }
 
   void _afterLayout(_) {
@@ -184,7 +184,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
       height: 100,
       child: LayoutBuilder(
         builder: (context, size) {
-          final width = widget.width != null && widget.width < size.maxWidth ? widget.width : size.maxWidth;
+          final width = widget.width != null && widget.width! < size.maxWidth ? widget.width! : size.maxWidth;
           return Stack(
             children: <Widget>[
               MeasureLine(
@@ -219,13 +219,20 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
 const double paddingSize = 10;
 
 class MeasureLine extends StatelessWidget {
-  MeasureLine({this.handleTap, this.animationValue, this.states, this.width, this.optionStyle, this.circleDiameter});
+  MeasureLine({
+    required this.handleTap,
+    required this.animationValue,
+    required this.states,
+    required this.width,
+    required this.optionStyle,
+    required this.circleDiameter,
+  });
 
   final double animationValue;
   final Function handleTap;
   final List<String> states;
   final double width;
-  final TextStyle optionStyle;
+  final TextStyle? optionStyle;
   final double circleDiameter;
   List<Widget> _buildUnits() {
     final res = <Widget>[];
@@ -309,7 +316,7 @@ class MeasureLine extends StatelessWidget {
 }
 
 class Face extends StatelessWidget {
-  Face({this.color = const Color(0xFF616154), this.animationValue, this.circleDiameter});
+  Face({this.color = const Color(0xFF616154), required this.animationValue, required this.circleDiameter});
 
   final double animationValue;
   final Color color;
@@ -402,8 +409,8 @@ class MyPainter extends CustomPainter {
     final rightX = size.width - leftX;
     final middleX = size.width / 2;
 
-    double y1, y3, x2, y2;
-    Path path2;
+    var y1 = 0.0, y3 = 0.0, x2 = 0.0, y2 = 0.0;
+    Path? path2;
     switch (activeIndex) {
       case 0:
         y1 = lowerY;
@@ -496,8 +503,14 @@ class MyPainter extends CustomPainter {
 }
 
 class MyIndicator extends StatelessWidget {
-  MyIndicator({this.animationValue, this.width, this.onDrag, this.onDragStart, this.onDragEnd, this.circleDiameter})
-      : position = (animationValue + .5) / 4;
+  MyIndicator({
+    required this.animationValue,
+    required this.width,
+    required this.onDrag,
+    required this.onDragStart,
+    required this.onDragEnd,
+    required this.circleDiameter,
+  }) : position = (animationValue + .5) / 4;
 
   final double animationValue;
   final Function onDrag;
@@ -512,9 +525,9 @@ class MyIndicator extends StatelessWidget {
     final opacityOfYellow = position < redOnset ? 1.0 : (1 - position) / (1 - redOnset);
     final faceValue = SeveritySlider.options.length - animationValue - 1;
     return GestureDetector(
-      onHorizontalDragStart: onDragStart,
-      onHorizontalDragUpdate: onDrag,
-      onHorizontalDragEnd: onDragEnd,
+      onHorizontalDragStart: (_) => onDragStart,
+      onHorizontalDragUpdate: (_) => onDrag,
+      onHorizontalDragEnd: (_) => onDragEnd,
       child: Container(
         width: circleDiameter,
         height: circleDiameter,
@@ -557,7 +570,7 @@ class Head extends StatelessWidget {
 
   final Color color;
   final bool hasShadow;
-  final double circleDiameter;
+  final double? circleDiameter;
   @override
   Widget build(BuildContext context) {
     return Container(

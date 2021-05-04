@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import '../../auth/auth.dart';
-import '../../models/application_user.dart';
 import '../../resources/user_repository.dart';
 import '../../util/validators.dart';
 import 'change_password_event.dart';
@@ -15,11 +13,10 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
   final UserRepository userRepository;
   final Authenticator authenticator;
 
-  ChangePasswordBloc({@required this.userRepository, @required this.authenticator})
-      : assert(userRepository != null),
-        assert(authenticator != null),
-        assert(userRepository.authenticated),
-        super(ChangePasswordEntry(user: userRepository.user, isValid: false, isRepeated: false));
+  ChangePasswordBloc({required this.userRepository, required this.authenticator})
+      : assert(userRepository.authenticated),
+        assert(userRepository.user != null),
+        super(ChangePasswordEntry(user: userRepository.user!, isValid: false, isRepeated: false));
 
   factory ChangePasswordBloc.fromContext(BuildContext context) {
     return ChangePasswordBloc(
@@ -28,39 +25,18 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
     );
   }
 
-  ApplicationUser get user => userRepository.user;
-
   // TODO debounce events when rebased on JPs debounce mixin
 
   @override
   Stream<ChangePasswordState> mapEventToState(ChangePasswordEvent event) async* {
-    if (event is ChangePasswordUpdated) {
-      yield* mapUpdatedToState(event);
-      return;
-    }
-
     if (event is ChangePasswordSubmitted) {
       yield* mapSubmittedToState(event);
       return;
     }
   }
 
-  Stream<ChangePasswordState> mapUpdatedToState(ChangePasswordUpdated event) async* {
-    try {
-      final isValid = isValidPassword(event.updatedPassword);
-
-      final isRepeated = event.updatedPassword == event.updatedRepeated &&
-          event.updatedPassword.isNotEmpty &&
-          event.updatedRepeated.isNotEmpty;
-
-      yield ChangePasswordEntry(user: user, isValid: isValid, isRepeated: isRepeated);
-    } catch (error, trace) {
-      yield ChangePasswordError.fromError(user: user, error: error, trace: trace);
-    }
-  }
-
   Stream<ChangePasswordState> mapSubmittedToState(ChangePasswordSubmitted event) async* {
-    if (user.providers.contains(AuthProvider.password)) {
+    if (userRepository.user!.providers.contains(AuthProvider.password)) {
       yield* _mapUpdatePasswordToState(event);
     } else {
       yield* _mapCreatePasswordToState(event);
@@ -69,17 +45,17 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
 
   Stream<ChangePasswordState> _mapUpdatePasswordToState(ChangePasswordSubmitted event) async* {
     if (isValidPassword(event.updatedPassword) == false) {
-      yield ChangePasswordError.invalidUpdatedPassword(user: user);
+      yield ChangePasswordError.invalidUpdatedPassword(user: userRepository.user!);
       return;
     }
 
     try {
-      yield ChangePasswordLoading(user: user);
+      yield ChangePasswordLoading(user: userRepository.user!);
 
       // Create a new password credential using the current password.
       final auth = await authenticator.authenticate(
         provider: AuthProvider.password,
-        username: user.username,
+        username: userRepository.user!.username,
         password: event.currentPassword,
       );
 
@@ -94,27 +70,27 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
         updatedPassword: event.updatedPassword,
       );
 
-      yield ChangePasswordSuccess(user: user);
+      yield ChangePasswordSuccess(user: userRepository.user!);
     } on WrongPasswordException {
-      yield ChangePasswordError.wrongCurrentPassword(user: user);
+      yield ChangePasswordError.wrongCurrentPassword(user: userRepository.user!);
     } catch (error, trace) {
-      yield ChangePasswordError.fromError(user: user, error: error, trace: trace);
+      yield ChangePasswordError.fromError(user: userRepository.user!, error: error, trace: trace);
     }
   }
 
   Stream<ChangePasswordState> _mapCreatePasswordToState(ChangePasswordSubmitted event) async* {
     if (isValidPassword(event.updatedPassword) == false) {
-      yield ChangePasswordError.invalidCreatedPassword(user: user);
+      yield ChangePasswordError.invalidCreatedPassword(user: userRepository.user!);
       return;
     }
 
     try {
-      yield ChangePasswordLoading(user: user);
+      yield ChangePasswordLoading(user: userRepository.user!);
 
       // Create a new password credential using the updated password.
       final auth = await authenticator.authenticate(
         provider: AuthProvider.password,
-        username: user.email,
+        username: userRepository.user!.email,
         password: event.updatedPassword,
       );
 
@@ -126,9 +102,9 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
         credential: auth.credential,
       );
 
-      yield ChangePasswordSuccess(user: user);
+      yield ChangePasswordSuccess(user: userRepository.user!);
     } catch (error, trace) {
-      yield ChangePasswordError.fromError(user: user, error: error, trace: trace);
+      yield ChangePasswordError.fromError(user: userRepository.user!, error: error, trace: trace);
     }
   }
 }

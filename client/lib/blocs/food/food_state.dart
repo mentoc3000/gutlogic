@@ -1,6 +1,5 @@
-import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../models/food/custom_food.dart';
 import '../../models/food/edamam_food.dart';
@@ -14,7 +13,7 @@ abstract class FoodState extends Equatable {
   const FoodState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -30,10 +29,10 @@ class NoFoodsFound extends FoodState with Query {
   @override
   final String query;
 
-  NoFoodsFound({@required this.query});
+  NoFoodsFound({required this.query});
 
   @override
-  List<Object> get props => [query];
+  List<Object?> get props => [query];
 }
 
 class FoodsLoaded extends FoodState with Query, SearchableLoaded {
@@ -46,10 +45,10 @@ class FoodsLoaded extends FoodState with Query, SearchableLoaded {
   final BuiltList<CustomFood> customFoods;
   final BuiltList<EdamamFood> edamamFoods;
 
-  FoodsLoaded({@required this.query, @required this.edamamFoods, @required this.customFoods});
+  FoodsLoaded({required this.query, required this.edamamFoods, required this.customFoods});
 
   @override
-  List<Object> get props => [query, customFoods, edamamFoods];
+  List<Object?> get props => [query, customFoods, edamamFoods];
 }
 
 class FoodError extends FoodState with ErrorState, ErrorRecorder {
@@ -57,11 +56,13 @@ class FoodError extends FoodState with ErrorState, ErrorRecorder {
   final String message;
 
   @override
-  final ErrorReport report;
+  final ErrorReport? report;
 
-  FoodError({@required this.message}) : report = null;
+  FoodError({required this.message}) : report = null;
 
-  FoodError.fromError({@required dynamic error, @required StackTrace trace})
+  FoodError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
+
+  factory FoodError.fromReport(ErrorReport report) => FoodError.fromError(error: report.error, trace: report.trace);
 }

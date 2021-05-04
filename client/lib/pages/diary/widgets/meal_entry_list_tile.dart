@@ -9,7 +9,7 @@ import 'diary_entry_list_tile.dart';
 class MealEntryListTile extends StatelessWidget {
   final MealEntry entry;
 
-  const MealEntryListTile({@required this.entry});
+  const MealEntryListTile({required this.entry});
 
   @override
   Widget build(BuildContext context) {

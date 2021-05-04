@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../util/app_config.dart';
 import 'device_info_dialog.dart';
 
@@ -6,6 +7,8 @@ class FlavorBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final config = AppConfig.of(context);
+
+    if (config == null) return Container();
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,

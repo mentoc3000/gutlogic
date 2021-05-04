@@ -14,15 +14,15 @@ import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/meal_entry/meal_entry_page.dart';
 import 'package:gutlogic/routes/routes.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 
 import '../mocks/mock_page_route.dart';
 import '../mocks/mock_router.dart';
 
-class MockMealEntryBloc extends MockBloc<MealEntryState> implements MealEntryBloc {}
+class MockMealEntryBloc extends MockBloc<MealEntryEvent, MealEntryState> implements MealEntryBloc {}
 
-class MockFoodBloc extends MockBloc<FoodState> implements FoodBloc {}
+class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
 
 class MealEntryPageWrapper extends StatelessWidget {
   @override
@@ -30,11 +30,11 @@ class MealEntryPageWrapper extends StatelessWidget {
 }
 
 void main() {
-  MealEntryBloc mealEntryBloc;
-  FoodBloc foodBloc;
-  Routes routes;
-  Widget mealEntryPage;
-  MealEntry mealEntry;
+  late MealEntryBloc mealEntryBloc;
+  late FoodBloc foodBloc;
+  late Routes routes;
+  late Widget mealEntryPage;
+  late MealEntry mealEntry;
 
   setUp(() {
     routes = MockRoutes();
@@ -79,6 +79,7 @@ void main() {
           MealEntryLoading(),
           MealEntryLoaded(mealEntry),
         ]),
+        initialState: MealEntryLoading(),
       );
 
       await tester.pumpWidget(mealEntryPage);
@@ -88,8 +89,8 @@ void main() {
       expect(find.text('Food & Drink'), findsOneWidget);
       expect(find.text(mealEntry.mealElements.first.foodReference.name), findsOneWidget);
       expect(find.text('Notes'), findsOneWidget);
-      expect(find.text(mealEntry.notes), findsOneWidget);
-      verifyNever(mealEntryBloc.add(any));
+      expect(find.text(mealEntry.notes!), findsOneWidget);
+      verifyNever(() => mealEntryBloc.add(any()));
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
@@ -99,13 +100,14 @@ void main() {
           null, // bloc_test skips first state. https://github.com/felangel/bloc/issues/796
           MealEntryLoading(),
         ]),
+        initialState: MealEntryLoading(),
       );
 
-      when(mealEntryBloc.state).thenReturn(MealEntryLoading());
+      whenListen(mealEntryBloc, Stream.value(MealEntryLoading()), initialState: MealEntryLoading());
       await tester.pumpWidget(mealEntryPage);
       expect(find.text('Meal/Snack'), findsOneWidget);
       expect(find.byType(LoadingPage), findsOneWidget);
-      verifyNever(mealEntryBloc.add(any));
+      verifyNever(() => mealEntryBloc.add(any()));
     });
 
     testWidgets('shows error', (WidgetTester tester) async {
@@ -116,19 +118,20 @@ void main() {
           MealEntryLoading(),
           MealEntryError(message: message),
         ]),
+        initialState: MealEntryLoading(),
       );
 
       await tester.pumpWidget(mealEntryPage);
       await tester.pump(const Duration(milliseconds: 100));
       expect(find.text('Meal/Snack'), findsOneWidget);
       expect(find.text(message), findsOneWidget);
-      verifyNever(mealEntryBloc.add(any));
+      verifyNever(() => mealEntryBloc.add(any()));
     });
 
     testWidgets('tile routes to mealElement page', (WidgetTester tester) async {
       final navigationKey = UniqueKey();
 
-      when(routes.createMealElementPageRoute(mealElement: anyNamed('mealElement')))
+      when(() => routes.createMealElementPageRoute(mealElement: any(named: 'mealElement')))
           .thenReturn(MockPageRoute(key: navigationKey));
 
       whenListen(
@@ -137,6 +140,7 @@ void main() {
           MealEntryLoading(),
           MealEntryLoaded(mealEntry),
         ]),
+        initialState: MealEntryLoading(),
       );
 
       await tester.pumpWidget(mealEntryPage);
@@ -149,11 +153,13 @@ void main() {
     });
 
     testWidgets('add button shows food search', (WidgetTester tester) async {
-      when(mealEntryBloc.state).thenReturn(MealEntryLoaded(mealEntry));
+      whenListen(mealEntryBloc, Stream.value(MealEntryLoaded(mealEntry)), initialState: MealEntryLoading());
 
       final newFood = CustomFood(id: '919', name: 'Hoisin Sauce');
       final foods = [newFood].build();
-      when(foodBloc.state).thenReturn(FoodsLoaded(query: '', customFoods: foods, edamamFoods: <EdamamFood>[].build()));
+      whenListen(
+          foodBloc, Stream.value(FoodsLoaded(query: '', customFoods: foods, edamamFoods: <EdamamFood>[].build())),
+          initialState: FoodsLoading());
 
       // Show initial mealentry
       await tester.pumpWidget(mealEntryPage);
@@ -178,6 +184,7 @@ void main() {
           MealEntryLoading(),
           MealEntryLoaded(mealEntry),
         ]),
+        initialState: MealEntryLoading(),
       );
 
       await tester.pumpWidget(mealEntryPage);
@@ -194,7 +201,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(mealElementTile, findsNothing);
-      verify(mealEntryBloc.add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealEntry.mealElements.first)))
+      verify(() =>
+              mealEntryBloc.add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealEntry.mealElements.first)))
           .called(1);
     });
 
@@ -205,6 +213,7 @@ void main() {
           MealEntryLoading(),
           MealEntryLoaded(mealEntry),
         ]),
+        initialState: MealEntryLoading(),
       );
 
       await tester.pumpWidget(mealEntryPage);
@@ -216,7 +225,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(mealElementTile, findsOneWidget);
       verifyNever(
-          mealEntryBloc.add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealEntry.mealElements.first)));
+          () => mealEntryBloc.add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealEntry.mealElements.first)));
     });
 
     testWidgets('updates notes', (WidgetTester tester) async {
@@ -226,17 +235,18 @@ void main() {
           MealEntryLoading(),
           MealEntryLoaded(mealEntry),
         ]),
+        initialState: MealEntryLoading(),
       );
 
       await tester.pumpWidget(mealEntryPage);
       await tester.pumpAndSettle();
-      final notesField = find.text(mealEntry.notes);
+      final notesField = find.text(mealEntry.notes!);
       expect(notesField, findsOneWidget);
       const newNote = 'new notes';
       await tester.enterText(notesField, newNote);
-      expect(find.text(mealEntry.notes), findsNothing);
+      expect(find.text(mealEntry.notes!), findsNothing);
       expect(find.text(newNote), findsOneWidget);
-      verify(mealEntryBloc.add(const UpdateMealEntryNotes(newNote))).called(1);
+      verify(() => mealEntryBloc.add(const UpdateMealEntryNotes(newNote))).called(1);
     });
   });
 }

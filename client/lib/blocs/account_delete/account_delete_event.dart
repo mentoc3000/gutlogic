@@ -4,7 +4,7 @@ abstract class AccountDeleteEvent extends Equatable {
   const AccountDeleteEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -13,10 +13,10 @@ abstract class AccountDeleteEvent extends Equatable {
 class AccountDeletePasswordConfirm extends AccountDeleteEvent {
   final String password;
 
-  AccountDeletePasswordConfirm({this.password});
+  AccountDeletePasswordConfirm({required this.password});
 
   @override
-  List<Object> get props => [password];
+  List<Object?> get props => [password];
 }
 
 class AccountDeleteFederatedConfirm extends AccountDeleteEvent {

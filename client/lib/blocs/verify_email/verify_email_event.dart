@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
+
 import '../../resources/firebase/analytics_service.dart';
 import '../bloc_helpers.dart';
 
 abstract class VerifyEmailEvent extends Equatable {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -25,5 +26,5 @@ class VerifyEmailResendRequested extends VerifyEmailEvent {}
 /// Added when email verification is confirmed
 class VerifyEmailConfirmed extends VerifyEmailEvent implements TrackedEvent {
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('email_verified');
+  void track(AnalyticsService analytics) => analytics.logEvent('email_verified');
 }

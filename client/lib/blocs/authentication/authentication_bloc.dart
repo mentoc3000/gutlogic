@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/application_user.dart';
 import '../../resources/user_repository.dart';
@@ -11,9 +10,9 @@ import 'authentication_state.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository _userRepository;
-  StreamSubscription _userValueSubscription;
+  late final StreamSubscription _userValueSubscription;
 
-  AuthenticationBloc({@required UserRepository userRepository})
+  AuthenticationBloc({required UserRepository userRepository})
       : _userRepository = userRepository,
         super(const AuthenticationUnknown()) {
     // Update the authentication state whenever the user value changes.
@@ -24,7 +23,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     return AuthenticationBloc(userRepository: context.read<UserRepository>());
   }
 
-  void _onUserValue(ApplicationUser user) {
+  void _onUserValue(ApplicationUser? user) {
     add(user == null ? const AuthenticationRevoked() : const AuthenticationProvided());
   }
 
@@ -49,7 +48,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   @override
   Future close() {
-    _userValueSubscription?.cancel();
+    _userValueSubscription.cancel();
     return super.close();
   }
 }

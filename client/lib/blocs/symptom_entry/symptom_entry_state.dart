@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/diary_entry/diary_entry.dart';
 import '../../util/error_report.dart';
@@ -9,7 +8,7 @@ import '../diary_entry/diary_entry_state.dart';
 
 abstract class SymptomEntryState extends Equatable {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class SymptomEntryLoading extends SymptomEntryState with DiaryEntryLoading {}
@@ -23,14 +22,17 @@ class SymptomEntryLoaded extends SymptomEntryState with DiaryEntryLoaded {
 
 class SymptomEntryError extends SymptomEntryState with DiaryEntryError, ErrorRecorder {
   @override
-  final ErrorReport report;
-
-  @override
   final String message;
 
-  SymptomEntryError({@required this.message}) : report = null;
+  @override
+  final ErrorReport? report;
 
-  SymptomEntryError.fromError({@required dynamic error, @required StackTrace trace})
+  SymptomEntryError({required this.message}) : report = null;
+
+  SymptomEntryError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
+
+  factory SymptomEntryError.fromReport(ErrorReport report) =>
+      SymptomEntryError.fromError(error: report.error, trace: report.trace);
 }

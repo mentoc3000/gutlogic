@@ -1,7 +1,8 @@
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../models/diary_entry/bowel_movement_entry.dart';
 import '../../resources/firebase/analytics_service.dart';
+import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
 import '../diary_entry/diary_entry.dart';
 
@@ -9,7 +10,7 @@ abstract class BowelMovementEntryEvent extends Equatable {
   const BowelMovementEntryEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -28,7 +29,7 @@ class CreateAndStreamBowelMovementEntry extends BowelMovementEntryEvent
   const CreateAndStreamBowelMovementEntry();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_bowel_movement_entry');
+  void track(AnalyticsService analytics) => analytics.logEvent('create_bowel_movement_entry');
 }
 
 class StreamBowelMovementEntry extends BowelMovementEntryEvent with StreamDiaryEntry {
@@ -45,7 +46,7 @@ class DeleteBowelMovementEntry extends BowelMovementEntryEvent with DeleteDiaryE
   const DeleteBowelMovementEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_bowel_movement_entry');
+  void track(AnalyticsService analytics) => analytics.logEvent('delete_bowel_movement_entry');
 }
 
 class UpdateBowelMovementEntry extends BowelMovementEntryEvent
@@ -57,7 +58,7 @@ class UpdateBowelMovementEntry extends BowelMovementEntryEvent
   const UpdateBowelMovementEntry(this.diaryEntry);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_bowel_movement_entry');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry');
 }
 
 class UpdateBowelMovementEntryDateTime extends BowelMovementEntryEvent
@@ -69,8 +70,7 @@ class UpdateBowelMovementEntryDateTime extends BowelMovementEntryEvent
   const UpdateBowelMovementEntryDateTime(this.dateTime);
 
   @override
-  void track(AnalyticsService analyticsService) =>
-      analyticsService.logUpdateEvent('update_bowel_movement_entry', 'dateTime');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'dateTime');
 }
 
 class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent
@@ -82,8 +82,7 @@ class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent
   const UpdateBowelMovementEntryNotes(this.notes);
 
   @override
-  void track(AnalyticsService analyticsService) =>
-      analyticsService.logUpdateEvent('update_bowel_movement_entry', 'notes');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'notes');
 }
 
 class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -92,11 +91,10 @@ class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements 
   const UpdateType(this.type);
 
   @override
-  List<Object> get props => [type];
+  List<Object?> get props => [type];
 
   @override
-  void track(AnalyticsService analyticsService) =>
-      analyticsService.logUpdateEvent('update_bowel_movement_entry', 'type');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'type');
 
   @override
   String toString() => 'UpdateType { type: $type } }';
@@ -108,11 +106,10 @@ class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implement
   const UpdateVolume(this.volume);
 
   @override
-  List<Object> get props => [volume];
+  List<Object?> get props => [volume];
 
   @override
-  void track(AnalyticsService analyticsService) =>
-      analyticsService.logUpdateEvent('update_bowel_movement_entry', 'volume');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'volume');
 
   @override
   String toString() => 'UpdateVolume { volume: $volume } }';
@@ -120,10 +117,10 @@ class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implement
 
 class ThrowBowelMovementEntryError extends BowelMovementEntryEvent with ErrorEvent {
   @override
-  final Object error;
+  final ErrorReport report;
 
-  @override
-  final StackTrace trace;
+  const ThrowBowelMovementEntryError({required this.report});
 
-  const ThrowBowelMovementEntryError({@required this.error, @required this.trace});
+  factory ThrowBowelMovementEntryError.fromError({required dynamic error, required StackTrace trace}) =>
+      ThrowBowelMovementEntryError(report: ErrorReport(error: error, trace: trace));
 }

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/diary_entry/bowel_movement_entry.dart';
 import '../models/diary_entry/meal_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
-import '../models/food/food.dart';
+import '../models/food_reference/food_reference.dart';
 import '../models/meal_element.dart';
 import '../models/pantry/pantry_entry.dart';
 import '../models/symptom_type.dart';
@@ -97,7 +97,7 @@ class Routes {
     );
   }
 
-  Route createMealEntryRoute({MealEntry entry}) {
+  Route createMealEntryRoute({MealEntry? entry}) {
     if (entry == null) {
       return MaterialPageRoute(
         builder: (context) => MealEntryPage.forNewEntry(),
@@ -111,18 +111,18 @@ class Routes {
     }
   }
 
-  Route createSymptomEntryRoute({SymptomEntry entry}) {
+  Route createSymptomEntryRoute({required SymptomEntry entry}) {
     return MaterialPageRoute(
       builder: (context) => SymptomEntryPage.forExistingEntry(entry),
       settings: const RouteSettings(name: 'Symptom Entry Page'),
     );
   }
 
-  Route createSymptomEntryRouteFrom({SymptomType symptomType}) {
+  Route createSymptomEntryRouteFrom({required SymptomType symptomType}) {
     return MaterialPageRoute(builder: (context) => SymptomEntryPage.forNewEntryFrom(symptomType));
   }
 
-  Route createBowelMovementEntryRoute({BowelMovementEntry entry}) {
+  Route createBowelMovementEntryRoute({BowelMovementEntry? entry}) {
     if (entry == null) {
       return MaterialPageRoute(
         builder: (context) => BowelMovementEntryPage.forNewEntry(),
@@ -136,19 +136,19 @@ class Routes {
     }
   }
 
-  Route createMealElementPageRoute({@required MealElement mealElement}) {
+  Route createMealElementPageRoute({required MealElement mealElement}) {
     return MaterialPageRoute(
       builder: (context) => MealElementEntryPage.forMealElement(mealElement),
       settings: const RouteSettings(name: 'MealElement Entry Page'),
     );
   }
 
-  Route createPantryEntryPageRoute({@required PantryEntry pantryEntry}) {
+  Route createPantryEntryPageRoute({required PantryEntry pantryEntry}) {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forPantryEntry(pantryEntry));
   }
 
-  Route createPantryEntryPageRouteForFood(Food food) {
-    return MaterialPageRoute(builder: (context) => PantryEntryPage.forFood(food));
+  Route createPantryEntryPageRouteForFood(FoodReference foodReference) {
+    return MaterialPageRoute(builder: (context) => PantryEntryPage.forFood(foodReference));
   }
 
   Route createPantryEntryPageRouteForId(String id) {

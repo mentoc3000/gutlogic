@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -12,7 +11,7 @@ abstract class BowelMovement implements Built<BowelMovement, BowelMovementBuilde
 
   BowelMovement._();
 
-  factory BowelMovement({@required int type, @required int volume}) = _$BowelMovement._;
+  factory BowelMovement({required int type, required int volume}) = _$BowelMovement._;
 
   factory BowelMovement.fromBuilder([BowelMovementBuilder Function(BowelMovementBuilder) updates]) = _$BowelMovement;
 }

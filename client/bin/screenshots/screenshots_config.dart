@@ -13,7 +13,7 @@ class ScreenshotsConfig {
   /// A list of requested Android device names.
   final UnmodifiableListView<String> android;
 
-  ScreenshotsConfig({List<String> locales, List<String> android, List<String> ios})
+  ScreenshotsConfig({required List<String> locales, required List<String> android, required List<String> ios})
       : locales = UnmodifiableListView(locales),
         android = UnmodifiableListView(android),
         ios = UnmodifiableListView(ios);

@@ -42,15 +42,16 @@ class MealEntryPage extends StatelessWidget {
 
   void listener(BuildContext context, MealEntryState state) {
     if (state is MealEntryLoaded) {
-      _notesController.text = state.diaryEntry.notes;
+      _notesController.text = state.diaryEntry.notes ?? '';
     }
     if (state is MealElementDeleted) {
-      final snackBar = UndoDeleteSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(UndoDeleteSnackBar(
         name: state.mealElement.foodReference.name,
-        onUndelete: () => MealEntryBloc.fromContext(context)
-            .add(UndeleteMealElement(mealEntry: state.mealEntry, mealElement: state.mealElement)),
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
+        onUndelete: () => MealEntryBloc.fromContext(context).add(UndeleteMealElement(
+          mealEntry: state.mealEntry,
+          mealElement: state.mealElement,
+        )),
+      ));
     }
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'apple/apple_auth.dart';
 import 'auth_provider.dart';
@@ -29,7 +28,7 @@ class Authenticator {
   /// Throws an [ArgumentError] if the [provider] cannot create credentials. Only the password, google, and apple auth
   /// providers are supported. Throws an [ArgumentError] if the password [provider] is passed without a [username] and
   /// [password].
-  Future<AuthResult> authenticate({@required AuthProvider provider, String username, String password}) {
+  Future<AuthResult> authenticate({required AuthProvider provider, String? username, String? password}) {
     switch (provider) {
       case AuthProvider.password:
         if (username == null || password == null) throw ArgumentError('A username and password are required.');

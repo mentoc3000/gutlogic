@@ -10,12 +10,12 @@ import 'pantry/pantry_page.dart';
 import 'settings/settings_page.dart';
 
 class MainTabs extends StatefulWidget {
-  final AnalyticsService analyticsService;
+  final AnalyticsService analytics;
 
-  MainTabs({@required this.analyticsService});
+  MainTabs({required this.analytics});
 
   static Widget provisioned(BuildContext context) {
-    return MainTabs(analyticsService: Provider.of<AnalyticsService>(context));
+    return MainTabs(analytics: Provider.of<AnalyticsService>(context));
   }
 
   @override
@@ -23,7 +23,7 @@ class MainTabs extends StatefulWidget {
 }
 
 class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin, RouteAware {
-  TabController _controller;
+  late final TabController controller;
   int selectedIndex = 0;
 
   final tabs = [
@@ -53,28 +53,30 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    widget.analyticsService?.subscribeToRoute(this, ModalRoute.of(context));
+
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) widget.analytics.subscribeToRoute(this, route);
   }
 
   @override
   void dispose() {
-    widget.analyticsService?.unsubscribeFromRoute(this);
+    widget.analytics.unsubscribeFromRoute(this);
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _controller = TabController(
+    controller = TabController(
       vsync: this,
       length: tabs.length,
       initialIndex: selectedIndex,
     );
-    _controller.addListener(() {
+    controller.addListener(() {
       setState(() {
-        if (selectedIndex != _controller.index) {
-          selectedIndex = _controller.index;
-          _sendCurrentTabToAnalytics();
+        if (selectedIndex != controller.index) {
+          selectedIndex = controller.index;
+          sendCurrentTabToAnalytics();
         }
       });
     });
@@ -95,7 +97,7 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
   Widget buildTabBar(BuildContext context) {
     return SafeArea(
       child: TabBar(
-        controller: _controller,
+        controller: controller,
         tabs: tabs,
         labelColor: Theme.of(context).colorScheme.onPrimary,
         indicatorSize: TabBarIndicatorSize.label,
@@ -107,16 +109,16 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
 
   Widget buildTabBarView(BuildContext context) {
     return TabBarView(
-      controller: _controller,
+      controller: controller,
       children: pages,
     );
   }
 
   @override
-  void didPush() => _sendCurrentTabToAnalytics();
+  void didPush() => sendCurrentTabToAnalytics();
 
   @override
-  void didPopNext() => _sendCurrentTabToAnalytics();
+  void didPopNext() => sendCurrentTabToAnalytics();
 
-  void _sendCurrentTabToAnalytics() => widget.analyticsService?.setCurrentScreen('${tabs[selectedIndex].text} Page');
+  void sendCurrentTabToAnalytics() => widget.analytics.setCurrentScreen('${tabs[selectedIndex].text} Page');
 }

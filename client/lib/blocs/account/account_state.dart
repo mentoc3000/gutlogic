@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/application_user.dart';
 import '../../util/error_report.dart';
@@ -10,7 +9,7 @@ abstract class AccountState extends Equatable {
   AccountState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -19,13 +18,13 @@ abstract class AccountState extends Equatable {
 class AccountReady extends AccountState {
   final ApplicationUser user;
 
-  AccountReady({@required this.user});
+  AccountReady({required this.user});
 
   @override
-  List<Object> get props => [user];
+  List<Object?> get props => [user];
 
   @override
-  String toString() => 'AccountReady { user.id: ${user?.id} }';
+  String toString() => 'AccountReady { user.id: ${user.id} }';
 }
 
 class AccountLoading extends AccountState {}
@@ -36,14 +35,14 @@ class AccountLoggedOut extends AccountState {}
 
 class AccountError extends AccountState with ErrorState, ErrorRecorder {
   @override
-  final ErrorReport report;
-
-  @override
   final String message;
 
-  AccountError({@required this.message}) : report = null;
+  @override
+  final ErrorReport? report;
 
-  AccountError.fromError({@required dynamic error, @required StackTrace trace})
+  AccountError({required this.message}) : report = null;
+
+  AccountError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 }

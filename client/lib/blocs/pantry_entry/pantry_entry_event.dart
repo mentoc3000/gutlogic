@@ -1,15 +1,17 @@
 import 'package:equatable/equatable.dart';
-import '../../models/food/food.dart';
+
+import '../../models/food_reference/food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../models/sensitivity.dart';
 import '../../resources/firebase/analytics_service.dart';
+import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
 
 abstract class PantryEntryEvent extends Equatable {
   const PantryEntryEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class Load extends PantryEntryEvent {
@@ -18,25 +20,25 @@ class Load extends PantryEntryEvent {
   const Load(this.pantryEntry);
 
   @override
-  List<Object> get props => [pantryEntry];
+  List<Object?> get props => [pantryEntry];
 
   @override
   String toString() => 'Load { id: ${pantryEntry.id} }';
 }
 
 class CreateAndStreamEntry extends PantryEntryEvent implements TrackedEvent {
-  final Food food;
+  final FoodReference foodReference;
 
-  const CreateAndStreamEntry(this.food);
+  const CreateAndStreamEntry(this.foodReference);
 
   @override
-  List<Object> get props => [food];
+  List<Object?> get props => [foodReference];
 
   @override
   String toString() => 'CreateAndStreamEntry { new PantryEntry }';
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_pantry_entry');
+  void track(AnalyticsService analytics) => analytics.logEvent('create_pantry_entry');
 }
 
 class StreamEntry extends PantryEntryEvent {
@@ -45,7 +47,7 @@ class StreamEntry extends PantryEntryEvent {
   const StreamEntry(this.pantryEntry);
 
   @override
-  List<Object> get props => [pantryEntry];
+  List<Object?> get props => [pantryEntry];
 
   @override
   String toString() => 'StreamEntry { id: ${pantryEntry.id} }';
@@ -57,7 +59,7 @@ class StreamId extends PantryEntryEvent {
   const StreamId(this.id);
 
   @override
-  List<Object> get props => [id];
+  List<Object?> get props => [id];
 
   @override
   String toString() => 'StreamId { id: $id }';
@@ -70,7 +72,7 @@ class Delete extends PantryEntryEvent implements TrackedEvent {
   String toString() => 'Delete';
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_pantry_entry');
+  void track(AnalyticsService analytics) => analytics.logEvent('delete_pantry_entry');
 }
 
 class UpdateEntry extends PantryEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -79,13 +81,13 @@ class UpdateEntry extends PantryEntryEvent with DebouncedEvent implements Tracke
   const UpdateEntry(this.pantryEntry);
 
   @override
-  List<Object> get props => [pantryEntry];
+  List<Object?> get props => [pantryEntry];
 
   @override
   String toString() => 'Update { pantryEntryId: ${pantryEntry.id} }';
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_pantry_entry');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_pantry_entry');
 }
 
 class UpdateSensitivity extends PantryEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -94,14 +96,13 @@ class UpdateSensitivity extends PantryEntryEvent with DebouncedEvent implements 
   const UpdateSensitivity(this.sensitivity);
 
   @override
-  List<Object> get props => [sensitivity];
+  List<Object?> get props => [sensitivity];
 
   @override
   String toString() => 'UpdateSensitivity { newSensitivity: $sensitivity } }';
 
   @override
-  void track(AnalyticsService analyticsService) =>
-      analyticsService.logUpdateEvent('update_pantry_entry', 'sensitivity');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_pantry_entry', 'sensitivity');
 }
 
 class UpdateNotes extends PantryEntryEvent with DebouncedEvent implements TrackedEvent {
@@ -110,24 +111,21 @@ class UpdateNotes extends PantryEntryEvent with DebouncedEvent implements Tracke
   const UpdateNotes(this.notes);
 
   @override
-  List<Object> get props => [notes];
+  List<Object?> get props => [notes];
 
   @override
   String toString() => 'UpdateNotes { newNotes: $notes } }';
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_pantry_entry', 'notes');
+  void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_pantry_entry', 'notes');
 }
 
-class ThrowPantryEntryError extends PantryEntryEvent {
-  final Object error;
-  final StackTrace trace;
-
-  const ThrowPantryEntryError({this.error, this.trace});
-
+class ThrowPantryEntryError extends PantryEntryEvent with ErrorEvent {
   @override
-  List<Object> get props => [error, trace];
+  final ErrorReport report;
 
-  @override
-  String toString() => 'Throw { error: $error }';
+  const ThrowPantryEntryError({required this.report});
+
+  factory ThrowPantryEntryError.fromError({required dynamic error, required StackTrace trace}) =>
+      ThrowPantryEntryError(report: ErrorReport(error: error, trace: trace));
 }

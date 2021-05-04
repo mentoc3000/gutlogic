@@ -5,17 +5,19 @@ import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/resources/diary_repositories/bowel_movement_entry_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-class MockFirestoreService extends Mock implements FirestoreService {}
+import 'bowel_movement_entry_repository_test.mocks.dart';
 
+@GenerateMocks([FirestoreService])
 void main() {
   group('BowelMovementEntryRepository', () {
-    String diaryEntryId;
-    BowelMovementEntry diaryEntry;
-    MockFirestoreInstance instance;
-    FirestoreService firestoreService;
-    BowelMovementEntryRepository repository;
+    late String diaryEntryId;
+    late BowelMovementEntry diaryEntry;
+    late MockFirestoreInstance instance;
+    late FirestoreService firestoreService;
+    late BowelMovementEntryRepository repository;
 
     setUp(() {
       diaryEntryId = 'entry1Id';
@@ -56,7 +58,7 @@ void main() {
     test('creates entry', () async {
       final now = DateTime.now();
       final newEntry = await repository.create();
-      expect(newEntry.datetime.difference(now).inSeconds < 1, true);
+      expect(newEntry!.datetime.difference(now).inSeconds < 1, true);
       expect(newEntry.bowelMovement, BowelMovementEntryRepository.initialBowelMovementValue);
       expect(newEntry.notes, isNull);
     });
@@ -82,35 +84,35 @@ void main() {
       final updatedDiaryEntry = diaryEntry.rebuild((b) => b..notes = notes);
       await repository.updateEntry(updatedDiaryEntry);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['notes'], notes);
+      expect(retrievedEntry!['notes'], notes);
     });
 
     test('updates datetime', () async {
       final datetime = DateTime.now().toUtc();
       await repository.updateDateTime(diaryEntry, datetime);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['datetime'], Timestamp.fromDate(datetime));
+      expect(retrievedEntry!['datetime'], Timestamp.fromDate(datetime));
     });
 
     test('updates notes', () async {
       const notes = 'new notes';
       await repository.updateNotes(diaryEntry, notes);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['notes'], notes);
+      expect(retrievedEntry!['notes'], notes);
     });
 
     test('updates type', () async {
       const type = 3;
       await repository.updateType(diaryEntry, type);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['bowelMovement']['type'], type);
+      expect(retrievedEntry!['bowelMovement']['type'], type);
     });
 
     test('updates volume', () async {
       const volume = 3;
       await repository.updateVolume(diaryEntry, volume);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect(retrievedEntry['bowelMovement']['volume'], volume);
+      expect(retrievedEntry!['bowelMovement']['volume'], volume);
     });
   });
 }

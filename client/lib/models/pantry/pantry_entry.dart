@@ -1,6 +1,6 @@
-import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+
 import '../food_reference/food_reference.dart';
 import '../model_interfaces.dart';
 import '../sensitivity.dart';
@@ -17,10 +17,10 @@ abstract class PantryEntry with Ided, Noted implements Built<PantryEntry, Pantry
   PantryEntry._();
 
   factory PantryEntry({
-    @required String id,
-    @required FoodReference foodReference,
-    @required Sensitivity sensitivity,
-    String notes,
+    required String id,
+    required FoodReference foodReference,
+    required Sensitivity sensitivity,
+    String? notes,
   }) = _$PantryEntry._;
 
   factory PantryEntry.fromBuilder([PantryEntryBuilder Function(PantryEntryBuilder) updates]) = _$PantryEntry;

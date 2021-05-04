@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import '../../auth/auth.dart';
 import '../../resources/user_repository.dart';
@@ -14,7 +13,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final UserRepository userRepository;
   final Authenticator authenticator;
 
-  RegisterBloc({@required this.userRepository, @required this.authenticator}) : super(const RegisterReady());
+  RegisterBloc({required this.userRepository, required this.authenticator}) : super(const RegisterReady());
 
   factory RegisterBloc.fromContext(BuildContext context) => RegisterBloc(
         userRepository: context.read<UserRepository>(),

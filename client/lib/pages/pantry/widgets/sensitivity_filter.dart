@@ -10,7 +10,7 @@ class SensitivityFilter extends StatelessWidget {
   final PantryFilterCubit pantryFilterCubit;
   final PantryFilter filter;
 
-  const SensitivityFilter({Key key, @required this.pantryFilterCubit, @required this.filter}) : super(key: key);
+  const SensitivityFilter({Key? key, required this.pantryFilterCubit, required this.filter}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _SensitivityFilterButton extends StatelessWidget {
   final bool enabled;
   final VoidCallback onPressed;
 
-  const _SensitivityFilterButton({Key key, @required this.color, @required this.enabled, @required this.onPressed})
+  const _SensitivityFilterButton({Key? key, required this.color, required this.enabled, required this.onPressed})
       : super(key: key);
 
   @override

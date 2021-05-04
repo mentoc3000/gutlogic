@@ -1,24 +1,22 @@
 import 'package:bloc/bloc.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:meta/meta.dart';
-import 'package:pedantic/pedantic.dart';
 
 import '../blocs/bloc_helpers.dart';
 import '../resources/firebase/analytics_service.dart';
+import '../resources/firebase/crashlytics_service.dart';
 import '../util/logger.dart';
 
 class GutLogicBlocObserver extends BlocObserver {
-  final AnalyticsService analyticsService;
-  final FirebaseCrashlytics firebaseCrashlytics;
+  final AnalyticsService analytics;
+  final CrashlyticsService crashlytics;
 
-  GutLogicBlocObserver({@required this.analyticsService, @required this.firebaseCrashlytics});
+  GutLogicBlocObserver({required this.analytics, required this.crashlytics});
 
   @override
-  void onEvent(Bloc bloc, Object event) {
+  void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
 
     if (event is TrackedEvent) {
-      event.track(analyticsService);
+      event.track(analytics);
     }
 
     logger.d('Event $event');
@@ -27,22 +25,23 @@ class GutLogicBlocObserver extends BlocObserver {
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
+
     logger.d(transition);
 
     final nextState = transition.nextState;
 
     if (nextState is ErrorRecorder) {
-      nextState.recordError(firebaseCrashlytics);
+      nextState.recordError(crashlytics);
       logger.e(nextState.report?.error);
       logger.e(nextState.report?.trace);
     }
   }
 
   @override
-  void onError(Cubit cubit, Object error, StackTrace trace) {
-    super.onError(cubit, error, trace);
+  void onError(BlocBase bloc, Object error, StackTrace trace) {
+    super.onError(bloc, error, trace);
     logger.e(error);
     logger.e(trace);
-    unawaited(firebaseCrashlytics.recordError(error, trace));
+    crashlytics.record(error, trace);
   }
 }

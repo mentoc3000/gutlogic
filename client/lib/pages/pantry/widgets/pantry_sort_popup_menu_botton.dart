@@ -8,7 +8,7 @@ import '../../../widgets/popup_menu_button/gl_popup_menu_item.dart';
 class PantrySortPopupMenuButton extends StatelessWidget {
   final void Function(PantrySort) onSelected;
 
-  const PantrySortPopupMenuButton({Key key, @required this.onSelected}) : super(key: key);
+  const PantrySortPopupMenuButton({Key? key, required this.onSelected}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

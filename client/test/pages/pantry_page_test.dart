@@ -7,20 +7,21 @@ import 'package:gutlogic/blocs/pantry/pantry.dart';
 import 'package:gutlogic/blocs/pantry_sort/pantry_sort.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_sort.dart';
 import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/pages/pantry/pantry_page.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/routes/routes.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart';
 
 import '../mocks/mock_page_route.dart';
 import '../mocks/mock_router.dart';
 
-class MockPantryBloc extends MockBloc<PantryState> implements PantryBloc {}
+class MockPantryBloc extends MockBloc<PantryEvent, PantryState> implements PantryBloc {}
 
-class MockPantrySortCubit extends MockBloc<PantrySortState> implements PantrySortCubit {}
+class MockPantrySortCubit extends MockCubit<PantrySortState> implements PantrySortCubit {}
 
 class PantryPageWrapper extends StatelessWidget {
   @override
@@ -33,10 +34,11 @@ Future<void> scrollToTop(WidgetTester tester) async {
 }
 
 void main() {
-  PantryBloc pantryBloc;
-  PantrySortCubit pantrySortCubit;
-  Widget pantryPage;
-  Routes routes;
+  late PantryBloc pantryBloc;
+  late PantrySortCubit pantrySortCubit;
+  late Widget pantryPage;
+  late Routes routes;
+  const defaultSort = PantrySort.alphabeticalAscending;
 
   initializeTimeZones();
 
@@ -44,6 +46,11 @@ void main() {
     routes = MockRoutes();
     pantryBloc = MockPantryBloc();
     pantrySortCubit = MockPantrySortCubit();
+
+    whenListen(pantryBloc, Stream.value(PantryLoaded(<PantryEntry>[].build())), initialState: PantryLoading());
+    whenListen(pantrySortCubit, Stream.value(PantrySortLoading(sort: defaultSort)),
+        initialState: PantrySortLoading(sort: defaultSort));
+
     pantryPage = Provider<Routes>.value(
       value: routes,
       child: BlocProvider<PantrySortCubit>.value(
@@ -58,27 +65,29 @@ void main() {
 
   group('PantryPage', () {
     testWidgets('shows empty pantry', (WidgetTester tester) async {
-      when(pantryBloc.state).thenReturn(PantryLoaded(<PantryEntry>[].build()));
+      whenListen(pantryBloc, Stream.value(PantryLoaded(<PantryEntry>[].build())), initialState: PantryLoading());
       await tester.pumpWidget(pantryPage);
       expect(find.text('Pantry'), findsOneWidget);
-      verifyNever(pantryBloc.add(any));
+      verifyNever(() => pantryBloc.add(any()));
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
-      when(pantrySortCubit.state).thenReturn(PantrySortLoading(sort: null));
+      whenListen(pantrySortCubit, Stream.value(PantrySortLoading(sort: defaultSort)),
+          initialState: PantrySortLoading(sort: defaultSort));
       await tester.pumpWidget(pantryPage);
       expect(find.text('Pantry'), findsOneWidget);
       expect(find.byType(LoadingPage), findsOneWidget);
-      verifyNever(pantryBloc.add(any));
+      verifyNever(() => pantryBloc.add(any()));
     });
 
     testWidgets('shows error', (WidgetTester tester) async {
       const message = 'Oh no! Something TERRIBLE happened!';
-      when(pantrySortCubit.state).thenReturn(PantrySortError(message: message, sort: null));
+      whenListen(pantrySortCubit, Stream.value(PantrySortError(message: message, sort: defaultSort)),
+          initialState: PantrySortLoading(sort: defaultSort));
       await tester.pumpWidget(pantryPage);
       await tester.pumpAndSettle();
       expect(find.text(message), findsOneWidget);
-      verifyNever(pantryBloc.add(any));
+      verifyNever(() => pantryBloc.add(any()));
     });
 
     testWidgets('removes entry when dragging pantry entry tile left', (WidgetTester tester) async {
@@ -87,7 +96,9 @@ void main() {
         foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beans'),
         sensitivity: Sensitivity.mild,
       );
-      when(pantrySortCubit.state).thenReturn(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: null));
+      whenListen(
+          pantrySortCubit, Stream.value(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: defaultSort)),
+          initialState: PantrySortLoading(sort: defaultSort));
       await tester.pumpWidget(pantryPage);
       await scrollToTop(tester);
       await tester.pumpAndSettle();
@@ -102,7 +113,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(entryTile, findsNothing);
-      verify(pantryBloc.add(DeletePantryEntry(pantryEntry))).called(1);
+      verify(() => pantryBloc.add(DeletePantryEntry(pantryEntry))).called(1);
     });
 
     testWidgets('shows an undo snackbar after deleting an entry', (WidgetTester tester) async {
@@ -111,12 +122,18 @@ void main() {
         foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beans'),
         sensitivity: Sensitivity.mild,
       );
+      final entries = [pantryEntry].build();
       whenListen(
-          pantryBloc,
-          Stream.fromIterable([
-            PantryLoaded(<PantryEntry>[pantryEntry].build()),
-            PantryEntryDeleted(pantryEntry),
-          ]));
+        pantryBloc,
+        Stream.fromIterable([
+          PantryLoaded(entries),
+          PantryEntryDeleted(pantryEntry),
+        ]),
+        initialState: PantryLoading(),
+      );
+      whenListen(pantrySortCubit, Stream.value(PantrySortLoaded(items: entries, sort: defaultSort)),
+          initialState: PantrySortLoading(sort: defaultSort));
+
       await tester.pumpWidget(pantryPage);
       await scrollToTop(tester);
       await tester.pumpAndSettle();
@@ -131,7 +148,9 @@ void main() {
         foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beans'),
         sensitivity: Sensitivity.mild,
       );
-      when(pantrySortCubit.state).thenReturn(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: null));
+      whenListen(
+          pantrySortCubit, Stream.value(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: defaultSort)),
+          initialState: PantrySortLoading(sort: defaultSort));
       await tester.pumpWidget(pantryPage);
       await scrollToTop(tester);
       await tester.pumpAndSettle();
@@ -141,7 +160,7 @@ void main() {
       await tester.drag(entryTile, const Offset(500, 0));
       await tester.pumpAndSettle();
       expect(entryTile, findsOneWidget);
-      verifyNever(pantryBloc.add(DeletePantryEntry(pantryEntry)));
+      verifyNever(() => pantryBloc.add(DeletePantryEntry(pantryEntry)));
     });
 
     testWidgets('tile routes to pantry entry page', (WidgetTester tester) async {
@@ -150,11 +169,13 @@ void main() {
         foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beans'),
         sensitivity: Sensitivity.mild,
       );
-      when(pantrySortCubit.state).thenReturn(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: null));
+      whenListen(
+          pantrySortCubit, Stream.value(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: defaultSort)),
+          initialState: PantrySortLoading(sort: defaultSort));
       await tester.pumpWidget(pantryPage);
 
       final navigationKey = UniqueKey();
-      when(routes.createPantryEntryPageRoute(pantryEntry: anyNamed('pantryEntry')))
+      when(() => routes.createPantryEntryPageRoute(pantryEntry: any(named: 'pantryEntry')))
           .thenReturn(MockPageRoute(key: navigationKey));
 
       await tester.pumpWidget(pantryPage);

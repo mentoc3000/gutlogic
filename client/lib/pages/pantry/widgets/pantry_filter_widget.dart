@@ -11,12 +11,12 @@ class PantryFilterWidget extends StatelessWidget {
   final PantryFilterCubit pantryFilterCubit;
   final void Function(BuildContext) onClose = Navigator.pop;
 
-  PantryFilterWidget({Key key, @required this.pantryFilterCubit}) : super(key: key);
+  PantryFilterWidget({Key? key, required this.pantryFilterCubit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PantryFilterCubit, PantryFilterState>(
-      cubit: pantryFilterCubit,
+      bloc: pantryFilterCubit,
       builder: (context, state) {
         final pantryFilter = state is Filter ? (state as Filter).filter : PantryFilter.all();
         return Container(

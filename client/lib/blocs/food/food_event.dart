@@ -1,9 +1,10 @@
-import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:equatable/equatable.dart';
+
 import '../../models/food/custom_food.dart';
 import '../../models/food/edamam_food.dart';
 import '../../resources/firebase/analytics_service.dart';
+import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
 import '../searchable/searchable_event.dart';
 
@@ -11,7 +12,7 @@ abstract class FoodEvent extends Equatable {
   const FoodEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -24,7 +25,7 @@ class StreamFoodQuery extends FoodEvent with FetchQuery, DebouncedEvent implemen
   const StreamFoodQuery(this.query);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('food_search');
+  void track(AnalyticsService analytics) => analytics.logEvent('food_search');
 }
 
 class CreateCustomFood extends FoodEvent implements TrackedEvent {
@@ -33,7 +34,7 @@ class CreateCustomFood extends FoodEvent implements TrackedEvent {
   const CreateCustomFood(this.foodName);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('create_custom_food');
+  void track(AnalyticsService analytics) => analytics.logEvent('create_custom_food');
 }
 
 class DeleteCustomFood extends FoodEvent implements TrackedEvent {
@@ -42,7 +43,7 @@ class DeleteCustomFood extends FoodEvent implements TrackedEvent {
   const DeleteCustomFood(this.customFood);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('delete_custom_food');
+  void track(AnalyticsService analytics) => analytics.logEvent('delete_custom_food');
 }
 
 class LoadFoods extends FoodEvent {
@@ -50,10 +51,10 @@ class LoadFoods extends FoodEvent {
   final BuiltList<CustomFood> customFoods;
   final BuiltList<EdamamFood> edamamFoods;
 
-  const LoadFoods({@required this.query, @required this.customFoods, @required this.edamamFoods});
+  const LoadFoods({required this.query, required this.customFoods, required this.edamamFoods});
 
   @override
-  List<Object> get props => [query, customFoods, edamamFoods];
+  List<Object?> get props => [query, customFoods, edamamFoods];
 
   @override
   String toString() => 'LoadFoods { customFoods: ${customFoods.length}, edamamFoods: ${edamamFoods.length} }';
@@ -61,10 +62,10 @@ class LoadFoods extends FoodEvent {
 
 class ThrowFoodError extends FoodEvent with ErrorEvent {
   @override
-  final Object error;
+  final ErrorReport report;
 
-  @override
-  final StackTrace trace;
+  const ThrowFoodError({required this.report});
 
-  const ThrowFoodError({@required this.error, @required this.trace});
+  factory ThrowFoodError.fromError({required dynamic error, required StackTrace trace}) =>
+      ThrowFoodError(report: ErrorReport(error: error, trace: trace));
 }

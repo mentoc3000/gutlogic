@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -14,7 +13,7 @@ abstract class PantryEntryReference with Ided implements Built<PantryEntryRefere
 
   PantryEntryReference._();
 
-  factory PantryEntryReference({@required String id, @required Sensitivity sensitivity}) = _$PantryEntryReference._;
+  factory PantryEntryReference({required String id, required Sensitivity sensitivity}) = _$PantryEntryReference._;
 
   factory PantryEntryReference.fromBuilder(
       [PantryEntryReferenceBuilder Function(PantryEntryReferenceBuilder) updates]) = _$PantryEntryReference;

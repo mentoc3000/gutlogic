@@ -1,47 +1,41 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 import '../../util/logger.dart';
 
 class RemoteConfigService {
-  final RemoteConfig _remoteConfig;
-  static const Duration initializationTimeout = Duration(seconds: 5);
+  final RemoteConfig? _remoteConfig;
 
-  RemoteConfigService._({@required RemoteConfig remoteConfig, @required bool debugMode}) : _remoteConfig = remoteConfig;
+  RemoteConfigService._(RemoteConfig? remoteConfig) : _remoteConfig = remoteConfig;
 
-  static Future<RemoteConfigService> createAndInitialize({bool debugMode = false}) async {
+  static Future<RemoteConfigService> initialize({bool enabled = true}) async {
+    if (enabled == false) return RemoteConfigService._(null);
+
     final remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: debugMode));
-    // Defaults are not set here, but provided in the [_RemoteConfiguration]
-    final remoteConfigService = RemoteConfigService._(remoteConfig: remoteConfig, debugMode: debugMode);
-    await remoteConfigService._initialize();
-    return remoteConfigService;
-  }
 
-  /// Fetch latest remote config values and activate them.
-  Future<void> _initialize() async {
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 5),
+      minimumFetchInterval: const Duration(hours: 1),
+    ));
+
     try {
-      await _fetchAndActivate().timeout(initializationTimeout);
-    } on FetchThrottledException catch (exception) {
-      logger.w('Remote config fetch throttled: $exception');
-    } on TimeoutException catch (exception) {
-      logger.w('Fetch and activate timed out: $exception');
+      await remoteConfig.fetch();
+      await remoteConfig.activate();
     } catch (exception) {
       logger.e('''Unable to fetch remote config: $exception
-      Cached or default values will be used.
-      ''');
+                  Cached or default values will be used.''');
     }
-  }
 
-  Future<void> _fetchAndActivate() async {
-    await _remoteConfig.fetch();
-    await _remoteConfig.activateFetched();
+    // Defaults are embedded in the [RemoteConfiguration] passed to [get].
+    return RemoteConfigService._(remoteConfig);
   }
 
   T get<T>(RemoteConfiguration<T> configuration) {
-    final remoteConfigValue = _remoteConfig.getValue(configuration.key);
+    if (_remoteConfig == null) return configuration.defaultValue;
+
+    final remoteConfigValue = _remoteConfig!.getValue(configuration.key);
+
     logger.i('RemoteConfigService: ${configuration.key} retrieved from ${remoteConfigValue.source}');
 
     if (remoteConfigValue.source != ValueSource.valueRemote) {
@@ -69,6 +63,8 @@ class RemoteConfiguration<T> {
   final String key;
   final T defaultValue;
 
-  RemoteConfiguration({@required this.key, @required this.defaultValue})
-      : assert(T == bool || T == int || T == double || T == String);
+  RemoteConfiguration({
+    required this.key,
+    required this.defaultValue,
+  }) : assert(T == bool || T == int || T == double || T == String);
 }

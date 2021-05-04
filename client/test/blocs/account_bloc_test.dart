@@ -3,15 +3,18 @@ import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/auth/auth.dart';
 import 'package:gutlogic/blocs/account/account.dart';
 import 'package:gutlogic/models/application_user.dart';
+import 'package:gutlogic/resources/user_repository.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
-import '../mocks/mock_bloc_delegate.dart';
-import '../mocks/mock_user_repository.dart';
+import '../flutter_test_config.dart';
+import 'account_bloc_test.mocks.dart';
 
+@GenerateMocks([UserRepository])
 void main() {
   group('Account Bloc', () {
-    final UserRepository userRepository = MockUserRepository();
+    final userRepository = MockUserRepository();
 
     final user = ApplicationUser(
       id: '123',
@@ -21,7 +24,7 @@ void main() {
       providers: <AuthProvider>[].build(),
     );
 
-    ApplicationUser updatedUser;
+    ApplicationUser? updatedUser;
 
     when(userRepository.authenticated).thenReturn(true);
     when(userRepository.user).thenReturn(user);
@@ -34,34 +37,28 @@ void main() {
       expect(build().state, AccountReady(user: user));
     });
 
-    blocTest(
+    blocTest<AccountBloc, AccountState>(
       'updates account',
-      build: () {
-        mockBlocDelegate();
-        return build();
-      },
-      act: (bloc) async {
+      build: build,
+      act: (bloc) {
         updatedUser = user.rebuild((b) => b.email = 'evan@aol.com');
-        return bloc.add(AccountUpdate(user: updatedUser));
+        return bloc.add(AccountUpdate(user: updatedUser!));
       },
-      expect: [
+      expect: () => [
         AccountUpdated(),
         AccountReady(user: user),
       ],
       verify: (bloc) async {
-        verify(userRepository.updateMetadata(updatedUser: updatedUser)).called(1);
+        verify(userRepository.updateMetadata(updatedUser: updatedUser!)).called(1);
         verify(analyticsService.logEvent('profile_updated')).called(1);
       },
     );
 
-    blocTest(
+    blocTest<AccountBloc, AccountState>(
       'logs out',
-      build: () {
-        mockBlocDelegate();
-        return build();
-      },
-      act: (bloc) async => bloc.add(AccountLogOut()),
-      expect: [
+      build: build,
+      act: (bloc) => bloc.add(AccountLogOut()),
+      expect: () => [
         AccountLoggedOut(),
       ],
       verify: (bloc) async {

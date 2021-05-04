@@ -177,7 +177,7 @@ server:deploy:
     - client/.pub-cache
 
 .client:
-  image: cirrusci/flutter:1.22.6
+  image: cirrusci/flutter:2.0.5
   tags:
     - docker
   before_script:
@@ -223,6 +223,8 @@ client:prep:
       dotenv: client/version.env
     paths:
       - client/lib/**/*.g.dart
+      - client/test/**/*.mocks.dart
+      - client/bin/**/*.mocks.dart
     expire_in: 1 day
   cache:
     <<: *client-cache
@@ -237,7 +239,8 @@ client:lint:
     # Delete generated files after analysis but before formatting. They cause the formatter to quit with an error
     # because they are formatter to 80 columns. There's no way to change the source_gen formatting, and no way to
     # exclude the generated files, so we have to delete them (see https://github.com/dart-lang/dart_style/issues/864).
-    - find lib test -name "*.g.dart" -type f -delete
+    - find lib test bin -name "*.g.dart" -type f -delete
+    - find lib test bin -name "*.mocks.dart" -type f -delete
     - flutter format --line-length 120 --dry-run --set-exit-if-changed lib test
   rules:
     - *client-merge-request-rule

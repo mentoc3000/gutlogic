@@ -1,10 +1,8 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:meta/meta.dart';
 
 import '../auth/auth_provider.dart';
-import 'serializers.dart';
 
 part 'application_user.g.dart';
 
@@ -27,36 +25,22 @@ abstract class ApplicationUser implements Built<ApplicationUser, ApplicationUser
   /// The set of authentication providers this user has connected.
   BuiltList<AuthProvider> get providers;
 
-  @nullable
-  String get firstname;
-
-  @nullable
-  String get lastname;
-
-  @nullable
-  DateTime get birthdate;
-
-  Map<String, dynamic> toJSON() {
-    return serializers.serializeWith(_$applicationUserSerializer, this);
-  }
-
-  factory ApplicationUser.fromJSON(Map<String, dynamic> json) {
-    // TODO figure out a better way to handle default values
-    if (json.containsKey('consented') == false) json['consented'] = false;
-
-    return serializers.deserializeWith(_$applicationUserSerializer, json);
-  }
+  String? get firstname;
+  String? get lastname;
+  DateTime? get birthdate;
 
   factory ApplicationUser({
-    @required String id,
-    @required String email,
-    @required bool verified,
-    @required bool consented,
-    @required BuiltList<AuthProvider> providers,
+    required String id,
+    required String email,
+    required bool verified,
+    required bool consented,
+    required BuiltList<AuthProvider> providers,
     String firstname,
     String lastname,
     DateTime birthdate,
   }) = _$ApplicationUser._;
+
+  static void _initializeBuilder(ApplicationUserBuilder builder) => builder..consented = false;
 
   // built_value boilerplate
   ApplicationUser._();

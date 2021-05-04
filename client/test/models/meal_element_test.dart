@@ -46,15 +46,15 @@ void main() {
       final quantity = Quantity.fromBuilder((b) => b
         ..amount = 3.4
         ..measure.unit = 'Slices');
-      final Map<String, dynamic> foodReferenceJson = serializers.serialize(foodReference);
-      final Map<String, dynamic> quantityJson = serializers.serialize(quantity);
+      final foodReferenceJson = serializers.serialize(foodReference) as Map<String, dynamic>;
+      final quantityJson = serializers.serialize(quantity) as Map<String, dynamic>;
       final mealElementJson = {
         'id': 'mealEntry1#mealElement1',
         'foodReference': foodReferenceJson,
         'quantity': quantityJson..remove('\$'),
         'notes': 'tender',
       };
-      final mealElement = serializers.deserializeWith(MealElement.serializer, mealElementJson);
+      final mealElement = serializers.deserializeWith(MealElement.serializer, mealElementJson)!;
       expect(mealElement.foodReference, foodReference);
       expect(mealElement.quantity, quantity);
     });
@@ -70,8 +70,8 @@ void main() {
         quantity: quantity,
         notes: 'tender',
       );
-      final Map<String, dynamic> foodReferenceJson = serializers.serialize(foodReference);
-      final Map<String, dynamic> quantityJson = serializers.serialize(quantity);
+      final foodReferenceJson = serializers.serialize(foodReference) as Map<String, dynamic>;
+      final quantityJson = serializers.serialize(quantity) as Map<String, dynamic>;
       expect(serializers.serialize(mealElement), {
         '\$': 'MealElement',
         'id': 'mealEntry1#mealElement1',

@@ -19,8 +19,6 @@ String toFirebaseProviderID(AuthProvider value) {
     case AuthProvider.apple:
       return 'apple.com';
   }
-
-  throw ArgumentError('Unknown AuthProvider value $value');
 }
 
 /// Converts a firebase_auth provider ID to an AuthProvider value.

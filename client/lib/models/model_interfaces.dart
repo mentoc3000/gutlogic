@@ -1,5 +1,3 @@
-import 'package:built_value/built_value.dart';
-
 abstract class Searchable {
   String searchHeading();
   String queryText();
@@ -23,6 +21,5 @@ mixin Dated {
 
 mixin Noted {
   // TODO: remove nullability in noted
-  @nullable
-  String get notes;
+  String? get notes;
 }

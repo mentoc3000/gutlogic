@@ -10,7 +10,7 @@ abstract class LandingState extends Equatable {
   const LandingState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -30,16 +30,16 @@ class LandingSuccess extends LandingState {
 
 class LandingError extends LandingState with ErrorState, ErrorRecorder {
   @override
-  final ErrorReport report;
-
-  @override
   final String message;
 
-  const LandingError({@required this.message}) : report = null;
+  @override
+  final ErrorReport? report;
+
+  const LandingError({required this.message}) : report = null;
 
   factory LandingError.disabled() => const LandingError(message: 'Sorry, that account has been disabled.');
 
-  LandingError.fromError({@required dynamic error, @required StackTrace trace})
+  LandingError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 }

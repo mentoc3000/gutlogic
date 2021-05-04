@@ -1,8 +1,9 @@
-import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:equatable/equatable.dart';
+
 import '../../models/symptom_type.dart';
 import '../../resources/firebase/analytics_service.dart';
+import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
 import '../searchable/searchable_event.dart';
 
@@ -10,7 +11,7 @@ abstract class SymptomTypeEvent extends Equatable {
   const SymptomTypeEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -20,7 +21,7 @@ class FetchAllSymptomTypes extends SymptomTypeEvent with FetchAll implements Tra
   const FetchAllSymptomTypes();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('symptom_type_search');
+  void track(AnalyticsService analytics) => analytics.logEvent('symptom_type_search');
 }
 
 class FetchSymptomTypeQuery extends SymptomTypeEvent with FetchQuery implements TrackedEvent {
@@ -30,14 +31,14 @@ class FetchSymptomTypeQuery extends SymptomTypeEvent with FetchQuery implements 
   const FetchSymptomTypeQuery(this.query);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('symptom_type_search');
+  void track(AnalyticsService analytics) => analytics.logEvent('symptom_type_search');
 }
 
 class StreamAllSymptomTypes extends SymptomTypeEvent with StreamAll implements TrackedEvent {
   const StreamAllSymptomTypes();
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('symptom_type_search');
+  void track(AnalyticsService analytics) => analytics.logEvent('symptom_type_search');
 }
 
 class StreamSymptomTypeQuery extends SymptomTypeEvent with StreamQuery implements TrackedEvent {
@@ -47,7 +48,7 @@ class StreamSymptomTypeQuery extends SymptomTypeEvent with StreamQuery implement
   const StreamSymptomTypeQuery(this.query);
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logEvent('symptom_type_search');
+  void track(AnalyticsService analytics) => analytics.logEvent('symptom_type_search');
 }
 
 class LoadSymptomTypes extends SymptomTypeEvent with LoadSearchables {
@@ -59,10 +60,10 @@ class LoadSymptomTypes extends SymptomTypeEvent with LoadSearchables {
 
 class ThrowSymptomTypeError extends SymptomTypeEvent with ErrorEvent {
   @override
-  final Object error;
+  final ErrorReport report;
 
-  @override
-  final StackTrace trace;
+  const ThrowSymptomTypeError({required this.report});
 
-  const ThrowSymptomTypeError({@required this.error, @required this.trace});
+  factory ThrowSymptomTypeError.fromError({required dynamic error, required StackTrace trace}) =>
+      ThrowSymptomTypeError(report: ErrorReport(error: error, trace: trace));
 }

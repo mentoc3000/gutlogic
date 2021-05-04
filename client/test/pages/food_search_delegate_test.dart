@@ -14,16 +14,16 @@ import 'package:gutlogic/pages/search_delegate/food_search_delegate.dart';
 import 'package:gutlogic/widgets/gl_app_bar.dart';
 import 'package:gutlogic/widgets/gl_icons.dart';
 import 'package:gutlogic/widgets/gl_scaffold.dart';
-import 'package:mockito/mockito.dart';
 
-class MockFoodBloc extends MockBloc<FoodState> implements FoodBloc {}
+class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
 
 void main() {
-  FoodBloc foodBloc;
-  Food food;
+  late FoodBloc foodBloc;
+  late CustomFood food;
 
   setUp(() {
     foodBloc = MockFoodBloc();
+    whenListen(foodBloc, const Stream.empty(), initialState: FoodsLoading());
     food = CustomFood(id: '1', name: 'Fruit Cake');
   });
 
@@ -68,7 +68,7 @@ void main() {
     });
 
     testWidgets('displays message when no results are found', (WidgetTester tester) async {
-      when(foodBloc.state).thenReturn(NoFoodsFound(query: ''));
+      whenListen(foodBloc, Stream.value(NoFoodsFound(query: '')), initialState: FoodsLoading());
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
@@ -92,8 +92,9 @@ void main() {
     });
 
     testWidgets('shows search results', (WidgetTester tester) async {
-      when(foodBloc.state).thenReturn(
-          FoodsLoaded(query: '', customFoods: <CustomFood>[food].build(), edamamFoods: <EdamamFood>[].build()));
+      whenListen(foodBloc,
+          Stream.value(FoodsLoaded(query: '', customFoods: [food].build(), edamamFoods: <EdamamFood>[].build())),
+          initialState: FoodsLoading());
 
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
@@ -124,8 +125,9 @@ void main() {
     });
 
     testWidgets('clears search', (WidgetTester tester) async {
-      when(foodBloc.state).thenReturn(
-          FoodsLoaded(query: '', customFoods: <CustomFood>[food].build(), edamamFoods: <EdamamFood>[].build()));
+      whenListen(foodBloc,
+          Stream.value(FoodsLoaded(query: '', customFoods: [food].build(), edamamFoods: <EdamamFood>[].build())),
+          initialState: FoodsLoading());
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
@@ -179,7 +181,7 @@ void main() {
 
     testWidgets('shows error', (WidgetTester tester) async {
       const message = 'Oh no! Something TERRIBLE happened!';
-      when(foodBloc.state).thenReturn(FoodError(message: message));
+      whenListen(foodBloc, Stream.value(FoodError(message: message)), initialState: FoodsLoading());
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
@@ -204,17 +206,17 @@ void main() {
 
 class TestHomePage extends StatelessWidget {
   const TestHomePage({
-    Key key,
+    Key? key,
     this.results,
-    this.delegate,
+    required this.delegate,
     this.passInInitialQuery = false,
     this.initialQuery,
   }) : super(key: key);
 
-  final List<Food> results;
+  final List<Food>? results;
   final FoodSearchDelegate delegate;
   final bool passInInitialQuery;
-  final String initialQuery;
+  final String? initialQuery;
 
   @override
   Widget build(BuildContext context) {
@@ -228,20 +230,22 @@ class TestHomePage extends StatelessWidget {
                 tooltip: 'Search',
                 icon: const Icon(GLIcons.search),
                 onPressed: () async {
-                  Food selectedResult;
+                  Food? selectedResult;
                   if (passInInitialQuery) {
-                    selectedResult = await showSearch<Food>(
+                    selectedResult = await showSearch<Food?>(
                       context: context,
                       delegate: delegate,
                       query: initialQuery,
                     );
                   } else {
-                    selectedResult = await showSearch<Food>(
+                    selectedResult = await showSearch<Food?>(
                       context: context,
                       delegate: delegate,
                     );
                   }
-                  results?.add(selectedResult);
+                  if (selectedResult != null) {
+                    results?.add(selectedResult);
+                  }
                 },
               ),
             ],

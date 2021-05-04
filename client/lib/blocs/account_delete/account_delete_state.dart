@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../util/error_report.dart';
 import '../../util/exception_messages.dart';
@@ -9,7 +8,7 @@ abstract class AccountDeleteState extends Equatable {
   const AccountDeleteState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -33,16 +32,16 @@ class AccountDeleteDone extends AccountDeleteState {
 
 class AccountDeleteError extends AccountDeleteState with ErrorState, ErrorRecorder {
   @override
-  final ErrorReport report;
-
-  @override
   final String message;
 
-  const AccountDeleteError({@required this.message}) : report = null;
+  @override
+  final ErrorReport? report;
+
+  const AccountDeleteError({required this.message}) : report = null;
 
   factory AccountDeleteError.password() => const AccountDeleteError(message: 'Sorry, that password is incorrect.');
 
-  AccountDeleteError.fromError({@required dynamic error, @required StackTrace trace})
+  AccountDeleteError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 }

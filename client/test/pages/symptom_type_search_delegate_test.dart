@@ -11,13 +11,12 @@ import 'package:gutlogic/pages/search_delegate/symptom_type_search_delegate.dart
 import 'package:gutlogic/widgets/gl_app_bar.dart';
 import 'package:gutlogic/widgets/gl_icons.dart';
 import 'package:gutlogic/widgets/gl_scaffold.dart';
-import 'package:mockito/mockito.dart';
 
-class MockSymptomTypeBloc extends MockBloc<SymptomTypeState> implements SymptomTypeBloc {}
+class MockSymptomTypeBloc extends MockBloc<SymptomTypeEvent, SymptomTypeState> implements SymptomTypeBloc {}
 
 void main() {
-  SymptomTypeBloc symptomTypeBloc;
-  SymptomType symptomType;
+  late SymptomTypeBloc symptomTypeBloc;
+  late SymptomType symptomType;
 
   setUp(() {
     symptomTypeBloc = MockSymptomTypeBloc();
@@ -30,7 +29,9 @@ void main() {
 
   group('SymptomTypeSearchDelegate', () {
     testWidgets('opens and closes search', (WidgetTester tester) async {
-      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc);
+      whenListen(symptomTypeBloc, Stream.value(SymptomTypesLoaded([symptomType].build())),
+          initialState: SymptomTypesLoading());
+      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc, onSelect: (_) {});
       final selectedResults = <SymptomType>[];
 
       final homepage = MultiBlocProvider(
@@ -65,8 +66,9 @@ void main() {
     });
 
     testWidgets('shows all results when query is blank', (WidgetTester tester) async {
-      when(symptomTypeBloc.state).thenReturn(SymptomTypesLoaded(BuiltList.from([symptomType])));
-      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc);
+      whenListen(symptomTypeBloc, Stream.value(SymptomTypesLoaded(BuiltList.from([symptomType]))),
+          initialState: SymptomTypesLoading());
+      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
         providers: [BlocProvider<SymptomTypeBloc>.value(value: symptomTypeBloc)],
@@ -83,8 +85,9 @@ void main() {
     });
 
     testWidgets('shows search results', (WidgetTester tester) async {
-      when(symptomTypeBloc.state).thenReturn(SymptomTypesLoaded(BuiltList.from([symptomType])));
-      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc);
+      whenListen(symptomTypeBloc, Stream.value(SymptomTypesLoaded(BuiltList.from([symptomType]))),
+          initialState: SymptomTypesLoading());
+      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
         providers: [BlocProvider<SymptomTypeBloc>.value(value: symptomTypeBloc)],
@@ -116,8 +119,9 @@ void main() {
     });
 
     testWidgets('clears search', (WidgetTester tester) async {
-      when(symptomTypeBloc.state).thenReturn(SymptomTypesLoaded(BuiltList.from([symptomType])));
-      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc);
+      whenListen(symptomTypeBloc, Stream.value(SymptomTypesLoaded(BuiltList.from([symptomType]))),
+          initialState: SymptomTypesLoading());
+      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
         providers: [BlocProvider<SymptomTypeBloc>.value(value: symptomTypeBloc)],
@@ -147,8 +151,9 @@ void main() {
 
     testWidgets('shows error', (WidgetTester tester) async {
       const message = 'Oh no! Something TERRIBLE happened!';
-      when(symptomTypeBloc.state).thenReturn(SymptomTypeError(message: message));
-      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc);
+      whenListen(symptomTypeBloc, Stream.value(SymptomTypeError(message: message)),
+          initialState: SymptomTypesLoading());
+      final delegate = SymptomTypeSearchDelegate(symptomTypeBloc: symptomTypeBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
         providers: [BlocProvider<SymptomTypeBloc>.value(value: symptomTypeBloc)],
@@ -172,17 +177,17 @@ void main() {
 
 class TestHomePage extends StatelessWidget {
   const TestHomePage({
-    Key key,
+    Key? key,
     this.results,
-    this.delegate,
+    required this.delegate,
     this.passInInitialQuery = false,
     this.initialQuery,
   }) : super(key: key);
 
-  final List<SymptomType> results;
+  final List<SymptomType>? results;
   final SymptomTypeSearchDelegate delegate;
   final bool passInInitialQuery;
-  final String initialQuery;
+  final String? initialQuery;
 
   @override
   Widget build(BuildContext context) {
@@ -196,20 +201,22 @@ class TestHomePage extends StatelessWidget {
                 tooltip: 'Search',
                 icon: const Icon(GLIcons.search),
                 onPressed: () async {
-                  SymptomType selectedResult;
+                  SymptomType? selectedResult;
                   if (passInInitialQuery) {
-                    selectedResult = await showSearch<SymptomType>(
+                    selectedResult = await showSearch<SymptomType?>(
                       context: context,
                       delegate: delegate,
                       query: initialQuery,
                     );
                   } else {
-                    selectedResult = await showSearch<SymptomType>(
+                    selectedResult = await showSearch<SymptomType?>(
                       context: context,
                       delegate: delegate,
                     );
                   }
-                  results?.add(selectedResult);
+                  if (selectedResult != null) {
+                    results?.add(selectedResult);
+                  }
                 },
               ),
             ],

@@ -1,6 +1,5 @@
-import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../models/symptom_type.dart';
 import '../../util/error_report.dart';
@@ -12,7 +11,7 @@ abstract class SymptomTypeState extends Equatable {
   const SymptomTypeState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -32,11 +31,14 @@ class SymptomTypeError extends SymptomTypeState with ErrorState, ErrorRecorder {
   final String message;
 
   @override
-  final ErrorReport report;
+  final ErrorReport? report;
 
-  SymptomTypeError({@required this.message}) : report = null;
+  SymptomTypeError({required this.message}) : report = null;
 
-  SymptomTypeError.fromError({@required dynamic error, @required StackTrace trace})
+  SymptomTypeError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
+
+  factory SymptomTypeError.fromReport(ErrorReport report) =>
+      SymptomTypeError.fromError(error: report.error, trace: report.trace);
 }

@@ -1,20 +1,22 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/auth/auth.dart';
-import 'package:gutlogic/blocs/change_password/change_password.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
+import 'package:gutlogic/blocs/change_password/change_password.dart';
 import 'package:gutlogic/models/application_user.dart';
 import 'package:gutlogic/resources/user_repository.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../mocks/mock_bloc_delegate.dart';
+import '../flutter_test_config.dart';
 import '../mocks/mock_firebase_auth.dart';
-import '../mocks/mock_user_repository.dart';
+import 'change_password_bloc_test.mocks.dart';
 
+@GenerateMocks([UserRepository])
 void main() {
   group('Change Password Bloc', () {
-    final UserRepository userRepository = MockUserRepository();
+    final userRepository = MockUserRepository();
 
     final passwordUser = ApplicationUser(
       id: '123',
@@ -32,8 +34,6 @@ void main() {
     );
     const currentPassword = '4%,g!y@5)@G>dHxB}FN_';
     const updatedPassword = 'BNk5(!~8/%Tnpr3Hj8JC';
-    const mismatchedPassword = 'ihkiPa6]@/jcYi|fp9e"';
-    const badPassword = '123';
 
     when(userRepository.authenticated).thenReturn(true);
 
@@ -52,61 +52,9 @@ void main() {
       );
     });
 
-    blocTest(
-      'updates unmatching passwords',
-      build: () {
-        when(userRepository.user).thenReturn(passwordUser);
-        return ChangePasswordBloc(
-          userRepository: userRepository,
-          authenticator: MockAuthenticator(),
-        );
-      },
-      act: (bloc) async => bloc.add(ChangePasswordUpdated(
-        currentPassword: currentPassword,
-        updatedPassword: updatedPassword,
-        updatedRepeated: mismatchedPassword,
-      )),
-      expect: [ChangePasswordEntry(user: passwordUser, isValid: true, isRepeated: false)],
-    );
-
-    blocTest(
-      'updates matching invalid passwords',
-      build: () {
-        when(userRepository.user).thenReturn(passwordUser);
-        return ChangePasswordBloc(
-          userRepository: userRepository,
-          authenticator: MockAuthenticator(),
-        );
-      },
-      act: (bloc) async => bloc.add(ChangePasswordUpdated(
-        currentPassword: currentPassword,
-        updatedPassword: badPassword,
-        updatedRepeated: badPassword,
-      )),
-      expect: [ChangePasswordEntry(user: passwordUser, isValid: false, isRepeated: true)],
-    );
-
-    blocTest(
-      'updates matching valid passwords',
-      build: () {
-        when(userRepository.user).thenReturn(passwordUser);
-        return ChangePasswordBloc(
-          userRepository: userRepository,
-          authenticator: MockAuthenticator(),
-        );
-      },
-      act: (bloc) async => bloc.add(ChangePasswordUpdated(
-        currentPassword: currentPassword,
-        updatedPassword: updatedPassword,
-        updatedRepeated: updatedPassword,
-      )),
-      expect: [ChangePasswordEntry(user: passwordUser, isValid: true, isRepeated: true)],
-    );
-
-    blocTest(
+    blocTest<ChangePasswordBloc, ChangePasswordState>(
       'submits password update',
       build: () {
-        mockBlocDelegate();
         when(userRepository.user).thenReturn(passwordUser);
         return ChangePasswordBloc(
           userRepository: userRepository,
@@ -119,7 +67,7 @@ void main() {
           updatedPassword: updatedPassword,
         ));
       },
-      expect: [
+      expect: () => [
         ChangePasswordLoading(user: passwordUser),
         ChangePasswordSuccess(user: passwordUser),
       ],
@@ -132,7 +80,7 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<ChangePasswordBloc, ChangePasswordState>(
       'submits password update to federated account',
       build: () {
         when(userRepository.user).thenReturn(federatedUser);
@@ -147,7 +95,7 @@ void main() {
           updatedPassword: updatedPassword,
         ));
       },
-      expect: [
+      expect: () => [
         ChangePasswordLoading(user: federatedUser),
         ChangePasswordSuccess(user: federatedUser),
       ],
@@ -160,7 +108,16 @@ void main() {
     );
 
     test('errors are recorded', () {
-      expect(const ChangePasswordError(message: '', user: null) is ErrorRecorder, true);
+      expect(
+          ChangePasswordError(
+              message: '',
+              user: ApplicationUser(
+                  consented: true,
+                  email: '',
+                  id: '',
+                  providers: <AuthProvider>[].build(),
+                  verified: true)) is ErrorRecorder,
+          true);
     });
   });
 }

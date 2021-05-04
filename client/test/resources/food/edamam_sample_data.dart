@@ -21,7 +21,7 @@ const brownRiceCakeResult = {
   ]
 };
 
-final EdamamApiEntry brownRiceCakeEntry = serializers.deserializeWith(EdamamApiEntry.serializer, brownRiceCakeResult);
+final EdamamApiEntry brownRiceCakeEntry = serializers.deserializeWith(EdamamApiEntry.serializer, brownRiceCakeResult)!;
 
 const asparagusResult = {
   'food': {
@@ -109,7 +109,7 @@ const asparagusResult = {
   ]
 };
 
-final EdamamApiEntry asparagusEntry = serializers.deserializeWith(EdamamApiEntry.serializer, asparagusResult);
+final EdamamApiEntry asparagusEntry = serializers.deserializeWith(EdamamApiEntry.serializer, asparagusResult)!;
 
 const appleQueryResults = [
   {
@@ -782,7 +782,7 @@ const appleQueryResults = [
 ];
 
 final List<EdamamApiEntry> appleQueryEntries =
-    appleQueryResults.map((e) => serializers.deserializeWith(EdamamApiEntry.serializer, e)).toList();
+    appleQueryResults.map((e) => serializers.deserializeWith(EdamamApiEntry.serializer, e)!).toList();
 
 const avocadoQueryResults = [
   {
@@ -1472,4 +1472,4 @@ const avocadoQueryResults = [
 ];
 
 final List<EdamamApiEntry> avocadoQueryEntries =
-    avocadoQueryResults.map((e) => serializers.deserializeWith(EdamamApiEntry.serializer, e)).toList();
+    avocadoQueryResults.map((e) => serializers.deserializeWith(EdamamApiEntry.serializer, e)!).toList();

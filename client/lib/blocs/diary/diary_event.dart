@@ -1,17 +1,19 @@
-import 'package:meta/meta.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../models/diary_entry/bowel_movement_entry.dart';
 import '../../models/diary_entry/diary_entry.dart';
 import '../../models/diary_entry/meal_entry.dart';
 import '../../models/diary_entry/symptom_entry.dart';
 import '../../resources/firebase/analytics_service.dart';
+import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
 
 abstract class DiaryEvent extends Equatable {
   const DiaryEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class StreamAllDiary extends DiaryEvent {
@@ -22,22 +24,22 @@ class StreamRange extends DiaryEvent {
   final DateTime start;
   final DateTime end;
 
-  const StreamRange({@required this.start, this.end});
+  const StreamRange({required this.start, required this.end});
 
   @override
-  List<Object> get props => [start, end];
+  List<Object?> get props => [start, end];
 
   @override
   String toString() => 'StreamRange { start: $start, end: $end }';
 }
 
 class Load extends DiaryEvent {
-  final Iterable<DiaryEntry> diaryEntries;
+  final BuiltList<DiaryEntry> diaryEntries;
 
-  const Load({@required this.diaryEntries});
+  const Load({required this.diaryEntries});
 
   @override
-  List<Object> get props => [diaryEntries];
+  List<Object?> get props => [diaryEntries];
 
   @override
   String toString() => 'LoadEntries { diaryEntries: ${diaryEntries.length}}';
@@ -49,18 +51,18 @@ class Delete extends DiaryEvent implements TrackedEvent {
   const Delete(this.diaryEntry);
 
   @override
-  List<Object> get props => [diaryEntry];
+  List<Object?> get props => [diaryEntry];
 
   @override
-  void track(AnalyticsService analyticsService) {
+  void track(AnalyticsService analytics) {
     if (diaryEntry is MealEntry) {
-      analyticsService.logEvent('delete_meal_entry');
+      analytics.logEvent('delete_meal_entry');
     }
     if (diaryEntry is BowelMovementEntry) {
-      analyticsService.logEvent('delete_bowel_movement_entry');
+      analytics.logEvent('delete_bowel_movement_entry');
     }
     if (diaryEntry is SymptomEntry) {
-      analyticsService.logEvent('delete_symptom_entry');
+      analytics.logEvent('delete_symptom_entry');
     }
   }
 
@@ -74,15 +76,15 @@ class Undelete extends DiaryEvent {
   const Undelete(this.diaryEntry);
 
   @override
-  List<Object> get props => [diaryEntry];
+  List<Object?> get props => [diaryEntry];
 }
 
-class Throw extends DiaryEvent with ErrorEvent {
+class ThrowDiaryError extends DiaryEvent with ErrorEvent {
   @override
-  final dynamic error;
+  final ErrorReport report;
 
-  @override
-  final StackTrace trace;
+  const ThrowDiaryError({required this.report});
 
-  const Throw({@required this.error, @required this.trace});
+  factory ThrowDiaryError.fromError({required dynamic error, required StackTrace trace}) =>
+      ThrowDiaryError(report: ErrorReport(error: error, trace: trace));
 }

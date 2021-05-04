@@ -36,9 +36,9 @@ class MealElementEntryPage extends StatelessWidget {
   void listener(BuildContext context, MealElementState state) {
     if (state is MealElementLoaded) {
       // Update text here to allow changes to save without submitting, but avoid cursor jumps
-      _notesController.text = state.mealElement.notes;
+      _notesController.text = state.mealElement.notes ?? '';
       _amountController.text = QuantityCard.formatAmount(state.mealElement.quantity?.amount);
-      _unitController.text = state.mealElement.quantity?.measure?.unit;
+      _unitController.text = state.mealElement.quantity?.measure?.unit ?? '';
     }
   }
 
@@ -46,7 +46,7 @@ class MealElementEntryPage extends StatelessWidget {
     return currentState is MealElementLoaded && !(previousState is MealElementLoaded);
   }
 
-  Widget appBarBuilder(BuildContext context, MealElementState state) {
+  AppBar appBarBuilder(BuildContext context, MealElementState state) {
     if (state is MealElementLoaded) {
       return GLAppBar(title: state.mealElement.foodReference.name);
     } else {

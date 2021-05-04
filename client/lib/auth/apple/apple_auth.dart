@@ -3,12 +3,11 @@ import 'package:flutter/services.dart';
 
 import '../../util/app_channel.dart';
 import '../auth.dart';
-import '../auth_platform.dart';
 import '../auth_provider.dart';
 import '../auth_result.dart';
 import '../auth_utils.dart';
 
-class AppleAuth implements AuthPlatform {
+class AppleAuth {
   static final OAuthProvider _oauth = OAuthProvider('apple.com');
   static const AppleAuthChannel _channel = AppleAuthChannel();
 
@@ -27,7 +26,11 @@ class AppleAuth implements AuthPlatform {
   /// Asynchronously query and cache the availability of Apple authentication on this platform.
   static Future<void> queryAndCacheAvailability() async {
     if (_cachedAvailabilityChecked == false) {
-      _cachedAvailability = await _channel.invokeMethod<bool>('available');
+      try {
+        _cachedAvailability = await _channel.invokeMethod<bool>('available') ?? false;
+      } on PlatformException {
+        _cachedAvailability = false;
+      }
       _cachedAvailabilityChecked = true;
     }
   }
@@ -46,7 +49,6 @@ class AppleAuth implements AuthPlatform {
   //   return AppleIDCredentialState.unknown;
   // }
 
-  @override
   Future<AuthResult> authenticate() async {
     if (available == false) throw 'Sign in with Apple is not available on this platform.';
 
@@ -57,7 +59,7 @@ class AppleAuth implements AuthPlatform {
 
     try {
       // TODO can we do this silently?
-      result = await _channel.invokeMapMethod<String, String>('authenticate', {'nonce': encNonce});
+      result = await _channel.invokeMapMethod<String, String>('authenticate', {'nonce': encNonce}) ?? {};
     } on PlatformException catch (ex) {
       if (ex.code == 'AUTHORIZATION_ERROR/CANCELED') {
         throw CancelledAuthenticationException();
@@ -94,7 +96,6 @@ class AppleAuth implements AuthPlatform {
     return AuthResult(provider: AuthProvider.apple, email: result['email'], credential: cred);
   }
 
-  @override
   Future<void> deauthenticate() async {
     if (available == false) return;
 

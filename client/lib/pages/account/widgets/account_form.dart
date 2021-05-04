@@ -11,7 +11,6 @@ import '../../../widgets/snack_bars/info_snack_bar.dart';
 import '../../error_page.dart';
 import '../../loading_page.dart';
 import 'account_delete_dialog.dart';
-import 'delete_account_button.dart';
 
 class AccountForm extends StatefulWidget {
   @override
@@ -19,8 +18,8 @@ class AccountForm extends StatefulWidget {
 }
 
 class AccountFormState extends State<AccountForm> {
-  final TextEditingController firstNameTextController = TextEditingController();
-  final TextEditingController lastNameTextController = TextEditingController();
+  final firstNameTextController = TextEditingController();
+  final lastNameTextController = TextEditingController();
 
   @override
   void initState() {
@@ -44,8 +43,7 @@ class AccountFormState extends State<AccountForm> {
     updateTextControllerValues();
     if (state is AccountUpdated) {
       // TODO: upon saving, remove focus on text fields
-      final snackbar = InfoSnackBar(text: 'Account updated');
-      Scaffold.of(context).showSnackBar(snackbar);
+      ScaffoldMessenger.of(context).showSnackBar(InfoSnackBar(text: 'Account updated'));
     }
   }
 
@@ -53,8 +51,8 @@ class AccountFormState extends State<AccountForm> {
     final state = context.read<AccountBloc>().state;
 
     if (state is AccountReady) {
-      firstNameTextController.text = state.user.firstname;
-      lastNameTextController.text = state.user.lastname;
+      firstNameTextController.text = state.user.firstname ?? '';
+      lastNameTextController.text = state.user.lastname ?? '';
     }
   }
 
@@ -74,13 +72,13 @@ class AccountFormState extends State<AccountForm> {
     return ListView(
       children: [
         const SizedBox(height: 20),
-        buildAccountFormField(label: 'First Name', controller: firstNameTextController, enabled: isFormEnabled),
+        buildAccountFormField(controller: firstNameTextController, label: 'First Name', enabled: isFormEnabled),
         const SizedBox(height: 20),
-        buildAccountFormField(label: 'Last Name', controller: lastNameTextController, enabled: isFormEnabled),
+        buildAccountFormField(controller: lastNameTextController, label: 'Last Name', enabled: isFormEnabled),
         const SizedBox(height: 20),
         buildChangePasswordButton(onPressed: onChangePasswordPressed),
         const SizedBox(height: 20),
-        buildSaveButton(onPressed: isFormEnabled ? () => onSavePressed(user) : null),
+        buildSaveButton(onPressed: isFormEnabled ? () => onSavePressed(user!) : null),
         const SizedBox(height: 20),
         buildLogoutButton(onPressed: isFormEnabled ? onLogOutPressed : null),
         const SizedBox(height: 20),
@@ -117,7 +115,11 @@ class AccountFormState extends State<AccountForm> {
     return LoadingPage();
   }
 
-  static GLTextFormField buildAccountFormField({String label, TextEditingController controller, bool enabled}) {
+  static GLTextFormField buildAccountFormField({
+    required TextEditingController controller,
+    required String label,
+    required bool enabled,
+  }) {
     return GLTextFormField(
       controller: controller,
       enabled: enabled,
@@ -125,30 +127,30 @@ class AccountFormState extends State<AccountForm> {
     );
   }
 
-  static Widget buildChangePasswordButton({VoidCallback onPressed}) {
+  static Widget buildChangePasswordButton({VoidCallback? onPressed}) {
     return GLSecondaryButton(
       child: const StretchedButtonContent(label: 'Change Password'),
       onPressed: onPressed,
     );
   }
 
-  static Widget buildSaveButton({VoidCallback onPressed}) {
+  static Widget buildSaveButton({VoidCallback? onPressed}) {
     return GLPrimaryButton(
       child: const StretchedButtonContent(label: 'Save'),
       onPressed: onPressed,
     );
   }
 
-  static Widget buildLogoutButton({VoidCallback onPressed}) {
+  static Widget buildLogoutButton({VoidCallback? onPressed}) {
     return GLWarningButton(
       child: const StretchedButtonContent(label: 'Logout'),
       onPressed: onPressed,
     );
   }
 
-  static Widget buildDeleteButton({VoidCallback onPressed}) {
+  static Widget buildDeleteButton({VoidCallback? onPressed}) {
     // TODO: differentiate this style from logout
-    return DeleteAccountButton(
+    return GLWarningButton(
       child: const StretchedButtonContent(label: 'Delete Account'),
       onPressed: onPressed,
     );

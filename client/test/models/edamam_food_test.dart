@@ -32,7 +32,7 @@ void main() {
           {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram', 'label': 'Kilogram', 'weight': 1000}
         ]
       };
-      final food = serializers.deserializeWith(EdamamFood.serializer, foodJson);
+      final food = serializers.deserializeWith(EdamamFood.serializer, foodJson)!;
       expect(food.name, foodJson['name']);
     });
 

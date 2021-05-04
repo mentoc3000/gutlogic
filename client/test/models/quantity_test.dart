@@ -8,15 +8,15 @@ void main() {
     test('constructs simple object', () {
       final quantity = Quantity(amount: 3, measure: Measure(unit: 'Cup', weight: 240));
       expect(quantity.amount, 3.0);
-      expect(quantity.measure.unit, 'Cup');
-      expect(quantity.measure.weight, 240);
+      expect(quantity.measure!.unit, 'Cup');
+      expect(quantity.measure!.weight, 240);
     });
 
     test('constructs object from amount and unit', () {
       final quantity = Quantity.unweighed(amount: 3, unit: 'Tablespoons');
       expect(quantity.amount, 3.0);
-      expect(quantity.measure.unit, 'Tablespoons');
-      expect(quantity.measure.weight, null);
+      expect(quantity.measure!.unit, 'Tablespoons');
+      expect(quantity.measure!.weight, null);
     });
 
     test('constructs empty', () {
@@ -39,8 +39,8 @@ void main() {
         'measure': serializers.serializeWith(Measure.serializer, measure),
       };
       final quantity = serializers.deserializeWith(Quantity.serializer, quantityJson);
-      expect(quantity.amount, 3.0);
-      expect(quantity.measure.unit, 'Cup');
+      expect(quantity!.amount, 3.0);
+      expect(quantity.measure!.unit, 'Cup');
     });
 
     test('is serializable', () {
@@ -65,7 +65,7 @@ void main() {
       final quantity1 = Quantity(amount: 1, measure: measure1);
       final quantity2 = quantity1.convertTo(measure2);
       expect(quantity2.amount, 16);
-      expect(quantity2.measure.unit, measure2.unit);
+      expect(quantity2.measure!.unit, measure2.unit);
     });
 
     test('converts to unweighed measure', () {
@@ -74,8 +74,8 @@ void main() {
       final quantity1 = Quantity(amount: 1, measure: measure1);
       final quantity2 = quantity1.convertTo(measure2);
       expect(quantity2.amount, quantity1.amount);
-      expect(quantity2.measure.unit, measure2.unit);
-      expect(quantity2.measure.weight, null);
+      expect(quantity2.measure!.unit, measure2.unit);
+      expect(quantity2.measure!.weight, null);
     });
   });
 }

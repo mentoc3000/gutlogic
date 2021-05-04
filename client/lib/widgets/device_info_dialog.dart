@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+
 import '../style/gl_colors.dart';
 import '../util/app_config.dart';
 import '../util/device_utils.dart';
@@ -13,7 +14,6 @@ Color getAppEnvironmentColor(Environment env) {
     case Environment.production:
       return GLColors.production;
   }
-  throw 'Unknown environment $env';
 }
 
 class DeviceInfoDialog extends StatelessWidget {
@@ -25,7 +25,7 @@ class DeviceInfoDialog extends StatelessWidget {
       contentPadding: const EdgeInsets.only(bottom: 10.0),
       title: Container(
         padding: const EdgeInsets.all(15.0),
-        color: getAppEnvironmentColor(AppConfig.of(context).environment),
+        color: getAppEnvironmentColor(AppConfig.of(context)?.environment ?? Environment.development),
         child: const Text(
           'Device Info',
           style: TextStyle(color: GLColors.white),
@@ -52,8 +52,11 @@ class DeviceInfoDialog extends StatelessWidget {
     return FutureBuilder(
         future: androidDeviceInfo,
         builder: (context, AsyncSnapshot<AndroidDeviceInfo> snapshot) {
+          if (appconfig == null) return Container();
           if (!snapshot.hasData) return Container();
-          final device = snapshot.data;
+
+          final device = snapshot.requireData;
+
           return SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -74,38 +77,35 @@ class DeviceInfoDialog extends StatelessWidget {
     final appconfig = AppConfig.of(context);
 
     return FutureBuilder(
-        future: iosDeviceInfo,
-        builder: (context, AsyncSnapshot<IosDeviceInfo> snapshot) {
-          if (!snapshot.hasData) return Container();
+      future: iosDeviceInfo,
+      builder: (context, AsyncSnapshot<IosDeviceInfo> snapshot) {
+        if (appconfig == null) return Container();
+        if (!snapshot.hasData) return Container();
 
-          final device = snapshot.data;
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _buildTile('Flavor:', appconfig.name),
-                _buildTile('Build mode:', appconfig.buildmode),
-                _buildTile('Physical device:', device.isPhysicalDevice),
-                _buildTile('Device:', device.name),
-                _buildTile('Model:', device.model),
-                _buildTile('System name:', device.systemName),
-                _buildTile('System version:', device.systemVersion)
-              ],
-            ),
-          );
-        });
+        final device = snapshot.requireData;
+
+        return SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _buildTile('Flavor:', appconfig.name),
+              _buildTile('Build mode:', appconfig.buildmode),
+              _buildTile('Physical device:', device.isPhysicalDevice),
+              _buildTile('Device:', device.name),
+              _buildTile('Model:', device.model),
+              _buildTile('System name:', device.systemName),
+              _buildTile('System version:', device.systemVersion)
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildTile(String key, Object value) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Row(
-        children: <Widget>[
-          Text(
-            key,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text(value.toString())
-        ],
+        children: [Text(key, style: const TextStyle(fontWeight: FontWeight.bold)), Text(value.toString())],
       ),
     );
   }

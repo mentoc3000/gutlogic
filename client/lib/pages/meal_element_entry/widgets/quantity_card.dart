@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+
 import '../../../models/measure.dart';
 import '../../../models/quantity.dart';
 import '../../../widgets/cards/gl_card.dart';
@@ -8,12 +7,10 @@ import 'amount_text_field.dart';
 import 'unit_dropdown.dart';
 import 'unit_text_field.dart';
 
-final _defaultQuantity = Quantity();
-
 class QuantityCard extends StatelessWidget {
   final Quantity quantity;
-  final void Function(Quantity) onChanged;
-  final Iterable<Measure> measureOptions;
+  final void Function(Quantity)? onChanged;
+  final Iterable<Measure>? measureOptions;
   final TextEditingController unitController;
   final TextEditingController amountController;
 
@@ -23,42 +20,42 @@ class QuantityCard extends StatelessWidget {
   ///
   /// If [measureOptions] are provided, then the unit selector is a dropdown, limited choices to that selection.
   /// If [measureOptions] is not provided, then the unit input is a [TextField].
-  QuantityCard(
-      {Quantity quantity,
-      @required this.onChanged,
-      @required this.unitController,
-      @required this.amountController,
-      this.measureOptions})
-      : quantity = quantity ?? _defaultQuantity;
+  QuantityCard({
+    Quantity? quantity,
+    this.onChanged,
+    required this.unitController,
+    required this.amountController,
+    this.measureOptions,
+  }) : quantity = quantity ?? Quantity();
 
-  Widget _buildAmountInput(BuildContext context) {
+  Widget buildAmountInput(BuildContext context) {
     return AmountTextField(
       controller: amountController,
       onChanged: (amount) {
         final newQuantity = quantity.rebuild((b) => b..amount = amount);
-        onChanged(newQuantity);
+        onChanged?.call(newQuantity);
       },
     );
   }
 
-  Widget _buildUnitInput(BuildContext context) {
-    final initialUnit = quantity.measure?.unit;
-
+  Widget buildUnitInput(BuildContext context) {
     if (measureOptions == null) {
       return UnitTextField(
         controller: unitController,
-        onChanged: (String unit) => onChanged(quantity.rebuild((b) => b.measure = Measure(unit: unit).toBuilder())),
+        onChanged: (String unit) {
+          onChanged?.call(quantity.rebuild((b) => b.measure = Measure(unit: unit).toBuilder()));
+        },
       );
     } else {
       return Center(
         child: UnitDropdown(
-          initialUnit: initialUnit,
-          unitOptions: measureOptions.map((e) => e.unit),
+          initialUnit: quantity.measure?.unit ?? measureOptions!.first.unit,
+          unitOptions: measureOptions!.map((e) => e.unit),
           onChanged: (String unit) {
-            final measure = measureOptions.firstWhere((m) => m.unit == unit);
+            final measure = measureOptions!.firstWhere((m) => m.unit == unit);
             final newQuantity = quantity.convertTo(measure);
             amountController.text = formatAmount(newQuantity.amount);
-            onChanged(newQuantity);
+            onChanged?.call(newQuantity);
           },
         ),
       );
@@ -72,25 +69,18 @@ class QuantityCard extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
         child: Row(
           children: [
-            Flexible(child: _buildAmountInput(context)),
-            Flexible(child: _buildUnitInput(context)),
+            Flexible(child: buildAmountInput(context)),
+            Flexible(child: buildUnitInput(context)),
           ],
         ),
       ),
     );
   }
 
-  static String formatAmount(double amount) {
-    if (amount == null) return null;
-
-    final transformer = pow(10, AmountTextField.precision);
-    final rounded = (amount * transformer).round() / transformer;
+  static String formatAmount(double? amount) {
+    if (amount == null) return '';
 
     // If the amount is an integer, don't show the decimal
-    if (rounded == rounded.floor()) {
-      return rounded.floor().toString();
-    } else {
-      return rounded.toString();
-    }
+    return amount == amount.floor() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(AmountTextField.precision);
   }
 }

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class GLCard extends StatelessWidget {
   @override
-  final Key key;
+  final Key? key;
   final Widget child;
 
-  GLCard({this.key, @required this.child});
+  GLCard({this.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

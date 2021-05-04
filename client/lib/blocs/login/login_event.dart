@@ -10,7 +10,7 @@ abstract class LoginEvent extends Equatable {
   const LoginEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -21,13 +21,13 @@ class LoginSubmitted extends LoginEvent implements TrackedEvent {
   final String password;
 
   const LoginSubmitted({
-    @required this.username,
-    @required this.password,
+    required this.username,
+    required this.password,
   });
 
   @override
-  List<Object> get props => [username, password];
+  List<Object?> get props => [username, password];
 
   @override
-  void track(AnalyticsService analyticsService) => analyticsService.logLogin(AuthProvider.password);
+  void track(AnalyticsService analytics) => analytics.logLogin(AuthProvider.password);
 }

@@ -17,17 +17,13 @@ class _ExceptionMessages {
   static String defaultMessage = 'Uh oh, something went wrong.';
 }
 
-String connectionExceptionMessage(dynamic error) {
-  if (error is SocketException) {
-    return _ExceptionMessages.noInternet;
-  }
-  if (error is HttpException) {
-    return _ExceptionMessages.serverConnection;
-  }
+String? connectionExceptionMessage(dynamic error) {
+  if (error is SocketException) return _ExceptionMessages.noInternet;
+  if (error is HttpException) return _ExceptionMessages.serverConnection;
   return null;
 }
 
-String firestoreExceptionString(dynamic error) {
+String? firestoreExceptionString(dynamic error) {
   if (error is PlatformException) {
     switch (error.code) {
       case 'aborted':

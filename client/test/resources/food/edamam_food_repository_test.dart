@@ -3,18 +3,22 @@ import 'package:gutlogic/resources/food/edamam_service.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
+
+import 'edamam_food_repository_test.mocks.dart';
 import 'edamam_sample_data.dart';
 
+@GenerateMocks([EdamamService])
 void main() {
   group('EdamamFoodRepository', () {
-    EdamamFoodReference foodReference;
-    EdamamFoodRepository foodRepository;
-    EdamamService edamamService;
-    EdamamFood food;
+    late EdamamFoodReference foodReference;
+    late EdamamFoodRepository foodRepository;
+    late MockEdamamService edamamService;
+    late EdamamFood food;
 
     setUp(() async {
-      food = brownRiceCakeEntry.toEdamamFood();
+      food = brownRiceCakeEntry.toEdamamFood()!;
       foodReference = food.toFoodReference();
       edamamService = MockEdamamService();
       when(edamamService.getById(any)).thenAnswer((_) => Future.value(brownRiceCakeEntry));
@@ -49,5 +53,3 @@ void main() {
     });
   });
 }
-
-class MockEdamamService extends Mock implements EdamamService {}

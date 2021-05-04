@@ -5,22 +5,23 @@ import '../../../style/gl_colors.dart';
 import '../../../widgets/cards/headed_card.dart';
 
 class SensitivitySlider extends StatefulWidget {
-  final Sensitivity sensitivityLevel;
-  final Function(Sensitivity) onChanged;
+  final Sensitivity sensitivity;
+  final void Function(Sensitivity)? onChanged;
 
-  const SensitivitySlider({this.sensitivityLevel, this.onChanged});
+  const SensitivitySlider({required this.sensitivity, this.onChanged});
 
   @override
-  _SensitivitySliderState createState() => _SensitivitySliderState();
+  _SensitivitySliderState createState() => _SensitivitySliderState(sensitivity: sensitivity);
 }
 
 class _SensitivitySliderState extends State<SensitivitySlider> {
-  Sensitivity _sensitivity;
-  Color get _color => GLColors.fromSensitivity(_sensitivity);
+  Sensitivity sensitivity;
+
+  Color get _color => GLColors.fromSensitivity(sensitivity);
 
   // move labels to Sensitivity class
   String get _label {
-    switch (_sensitivity) {
+    switch (sensitivity) {
       case Sensitivity.none:
         return 'None';
       case Sensitivity.mild:
@@ -34,11 +35,7 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _sensitivity = widget.sensitivityLevel;
-  }
+  _SensitivitySliderState({required this.sensitivity});
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +47,10 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
             min: 0,
             max: 4,
             divisions: 4,
-            value: sensitivityToSliderValue(_sensitivity),
+            value: sensitivityToSliderValue(sensitivity),
             activeColor: _color,
-            onChanged: (value) => setState(() {
-              _sensitivity = sliderValueToSensitivity(value);
-            }),
-            onChangeEnd: onSensitivityChange,
+            onChanged: onSensitivityChanged,
+            onChangeEnd: onSensitivityChangeEnd,
           ),
           Text(_label),
         ],
@@ -63,20 +58,19 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
     );
   }
 
-  double sensitivityToSliderValue(Sensitivity sensitivity) {
-    final sensitivityInt = sensitivity.toInt();
-    final sliderInt = sensitivityInt + 1;
-    return sliderInt.toDouble();
-  }
+  double sensitivityToSliderValue(Sensitivity sensitivity) => sensitivity.toInt() + 1;
 
   Sensitivity sliderValueToSensitivity(double value) => Sensitivity.fromNum(value - 1);
 
-  void onSensitivityClear() => setState(() {
-        if (_sensitivity != Sensitivity.unknown) {
-          _sensitivity = Sensitivity.unknown;
-          widget.onChanged(_sensitivity);
-        }
-      });
+  void onSensitivityChanged(double value) {
+    setState(() {
+      sensitivity = sliderValueToSensitivity(value);
+    });
+  }
 
-  void onSensitivityChange(double newValue) => setState(() => widget.onChanged(sliderValueToSensitivity(newValue)));
+  void onSensitivityChangeEnd(double value) {
+    setState(() {
+      widget.onChanged?.call(sliderValueToSensitivity(value));
+    });
+  }
 }

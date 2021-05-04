@@ -4,7 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../auth/auth_provider.dart';
 import '../../../blocs/change_password/change_password.dart';
 import '../../../widgets/buttons/buttons.dart';
-import '../../../widgets/form_fields/password_form_field.dart';
+import '../../../widgets/form_fields/focus_history.dart';
+import '../../../widgets/form_fields/password_field.dart';
+import '../../../widgets/form_fields/password_strength.dart';
+import '../../../widgets/snack_bars/error_snack_bar.dart';
 import 'change_password_upgrade_warning.dart';
 
 class ChangePasswordForm extends StatefulWidget {
@@ -17,12 +20,16 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
   final TextEditingController _updatedPasswordTextController = TextEditingController();
   final TextEditingController _updatedRepeatedTextController = TextEditingController();
 
+  bool _isValidForm = false;
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
-    _currentPasswordTextController.addListener(onCurrentPasswordChanged);
-    _updatedPasswordTextController.addListener(onUpdatedPasswordChanged);
-    _updatedRepeatedTextController.addListener(onUpdatedRepeatedChanged);
+    _currentPasswordTextController.addListener(validateForm);
+    _updatedPasswordTextController.addListener(validateForm);
+    _updatedRepeatedTextController.addListener(validateForm);
   }
 
   @override
@@ -33,37 +40,15 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
     super.dispose();
   }
 
+  void validateForm() {
+    setState(() {
+      _isValidForm = _formKey.currentState?.validate() ?? false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChangePasswordBloc, ChangePasswordState>(listener: listener, builder: builder);
-  }
-
-  void onCurrentPasswordChanged() {
-    final bloc = context.read<ChangePasswordBloc>();
-
-    if (bloc.state is ChangePasswordEntry) {
-      bloc.add(ChangePasswordUpdated(
-        currentPassword: _currentPasswordTextController.text,
-        updatedPassword: _updatedPasswordTextController.text,
-        updatedRepeated: _updatedRepeatedTextController.text,
-      ));
-    }
-  }
-
-  void onUpdatedPasswordChanged() {
-    context.read<ChangePasswordBloc>().add(ChangePasswordUpdated(
-          currentPassword: _currentPasswordTextController.text,
-          updatedPassword: _updatedPasswordTextController.text,
-          updatedRepeated: _updatedRepeatedTextController.text,
-        ));
-  }
-
-  void onUpdatedRepeatedChanged() {
-    context.read<ChangePasswordBloc>().add(ChangePasswordUpdated(
-          currentPassword: _currentPasswordTextController.text,
-          updatedPassword: _updatedPasswordTextController.text,
-          updatedRepeated: _updatedRepeatedTextController.text,
-        ));
   }
 
   void onAcceptButtonPressed() {
@@ -73,75 +58,73 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
         ));
   }
 
-  bool _isPasswordValid(ChangePasswordState state) {
-    if (state is ChangePasswordEntry) {
-      return _updatedPasswordTextController.text.isEmpty || state.isValid;
-    } else {
-      return true; // hide entry errors on other states
-    }
-  }
-
-  bool _isRepeatedValid(ChangePasswordState state) {
-    if (state is ChangePasswordEntry) {
-      // We only show an error on the Repeat Password field if the Enter Password field is already valid.
-      return _isPasswordValid(state) == false || _updatedPasswordTextController.text.isEmpty || state.isRepeated;
-    } else {
-      return true; // hide entry errors on other states
-    }
-  }
-
   void listener(BuildContext context, ChangePasswordState state) {
     if (state is ChangePasswordError) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackBar(text: state.message));
     } else if (state is ChangePasswordSuccess) {
       Navigator.of(context).pop();
     }
   }
 
   Widget builder(BuildContext context, ChangePasswordState state) {
-    final isAcceptButtonEnabled = state is ChangePasswordEntry && state.isValid && state.isRepeated;
+    final isSubmittable = state is ChangePasswordEntry && _isValidForm;
 
     Widget first;
 
     final hasPasswordProvider = state.user.providers.contains(AuthProvider.password);
 
     if (hasPasswordProvider) {
-      first = PasswordFormField(
+      first = PasswordField(
         enabled: state is ChangePasswordEntry,
         controller: _currentPasswordTextController,
+        validator: null,
         label: 'Current Password',
-        validator: PasswordValidators.isNotEmpty,
       );
     } else {
       first = ChangePasswordUpgradeWarning(email: state.user.email);
     }
 
-    return ListView(children: [
-      first,
-      const SizedBox(height: 20),
-      PasswordFormField(
-        enabled: state is ChangePasswordEntry,
-        controller: _updatedPasswordTextController,
-        validator: PasswordValidators.length,
-        label: 'New Password',
-        showStrengthBar: true,
+    return Form(
+      key: _formKey,
+      child: ListView(
+        children: [
+          first,
+          const SizedBox(height: 20),
+          FocusHistory(child: Builder(builder: (context) {
+            return PasswordField(
+              enabled: state is ChangePasswordEntry,
+              controller: _updatedPasswordTextController,
+              validator: (value) {
+                if (FocusHistory.of(context).blurred) return PasswordField.validate(value);
+              },
+              label: 'New Password',
+            );
+          })),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(40, 10, 0, 0),
+            child: PasswordStrength(controller: _updatedPasswordTextController),
+          ),
+          const SizedBox(height: 20),
+          FocusHistory(child: Builder(builder: (context) {
+            return PasswordField(
+              enabled: state is ChangePasswordEntry,
+              controller: _updatedRepeatedTextController,
+              validator: (value) {
+                if (FocusHistory.of(context).blurred &&
+                    _updatedPasswordTextController.text != _updatedRepeatedTextController.text) {
+                  return 'Passwords must match.';
+                }
+              },
+              label: 'Confirm Password',
+            );
+          })),
+          const SizedBox(height: 20),
+          GLPrimaryButton(
+            child: const StretchedButtonContent(label: 'Save'),
+            onPressed: isSubmittable ? onAcceptButtonPressed : null,
+          ),
+        ],
       ),
-      const SizedBox(height: 20),
-      PasswordFormField(
-        enabled: state is ChangePasswordEntry,
-        controller: _updatedRepeatedTextController,
-        validator: (_) => _isRepeatedValid(state) ? null : 'Passwords must match.',
-        label: 'Confirm Password',
-      ),
-      const SizedBox(height: 20),
-      buildAcceptButton(onPressed: isAcceptButtonEnabled ? onAcceptButtonPressed : null),
-    ]);
-  }
-
-  static Widget buildAcceptButton({VoidCallback onPressed}) {
-    return GLPrimaryButton(
-      child: const StretchedButtonContent(label: 'Save'),
-      onPressed: onPressed,
     );
   }
 }

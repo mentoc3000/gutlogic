@@ -1,6 +1,5 @@
-import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../models/pantry/pantry_entry.dart';
 import '../../util/error_report.dart';
@@ -12,7 +11,7 @@ abstract class PantryState extends Equatable {
   const PantryState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;
@@ -33,7 +32,7 @@ class PantryEntryDeleted extends PantryState {
   PantryEntryDeleted(this.pantryEntry);
 
   @override
-  List<Object> get props => [pantryEntry];
+  List<Object?> get props => [pantryEntry];
 
   @override
   String toString() => 'PantryEntryDeleted { pantryEntry: ${pantryEntry.id} }';
@@ -44,11 +43,13 @@ class PantryError extends PantryState with ErrorState, ErrorRecorder {
   final String message;
 
   @override
-  final ErrorReport report;
+  final ErrorReport? report;
 
-  PantryError({@required this.message}) : report = null;
+  PantryError({required this.message}) : report = null;
 
-  PantryError.fromError({@required dynamic error, @required StackTrace trace})
+  PantryError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
+
+  factory PantryError.fromReport(ErrorReport report) => PantryError.fromError(error: report.error, trace: report.trace);
 }
