@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/pantry_entry/pantry_entry.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
+import '../../models/pantry/pantry_entry_reference.dart';
 import '../../resources/pantry_repository.dart';
 import '../../widgets/cards/notes_card.dart';
 import '../../widgets/gl_app_bar.dart';
@@ -26,10 +27,11 @@ class PantryEntryPage extends StatefulWidget {
   }
 
   /// Wrap an pantryentry page with the necessary bloc providers, given the pantryentry.
-  static Widget forId(String id) {
+  static Widget forPantryEntryReference(PantryEntryReference pantryEntryReference) {
     return BlocProvider(
       create: (context) {
-        return PantryEntryBloc(repository: context.read<PantryRepository>())..add(StreamId(id));
+        return PantryEntryBloc(repository: context.read<PantryRepository>())
+          ..add(StreamReference(pantryEntryReference));
       },
       child: PantryEntryPage(),
     );

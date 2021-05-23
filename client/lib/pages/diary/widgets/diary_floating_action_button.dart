@@ -4,6 +4,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../blocs/symptom_type/symptom_type.dart';
 import '../../../routes/routes.dart';
+import '../../../style/gl_color_scheme.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/gl_icons.dart';
 import '../../search_delegate/symptom_type_search_delegate.dart';
@@ -46,8 +47,11 @@ class DiaryFloatingActionButton extends StatelessWidget {
     );
 
     return SpeedDial(
-      child: const Icon(GLIcons.add),
+      icon: GLIcons.add,
+      activeIcon: GLIcons.clear,
       children: [food, symptom, bowelMovement],
+      backgroundColor: glColorScheme.secondary,
+      foregroundColor: glColorScheme.onSecondary,
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_entry_reference.dart';
 import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
@@ -54,12 +55,16 @@ void main() {
       await expectLater(repository.streamAll(), emits(pantryEntries));
     });
 
-    test('steams one entry', () async {
+    test('streams one entry', () async {
       await expectLater(repository.stream(pantryEntry), emits(pantryEntry));
     });
 
-    test('steams one entry by id', () async {
-      await expectLater(repository.streamId(pantryEntry.id), emits(pantryEntry));
+    test('streams by food', () async {
+      await expectLater(repository.streamByFood(food.toFoodReference()), emits(pantryEntry));
+    });
+
+    test('streams one entry by id', () async {
+      await expectLater(repository.streamEntry(pantryEntry.toReference()), emits(pantryEntry));
     });
 
     test('fetches all entries', () async {
@@ -68,22 +73,23 @@ void main() {
     });
 
     test('fetches one entry', () async {
-      final entry = await repository.fetchId(pantryEntryId);
+      final entry = await repository.fetchEntry(pantryEntry.toReference());
       expect(entry, pantryEntry);
     });
 
     test('non-existant id returns null', () async {
-      final entry = await repository.fetchId('invalidid');
+      final fakeRef = PantryEntryReference(id: 'fake', sensitivity: Sensitivity.none);
+      final entry = await repository.fetchEntry(fakeRef);
       expect(entry, null);
     });
 
     test('finds a food', () async {
-      final foundEntry = await repository.findByFood(food.toFoodReference());
+      final foundEntry = await repository.fetchByFood(food.toFoodReference());
       expect(foundEntry, pantryEntry);
     });
 
     test('adds an entry', () async {
-      pantryEntryId = 'entry2Id';
+      const pantryEntryId = 'entry2Id';
       final foodReference = CustomFoodReference(id: 'foodId', name: 'Corned Beef');
       const sensitivity = Sensitivity.moderate;
       const notes = 'easy';
@@ -107,14 +113,6 @@ void main() {
       final existingPantryEntry = await repository.addFood(food.toFoodReference());
       expect(existingPantryEntry!.foodReference.id, food.id);
       expect(existingPantryEntry.notes, pantryEntry.notes);
-    });
-
-    test('deletes entry by id', () async {
-      final entriesBeforeDeletion = await instance.collection('pantry').get();
-      expect(entriesBeforeDeletion.docs.isEmpty, false);
-      await repository.deleteById(pantryEntryId);
-      final entriesAfterDeletion = await instance.collection('pantry').get();
-      expect(entriesAfterDeletion.docs.isEmpty, true);
     });
 
     test('deletes entry', () async {

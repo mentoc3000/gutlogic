@@ -5,6 +5,7 @@ import 'package:built_value/serializer.dart';
 import '../food_reference/custom_food_reference.dart';
 import '../measure.dart';
 import '../model_interfaces.dart';
+import '../pantry/pantry_entry_reference.dart';
 import 'food.dart';
 
 part 'custom_food.g.dart';
@@ -19,8 +20,14 @@ abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>,
   factory CustomFood({
     required String id,
     required String name,
+    PantryEntryReference? pantryEntryReference,
   }) =>
-      _$CustomFood._(id: id, name: name, measures: CustomFood.defaultMeasures);
+      _$CustomFood._(
+        id: id,
+        name: name,
+        measures: CustomFood.defaultMeasures,
+        pantryEntryReference: pantryEntryReference,
+      );
 
   factory CustomFood.fromBuilder([CustomFoodBuilder Function(CustomFoodBuilder) updates]) = _$CustomFood;
 
@@ -32,4 +39,9 @@ abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>,
 
   @override
   String queryText() => name;
+
+  @override
+  CustomFood addPantryEntryReference(PantryEntryReference? pantryEntryReference) {
+    return rebuild((b) => b.pantryEntryReference = pantryEntryReference?.toBuilder());
+  }
 }

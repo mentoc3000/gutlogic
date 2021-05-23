@@ -71,7 +71,7 @@ void main() {
         foodReference: food.toFoodReference(),
         sensitivity: Sensitivity.mild,
       );
-      when(pantryRepository.findByFood(any)).thenAnswer((_) async => pantryEntry);
+      when(pantryRepository.fetchByFood(any)).thenAnswer((_) async => pantryEntry);
 
       mealElementRepository = MealElementRepository(
         firestoreService: firestoreService,

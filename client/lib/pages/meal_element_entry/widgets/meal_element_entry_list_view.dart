@@ -27,7 +27,8 @@ class MealElementEntryListView extends StatelessWidget {
 
   void addFoodToPantry(BuildContext context) {
     if (mealElement.pantryEntryReference != null) {
-      Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForId(mealElement.pantryEntryReference!.id));
+      Navigator.push(
+          context, Routes.of(context).createPantryEntryPageRouteForReference(mealElement.pantryEntryReference!));
     } else {
       Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(mealElement.foodReference));
     }

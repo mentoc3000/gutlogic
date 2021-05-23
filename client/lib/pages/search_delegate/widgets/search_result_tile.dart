@@ -10,17 +10,25 @@ import '../../../widgets/list_tiles/gl_list_tile.dart';
 
 class SearchResultTile extends StatelessWidget {
   final Searchable searchable;
+  final Widget? trailing;
   final VoidCallback onTap;
   final FutureOr<void> Function(Searchable)? onDelete;
   final bool isCustom;
   bool get isDismissible => onDelete != null;
 
-  SearchResultTile({required this.searchable, required this.onTap, this.onDelete, this.isCustom = false});
+  SearchResultTile({
+    required this.searchable,
+    this.trailing,
+    required this.onTap,
+    this.onDelete,
+    this.isCustom = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final trailing = isCustom ? const Icon(GLIcons.account) : null;
-    final tile = GLListTile(heading: searchable.searchHeading(), onTap: onTap, trailing: trailing);
+    final leading = isCustom ? const Icon(GLIcons.account) : null;
+    final tile = GLListTile(heading: searchable.searchHeading(), onTap: onTap, leading: leading, trailing: trailing);
+
     return isDismissible
         ? DeleteDismissible(
             child: tile,

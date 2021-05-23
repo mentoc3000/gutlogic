@@ -93,12 +93,16 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
-            return CustomFoodRepository(firestoreService: context.read<FirestoreService>());
+            return CustomFoodRepository(
+              firestoreService: context.read<FirestoreService>(),
+              pantryRepository: context.read<PantryRepository>(),
+            );
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
             return EdamamFoodRepository(
               edamamService: EdamamService(edamamFoodSearchService: CloudFunctionService('edamamFoodSearch')),
+              pantryRepository: context.read<PantryRepository>(),
             );
           }),
         ],

@@ -49,7 +49,7 @@ void main() {
       when(mealElementRepository.stream(edamamFoodMealElement))
           .thenAnswer((_) => Stream<MealElement>.fromIterable([edamamFoodMealElement]));
       edamamFoodRepository = MockEdamamFoodRepository();
-      when(edamamFoodRepository.fetchItem(edamamFoodReference)).thenAnswer((_) async => await edamamFood);
+      when(edamamFoodRepository.fetchFood(edamamFoodReference)).thenAnswer((_) async => await edamamFood);
     });
 
     test('initial state', () {
@@ -99,7 +99,7 @@ void main() {
     blocTest<MealElementBloc, MealElementState>(
       'streams mealElement with Edamam food with no measures',
       build: () {
-        when(edamamFoodRepository.fetchItem(edamamFoodReference))
+        when(edamamFoodRepository.fetchFood(edamamFoodReference))
             .thenAnswer((_) async => await edamamFood.rebuild((b) => b..measures = null));
         return MealElementBloc(
           mealElementRepository: mealElementRepository,

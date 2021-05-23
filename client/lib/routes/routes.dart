@@ -7,6 +7,7 @@ import '../models/diary_entry/symptom_entry.dart';
 import '../models/food_reference/food_reference.dart';
 import '../models/meal_element.dart';
 import '../models/pantry/pantry_entry.dart';
+import '../models/pantry/pantry_entry_reference.dart';
 import '../models/symptom_type.dart';
 import '../pages/account/account_page.dart';
 import '../pages/bowel_movement_entry/bowel_movement_entry_page.dart';
@@ -151,7 +152,7 @@ class Routes {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forFood(foodReference));
   }
 
-  Route createPantryEntryPageRouteForId(String id) {
-    return MaterialPageRoute(builder: (context) => PantryEntryPage.forId(id));
+  Route createPantryEntryPageRouteForReference(PantryEntryReference pantryEntryReference) {
+    return MaterialPageRoute(builder: (context) => PantryEntryPage.forPantryEntryReference(pantryEntryReference));
   }
 }

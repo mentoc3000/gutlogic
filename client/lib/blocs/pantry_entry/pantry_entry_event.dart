@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../models/food_reference/food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
+import '../../models/pantry/pantry_entry_reference.dart';
 import '../../models/sensitivity.dart';
 import '../../resources/firebase/analytics_service.dart';
 import '../../util/error_report.dart';
@@ -53,16 +54,16 @@ class StreamEntry extends PantryEntryEvent {
   String toString() => 'StreamEntry { id: ${pantryEntry.id} }';
 }
 
-class StreamId extends PantryEntryEvent {
-  final String id;
+class StreamReference extends PantryEntryEvent {
+  final PantryEntryReference pantryEntryReference;
 
-  const StreamId(this.id);
-
-  @override
-  List<Object?> get props => [id];
+  const StreamReference(this.pantryEntryReference);
 
   @override
-  String toString() => 'StreamId { id: $id }';
+  List<Object?> get props => [pantryEntryReference];
+
+  @override
+  String toString() => 'StreamId { id: ${pantryEntryReference.id} }';
 }
 
 class Delete extends PantryEntryEvent implements TrackedEvent {

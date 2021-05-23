@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../models/food_reference/food_reference.dart';
 import '../models/pantry/pantry_entry.dart';
+import '../models/pantry/pantry_entry_reference.dart';
 import '../models/sensitivity.dart';
 import '../models/serializers.dart';
 import '../util/logger.dart';
@@ -15,7 +16,7 @@ import 'firebase/firestore_repository.dart';
 import 'firebase/firestore_service.dart';
 import 'searchable_repository.dart';
 
-class PantryRepository with FirestoreRepository, SearchableRepository<PantryEntry> {
+class PantryRepository with FirestoreRepository implements SearchableRepository<PantryEntry> {
   static const defaultSensitivity = Sensitivity.unknown;
   final CrashlyticsService crashlytics;
   final BehaviorSubject<BuiltList<PantryEntry>> _behaviorSubject = BehaviorSubject();
@@ -24,7 +25,7 @@ class PantryRepository with FirestoreRepository, SearchableRepository<PantryEntr
   PantryRepository({required FirestoreService firestoreService, required this.crashlytics}) {
     this.firestoreService = firestoreService;
     final pantryStream = firestoreService.userPantryCollection.snapshots().map((querySnapshot) =>
-        BuiltList<PantryEntry>(querySnapshot.docs.map(document2pantryEntry).where((entry) => entry != null)));
+        BuiltList<PantryEntry>(querySnapshot.docs.map(_documentTopantryEntry).where((entry) => entry != null)));
     _behaviorSubject.addStream(pantryStream);
   }
 
@@ -36,26 +37,54 @@ class PantryRepository with FirestoreRepository, SearchableRepository<PantryEntr
         querySnapshot.where((entry) => entry.queryText().toLowerCase().contains(query.toLowerCase()))));
   }
 
-  Stream<PantryEntry?> stream(PantryEntry pantryEntry) => streamId(pantryEntry.id);
+  Stream<PantryEntry?> stream(PantryEntry? pantryEntry) => streamEntry(pantryEntry?.toReference());
 
-  Stream<PantryEntry?> streamId(String pantryEntryId) {
-    return _pantryStream.map((entries) => entries.cast<PantryEntry?>().firstWhere(
-          (entry) => entry?.id == pantryEntryId,
-          orElse: () => null,
-        ));
+  Stream<PantryEntry?> streamEntry(PantryEntryReference? pantryEntryReference) {
+    return pantryEntryReference == null
+        ? Stream.value(null)
+        : _pantryStream.map((entries) => entries.cast<PantryEntry?>().firstWhere(
+              (entry) => entry?.id == pantryEntryReference.id,
+              orElse: () => null,
+            ));
+  }
+
+  Stream<PantryEntry?> streamByFood(FoodReference? foodReference) {
+    return foodReference == null
+        ? Stream.value(null)
+        : streamAll().map((entries) => entries
+            .cast<PantryEntry?>()
+            .firstWhere((entry) => entry?.foodReference == foodReference, orElse: () => null));
   }
 
   Future<BuiltList<PantryEntry>> fetchAll() => streamAll().first;
 
-  Future<PantryEntry?> fetchId(String id) => streamId(id).first;
+  @override
+  Future<BuiltList<PantryEntry>> fetchQuery(String query) => streamQuery(query).first;
 
-  Future<void> delete(PantryEntry pantryEntry) => deleteById(pantryEntry.id);
+  Future<PantryEntry?> fetch(PantryEntry? pantryEntry) => fetchEntry(pantryEntry?.toReference());
 
-  Future<void> deleteById(String pantryEntryId) => firestoreService.userPantryCollection.doc(pantryEntryId).delete();
+  Future<PantryEntry?> fetchEntry(PantryEntryReference? pantryEntryReference) =>
+      streamEntry(pantryEntryReference).first;
 
-  Future<PantryEntry?> findByFood(FoodReference foodReference) async {
+  Future<PantryEntry?> fetchByFood(FoodReference? foodReference) async {
+    if (foodReference == null) return null;
     final pantry = await fetchAll();
     return pantry.cast<PantryEntry?>().firstWhere((entry) => entry?.foodReference == foodReference, orElse: () => null);
+  }
+
+  Future<PantryEntry?> _fetchId(String id) {
+    return _pantryStream
+        .map((entries) => entries.cast<PantryEntry?>().firstWhere(
+              (entry) => entry?.id == id,
+              orElse: () => null,
+            ))
+        .first;
+  }
+
+  Future<void> delete(PantryEntry pantryEntry) => deleteEntry(pantryEntry.toReference());
+
+  Future<void> deleteEntry(PantryEntryReference pantryEntryReference) {
+    return firestoreService.userPantryCollection.doc(pantryEntryReference.id).delete();
   }
 
   Future<PantryEntry?> add(PantryEntry pantryEntry) async {
@@ -71,11 +100,11 @@ class PantryRepository with FirestoreRepository, SearchableRepository<PantryEntr
     // before the change is propagated to the stream, so the latest addition cannot be found.
     await Future.delayed(const Duration(milliseconds: 1));
 
-    return await fetchId(docRef.id);
+    return await _fetchId(docRef.id);
   }
 
   Future<PantryEntry?> addFood(FoodReference foodReference) async {
-    final existingEntry = await findByFood(foodReference);
+    final existingEntry = await fetchByFood(foodReference);
     if (existingEntry != null) return existingEntry;
 
     final pantryEntry = PantryEntry(id: '', foodReference: foodReference, sensitivity: defaultSensitivity);
@@ -102,7 +131,7 @@ class PantryRepository with FirestoreRepository, SearchableRepository<PantryEntr
   Future<void> updateNotes(PantryEntry pantryEntry, String newNotes) =>
       updateEntry(pantryEntry.rebuild((b) => b..notes = newNotes));
 
-  PantryEntry? document2pantryEntry(DocumentSnapshot document) {
+  PantryEntry? _documentTopantryEntry(DocumentSnapshot document) {
     try {
       return serializers.deserializeWith(PantryEntry.serializer, FirestoreService.getDocumentData(document));
     } on DeserializationError catch (error, trace) {

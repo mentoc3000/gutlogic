@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/food/food.dart';
-import '../../models/food/custom_food.dart';
 import '../../models/food/food.dart';
 import '../../pages/error_page.dart';
 import '../../pages/loading_page.dart';
@@ -12,7 +11,7 @@ import '../../widgets/list_tiles/gl_list_tile.dart';
 import '../../widgets/powered_by_edamam.dart';
 import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
-import 'widgets/search_result_tile.dart';
+import 'widgets/food_search_result_tile.dart';
 
 class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
   final FoodBloc foodBloc;
@@ -60,16 +59,12 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   final result = items[index];
-                  return SearchResultTile(
-                    searchable: result,
+                  return FoodSearchResultTile(
+                    food: result,
                     onTap: () {
                       closeSearch(context);
                       onSelect(result);
                     },
-                    onDelete: (food) {
-                      if (food is CustomFood) foodBloc.add(DeleteCustomFood(food));
-                    },
-                    isCustom: result is CustomFood,
                   );
                 },
               ),
