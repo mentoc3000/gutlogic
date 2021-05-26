@@ -5,6 +5,7 @@ import '../../../blocs/meal_element/meal_element.dart';
 import '../../../models/food/food.dart';
 import '../../../models/meal_element.dart';
 import '../../../routes/routes.dart';
+import '../../../widgets/cards/food_details_card.dart';
 import '../../../widgets/cards/notes_card.dart';
 import 'meal_element_sensitivity_card.dart';
 import 'quantity_card.dart';
@@ -48,6 +49,7 @@ class MealElementEntryListView extends StatelessWidget {
         sensitivity: mealElement.pantryEntryReference?.sensitivity,
         onTap: () => addFoodToPantry(context),
       ),
+      if (food != null) FoodDetailsCard(food: food!),
       NotesCard(
         controller: notesController,
         onChanged: (notes) => context.read<MealElementBloc>().add(UpdateNotes(notes)),

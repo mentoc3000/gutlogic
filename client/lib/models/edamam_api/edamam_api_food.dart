@@ -9,13 +9,12 @@ abstract class EdamamApiFood implements Built<EdamamApiFood, EdamamApiFoodBuilde
   static Serializer<EdamamApiFood> get serializer => _$edamamApiFoodSerializer;
 
   String? get foodId;
-
   String? get label;
-
   EdamamApiNutrients? get nutrients;
-
+  String? get brand;
   String? get category;
-
+  String? get categoryLabel;
+  String? get foodContentsLabel;
   String? get image;
 
   EdamamApiFood._();

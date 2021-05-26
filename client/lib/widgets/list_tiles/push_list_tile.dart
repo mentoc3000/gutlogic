@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-
+import 'package:flutter/widgets.dart';
 import '../gl_icons.dart';
 import 'gl_list_tile.dart';
 

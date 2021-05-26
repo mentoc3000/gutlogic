@@ -19,12 +19,14 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
     required String name,
     BuiltList<Measure>? measures,
     PantryEntryReference? pantryEntryReference,
+    String? brand,
   }) =>
       _$EdamamFood._(
         id: id,
         name: name,
-        measures: measures ?? <Measure>[].build(),
+        measures: measures ?? Food.defaultMeasures,
         pantryEntryReference: pantryEntryReference,
+        brand: brand,
       );
 
   factory EdamamFood.fromBuilder([EdamamFoodBuilder Function(EdamamFoodBuilder) updates]) = _$EdamamFood;

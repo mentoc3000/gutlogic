@@ -32,18 +32,21 @@ class DiaryFloatingActionButton extends StatelessWidget {
       backgroundColor: GLColors.food,
       label: 'Food & Drink',
       onTap: () => Navigator.push(context, Routes.of(context).createMealEntryRoute()),
+      foregroundColor: glColorScheme.onSecondary,
     );
     final bowelMovement = SpeedDialChild(
       child: const Icon(GLIcons.bowelMovement),
       backgroundColor: GLColors.bowelMovement,
       label: 'Bowel Movement',
       onTap: () => Navigator.push(context, Routes.of(context).createBowelMovementEntryRoute()),
+      foregroundColor: glColorScheme.onSecondary,
     );
     final symptom = SpeedDialChild(
       child: const Icon(GLIcons.symptom),
       backgroundColor: GLColors.symptom,
       label: 'Symptom',
       onTap: () => showSymptomTypeSearch(context),
+      foregroundColor: glColorScheme.onSecondary,
     );
 
     return SpeedDial(

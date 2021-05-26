@@ -28,10 +28,13 @@ abstract class EdamamApiEntry implements Built<EdamamApiEntry, EdamamApiEntryBui
       if (!_isValidLabel(nativeMeasure.label)) continue;
 
       if (nativeMeasure.qualified == null) {
+
         if (_isValidWeight(nativeMeasure.weight)) {
           measures.add(Measure(unit: nativeMeasure.label!, weight: nativeMeasure.weight!));
         }
+
       } else {
+
         if (nativeMeasure.qualified == null) continue;
 
         for (var qualifiedMeasure in nativeMeasure.qualified!) {
@@ -42,10 +45,17 @@ abstract class EdamamApiEntry implements Built<EdamamApiEntry, EdamamApiEntryBui
                 _isValidLabel(qualifier.label) ? '${nativeMeasure.label}, ${qualifier.label}' : nativeMeasure.label!;
             measures.add(Measure(unit: unit, weight: qualifiedMeasure.weight!));
           }
+
         }
       }
     }
-    return EdamamFood(id: food.foodId!, name: food.label!, measures: measures.build());
+
+    return EdamamFood(
+      id: food.foodId!,
+      name: food.label!,
+      measures: measures.build(),
+      brand: food.brand,
+    );
   }
 }
 

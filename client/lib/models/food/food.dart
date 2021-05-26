@@ -10,7 +10,10 @@ part 'food.g.dart';
 
 @BuiltValue(instantiable: false)
 abstract class Food with Ided, Named implements Searchable {
+  static BuiltList<Measure> defaultMeasures = <Measure>[].build();
+
   BuiltList<Measure> get measures;
+  String? get brand;
 
   @BuiltValueField(serialize: false)
   PantryEntryReference? get pantryEntryReference;

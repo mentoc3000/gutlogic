@@ -4,7 +4,7 @@ class GLListTile extends StatelessWidget {
   final String heading;
   final String? subheading;
   final Widget? leading;
-  final void Function()? onTap;
+  final VoidCallback? onTap;
   final bool dense;
   final Widget? trailing;
 

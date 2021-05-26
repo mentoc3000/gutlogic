@@ -13,8 +13,6 @@ part 'custom_food.g.dart';
 abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>, Searchable {
   static Serializer<CustomFood> get serializer => _$customFoodSerializer;
 
-  static BuiltList<Measure> defaultMeasures = <Measure>[].build();
-
   CustomFood._();
 
   factory CustomFood({
@@ -25,14 +23,12 @@ abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>,
       _$CustomFood._(
         id: id,
         name: name,
-        measures: CustomFood.defaultMeasures,
+        measures: Food.defaultMeasures,
         pantryEntryReference: pantryEntryReference,
+        brand: null,
       );
 
   factory CustomFood.fromBuilder([CustomFoodBuilder Function(CustomFoodBuilder) updates]) = _$CustomFood;
-
-  @override
-  CustomFoodReference toFoodReference() => CustomFoodReference(id: id, name: name);
 
   @override
   String searchHeading() => name;
@@ -44,4 +40,7 @@ abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>,
   CustomFood addPantryEntryReference(PantryEntryReference? pantryEntryReference) {
     return rebuild((b) => b.pantryEntryReference = pantryEntryReference?.toBuilder());
   }
+
+  @override
+  CustomFoodReference toFoodReference() => CustomFoodReference(id: id, name: name);
 }
