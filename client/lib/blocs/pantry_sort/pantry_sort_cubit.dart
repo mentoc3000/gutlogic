@@ -59,14 +59,21 @@ int _compareSensitivity(PantryEntry a, PantryEntry b) => a.sensitivity.compareTo
 BuiltList<PantryEntry> _sortAlphabeticallyAscending(BuiltList<PantryEntry> pantryEntries) {
   final list = pantryEntries.toList();
   list.sort(_compareAlphabetically);
-  return list.build();
+  return list.toBuiltList();
 }
 
 BuiltList<PantryEntry> _sortBySensitivityAscending(BuiltList<PantryEntry> pantryEntries) {
   final list = pantryEntries.toList();
   list.sort(_compareAlphabetically);
   list.sort(_compareSensitivity);
-  return list.build();
+  return list.toBuiltList();
+}
+
+BuiltList<PantryEntry> _sortBySensitivityDescending(BuiltList<PantryEntry> pantryEntries) {
+  final list = pantryEntries.toList();
+  list.sort((a, b) => _compareAlphabetically(b, a)); // Reverse alphabetical order
+  list.sort(_compareSensitivity);
+  return list.reversed.toBuiltList();
 }
 
 BuiltList<PantryEntry> _sortPantry(BuiltList<PantryEntry> pantryEntries, PantrySort pantrySort) {
@@ -76,7 +83,7 @@ BuiltList<PantryEntry> _sortPantry(BuiltList<PantryEntry> pantryEntries, PantryS
     case PantrySort.sensitivityAscending:
       return _sortBySensitivityAscending(pantryEntries);
     case PantrySort.sensitivityDescending:
-      return _sortBySensitivityAscending(pantryEntries).reversed.toBuiltList();
+      return _sortBySensitivityDescending(pantryEntries);
     default:
       return _sortAlphabeticallyAscending(pantryEntries);
   }
