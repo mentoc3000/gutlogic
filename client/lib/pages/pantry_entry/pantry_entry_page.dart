@@ -5,22 +5,21 @@ import '../../blocs/pantry_entry/pantry_entry.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../models/pantry/pantry_entry_reference.dart';
-import '../../resources/pantry_repository.dart';
-import '../../widgets/cards/notes_card.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../error_page.dart';
 import '../loading_page.dart';
-import 'widgets/sensitivity_slider_card.dart';
+import 'widgets/pantry_entry_list_view.dart';
 
-class PantryEntryPage extends StatefulWidget {
+class PantryEntryPage extends StatelessWidget {
   static String tag = 'pantryentry-entry-page';
+  final TextEditingController _notesController = TextEditingController();
 
   /// Wrap an pantryentry page with the necessary bloc providers, given the pantryentry.
   static Widget forPantryEntry(PantryEntry pantryEntry) {
     return BlocProvider(
       create: (context) {
-        return PantryEntryBloc(repository: context.read<PantryRepository>())..add(StreamEntry(pantryEntry));
+        return PantryEntryBloc.fromContext(context)..add(StreamEntry(pantryEntry));
       },
       child: PantryEntryPage(),
     );
@@ -29,10 +28,7 @@ class PantryEntryPage extends StatefulWidget {
   /// Wrap an pantryentry page with the necessary bloc providers, given the pantryentry.
   static Widget forPantryEntryReference(PantryEntryReference pantryEntryReference) {
     return BlocProvider(
-      create: (context) {
-        return PantryEntryBloc(repository: context.read<PantryRepository>())
-          ..add(StreamReference(pantryEntryReference));
-      },
+      create: (context) => PantryEntryBloc.fromContext(context)..add(StreamReference(pantryEntryReference)),
       child: PantryEntryPage(),
     );
   }
@@ -40,24 +36,9 @@ class PantryEntryPage extends StatefulWidget {
   /// Wrap an pantryentry page with the necessary bloc providers, given the meal entry.
   static Widget forFood(FoodReference foodReference) {
     return BlocProvider(
-      create: (context) {
-        return PantryEntryBloc(repository: context.read<PantryRepository>())..add(CreateAndStreamEntry(foodReference));
-      },
+      create: (context) => PantryEntryBloc.fromContext(context)..add(CreateAndStreamEntry(foodReference)),
       child: PantryEntryPage(),
     );
-  }
-
-  @override
-  _PantryEntryPageState createState() => _PantryEntryPageState();
-}
-
-class _PantryEntryPageState extends State<PantryEntryPage> {
-  final TextEditingController _notesController = TextEditingController();
-
-  @override
-  void dispose() {
-    _notesController.dispose();
-    super.dispose();
   }
 
   @override
@@ -72,52 +53,30 @@ class _PantryEntryPageState extends State<PantryEntryPage> {
   }
 
   Widget builder(BuildContext context, PantryEntryState state) {
-    final pantryBloc = context.read<PantryEntryBloc>();
-    final defaultAppBar = GLAppBar(title: 'Food');
+    return GLScaffold(
+      appBar: appBarBuilder(context, state),
+      body: bodyBuilder(context, state),
+    );
+  }
 
-    List<Widget> buildCards(PantryEntry pantryEntry) {
-      return [
-        SensitivitySlider(
-          sensitivity: pantryEntry.sensitivity,
-          onChanged: (sensitivity) => pantryBloc.add(UpdateSensitivity(sensitivity)),
-        ),
-        NotesCard(
-          controller: _notesController,
-          onChanged: (notes) => pantryBloc.add(UpdateNotes(notes)),
-        )
-      ];
+  AppBar appBarBuilder(BuildContext context, PantryEntryState state) {
+    if (state is PantryEntryLoaded) {
+      return GLAppBar(title: state.pantryEntry.foodReference.name);
+    } else {
+      return GLAppBar(title: 'Food');
     }
+  }
 
+  Widget bodyBuilder(BuildContext context, PantryEntryState state) {
     if (state is PantryEntryLoading) {
-      return GLScaffold(
-        appBar: defaultAppBar,
-        body: LoadingPage(),
-      );
+      return LoadingPage();
     }
     if (state is PantryEntryLoaded) {
-      final pantryEntry = state.pantryEntry;
-      final cards = buildCards(pantryEntry);
-      return GLScaffold(
-        appBar: GLAppBar(title: pantryEntry.foodReference.name),
-        body: Form(
-          child: ListView.builder(
-            itemCount: cards.length,
-            itemBuilder: (BuildContext context, int index) =>
-                Padding(padding: const EdgeInsets.all(1.0), child: cards[index]),
-            padding: const EdgeInsets.all(0.0),
-          ),
-        ),
-      );
+      return PantryEntryListView(pantryEntry: state.pantryEntry, food: state.food, notesController: _notesController);
     }
     if (state is PantryEntryError) {
-      return GLScaffold(
-        appBar: defaultAppBar,
-        body: ErrorPage(message: state.message),
-      );
+      return ErrorPage(message: state.message);
     }
-    return GLScaffold(
-      appBar: defaultAppBar,
-      body: ErrorPage(),
-    );
+    return ErrorPage();
   }
 }

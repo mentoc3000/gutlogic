@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/food/custom_food.dart';
 import '../../models/food_reference/custom_food_reference.dart';
 import '../../models/serializers.dart';
+import '../../util/null_utils.dart';
 import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
 import '../pantry_repository.dart';
@@ -43,7 +44,7 @@ class CustomFoodRepository with FirestoreRepository, FoodRepository<CustomFood> 
     final foodStream = docStream.asyncMap((querySnapshot) => _documentSnapshotToResults(querySnapshot.docs, query));
     final maybeFoodWithPantryEntry =
         mergePantryEntryStreams(pantryRepository: pantryRepository, foodStream: foodStream);
-    return maybeFoodWithPantryEntry.map((event) => removeNull(event).toBuiltList());
+    return maybeFoodWithPantryEntry.map((foods) => foods.whereNotNull().toBuiltList());
   }
 
   Stream<CustomFood?> streamFood(CustomFoodReference foodReference) {

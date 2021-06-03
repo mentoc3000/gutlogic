@@ -12,6 +12,7 @@ import 'diary_entry/meal_entry.dart';
 import 'diary_entry/symptom_entry.dart';
 import 'edamam_api/edamam_api_entry.dart';
 import 'edamam_api/edamam_api_food.dart';
+import 'edamam_api/edamam_api_irritant.dart';
 import 'edamam_api/edamam_api_measure.dart';
 import 'edamam_api/edamam_api_nutrients.dart';
 import 'edamam_api/edamam_api_qualified_measure.dart';
@@ -44,6 +45,7 @@ part 'serializers.g.dart';
   DiaryEntry,
   EdamamApiEntry,
   EdamamApiFood,
+  EdamamApiIrritant,
   EdamamApiMeasure,
   EdamamApiNutrients,
   EdamamApiQualifiedMeasure,

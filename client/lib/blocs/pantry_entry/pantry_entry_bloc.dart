@@ -1,13 +1,27 @@
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../models/food/food.dart';
+import '../../models/food_reference/edamam_food_reference.dart';
+import '../../models/pantry/pantry_entry.dart';
+import '../../resources/food/edamam_food_repository.dart';
 import '../../resources/pantry_repository.dart';
 import '../bloc_helpers.dart';
 import 'pantry_entry.dart';
 
 class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with StreamSubscriber {
   final PantryRepository repository;
+  final EdamamFoodRepository edamamFoodRepository;
 
-  PantryEntryBloc({required this.repository}) : super(PantryEntryLoading());
+  PantryEntryBloc({required this.repository, required this.edamamFoodRepository}) : super(PantryEntryLoading());
+
+  factory PantryEntryBloc.fromContext(BuildContext context) {
+    return PantryEntryBloc(
+        repository: context.read<PantryRepository>(), edamamFoodRepository: context.read<EdamamFoodRepository>());
+  }
 
   @override
   Stream<Transition<PantryEntryEvent, PantryEntryState>> transformEvents(
@@ -28,21 +42,34 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
         }
       }
       if (event is StreamEntry) {
-        yield PantryEntryLoaded(event.pantryEntry);
+        // TODO: load pantry entry without food first
+        yield PantryEntryLoading();
+
+        final food = await _pantryEntryFood(event.pantryEntry);
+
+        yield PantryEntryLoaded(pantryEntry: event.pantryEntry, food: food);
+
         streamSubscription = repository.stream(event.pantryEntry).listen(
-              (pantryEntry) => add(Load(pantryEntry!)),
+              (pantryEntry) => add(Load(pantryEntry: pantryEntry!, food: food)),
               onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
             );
       }
       if (event is StreamReference) {
+        // TODO: load pantry entry without food first
         yield PantryEntryLoading();
-        streamSubscription = repository.streamEntry(event.pantryEntryReference).listen(
-              (pantryEntry) => add(Load(pantryEntry!)),
-              onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
-            );
+        final pantryEntryStream = repository.streamEntry(event.pantryEntryReference);
+        final pantryEntry = (await pantryEntryStream.first)!;
+        final food = await _pantryEntryFood(pantryEntry);
+
+        yield PantryEntryLoaded(pantryEntry: pantryEntry, food: food);
+
+        streamSubscription = pantryEntryStream.listen(
+          (pantryEntry) => add(Load(pantryEntry: pantryEntry!, food: food)),
+          onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
+        );
       }
       if (event is Load) {
-        yield PantryEntryLoaded(event.pantryEntry);
+        yield PantryEntryLoaded(pantryEntry: event.pantryEntry, food: event.food);
       }
       if (event is Delete) {
         if (state is PantryEntryLoaded) {
@@ -65,6 +92,14 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
       }
     } catch (error, trace) {
       yield PantryEntryError.fromError(error: error, trace: trace);
+    }
+  }
+
+  FutureOr<Food?> _pantryEntryFood(PantryEntry pantryEntry) {
+    if (pantryEntry.foodReference is EdamamFoodReference) {
+      return edamamFoodRepository.fetchFood(pantryEntry.foodReference as EdamamFoodReference);
+    } else {
+      return null;
     }
   }
 }

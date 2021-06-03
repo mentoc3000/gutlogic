@@ -2,10 +2,13 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-import '../food/edamam_food.dart';
-import '../measure.dart';
 import './edamam_api_food.dart';
+import './edamam_api_irritant.dart';
 import './edamam_api_measure.dart';
+import '../../util/null_utils.dart';
+import '../food/edamam_food.dart';
+import '../irritant.dart';
+import '../measure.dart';
 
 part 'edamam_api_entry.g.dart';
 
@@ -14,6 +17,7 @@ abstract class EdamamApiEntry implements Built<EdamamApiEntry, EdamamApiEntryBui
 
   EdamamApiFood get food;
   BuiltList<EdamamApiMeasure> get measures;
+  BuiltList<EdamamApiIrritant>? get irritants;
 
   EdamamApiEntry._();
 
@@ -28,13 +32,10 @@ abstract class EdamamApiEntry implements Built<EdamamApiEntry, EdamamApiEntryBui
       if (!_isValidLabel(nativeMeasure.label)) continue;
 
       if (nativeMeasure.qualified == null) {
-
         if (_isValidWeight(nativeMeasure.weight)) {
           measures.add(Measure(unit: nativeMeasure.label!, weight: nativeMeasure.weight!));
         }
-
       } else {
-
         if (nativeMeasure.qualified == null) continue;
 
         for (var qualifiedMeasure in nativeMeasure.qualified!) {
@@ -45,17 +46,18 @@ abstract class EdamamApiEntry implements Built<EdamamApiEntry, EdamamApiEntryBui
                 _isValidLabel(qualifier.label) ? '${nativeMeasure.label}, ${qualifier.label}' : nativeMeasure.label!;
             measures.add(Measure(unit: unit, weight: qualifiedMeasure.weight!));
           }
-
         }
       }
     }
 
+    final irritants = this.irritants?.map((i) => i.toIrritant()).whereNotNull() ?? <Irritant>[];
+
     return EdamamFood(
-      id: food.foodId!,
-      name: food.label!,
-      measures: measures.build(),
-      brand: food.brand,
-    );
+        id: food.foodId!,
+        name: food.label!,
+        measures: measures.build(),
+        brand: food.brand,
+        irritants: irritants.toBuiltList());
   }
 }
 

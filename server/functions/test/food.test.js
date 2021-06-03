@@ -27,3 +27,15 @@ test('gets many foods', async (t) => {
   t.is(status, 200);
   t.is(data.hints.length, 22);
 });
+
+test('gets irritating food', async (t) => {
+  const foodId = 'food_auk9jeqampkhjsbyvvbsdbqyejif';
+  const input = { query: foodId };
+  const wrapped = fft.wrap(functions.edamamFoodSearch);
+  const { status, data } = await wrapped(input);
+  t.is(status, 200);
+  const food = data.hints[0];
+  t.is(food.irritants[0].name, 'Fructose');
+  t.is(food.irritants[0].isPresent, true);
+  t.is(food.irritants[0].concentration, 0.0316);
+});

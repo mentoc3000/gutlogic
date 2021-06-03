@@ -44,6 +44,7 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
 
         // If the meal element uses an Edamam food, fetch that food to get the measure options
         if (mealElement.foodReference is EdamamFoodReference) {
+          // TODO: load meal element without food first
           yield MealElementLoading();
           food = await edamamFoodRepository.fetchFood(mealElement.foodReference as EdamamFoodReference);
 

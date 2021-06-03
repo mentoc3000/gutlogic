@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../../models/food/food.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../util/error_report.dart';
 import '../../util/exception_messages.dart';
@@ -17,11 +18,12 @@ class PantryEntryLoading extends PantryEntryState {}
 
 class PantryEntryLoaded extends PantryEntryState {
   final PantryEntry pantryEntry;
+  final Food? food;
 
-  PantryEntryLoaded(this.pantryEntry);
+  PantryEntryLoaded({required this.pantryEntry, this.food});
 
   @override
-  List<Object?> get props => [pantryEntry];
+  List<Object?> get props => [pantryEntry, food];
 
   @override
   String toString() => 'PantryEntryLoaded { pantryEntry: ${pantryEntry.id} }';

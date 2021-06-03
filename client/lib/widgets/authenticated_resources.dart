@@ -48,6 +48,7 @@ class AuthenticatedResources extends StatelessWidget {
       // Wrap the child views in the global authenticated repositories/blocs.
       return MultiRepositoryProvider(
         providers: [
+          // TODO: add fromContext factories to all blocs and repos
           RepositoryProvider(create: (context) {
             return FirestoreService(userID: context.read<UserRepository>().user!.id);
           }),

@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 void main() {
   group('Irritant', () {
     test('constructs simple object', () {
-      final irritant = Irritant(name: 'Fructan');
+      final irritant = Irritant(name: 'Fructan', concentration: 1);
       expect(irritant.name, 'Fructan');
     });
 

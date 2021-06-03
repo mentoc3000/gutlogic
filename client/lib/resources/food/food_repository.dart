@@ -30,5 +30,3 @@ Stream<BuiltList<T?>> mergePantryEntryStreams<T extends Food>(
         (Iterable<T?> values) => values.toBuiltList());
   });
 }
-
-Iterable<T> removeNull<T>(Iterable<T?> iterable) => iterable.where((element) => element != null).cast<T>();

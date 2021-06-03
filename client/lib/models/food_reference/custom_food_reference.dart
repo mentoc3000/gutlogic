@@ -1,6 +1,8 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:built_collection/built_collection.dart';
 
+import '../irritant.dart';
 import '../model_interfaces.dart';
 import 'food_reference.dart';
 
@@ -15,6 +17,7 @@ abstract class CustomFoodReference
   factory CustomFoodReference({
     required String id,
     required String name,
+    BuiltList<Irritant>? irritants,
   }) = _$CustomFoodReference._;
 
   factory CustomFoodReference.fromBuilder([CustomFoodReferenceBuilder Function(CustomFoodReferenceBuilder) updates]) =

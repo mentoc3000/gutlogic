@@ -4,6 +4,7 @@ import 'package:built_collection/built_collection.dart';
 
 import '../../models/food/edamam_food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
+import '../../util/null_utils.dart';
 import '../food/edamam_service.dart';
 import '../pantry_repository.dart';
 import 'food_repository.dart';
@@ -23,7 +24,7 @@ class EdamamFoodRepository extends FoodRepository<EdamamFood> {
     final maybeEdamamFoods = edamamEntries.map((foods) => foods.map((f) => f.toEdamamFood()));
     final edamamFoodsWithPantry =
         mergePantryEntryStreams(pantryRepository: pantryRepository, foodStream: maybeEdamamFoods);
-    return edamamFoodsWithPantry.map((foods) => removeNull(foods).toBuiltList());
+    return edamamFoodsWithPantry.map((foods) => foods.whereNotNull().toBuiltList());
   }
 
   @override
