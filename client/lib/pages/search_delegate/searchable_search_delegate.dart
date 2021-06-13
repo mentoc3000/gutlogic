@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/model_interfaces.dart';
+import '../../style/gl_color_scheme.dart';
 import '../../widgets/gl_icons.dart';
 import '../../widgets/list_tiles/gl_list_tile.dart';
 
@@ -57,6 +58,11 @@ abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDele
     return theme.copyWith(
       textTheme: theme.textTheme.copyWith(
         headline6: theme.textTheme.headline6?.copyWith(color: theme.colorScheme.onPrimary),
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: glColorScheme.onPrimary,
+        selectionColor: glColorScheme.onPrimary.withOpacity(0.5),
+        selectionHandleColor: glColorScheme.onPrimary,
       ),
     );
   }
