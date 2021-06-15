@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../style/gl_colors.dart';
-import '../../../style/gl_theme.dart';
+import '../../../style/gl_text_style.dart';
 
 class NoEntriesTile extends StatelessWidget {
   final bool showElipses;
@@ -16,7 +16,7 @@ class NoEntriesTile extends StatelessWidget {
           if (showElipses) const Icon(Icons.more_vert),
           const Text(
             'No Entries',
-            style: tileHeadingTheme,
+            style: tileHeadingStyle,
           ),
           if (showElipses) const Icon(Icons.more_vert),
         ],

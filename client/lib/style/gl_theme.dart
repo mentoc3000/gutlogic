@@ -17,9 +17,16 @@ final ThemeData glTheme = ThemeData(
   canvasColor: GLColors.transparent,
 );
 
-const tileHeadingTheme = TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
-
-const tileSubheadingTheme = TextStyle(fontSize: 16.0);
+final ThemeData searchDelegateTheme = glTheme.copyWith(
+  textTheme: glTheme.textTheme.copyWith(
+    headline6: glTheme.textTheme.headline6?.copyWith(color: glTheme.colorScheme.onPrimary),
+  ),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: glColorScheme.onPrimary,
+    selectionColor: glColorScheme.onPrimary.withOpacity(0.5),
+    selectionHandleColor: glColorScheme.onPrimary,
+  ),
+);
 
 const brightnessOnBackground = Brightness.light;
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../style/gl_theme.dart';
+import '../../style/gl_text_style.dart';
 import 'gl_card.dart';
 
 class ExpansionCard extends StatelessWidget {
@@ -15,7 +15,7 @@ class ExpansionCard extends StatelessWidget {
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: GLCard(
         child: ExpansionTile(
-          title: Text(heading, style: tileHeadingTheme),
+          title: Text(heading, style: tileHeadingStyle),
           children: items,
         ),
       ),

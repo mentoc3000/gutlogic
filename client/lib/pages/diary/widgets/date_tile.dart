@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import '../../../style/gl_colors.dart';
-import '../../../style/gl_theme.dart';
+import '../../../style/gl_text_style.dart';
 
 class DateTile extends StatelessWidget {
   final DateTime datetime;
@@ -23,7 +23,7 @@ class DateTile extends StatelessWidget {
         ),
         child: Text(
           dateFormatter.format(datetime),
-          style: tileHeadingTheme,
+          style: tileHeadingStyle,
         ),
       ),
     );

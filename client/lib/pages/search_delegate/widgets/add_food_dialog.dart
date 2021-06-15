@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../style/gl_theme.dart';
 import '../../../widgets/alert_dialogs/text_field_dialog.dart';
 
 class AddFoodDialog extends StatelessWidget {
@@ -9,9 +10,13 @@ class AddFoodDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldDialog(
-      title: 'Enter new food:',
-      initialText: initialFoodName,
+    // Wrap in Theme to correct headline color
+    return Theme(
+      data: glTheme,
+      child: TextFieldDialog(
+        title: 'Enter new food:',
+        initialText: initialFoodName,
+      ),
     );
   }
 }

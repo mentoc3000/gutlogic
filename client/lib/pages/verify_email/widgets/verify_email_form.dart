@@ -6,7 +6,7 @@ import '../../../blocs/verify_email/verify_email.dart';
 import '../../../resources/user_repository.dart';
 import '../../../routes/routes.dart';
 import '../../../style/gl_colors.dart';
-import '../../../style/gl_theme.dart';
+import '../../../style/gl_text_style.dart';
 import '../../../widgets/buttons/buttons.dart';
 
 class VerifyEmailForm extends StatelessWidget {
@@ -25,8 +25,8 @@ class VerifyEmailForm extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(message, textAlign: TextAlign.center, style: tileSubheadingTheme),
-        Text(email, textAlign: TextAlign.center, style: tileSubheadingTheme),
+        Text(message, textAlign: TextAlign.center, style: tileSubheadingStyle),
+        Text(email, textAlign: TextAlign.center, style: tileSubheadingStyle),
         GLTertiaryButton(
             child: const StretchedButtonContent(label: 'Resend'), onPressed: () => onResendPressed(context)),
         GLTertiaryButton(child: const StretchedButtonContent(label: 'OK'), onPressed: () => onRefreshPressed(context)),

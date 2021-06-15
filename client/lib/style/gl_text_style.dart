@@ -21,3 +21,7 @@ void addFontLicenseToRegistry(AssetBundle rootBundle) {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 }
+
+const tileHeadingStyle = TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
+
+const tileSubheadingStyle = TextStyle(fontSize: 16.0);

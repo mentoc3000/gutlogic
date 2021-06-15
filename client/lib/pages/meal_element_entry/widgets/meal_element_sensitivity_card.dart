@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../../../models/sensitivity.dart';
-import '../../../style/gl_theme.dart';
+import '../../../style/gl_text_style.dart';
 import '../../../widgets/cards/push_card.dart';
 import '../../../widgets/sensitivity_indicator.dart';
 
@@ -30,7 +30,7 @@ class MealElementSensitivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const style = tileSubheadingTheme;
+    const style = tileSubheadingStyle;
     return PushCard(
       child: Row(
         children: [

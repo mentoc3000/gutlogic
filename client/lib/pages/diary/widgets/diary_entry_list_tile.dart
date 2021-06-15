@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../blocs/diary/diary.dart';
 import '../../../models/diary_entry/diary_entry.dart';
-import '../../../style/gl_theme.dart';
+import '../../../style/gl_text_style.dart';
 import '../../../widgets/alert_dialogs/confirm_delete_dialog.dart';
 import '../../../widgets/dismissible/delete_dismissible.dart';
 import '../../../widgets/gl_icons.dart';
@@ -47,7 +47,7 @@ class DiaryEntryListTile extends StatelessWidget {
   Widget buildHeading() {
     return Text(
       heading,
-      style: tileHeadingTheme,
+      style: tileHeadingStyle,
     );
   }
 
@@ -60,7 +60,7 @@ class DiaryEntryListTile extends StatelessWidget {
         children: subheadings
             .map((s) => Container(
                   padding: const EdgeInsets.all(6),
-                  child: Text(s, style: tileSubheadingTheme),
+                  child: Text(s, style: tileSubheadingStyle),
                 ))
             .toList(),
       ),

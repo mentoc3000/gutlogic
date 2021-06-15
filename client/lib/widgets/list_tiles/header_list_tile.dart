@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../style/gl_theme.dart';
+import '../../style/gl_text_style.dart';
 
 class HeaderListTile extends StatelessWidget {
   final String heading;
@@ -12,7 +12,7 @@ class HeaderListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(heading, style: tileHeadingTheme),
+      title: Text(heading, style: tileHeadingStyle),
       onTap: onTap,
       trailing: trailing,
     );

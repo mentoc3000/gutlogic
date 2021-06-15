@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/pantry_filter/pantry_filter.dart';
 import '../../../models/pantry/pantry_filter.dart';
+import '../../../style/gl_text_style.dart';
 import '../../../style/gl_theme.dart';
 import '../../../widgets/buttons/buttons.dart';
 import 'sensitivity_filter.dart';
@@ -34,7 +35,7 @@ class PantryFilterWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Filter', style: tileHeadingTheme),
+                    const Text('Filter', style: tileHeadingStyle),
                     GLSecondaryButton(
                         onPressed: pantryFilterCubit.showAll, child: const ShrinkWrappedButtonContent(label: 'Clear')),
                   ],
