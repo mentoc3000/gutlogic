@@ -1,17 +1,17 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
-import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
+import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_element_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_entry_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'meal_entry_repository_test.mocks.dart';
@@ -23,7 +23,7 @@ void main() {
     late MealElement mealElement1;
     late MealElement mealElement2;
     late MealEntry diaryEntry;
-    late MockFirestoreInstance instance;
+    late FakeFirebaseFirestore instance;
     late MockFirestoreService firestoreService;
     late MealEntryRepository repository;
     late MockMealElementRepository mealElementRepository;
@@ -54,7 +54,7 @@ void main() {
         notes: notes,
       );
 
-      instance = MockFirestoreInstance();
+      instance = FakeFirebaseFirestore();
       instance.collection('diary').doc(diaryEntryId).set({
         '\$': 'MealEntry',
         'mealElements': mealElements.map(serializers.serialize).toList(),

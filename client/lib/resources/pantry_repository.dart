@@ -25,7 +25,7 @@ class PantryRepository with FirestoreRepository implements SearchableRepository<
   PantryRepository({required FirestoreService firestoreService, required this.crashlytics}) {
     this.firestoreService = firestoreService;
     final pantryStream = firestoreService.userPantryCollection.snapshots().map((querySnapshot) =>
-        BuiltList<PantryEntry>(querySnapshot.docs.map(_documentTopantryEntry).where((entry) => entry != null)));
+        BuiltList<PantryEntry>(querySnapshot.docs.map(_documentToPantryEntry).where((entry) => entry != null)));
     _behaviorSubject.addStream(pantryStream);
   }
 
@@ -131,9 +131,9 @@ class PantryRepository with FirestoreRepository implements SearchableRepository<
   Future<void> updateNotes(PantryEntry pantryEntry, String newNotes) =>
       updateEntry(pantryEntry.rebuild((b) => b..notes = newNotes));
 
-  PantryEntry? _documentTopantryEntry(DocumentSnapshot document) {
+  PantryEntry? _documentToPantryEntry(UntypedSnapshot snapshot) {
     try {
-      return serializers.deserializeWith(PantryEntry.serializer, FirestoreService.getDocumentData(document));
+      return serializers.deserializeWith(PantryEntry.serializer, FirestoreService.getDocumentData(snapshot));
     } on DeserializationError catch (error, trace) {
       // If entry is corrupt, log and ignore it
       logger.w(error);

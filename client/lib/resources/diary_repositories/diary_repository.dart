@@ -32,7 +32,7 @@ class DiaryRepository with FirestoreRepository, DiaryEntryAdder, DiaryEntryDelet
     throw UnimplementedError();
   }
 
-  DiaryEntry? documentToDiaryEntry(DocumentSnapshot document) {
+  DiaryEntry? documentToDiaryEntry(DocumentSnapshot<UntypedData> document) {
     try {
       return deserialize(FirestoreService.getDocumentData(document));
     } on DeserializationError catch (error, trace) {

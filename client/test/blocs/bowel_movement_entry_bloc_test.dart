@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever, verifyNoMoreInteractions;
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/bowel_movement_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/models/diary_entry/diary_entry.dart';
 import 'package:gutlogic/resources/diary_repositories/bowel_movement_entry_repository.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

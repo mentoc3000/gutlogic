@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide when, verify, verifyNever;
 import 'package:built_collection/src/list.dart';
-import 'package:gutlogic/blocs/diary/diary.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
+import 'package:gutlogic/blocs/diary/diary.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/models/diary_entry/diary_entry.dart';
@@ -14,8 +14,8 @@ import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

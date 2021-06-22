@@ -1,4 +1,4 @@
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever, verifyNoMoreInteractions;
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/pantry_entry/pantry_entry.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
@@ -8,6 +8,7 @@ import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

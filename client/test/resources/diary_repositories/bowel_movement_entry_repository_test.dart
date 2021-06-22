@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/resources/diary_repositories/bowel_movement_entry_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'bowel_movement_entry_repository_test.mocks.dart';
@@ -15,7 +15,7 @@ void main() {
   group('BowelMovementEntryRepository', () {
     late String diaryEntryId;
     late BowelMovementEntry diaryEntry;
-    late MockFirestoreInstance instance;
+    late FakeFirebaseFirestore instance;
     late FirestoreService firestoreService;
     late BowelMovementEntryRepository repository;
 
@@ -31,7 +31,7 @@ void main() {
         bowelMovement: BowelMovement(type: type, volume: volume),
         notes: notes,
       );
-      instance = MockFirestoreInstance();
+      instance = FakeFirebaseFirestore();
       instance.collection('diary').doc(diaryEntryId).set({
         '\$': 'BowelMovementEntry',
         'bowelMovement': {

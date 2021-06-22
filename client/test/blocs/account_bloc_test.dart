@@ -1,11 +1,11 @@
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide when, verify;
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/auth/auth.dart';
 import 'package:gutlogic/blocs/account/account.dart';
 import 'package:gutlogic/models/application_user.dart';
 import 'package:gutlogic/resources/user_repository.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

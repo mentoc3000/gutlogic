@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide when, verify;
 import 'package:equatable/equatable.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:test/test.dart';

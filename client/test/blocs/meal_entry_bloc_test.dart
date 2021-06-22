@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever, verifyNoMoreInteractions;
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/meal_entry/meal_entry.dart';
@@ -9,8 +9,8 @@ import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_entry_repository.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

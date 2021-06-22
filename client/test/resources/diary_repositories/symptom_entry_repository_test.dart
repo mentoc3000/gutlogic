@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
-import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/serializers.dart';
+import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'symptom_entry_repository_test.mocks.dart';
@@ -18,7 +18,7 @@ void main() {
   group('SymptomEntryRepository', () {
     late String diaryEntryId;
     late SymptomEntry diaryEntry;
-    late MockFirestoreInstance instance;
+    late FakeFirebaseFirestore instance;
     late FirestoreService firestoreService;
     late SymptomEntryRepository repository;
 
@@ -34,7 +34,7 @@ void main() {
         symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: name), severity: severity),
         notes: notes,
       );
-      instance = MockFirestoreInstance();
+      instance = FakeFirebaseFirestore();
       instance.collection('diary').doc(diaryEntryId).set({
         '\$': 'SymptomEntry',
         'symptom': {

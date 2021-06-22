@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever, verifyNoMoreInteractions;
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/symptom_entry/symptom_entry.dart';
 import 'package:gutlogic/models/diary_entry/diary_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
+import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
-import 'package:gutlogic/models/severity.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

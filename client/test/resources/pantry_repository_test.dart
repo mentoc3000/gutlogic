@@ -1,17 +1,17 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/pantry/pantry_entry_reference.dart';
 import 'package:gutlogic/models/sensitivity.dart';
 import 'package:gutlogic/models/serializers.dart';
-import 'package:gutlogic/resources/pantry_repository.dart';
-import 'package:gutlogic/resources/firebase/firestore_service.dart';
 import 'package:gutlogic/resources/firebase/crashlytics_service.dart';
-import 'package:mockito/mockito.dart';
+import 'package:gutlogic/resources/firebase/firestore_service.dart';
+import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';
@@ -24,7 +24,7 @@ void main() {
     late CustomFood food;
     late PantryEntry pantryEntry;
     late BuiltList<PantryEntry> pantryEntries;
-    late MockFirestoreInstance instance;
+    late FakeFirebaseFirestore instance;
     late FirestoreService firestoreService;
     late PantryRepository repository;
 
@@ -40,7 +40,7 @@ void main() {
         notes: notes,
       );
       pantryEntries = [pantryEntry].build();
-      instance = MockFirestoreInstance();
+      instance = FakeFirebaseFirestore();
       final pantryCollection = instance.collection('pantry');
       await pantryCollection
           .doc(pantryEntryId)

@@ -1,19 +1,20 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever, verifyNoMoreInteractions;
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/meal_element/meal_element.dart';
-import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
+import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/measure.dart';
 import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_element_repository.dart';
-import 'package:mockito/mockito.dart';
+import 'package:gutlogic/resources/food/edamam_food_repository.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

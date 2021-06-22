@@ -163,10 +163,10 @@ server:deploy:
 # Aliases flutter to use fvm if fvm is installed. This is so fvm is used on the mac runner, but not on docker, where it is redundant.
 # TODO use a custom docker image with fvm already installed so we can use fvm on both the macos and docker runners
 .flutter-fvm: &flutter-fvm >
-  if flutter pub global list | grep -q "fvm"; then
+  if command -v fvm; then
     echo "Using FVM";
-    flutter pub global run fvm:main install;
-    alias flutter="flutter pub global run fvm:main flutter";
+    fvm install;
+    alias flutter="fvm flutter";
   fi;
 
 .client-cache: &client-cache
@@ -177,7 +177,7 @@ server:deploy:
     - client/.pub-cache
 
 .client:
-  image: cirrusci/flutter:2.0.5
+  image: cirrusci/flutter:2.2.1
   tags:
     - docker
   before_script:
@@ -235,7 +235,7 @@ client:lint:
   extends:
     - .client
   script:
-    - dartanalyzer --fatal-warnings lib test
+    - flutter analyze --fatal-warnings lib test
     # Delete generated files after analysis but before formatting. They cause the formatter to quit with an error
     # because they are formatter to 80 columns. There's no way to change the source_gen formatting, and no way to
     # exclude the generated files, so we have to delete them (see https://github.com/dart-lang/dart_style/issues/864).
@@ -287,6 +287,7 @@ client:build:ios:
   tags:
     - macos
   script:
+    - pod repo update
     - flutter build ios --flavor $FLUTTER_FLAVOR --release --no-codesign
   rules:
     - *client-merge-request-rule

@@ -1,18 +1,18 @@
-import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gutlogic/auth/auth_provider.dart';
-import 'package:gutlogic/resources/user_repository.dart';
-import 'package:gutlogic/models/application_user.dart';
 import 'package:gutlogic/auth/auth.dart';
+import 'package:gutlogic/auth/auth_provider.dart';
+import 'package:gutlogic/models/application_user.dart';
+import 'package:gutlogic/resources/user_repository.dart';
 import 'package:mockito/mockito.dart';
 
 import '../mocks/mock_firebase_auth.dart';
 
 void main() {
   group('UserRepository', () {
-    late MockFirestoreInstance firebaseData;
+    late FakeFirebaseFirestore firebaseData;
     late MockFirebaseAuth firebaseAuth;
     late UserRepository userRepository;
 
@@ -21,7 +21,7 @@ void main() {
     const mockPassword = 'test-password';
 
     setUp(() {
-      firebaseData = MockFirestoreInstance();
+      firebaseData = FakeFirebaseFirestore();
 
       firebaseAuth = MockFirebaseAuth();
       firebaseAuth.createMockFirebaseUser = () {

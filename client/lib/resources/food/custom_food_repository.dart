@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/food/custom_food.dart';
 import '../../models/food_reference/custom_food_reference.dart';
@@ -15,16 +14,12 @@ class CustomFoodRepository with FirestoreRepository {
     this.firestoreService = firestoreService;
   }
 
-  Future<CustomFood?> _documentSnapshotToCustomFood(DocumentSnapshot documentSnapshot) async {
-    return serializers.deserializeWith(
-      CustomFood.serializer,
-      FirestoreService.getDocumentData(documentSnapshot),
-    );
+  Future<CustomFood?> _documentSnapshotToCustomFood(UntypedSnapshot snapshot) async {
+    return serializers.deserializeWith(CustomFood.serializer, FirestoreService.getDocumentData(snapshot));
   }
 
-  Future<Iterable<CustomFood?>> _documentSnapshotToResults(
-      Iterable<DocumentSnapshot> documentSnapshots, String query) async {
-    final customFoods = await Future.wait(documentSnapshots.map(_documentSnapshotToCustomFood));
+  Future<Iterable<CustomFood?>> _documentSnapshotToResults(Iterable<UntypedSnapshot> snapshots, String query) async {
+    final customFoods = await Future.wait(snapshots.map(_documentSnapshotToCustomFood));
     return _matchQuery(customFoods, query);
   }
 

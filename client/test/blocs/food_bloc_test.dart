@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart' hide when, verify;
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/food/food.dart';
@@ -10,6 +10,7 @@ import 'package:gutlogic/models/food/food.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

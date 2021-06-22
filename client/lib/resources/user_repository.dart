@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import '../auth/auth.dart';
 import '../models/application_user.dart';
 import '../models/serializers.dart';
+import 'firebase/firestore_service.dart';
 
 class UserRepository {
   final FirebaseFirestore _firebaseData;
@@ -40,7 +41,7 @@ class UserRepository {
       return prev?.uid == next?.uid;
     }
 
-    Stream<DocumentSnapshot?> mapUserToSnapshotStream(User? user) {
+    Stream<UntypedSnapshot?> mapUserToSnapshotStream(User? user) {
       return user == null ? Stream.value(null) : _getUserMetaDocumentReference(user.uid).snapshots();
     }
 
@@ -55,7 +56,7 @@ class UserRepository {
       if (values[0] == null || values[1] == null) return null;
 
       final user = values[0] as User;
-      final snap = values[1] as DocumentSnapshot;
+      final snap = values[1] as UntypedSnapshot;
 
       final data = snap.data() ?? {};
 
@@ -83,7 +84,7 @@ class UserRepository {
   }
 
   /// Get the Firebase DocumentReference with the user metadata.
-  DocumentReference _getUserMetaDocumentReference(String uid) {
+  DocumentReference<UntypedData> _getUserMetaDocumentReference(String uid) {
     return _firebaseData.collection('users').doc(uid);
   }
 
