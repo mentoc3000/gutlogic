@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/food/food.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
-import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food/food.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/search_delegate/food_search_delegate.dart';
@@ -92,9 +91,7 @@ void main() {
     });
 
     testWidgets('shows search results', (WidgetTester tester) async {
-      whenListen(foodBloc,
-          Stream.value(FoodsLoaded(query: '', customFoods: [food].build(), edamamFoods: <EdamamFood>[].build())),
-          initialState: FoodsLoading());
+      whenListen(foodBloc, Stream.value(FoodsLoaded(query: '', items: [food].build())), initialState: FoodsLoading());
 
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
@@ -125,9 +122,7 @@ void main() {
     });
 
     testWidgets('clears search', (WidgetTester tester) async {
-      whenListen(foodBloc,
-          Stream.value(FoodsLoaded(query: '', customFoods: [food].build(), edamamFoods: <EdamamFood>[].build())),
-          initialState: FoodsLoading());
+      whenListen(foodBloc, Stream.value(FoodsLoaded(query: '', items: [food].build())), initialState: FoodsLoading());
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(

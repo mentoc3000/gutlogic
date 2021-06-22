@@ -2,13 +2,13 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-import './edamam_api_food.dart';
-import './edamam_api_irritant.dart';
-import './edamam_api_measure.dart';
 import '../../util/null_utils.dart';
 import '../food/edamam_food.dart';
 import '../irritant.dart';
 import '../measure.dart';
+import './edamam_api_food.dart';
+import './edamam_api_irritant.dart';
+import './edamam_api_measure.dart';
 
 part 'edamam_api_entry.g.dart';
 

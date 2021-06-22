@@ -3,9 +3,6 @@ import 'package:gutlogic/resources/food/edamam_service.dart';
 import 'package:gutlogic/resources/pantry_repository.dart';
 import 'package:gutlogic/models/edamam_api/edamam_api_entry.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
-import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
-import 'package:gutlogic/models/pantry/pantry_entry.dart';
-import 'package:gutlogic/models/sensitivity.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
@@ -16,18 +13,12 @@ import 'edamam_sample_data.dart';
 @GenerateMocks([EdamamService, PantryRepository])
 void main() {
   group('EdamamFoodRepository', () {
-    late EdamamFoodReference foodReference;
     late EdamamFoodRepository foodRepository;
     late MockEdamamService edamamService;
-    late MockPantryRepository pantryRepository;
-    late PantryEntry pantryEntry;
     late EdamamFood food;
 
     setUp(() async {
-      final foodWithoutPantry = brownRiceCakeEntry.toEdamamFood()!;
-      foodReference = foodWithoutPantry.toFoodReference();
-      pantryEntry = PantryEntry(id: '01', sensitivity: Sensitivity.mild, foodReference: foodReference);
-      food = foodWithoutPantry.addPantryEntryReference(pantryEntry.toReference());
+      food = brownRiceCakeEntry.toEdamamFood()!;
 
       edamamService = MockEdamamService();
       when(edamamService.getById(any)).thenAnswer((_) => Future.value(brownRiceCakeEntry));
@@ -35,11 +26,7 @@ void main() {
       when(edamamService.searchFood('apple')).thenAnswer((_) => Future.value(appleQueryEntries));
       when(edamamService.searchFood('avocado')).thenAnswer((_) => Future.value(avocadoQueryEntries));
 
-      pantryRepository = MockPantryRepository();
-      when(pantryRepository.streamByFood(any)).thenAnswer((_) => Stream.value(null));
-      when(pantryRepository.streamByFood(foodReference)).thenAnswer((_) => Stream.value(pantryEntry));
-
-      foodRepository = EdamamFoodRepository(edamamService: edamamService, pantryRepository: pantryRepository);
+      foodRepository = EdamamFoodRepository(edamamService: edamamService);
     });
 
     test('fetches query', () async {
@@ -63,14 +50,8 @@ void main() {
     });
 
     test('fetches single food', () async {
-      final fetchedFood = await foodRepository.fetchFood(foodReference);
+      final fetchedFood = await foodRepository.fetchFood(food.toFoodReference());
       expect(fetchedFood, food);
-    });
-
-    test('fetches single food with pantry entry', () async {
-      final pantryEntryReference = pantryEntry.toReference();
-      final fetchedFood = await foodRepository.fetchFood(foodReference);
-      expect(fetchedFood!.pantryEntryReference, pantryEntryReference);
     });
 
     test('streams query', () async {

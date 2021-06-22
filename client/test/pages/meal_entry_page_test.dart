@@ -7,7 +7,6 @@ import 'package:gutlogic/blocs/food/food.dart';
 import 'package:gutlogic/blocs/meal_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
-import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
@@ -157,9 +156,7 @@ void main() {
 
       final newFood = CustomFood(id: '919', name: 'Hoisin Sauce');
       final foods = [newFood].build();
-      whenListen(
-          foodBloc, Stream.value(FoodsLoaded(query: '', customFoods: foods, edamamFoods: <EdamamFood>[].build())),
-          initialState: FoodsLoading());
+      whenListen(foodBloc, Stream.value(FoodsLoaded(query: '', items: foods)), initialState: FoodsLoading());
 
       // Show initial mealentry
       await tester.pumpWidget(mealEntryPage);

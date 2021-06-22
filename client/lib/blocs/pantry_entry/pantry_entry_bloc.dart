@@ -7,20 +7,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/food/food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
-import '../../resources/food/edamam_food_repository.dart';
+import '../../resources/food/food_service.dart';
 import '../../resources/pantry_repository.dart';
 import '../bloc_helpers.dart';
 import 'pantry_entry.dart';
 
 class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with StreamSubscriber {
   final PantryRepository repository;
-  final EdamamFoodRepository edamamFoodRepository;
+  final FoodService foodService;
 
-  PantryEntryBloc({required this.repository, required this.edamamFoodRepository}) : super(PantryEntryLoading());
+  PantryEntryBloc({required this.repository, required this.foodService}) : super(PantryEntryLoading());
 
   factory PantryEntryBloc.fromContext(BuildContext context) {
-    return PantryEntryBloc(
-        repository: context.read<PantryRepository>(), edamamFoodRepository: context.read<EdamamFoodRepository>());
+    return PantryEntryBloc(repository: context.read<PantryRepository>(), foodService: context.read<FoodService>());
   }
 
   @override
@@ -97,7 +96,7 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
 
   FutureOr<Food?> _pantryEntryFood(PantryEntry pantryEntry) {
     if (pantryEntry.foodReference is EdamamFoodReference) {
-      return edamamFoodRepository.fetchFood(pantryEntry.foodReference as EdamamFoodReference);
+      return foodService.fetchFood(pantryEntry.foodReference as EdamamFoodReference);
     } else {
       return null;
     }

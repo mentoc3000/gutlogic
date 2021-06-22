@@ -9,13 +9,10 @@ import '../../models/serializers.dart';
 import '../../util/null_utils.dart';
 import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
-import '../pantry_repository.dart';
-import 'food_repository.dart';
 
-class CustomFoodRepository with FirestoreRepository, FoodRepository<CustomFood> {
-  CustomFoodRepository({required FirestoreService firestoreService, required PantryRepository pantryRepository}) {
+class CustomFoodRepository with FirestoreRepository {
+  CustomFoodRepository({required FirestoreService firestoreService}) {
     this.firestoreService = firestoreService;
-    this.pantryRepository = pantryRepository;
   }
 
   Future<CustomFood?> _documentSnapshotToCustomFood(DocumentSnapshot documentSnapshot) async {
@@ -36,25 +33,21 @@ class CustomFoodRepository with FirestoreRepository, FoodRepository<CustomFood> 
     return matches.cast<CustomFood>().toList()..sort((a, b) => a.queryText().compareTo(b.queryText()));
   }
 
-  @override
   Stream<BuiltList<CustomFood>> streamQuery(String query) {
     if (query.isEmpty) return Stream.value(<CustomFood>[].build());
 
     final docStream = firestoreService.customFoodCollection.snapshots();
-    final foodStream = docStream.asyncMap((querySnapshot) => _documentSnapshotToResults(querySnapshot.docs, query));
-    final maybeFoodWithPantryEntry =
-        mergePantryEntryStreams(pantryRepository: pantryRepository, foodStream: foodStream);
-    return maybeFoodWithPantryEntry.map((foods) => foods.whereNotNull().toBuiltList());
+    return docStream
+        .asyncMap((querySnapshot) => _documentSnapshotToResults(querySnapshot.docs, query))
+        .map((event) => event.whereNotNull().toBuiltList());
   }
 
   Stream<CustomFood?> streamFood(CustomFoodReference foodReference) {
     final id = foodReference.id;
     final docStream = firestoreService.customFoodCollection.doc(id).snapshots();
-    final foodStream = docStream.asyncMap(_documentSnapshotToCustomFood);
-    return mergePantryEntryStream(pantryRepository: pantryRepository, foodStream: foodStream);
+    return docStream.asyncMap(_documentSnapshotToCustomFood);
   }
 
-  @override
   Future<BuiltList<CustomFood>> fetchQuery(String query) => streamQuery(query).first;
 
   Future<CustomFood?> fetchFood(CustomFoodReference foodReference) => streamFood(foodReference).first;

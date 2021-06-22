@@ -1,8 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../models/food/custom_food.dart';
-import '../../models/food/edamam_food.dart';
 import '../../models/food/food.dart';
 import '../../util/error_report.dart';
 import '../../util/exception_messages.dart';
@@ -37,18 +35,15 @@ class NoFoodsFound extends FoodState with Query {
 
 class FoodsLoaded extends FoodState with Query, SearchableLoaded {
   @override
-  BuiltList<Food> get items => <Food>[...customFoods, ...edamamFoods].build();
-
-  @override
   final String query;
 
-  final BuiltList<CustomFood> customFoods;
-  final BuiltList<EdamamFood> edamamFoods;
+  @override
+  final BuiltList<Food> items;
 
-  FoodsLoaded({required this.query, required this.edamamFoods, required this.customFoods});
+  FoodsLoaded({required this.query, required this.items});
 
   @override
-  List<Object?> get props => [query, customFoods, edamamFoods];
+  List<Object?> get props => [query, items];
 }
 
 class FoodError extends FoodState with ErrorState, ErrorRecorder {

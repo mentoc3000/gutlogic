@@ -7,22 +7,21 @@ import 'package:pedantic/pedantic.dart';
 import '../../models/food/food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
 import '../../resources/diary_repositories/meal_element_repository.dart';
-import '../../resources/food/edamam_food_repository.dart';
+import '../../resources/food/food_service.dart';
 import '../bloc_helpers.dart';
 import 'meal_element_event.dart';
 import 'meal_element_state.dart';
 
 class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with StreamSubscriber {
   final MealElementRepository mealElementRepository;
-  final EdamamFoodRepository edamamFoodRepository;
+  final FoodService foodService;
 
-  MealElementBloc({required this.mealElementRepository, required this.edamamFoodRepository})
-      : super(MealElementLoading());
+  MealElementBloc({required this.mealElementRepository, required this.foodService}) : super(MealElementLoading());
 
   factory MealElementBloc.fromContext(BuildContext context) {
     return MealElementBloc(
       mealElementRepository: context.read<MealElementRepository>(),
-      edamamFoodRepository: context.read<EdamamFoodRepository>(),
+      foodService: context.read<FoodService>(),
     );
   }
 
@@ -46,7 +45,7 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
         if (mealElement.foodReference is EdamamFoodReference) {
           // TODO: load meal element without food first
           yield MealElementLoading();
-          food = await edamamFoodRepository.fetchFood(mealElement.foodReference as EdamamFoodReference);
+          food = await foodService.fetchFood(mealElement.foodReference);
 
           // If the meal element doesn't have a measure yet, set it to the first option
           if (mealElement.quantity?.measure == null && (food?.measures.isNotEmpty ?? false)) {

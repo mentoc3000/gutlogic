@@ -2,7 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/food/custom_food.dart';
-import '../../models/food/edamam_food.dart';
+import '../../models/food/food.dart';
 import '../../resources/firebase/analytics_service.dart';
 import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
@@ -48,16 +48,15 @@ class DeleteCustomFood extends FoodEvent implements TrackedEvent {
 
 class LoadFoods extends FoodEvent {
   final String query;
-  final BuiltList<CustomFood> customFoods;
-  final BuiltList<EdamamFood> edamamFoods;
+  final BuiltList<Food> foods;
 
-  const LoadFoods({required this.query, required this.customFoods, required this.edamamFoods});
-
-  @override
-  List<Object?> get props => [query, customFoods, edamamFoods];
+  const LoadFoods({required this.query, required this.foods});
 
   @override
-  String toString() => 'LoadFoods { customFoods: ${customFoods.length}, edamamFoods: ${edamamFoods.length} }';
+  List<Object?> get props => [query, foods];
+
+  @override
+  String toString() => 'LoadFoods { foods: ${foods.length} }';
 }
 
 class ThrowFoodError extends FoodEvent with ErrorEvent {

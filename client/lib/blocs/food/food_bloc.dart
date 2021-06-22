@@ -2,30 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:pedantic/pedantic.dart';
-import 'package:rxdart/rxdart.dart';
 
-import '../../models/food/custom_food.dart';
-import '../../models/food/edamam_food.dart';
-import '../../resources/food/custom_food_repository.dart';
-import '../../resources/food/edamam_food_repository.dart';
+import '../../resources/food/food_service.dart';
 import '../bloc_helpers.dart';
 import 'food_event.dart';
 import 'food_state.dart';
 
 class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
-  final CustomFoodRepository customFoodRepository;
-  final EdamamFoodRepository edamamFoodRepository;
+  final FoodService foodService;
 
-  FoodBloc({required this.customFoodRepository, required this.edamamFoodRepository}) : super(FoodsLoading());
+  FoodBloc({required this.foodService}) : super(FoodsLoading());
 
-  factory FoodBloc.fromContext(BuildContext context) {
-    return FoodBloc(
-      customFoodRepository: context.read<CustomFoodRepository>(),
-      edamamFoodRepository: context.read<EdamamFoodRepository>(),
-    );
-  }
+  factory FoodBloc.fromContext(BuildContext context) => FoodBloc(foodService: context.read<FoodService>());
 
   @override
   Stream<Transition<FoodEvent, FoodState>> transformEvents(
@@ -47,37 +36,25 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
         yield FoodsLoading();
 
         await streamSubscription?.cancel();
-        final customFoodStream = customFoodRepository.streamQuery(event.query);
-        final edamamFoodStream = edamamFoodRepository.streamQuery(event.query);
 
-        final combinedStream = CombineLatestStream(
-          [customFoodStream, edamamFoodStream],
-          (values) => _Results(
-            edamam: values.last as BuiltList<EdamamFood>,
-            custom: values.first as BuiltList<CustomFood>,
-          ),
-        );
-
-        streamSubscription = combinedStream.listen(
-          (combinedFoods) =>
-              add(LoadFoods(query: event.query, customFoods: combinedFoods.custom, edamamFoods: combinedFoods.edamam)),
-          onError: (error, StackTrace trace) => add(ThrowFoodError.fromError(error: error, trace: trace)),
-        );
+        streamSubscription = foodService.streamQuery(event.query).listen(
+              (foods) => add(LoadFoods(query: event.query, foods: foods)),
+              onError: (error, StackTrace trace) => add(ThrowFoodError.fromError(error: error, trace: trace)),
+            );
       }
       if (event is LoadFoods) {
-        final customFoods = event.customFoods;
-        final edamamFoods = event.edamamFoods;
-        if (customFoods.isEmpty && edamamFoods.isEmpty) {
+        final foods = event.foods;
+        if (foods.isEmpty) {
           yield NoFoodsFound(query: event.query);
         } else {
-          yield FoodsLoaded(query: event.query, customFoods: customFoods, edamamFoods: edamamFoods);
+          yield FoodsLoaded(query: event.query, items: foods);
         }
       }
       if (event is CreateCustomFood) {
-        unawaited(customFoodRepository.add(name: event.foodName));
+        unawaited(foodService.add(name: event.foodName));
       }
       if (event is DeleteCustomFood) {
-        unawaited(customFoodRepository.delete(event.customFood));
+        unawaited(foodService.delete(event.customFood));
       }
       if (event is ThrowFoodError) {
         yield FoodError.fromReport(event.report);
@@ -86,11 +63,4 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
       yield FoodError.fromError(error: error, trace: trace);
     }
   }
-}
-
-class _Results {
-  final BuiltList<EdamamFood> edamam;
-  final BuiltList<CustomFood> custom;
-
-  const _Results({required this.edamam, required this.custom});
 }
