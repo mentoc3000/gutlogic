@@ -9,6 +9,7 @@ void main() {
     test('is serializable', () {
       final asparagus = serializers.deserializeWith(EdamamApiEntry.serializer, asparagusResult);
       expect(asparagus!.measures[2].qualified![1].weight, 16.0);
+      expect(asparagus.irritants![0].concentration, 0.0321);
     });
 
     test('converts to EdamamFood', () {
@@ -56,6 +57,24 @@ void main() {
       final nativeFood = serializers.deserializeWith(EdamamApiEntry.serializer, incompleteResult);
       final food = nativeFood!.toEdamamFood();
       expect(food!.measures.length, 2);
+    });
+
+    test('converts with null irritant data', () {
+      const result = {
+        'food': {
+          'foodId': 'food_b7bgzddbqq26mia27xpv7acn083m',
+          'uri': 'http://www.edamam.com/ontologies/edamam.owl#Food_asparagus',
+          'label': 'Asparagus',
+          'nutrients': {'ENERC_KCAL': 20.0, 'PROCNT': 2.2, 'FAT': 0.12, 'CHOCDF': 3.88, 'FIBTG': 2.1},
+          'category': 'Generic foods',
+          'categoryLabel': 'food',
+          'image': 'https://www.edamam.com/food-img/159/159dec8bbcabf7ed641a57b40a2d2eb9.jpg'
+        },
+      };
+
+      final nativeFood = serializers.deserializeWith(EdamamApiEntry.serializer, result);
+      final food = nativeFood!.toEdamamFood();
+      expect(food!.irritants, null);
     });
   });
 }

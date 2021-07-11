@@ -50,14 +50,15 @@ abstract class EdamamApiEntry implements Built<EdamamApiEntry, EdamamApiEntryBui
       }
     }
 
-    final irritants = this.irritants?.map((i) => i.toIrritant()).whereNotNull() ?? <Irritant>[];
+    final irritants = this.irritants?.map((i) => i.toIrritant()).whereNotNull().toBuiltList();
 
     return EdamamFood(
-        id: food.foodId!,
-        name: food.label!,
-        measures: measures.build(),
-        brand: food.brand,
-        irritants: irritants.toBuiltList());
+      id: food.foodId!,
+      name: food.label!,
+      measures: measures.build(),
+      brand: food.brand,
+      irritants: irritants,
+    );
   }
 }
 

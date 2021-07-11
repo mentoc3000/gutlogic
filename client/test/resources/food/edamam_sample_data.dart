@@ -18,7 +18,8 @@ const brownRiceCakeResult = {
     {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_ounce', 'label': 'Ounce', 'weight': 28.349524},
     {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_pound', 'label': 'Pound', 'weight': 453.59238},
     {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram', 'label': 'Kilogram', 'weight': 1000}
-  ]
+  ],
+  'irritants': [],
 };
 
 final EdamamApiEntry brownRiceCakeEntry = serializers.deserializeWith(EdamamApiEntry.serializer, brownRiceCakeResult)!;
@@ -106,6 +107,10 @@ const asparagusResult = {
     {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_pound', 'label': 'Pound', 'weight': 453.59237},
     {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram', 'label': 'Kilogram', 'weight': 1000.0},
     {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_cup', 'label': 'Cup', 'weight': 134.0}
+  ],
+  'irritants': [
+    {'name': 'fructose', 'isPresent': true, 'concentration': 0.0321},
+    {'name': 'galactose', 'isPresent': true, 'concentration': null},
   ]
 };
 

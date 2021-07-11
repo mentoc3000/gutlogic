@@ -20,29 +20,33 @@ class PantryFilterWidget extends StatelessWidget {
       bloc: pantryFilterCubit,
       builder: (context, state) {
         final pantryFilter = state is Filter ? (state as Filter).filter : PantryFilter.all();
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-            color: glTheme.scaffoldBackgroundColor,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Filter', style: tileHeadingStyle),
-                    GLSecondaryButton(
-                        onPressed: pantryFilterCubit.showAll, child: const ShrinkWrappedButtonContent(label: 'Clear')),
-                  ],
-                ),
-                SensitivityFilter(pantryFilterCubit: pantryFilterCubit, filter: pantryFilter),
-                GLPrimaryButton(onPressed: () => onClose(context), child: const StretchedButtonContent(label: 'Done')),
-              ],
+        return SafeArea(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+              color: glTheme.scaffoldBackgroundColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Filter', style: tileHeadingStyle),
+                      GLSecondaryButton(
+                          onPressed: pantryFilterCubit.showAll,
+                          child: const ShrinkWrappedButtonContent(label: 'Clear')),
+                    ],
+                  ),
+                  SensitivityFilter(pantryFilterCubit: pantryFilterCubit, filter: pantryFilter),
+                  GLPrimaryButton(
+                      onPressed: () => onClose(context), child: const StretchedButtonContent(label: 'Done')),
+                ],
+              ),
             ),
           ),
         );

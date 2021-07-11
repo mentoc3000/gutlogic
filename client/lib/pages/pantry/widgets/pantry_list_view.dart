@@ -12,8 +12,16 @@ class PantryListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: pantryEntries.length,
-      itemBuilder: (BuildContext context, int index) => PantryListTile(pantryEntry: pantryEntries[index]),
+      itemCount: pantryEntries.length + 1,
+      itemBuilder: _itemBuilder,
     );
+  }
+
+  Widget _itemBuilder(BuildContext context, int index) {
+    if (index < pantryEntries.length) {
+      return PantryListTile(pantryEntry: pantryEntries[index]);
+    } else {
+      return const SizedBox(height: 72); // final item is buffer to show last entry above fab
+    }
   }
 }
