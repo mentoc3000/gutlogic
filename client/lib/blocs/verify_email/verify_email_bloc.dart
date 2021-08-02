@@ -11,7 +11,6 @@ import 'verify_email_state.dart';
 class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
   final UserRepository _userRepository;
 
-  late final StreamSubscription _userValueSubscription;
   late final StreamSubscription _userRefreshSubscription;
 
   VerifyEmailBloc({required UserRepository userRepository})
@@ -34,7 +33,6 @@ class VerifyEmailBloc extends Bloc<VerifyEmailEvent, VerifyEmailState> {
   @override
   Future close() {
     _userRefreshSubscription.cancel();
-    _userValueSubscription.cancel();
     return super.close();
   }
 
