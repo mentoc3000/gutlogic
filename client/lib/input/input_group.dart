@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'input.dart';
-import 'input_value.dart';
+import 'input_types.dart';
 
 class InputGroupState extends Equatable {
   /// True if any of the inputs are dirty.
@@ -33,9 +33,10 @@ abstract class InputGroup extends Cubit<InputGroupState> {
     await super.close();
   }
 
+  /// The current state dirty value.
   bool get dirty => state.dirty;
 
-  /// True if the current state is valid.
+  /// The current state valid value.
   bool get valid => state.valid;
 
   /// Overridden by form subclasses so this class can operate on them.
