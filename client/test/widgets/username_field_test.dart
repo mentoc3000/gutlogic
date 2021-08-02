@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gutlogic/input/input.dart';
+import 'package:gutlogic/util/validators.dart';
 import 'package:gutlogic/widgets/form_fields/username_field.dart';
 
 import '../util/test_overlay.dart';
 
 void main() {
   group('UsernameField', () {
+    const invalidEmailError = 'Invalid email address.';
+
     late Widget testWidget;
+
+    final input = InputText(validator: (value) => isValidEmail(value) ? null : invalidEmailError);
 
     setUp(() {
       testWidget = TestOverlay(
-        child: Form(
-          child: Column(
-            children: <Widget>[
-              UsernameField(controller: TextEditingController()),
-              TextFormField(controller: null),
-            ],
-          ),
+        child: Column(
+          children: <Widget>[
+            UsernameField(input: input),
+            TextFormField(),
+          ],
         ),
       );
     });
@@ -34,14 +38,14 @@ void main() {
       const validEmail = 'jp@gutlogic.co';
       await tester.pumpWidget(testWidget);
 
-      await tester.enterText(find.byType(TextFormField).first, validEmail);
+      await tester.enterText(find.byType(TextField).first, validEmail);
       await tester.pump();
 
       expect(find.text(validEmail), findsOneWidget);
       expect(find.text('Invalid email address.'), findsNothing);
 
       // Change to the second form field to force the focus to change
-      await tester.enterText(find.byType(TextFormField).last, 'abc');
+      await tester.enterText(find.byType(TextField).last, 'abc');
       await tester.pump();
 
       expect(find.text(validEmail), findsOneWidget);
@@ -53,18 +57,18 @@ void main() {
       const invalidEmail = 'jp';
       await tester.pumpWidget(testWidget);
 
-      await tester.enterText(find.byType(TextFormField).first, invalidEmail);
+      await tester.enterText(find.byType(TextField).first, invalidEmail);
       await tester.pump();
 
       expect(find.text(invalidEmail), findsOneWidget);
-      expect(find.text('Invalid email address.'), findsNothing);
+      expect(find.text(invalidEmailError), findsNothing);
 
       // Change to the second form field to force the focus to change
-      await tester.enterText(find.byType(TextFormField).last, 'abc');
+      await tester.enterText(find.byType(TextField).last, 'abc');
       await tester.pump();
 
       expect(find.text(invalidEmail), findsOneWidget);
-      expect(find.text('Invalid email address.'), findsOneWidget);
-    }, skip: true); // TODO update test when new form API lands
+      expect(find.text(invalidEmailError), findsOneWidget);
+    });
   });
 }

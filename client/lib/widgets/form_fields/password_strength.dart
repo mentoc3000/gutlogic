@@ -4,20 +4,15 @@ import 'package:flutter_password_strength/flutter_password_strength.dart';
 import '../../style/gl_colors.dart';
 
 class PasswordStrength extends StatelessWidget {
-  final TextEditingController controller;
+  final String password;
 
-  const PasswordStrength({Key? key, required this.controller}) : super(key: key);
+  const PasswordStrength({Key? key, required this.password}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<TextEditingValue>(
-      valueListenable: controller,
-      builder: (context, value, child) {
-        return FlutterPasswordStrength(
-          password: value.text,
-          strengthColors: const PasswordStrengthColors([Colors.red, Colors.yellow, Colors.blue, GLColors.darkGreen]),
-        );
-      },
+    return FlutterPasswordStrength(
+      password: password,
+      strengthColors: const PasswordStrengthColors([Colors.red, Colors.yellow, Colors.blue, GLColors.darkGreen]),
     );
   }
 }

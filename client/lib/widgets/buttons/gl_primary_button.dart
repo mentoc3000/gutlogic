@@ -5,11 +5,13 @@ import 'gl_raised_button.dart';
 class GLPrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget? child;
+  final bool enabled;
 
   const GLPrimaryButton({
     Key? key,
-    required this.onPressed,
-    required this.child,
+    this.onPressed,
+    this.child,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -18,7 +20,7 @@ class GLPrimaryButton extends StatelessWidget {
     final colorScheme = ButtonTheme.of(context).colorScheme!;
 
     return GLRaisedButton(
-      onPressed: onPressed,
+      onPressed: enabled ? onPressed : null,
       textColor: colorScheme.onPrimary,
       color: colorScheme.primary,
       disabledTextColor: colorScheme.onBackground,

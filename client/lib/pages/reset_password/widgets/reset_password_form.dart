@@ -1,70 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/reset_password/reset_password.dart';
-import '../../../widgets/buttons/buttons.dart';
+import '../models/reset_password_input_group.dart';
 import 'reset_password_done.dart';
-import 'reset_password_email.dart';
+import 'reset_password_form_widgets.dart';
 
-class ResetPasswordForm extends StatefulWidget {
-  @override
-  ResetPasswordFormState createState() => ResetPasswordFormState();
-}
-
-class ResetPasswordFormState extends State<ResetPasswordForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailTextController = TextEditingController();
-
-  bool _isValidForm = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _emailTextController.addListener(validateForm);
-  }
-
-  @override
-  void dispose() {
-    _emailTextController.dispose();
-    super.dispose();
-  }
-
-  void validateForm() {
-    setState(() {
-      _isValidForm = _formKey.currentState?.validate() ?? false;
-    });
-  }
-
-  void onSubmitButtonPressed() {
-    if (_formKey.currentState?.validate() == false) return;
-
-    context.read<ResetPasswordBloc>().add(ResetPasswordSubmitted(email: _emailTextController.text));
-  }
-
+class ResetPasswordForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ResetPasswordBloc, ResetPasswordState>(builder: builder);
-  }
+    final state = context.select((ResetPasswordBloc bloc) => bloc.state);
 
-  Widget builder(BuildContext context, ResetPasswordState state) {
     if (state is ResetPasswordSuccess) {
       return ResetPasswordDone(email: state.email);
     }
 
-    final isSubmittable = state is ResetPasswordReady && _isValidForm;
-
-    return Form(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.always,
+    return BlocProvider(
+      create: (context) => ResetPasswordInputGroup(),
       child: Column(
         children: [
           const Text('No problem, we all forget things sometimes. Where should we send your reset link?'),
-          ResetPasswordEmail(controller: _emailTextController),
-          GLPrimaryButton(
-            child: const StretchedButtonContent(label: 'Send Reset Link'),
-            onPressed: isSubmittable ? onSubmitButtonPressed : null,
-          ),
+          ResetPasswordEmail(),
+          ResetPasswordSubmitButton(),
         ],
       ),
     );

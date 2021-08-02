@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../auth/auth.dart';
 import '../../../blocs/account_delete/account_delete.dart';
+import '../../../input/input.dart';
 import '../../../resources/user_repository.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/buttons/buttons.dart';
@@ -30,29 +31,30 @@ class AccountDeleteDialog extends StatefulWidget {
           userRepository: context.read<UserRepository>(),
           authenticator: Authenticator.of(context),
         ),
-        child: GLScaffold(body: AccountDeleteDialog(showPasswordEntry: showPasswordEntry)),
+        child: GLScaffold(body: AccountDeleteDialog(requirePassword: showPasswordEntry)),
       ),
       barrierDismissible: false, // require button interaction
     );
   }
 
-  final bool showPasswordEntry;
+  final bool requirePassword;
 
-  AccountDeleteDialog({required this.showPasswordEntry});
+  AccountDeleteDialog({required this.requirePassword});
 
   @override
-  AccountDeleteDialogState createState() => AccountDeleteDialogState(showPasswordEntry: showPasswordEntry);
+  AccountDeleteDialogState createState() => AccountDeleteDialogState(requirePassword: requirePassword);
 }
 
 class AccountDeleteDialogState extends State<AccountDeleteDialog> {
-  final TextEditingController passwordTextController = TextEditingController();
-  final bool showPasswordEntry;
+  final InputText password = InputText();
 
-  AccountDeleteDialogState({required this.showPasswordEntry});
+  final bool requirePassword;
+
+  AccountDeleteDialogState({required this.requirePassword});
 
   @override
   void dispose() {
-    passwordTextController.dispose();
+    password.close();
     super.dispose();
   }
 
@@ -72,17 +74,19 @@ class AccountDeleteDialogState extends State<AccountDeleteDialog> {
   Widget builder(BuildContext context, AccountDeleteState state) {
     final isSubmittable = state is AccountDeleteReady;
 
-    final body = showPasswordEntry ? buildPasswordBody(enabled: isSubmittable) : buildSimpleBody();
-
     return AlertDialog(
       title: const Text('Delete Account?'),
-      content: SingleChildScrollView(child: body),
+      content: SingleChildScrollView(
+        child: requirePassword ? AccountDeletePasswordWarning(field: password) : AccountDeleteSimpleWarning(),
+      ),
       actions: [
         GLTertiaryButton(
+          enabled: state is AccountDeleteReady,
           child: const ShrinkWrappedButtonContent(label: 'Cancel'),
           onPressed: isSubmittable ? onCancelPressed : null,
         ),
         GLWarningButton(
+          enabled: state is AccountDeleteReady,
           child: const ShrinkWrappedButtonContent(label: 'Delete'),
           onPressed: isSubmittable ? onDeletePressed : null,
         ),
@@ -95,23 +99,31 @@ class AccountDeleteDialogState extends State<AccountDeleteDialog> {
   }
 
   void onDeletePressed() {
-    final event = showPasswordEntry
-        ? AccountDeletePasswordConfirm(password: passwordTextController.text)
+    final event = requirePassword
+        ? AccountDeletePasswordConfirm(password: password.value)
         : const AccountDeleteFederatedConfirm();
 
     context.read<AccountDeleteBloc>().add(event);
   }
+}
 
-  /// Build an alert body with a password entry, for users with a password.
-  Widget buildPasswordBody({required bool enabled}) {
+class AccountDeletePasswordWarning extends StatelessWidget {
+  final InputText field;
+
+  AccountDeletePasswordWarning({required this.field});
+
+  @override
+  Widget build(BuildContext context) {
     return ListBody(children: [
       const Text('Are you sure you want to delete your account? Please re-enter your password to continue.'),
-      PasswordField(controller: passwordTextController, enabled: enabled),
+      PasswordField(input: field),
     ]);
   }
+}
 
-  /// Build an alert body without a password entry, for users that only have federated providers.
-  Widget buildSimpleBody() {
+class AccountDeleteSimpleWarning extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return const Text('Are you sure you want to delete your account?');
   }
 }

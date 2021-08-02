@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import '../../models/application_user.dart';
 import '../../resources/firebase/analytics_service.dart';
 import '../bloc_helpers.dart';
 
@@ -15,18 +14,16 @@ abstract class AccountEvent extends Equatable {
 }
 
 class AccountUpdate extends AccountEvent implements TrackedEvent {
-  final ApplicationUser user;
+  final String firstname;
+  final String lastname;
 
-  AccountUpdate({required this.user});
+  AccountUpdate({required this.firstname, required this.lastname});
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [firstname, lastname];
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('profile_updated');
-
-  @override
-  String toString() => 'AccountUpdate { user.id: ${user.id} }';
 }
 
 class AccountLogOut extends AccountEvent implements TrackedEvent {

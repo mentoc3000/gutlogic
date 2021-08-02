@@ -1,33 +1,37 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' hide FormFieldBuilder;
 
-import '../../util/validators.dart';
+import '../../input/input.dart';
 import '../gl_icons.dart';
 
 class UsernameField extends StatelessWidget {
-  final TextEditingController controller;
-  final StringValidator? validator;
-  final bool enabled;
+  final InputText input;
+  final bool? enabled;
 
-  const UsernameField({
+  UsernameField({
     Key? key,
-    required this.controller,
-    this.validator = validate,
-    this.enabled = true,
+    this.enabled,
+    required this.input,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      decoration: const InputDecoration(icon: Icon(GLIcons.email), labelText: 'Email'),
-      keyboardType: TextInputType.emailAddress,
-      autocorrect: false,
-      validator: validator,
-    );
+    return Focus(child: InputBuilder(input: input, builder: builder));
   }
 
-  static String? validate(String? email) {
-    return (email == null || isValidEmail(email)) ? null : 'Invalid email address.';
+  Widget builder(BuildContext context, InputState<String> state) {
+    // Only show an error on dirty unfocused inputs.
+    final errorText = state.dirty && Focus.of(context).hasFocus == false ? state.error : null;
+
+    return TextField(
+      enabled: enabled,
+      controller: input.controller,
+      decoration: InputDecoration(
+        icon: const Icon(GLIcons.email),
+        labelText: 'Email',
+        errorText: errorText,
+      ),
+      keyboardType: TextInputType.emailAddress,
+      autocorrect: false,
+    );
   }
 }

@@ -9,4 +9,4 @@ extension StreamExtensions<T> on Stream<T?> {
 }
 
 /// Do a dynamic null check.
-bool isNotNull(dynamic? value) => value != null;
+bool isNotNull(dynamic value) => value != null;

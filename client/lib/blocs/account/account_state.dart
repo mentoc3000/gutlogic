@@ -6,8 +6,6 @@ import '../../util/exception_messages.dart';
 import '../bloc_helpers.dart';
 
 abstract class AccountState extends Equatable {
-  AccountState();
-
   @override
   List<Object?> get props => [];
 
@@ -15,23 +13,39 @@ abstract class AccountState extends Equatable {
   bool get stringify => true;
 }
 
-class AccountReady extends AccountState {
+abstract class AccountUserState {
+  ApplicationUser get user;
+}
+
+class AccountUpdateReady extends AccountState implements AccountUserState {
+  @override
   final ApplicationUser user;
 
-  AccountReady({required this.user});
+  AccountUpdateReady({required this.user});
 
   @override
   List<Object?> get props => [user];
-
-  @override
-  String toString() => 'AccountReady { user.id: ${user.id} }';
 }
 
-class AccountLoading extends AccountState {}
+class AccountUpdateLoading extends AccountState implements AccountUserState {
+  @override
+  final ApplicationUser user;
 
-class AccountUpdated extends AccountState {}
+  AccountUpdateLoading({required this.user});
 
-class AccountLoggedOut extends AccountState {}
+  @override
+  List<Object?> get props => [user];
+}
+
+class AccountUpdateSuccess extends AccountState implements AccountUserState {
+  @override
+  final ApplicationUser user;
+
+  AccountUpdateSuccess({required this.user});
+
+  @override
+  List<Object?> get props => [user];
+}
 
 class AccountError extends AccountState with ErrorState, ErrorRecorder {
   @override
@@ -40,7 +54,7 @@ class AccountError extends AccountState with ErrorState, ErrorRecorder {
   @override
   final ErrorReport? report;
 
-  AccountError({required this.message}) : report = null;
+  AccountError({required user, required this.message}) : report = null;
 
   AccountError.fromError({required dynamic error, required StackTrace trace})
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,

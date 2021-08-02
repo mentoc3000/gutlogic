@@ -1,5 +1,6 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
+import '../../blocs/bloc_helpers.dart';
 import '../../style/gl_color_scheme.dart';
 import 'gl_snack_bar.dart';
 
@@ -13,4 +14,11 @@ class ErrorSnackBar extends GLSnackBar {
           textColor: glColorScheme.onError,
           backgroundColor: glColorScheme.error,
         );
+
+  /// When [state] is an instance of [ErrorState], this function shows the error message in an [ErrorSnackBar].
+  ///
+  /// Pair this with BlocListener to automatically show error messages.
+  static void listen(BuildContext context, dynamic state) {
+    if (state is ErrorState) ScaffoldMessenger.of(context).showSnackBar(ErrorSnackBar(text: state.message));
+  }
 }

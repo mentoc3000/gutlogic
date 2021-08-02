@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pedantic/pedantic.dart';
 
 import '../../resources/user_repository.dart';
 import 'account_event.dart';
@@ -15,7 +14,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       : assert(userRepository.authenticated),
         assert(userRepository.user != null),
         _userRepository = userRepository,
-        super(AccountReady(user: userRepository.user!));
+        super(AccountUpdateReady(user: userRepository.user!));
 
   factory AccountBloc.fromContext(BuildContext context) {
     return AccountBloc(userRepository: context.read<UserRepository>());
@@ -32,9 +31,13 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   Stream<AccountState> _mapUpdatedToState(AccountUpdate event) async* {
     try {
-      unawaited(_userRepository.updateMetadata(updatedUser: event.user));
-      yield AccountUpdated();
-      yield AccountReady(user: _userRepository.user!);
+      final updatedUser = _userRepository.user!.rebuild((b) => b
+        ..firstname = event.firstname
+        ..lastname = event.lastname);
+
+      await _userRepository.updateMetadata(updatedUser: updatedUser);
+
+      yield AccountUpdateSuccess(user: _userRepository.user!);
     } catch (error, trace) {
       yield AccountError.fromError(error: error, trace: trace);
     }
@@ -43,7 +46,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   Stream<AccountState> _mapLoggedOutToState(AccountLogOut event) async* {
     try {
       await _userRepository.logout();
-      yield AccountLoggedOut();
     } catch (error, trace) {
       yield AccountError.fromError(error: error, trace: trace);
     }

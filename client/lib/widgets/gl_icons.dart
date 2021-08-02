@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 import '../assets/sick_face_icon.dart';
 
 class GLIcons {
@@ -25,4 +26,6 @@ class GLIcons {
   static const settings = Icons.settings;
   static const sort = Icons.sort_by_alpha;
   static const symptom = SickFaceIcon.sickFace;
+  static const visibility = Icons.visibility;
+  static const visibilityOff = Icons.visibility_off;
 }

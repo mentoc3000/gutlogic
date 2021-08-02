@@ -1,45 +1,50 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' hide FormFieldBuilder;
 
-import '../../util/validators.dart';
+import '../../input/input.dart';
 import '../gl_icons.dart';
 
-class PasswordField extends StatelessWidget {
-  final TextEditingController controller;
-  final StringValidator? validator;
+class PasswordField extends StatefulWidget {
+  final InputText input;
   final String label;
-  final bool enabled;
+  final bool? enabled;
 
   PasswordField({
     Key? key,
-    this.enabled = true,
-    required this.controller,
-    this.validator = validate,
+    this.enabled,
     this.label = 'Password',
+    required this.input,
   }) : super(key: key);
 
   @override
+  PasswordFieldState createState() => PasswordFieldState();
+}
+
+class PasswordFieldState extends State<PasswordField> {
+  bool isObscured = true;
+
+  @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      enabled: enabled,
-      controller: controller,
-      decoration: InputDecoration(icon: const Icon(GLIcons.password), labelText: label),
-      obscureText: true, // TODO add option to show password
-      autocorrect: false,
-      validator: validator,
-    );
+    return Focus(child: InputBuilder(input: widget.input, builder: builder));
   }
 
-  static String? validate(String? password) {
-    if (password == null || password.isEmpty) {
-      return 'Enter password.';
-    }
-    if (isPasswordTooShort(password)) {
-      return 'Password must be at least 10 characters.';
-    }
-    if (isPasswordTooLong(password)) {
-      return 'Password must be fewer than 64 characters.';
-    }
-    return null;
+  Widget builder(BuildContext context, InputState<String> state) {
+    // Only show an error on dirty focused inputs.
+    final errorText = state.dirty && Focus.of(context).hasFocus == false ? state.error : null;
+
+    return TextField(
+      enabled: widget.enabled,
+      controller: widget.input.controller,
+      decoration: InputDecoration(
+        icon: const Icon(GLIcons.password),
+        labelText: widget.label,
+        suffixIcon: GestureDetector(
+          onTap: () => setState(() => isObscured = !isObscured),
+          child: Icon(isObscured ? GLIcons.visibility : GLIcons.visibilityOff),
+        ),
+        errorText: errorText,
+      ),
+      obscureText: isObscured,
+      autocorrect: false,
+    );
   }
 }
