@@ -21,10 +21,12 @@ class EdamamFoodRepository {
 
   Future<BuiltList<EdamamFood>> fetchQuery(String query) => streamQuery(query).first;
 
-  Stream<EdamamFood?> streamFood(EdamamFoodReference foodReference) {
-    final edamamEntry = Stream.fromFuture(edamamService.getById(foodReference.id));
+  Stream<EdamamFood?> streamFood(EdamamFoodReference foodReference) async* {
+    final edamamEntry = await edamamService.getById(foodReference.id);
     // Multiple edamam foods refer to the same database entry. Replace the generic label with the specific one.
-    return edamamEntry.map((e) => e?.toEdamamFood()?.rebuild((b) => b.name = foodReference.name));
+    yield edamamEntry?.toEdamamFood()?.rebuild((b) => b.name = foodReference.name) ??
+        // edamamEntry is null if food no longer exists in Edamam database. Use data from foodReference.
+        EdamamFood(id: foodReference.id, name: foodReference.name, irritants: foodReference.irritants);
   }
 
   Future<EdamamFood?> fetchFood(EdamamFoodReference foodReference) => streamFood(foodReference).first;

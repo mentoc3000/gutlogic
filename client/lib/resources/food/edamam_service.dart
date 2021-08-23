@@ -24,6 +24,8 @@ class EdamamService {
         } catch (e) {
           throw EdamamException(message: 'Parsing error');
         }
+      case 404:
+        return [];
       case 443:
         return [];
     }

@@ -19,16 +19,24 @@ void main() {
         'hints': [brownRiceCakeResult]
       }
     };
+
     const query = 'apple';
     const appleResponse = {
       'status': 200,
       'data': {'hints': appleQueryResults}
     };
 
+    const missingId = 'nothinghere';
+    const missingResponse = {
+      'status': 404,
+      'data': {'error': 'not_found'}
+    };
+
     setUp(() {
       edamamFoodSearchService = MockCloudFunctionService();
       when(edamamFoodSearchService.callWith({'query': riceCakeId})).thenAnswer((_) async => riceCakeResponse);
       when(edamamFoodSearchService.callWith({'query': query})).thenAnswer((_) async => appleResponse);
+      when(edamamFoodSearchService.callWith({'query': missingId})).thenAnswer((_) async => missingResponse);
       edamamService = EdamamService(edamamFoodSearchService: edamamFoodSearchService);
     });
 
@@ -37,10 +45,20 @@ void main() {
       expect(edamamEntry!.food.label, 'brown rice cake');
     });
 
+    test('returns null for missing food', () async {
+      final edamamEntry = await edamamService.getById(missingId);
+      expect(edamamEntry, null);
+    });
+
     test('searches foods', () async {
       final results = await edamamService.searchFood(query);
       expect(results.length, 22);
       expect(results[0].food.foodId, 'food_a1gb9ubb72c7snbuxr3weagwv0dd');
+    });
+
+    test('returns nothing for missing food', () async {
+      final results = await edamamService.searchFood(missingId);
+      expect(results.length, 0);
     });
   });
 }

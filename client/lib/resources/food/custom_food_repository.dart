@@ -14,12 +14,14 @@ class CustomFoodRepository with FirestoreRepository {
     this.firestoreService = firestoreService;
   }
 
-  Future<CustomFood?> _documentSnapshotToCustomFood(UntypedSnapshot snapshot) async {
-    return serializers.deserializeWith(CustomFood.serializer, FirestoreService.getDocumentData(snapshot));
+  CustomFood? _documentSnapshotToCustomFood(UntypedSnapshot snapshot) {
+    final documentData = FirestoreService.getDocumentData(snapshot);
+    if (documentData == null) return null;
+    return serializers.deserializeWith(CustomFood.serializer, documentData);
   }
 
-  Future<Iterable<CustomFood?>> _documentSnapshotToResults(Iterable<UntypedSnapshot> snapshots, String query) async {
-    final customFoods = await Future.wait(snapshots.map(_documentSnapshotToCustomFood));
+  Iterable<CustomFood?> _documentSnapshotToResults(Iterable<UntypedSnapshot> snapshots, String query) {
+    final customFoods = snapshots.map(_documentSnapshotToCustomFood);
     return _matchQuery(customFoods, query);
   }
 
@@ -33,14 +35,15 @@ class CustomFoodRepository with FirestoreRepository {
 
     final docStream = firestoreService.customFoodCollection.snapshots();
     return docStream
-        .asyncMap((querySnapshot) => _documentSnapshotToResults(querySnapshot.docs, query))
-        .map((event) => event.whereNotNull().toBuiltList());
+        .map((querySnapshot) => _documentSnapshotToResults(querySnapshot.docs, query).whereNotNull().toBuiltList());
   }
 
-  Stream<CustomFood?> streamFood(CustomFoodReference foodReference) {
+  Stream<CustomFood> streamFood(CustomFoodReference foodReference) {
     final id = foodReference.id;
     final docStream = firestoreService.customFoodCollection.doc(id).snapshots();
-    return docStream.asyncMap(_documentSnapshotToCustomFood);
+    return docStream
+        .map(_documentSnapshotToCustomFood)
+        .map((f) => f ?? CustomFood(id: foodReference.id, name: foodReference.name));
   }
 
   Future<BuiltList<CustomFood>> fetchQuery(String query) => streamQuery(query).first;
