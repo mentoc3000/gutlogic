@@ -91,7 +91,11 @@ void main() {
     });
 
     testWidgets('shows search results', (WidgetTester tester) async {
-      whenListen(foodBloc, Stream.value(FoodsLoaded(query: '', items: [food].build())), initialState: FoodsLoading());
+      whenListen(
+        foodBloc,
+        Stream.value(FoodsLoaded(query: '', items: [food].build())),
+        initialState: FoodsLoading(),
+      );
 
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
@@ -122,7 +126,11 @@ void main() {
     });
 
     testWidgets('clears search', (WidgetTester tester) async {
-      whenListen(foodBloc, Stream.value(FoodsLoaded(query: '', items: [food].build())), initialState: FoodsLoading());
+      whenListen(
+        foodBloc,
+        Stream.value(FoodsLoaded(query: '', items: [food].build())),
+        initialState: FoodsLoading(),
+      );
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(

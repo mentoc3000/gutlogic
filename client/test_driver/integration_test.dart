@@ -22,6 +22,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // TODO verify we are on the timeline
+
+      await tester.tap(find.text('Pantry'));
+      await tester.pumpAndSettle();
+
+      // TODO verify we are on the pantry
     });
   });
 }

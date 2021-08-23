@@ -49,7 +49,7 @@ class DeletePantryEntry extends PantryEvent implements TrackedEvent {
   List<Object?> get props => [pantryEntry];
 
   @override
-  String toString() => 'Delete { id: ${pantryEntry.id} }';
+  String toString() => 'Delete { id: ${pantryEntry.userFoodDetailsId} }';
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('delete_pantry_entry');

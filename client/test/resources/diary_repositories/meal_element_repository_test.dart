@@ -7,18 +7,20 @@ import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/quantity.dart';
-import 'package:gutlogic/models/sensitivity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_element_repository.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
-import 'package:gutlogic/resources/pantry_repository.dart';
+import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'meal_element_repository_test.mocks.dart';
 
-@GenerateMocks([FirestoreService, PantryRepository])
+@GenerateMocks([FirestoreService, PantryService])
 void main() {
   group('MealElementRepository', () {
     late String diaryEntryId;
@@ -28,7 +30,7 @@ void main() {
     late FakeFirebaseFirestore instance;
     late FirestoreService firestoreService;
     late MealElementRepository mealElementRepository;
-    late MockPantryRepository pantryRepository;
+    late MockPantryService pantryService;
 
     setUp(() {
       diaryEntryId = 'entry1Id';
@@ -65,17 +67,18 @@ void main() {
       when(firestoreService.instance).thenReturn(instance);
       when(firestoreService.userDiaryCollection).thenReturn(instance.collection('diary'));
 
-      pantryRepository = MockPantryRepository();
+      pantryService = MockPantryService();
       final pantryEntry = PantryEntry(
-        id: 'pantry1',
+        userFoodDetailsId: 'pantry1',
         foodReference: food.toFoodReference(),
-        sensitivity: Sensitivity.mild,
+        sensitivity: Sensitivity(level: SensitivityLevel.severe, source: SensitivitySource.user),
+        notes: null,
       );
-      when(pantryRepository.fetchByFood(any)).thenAnswer((_) async => pantryEntry);
+      when(pantryService.fetchByFood(any)).thenAnswer((_) async => pantryEntry);
 
       mealElementRepository = MealElementRepository(
         firestoreService: firestoreService,
-        pantryRepository: pantryRepository,
+        pantryService: pantryService,
       );
     });
 
@@ -122,13 +125,6 @@ void main() {
       await mealElementRepository.update(updatedMealElement);
       final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
       expect((retrievedEntry!['mealElements'] as List).first['notes'], notes);
-    });
-
-    test('updates food reference', () async {
-      final foodReference = CustomFoodReference(id: '1234', name: 'Burger');
-      await mealElementRepository.updateFoodReference(mealElement1, foodReference);
-      final retrievedEntry = (await instance.collection('diary').doc(diaryEntryId).get()).data();
-      expect((retrievedEntry!['mealElements'] as List).first['foodReference']['id'], foodReference.id);
     });
 
     test('updates quantity', () async {

@@ -4,18 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/diary_entry/meal_entry.dart';
 import '../../models/food/food.dart';
-import '../../models/food_reference/food_reference.dart';
 import '../../models/meal_element.dart';
 import '../../models/quantity.dart';
 import '../../models/serializers.dart';
 import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
-import '../pantry_repository.dart';
+import '../pantry_service.dart';
 
 class MealElementRepository with FirestoreRepository {
-  final PantryRepository pantryRepository;
+  final PantryService pantryService;
 
-  MealElementRepository({required FirestoreService firestoreService, required this.pantryRepository}) {
+  MealElementRepository({required FirestoreService firestoreService, required this.pantryService}) {
     this.firestoreService = firestoreService;
   }
 
@@ -66,9 +65,6 @@ class MealElementRepository with FirestoreRepository {
         },
       );
 
-  Future<void> updateFoodReference(MealElement mealElement, FoodReference foodReference) =>
-      update(mealElement.rebuild((b) => b..foodReference = foodReference));
-
   Future<void> updateQuantity(MealElement mealElement, Quantity quantity) =>
       update(mealElement.rebuild((b) => b..quantity = quantity.toBuilder()));
 
@@ -78,12 +74,7 @@ class MealElementRepository with FirestoreRepository {
   Future<MealElement?> addNewMealElementTo(MealEntry mealEntry, {required Food food}) async {
     final mealElementId = newMealElementId(mealEntry);
     final foodReference = food.toFoodReference();
-    final pantryEntry = await pantryRepository.fetchByFood(foodReference);
-    final mealElement = MealElement(
-      id: mealElementId,
-      foodReference: foodReference,
-      pantryEntryReference: pantryEntry?.toReference(),
-    );
+    final mealElement = MealElement(id: mealElementId, foodReference: foodReference);
     return addMealElementTo(mealEntry, mealElement: mealElement);
   }
 

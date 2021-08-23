@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../blocs/authentication/authentication.dart';
 import '../blocs/food/food_bloc.dart';
@@ -16,8 +17,11 @@ import '../resources/food/custom_food_repository.dart';
 import '../resources/food/edamam_food_repository.dart';
 import '../resources/food/edamam_service.dart';
 import '../resources/food/food_service.dart';
-import '../resources/pantry_repository.dart';
+import '../resources/pantry_service.dart';
+import '../resources/sensitivity/sensitivity_repository.dart';
+import '../resources/sensitivity/sensitivity_service.dart';
 import '../resources/symptom_type_repository.dart';
+import '../resources/user_food_details_repository.dart';
 import '../resources/user_repository.dart';
 import '../routes/routes.dart';
 
@@ -49,9 +53,22 @@ class AuthenticatedResources extends StatelessWidget {
       // Wrap the child views in the global authenticated repositories/blocs.
       return MultiRepositoryProvider(
         providers: [
-          // TODO: add fromContext factories to all blocs and repos
           RepositoryProvider(create: (context) {
             return FirestoreService(userID: context.read<UserRepository>().user!.id);
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return SensitivityRepository(
+              firestoreService: context.read<FirestoreService>(),
+              crashlytics: context.read<CrashlyticsService>(),
+            );
+          }),
+          RepositoryProvider(create: (context) {
+            // TODO move this into its most tightly nested widget tree
+            return UserFoodDetailsRepository(
+              firestoreService: context.read<FirestoreService>(),
+              crashlytics: context.read<CrashlyticsService>(),
+            );
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
@@ -66,16 +83,16 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
-            return PantryRepository(
-              firestoreService: context.read<FirestoreService>(),
-              crashlytics: context.read<CrashlyticsService>(),
+            return PantryService(
+              sensitivityRepository: context.read<SensitivityRepository>(),
+              userFoodDetailsRepository: context.read<UserFoodDetailsRepository>(),
             );
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
             return MealElementRepository(
               firestoreService: context.read<FirestoreService>(),
-              pantryRepository: context.read<PantryRepository>(),
+              pantryService: context.read<PantryService>(),
             );
           }),
           RepositoryProvider(create: (context) {
@@ -98,22 +115,25 @@ class AuthenticatedResources extends StatelessWidget {
             final edamamService = EdamamService(edamamFoodSearchService: CloudFunctionService('edamamFoodSearch'));
             final edamamFoodRepository = EdamamFoodRepository(edamamService: edamamService);
             final customFoodRepository = CustomFoodRepository(firestoreService: context.read<FirestoreService>());
-            final pantryRepository = PantryRepository(
-              firestoreService: context.read<FirestoreService>(),
-              crashlytics: context.read<CrashlyticsService>(),
-            );
-            return FoodService(
-              edamamFoodRepository: edamamFoodRepository,
-              customFoodRepository: customFoodRepository,
-              pantryRepository: pantryRepository,
-            );
+            return FoodService(edamamFoodRepository: edamamFoodRepository, customFoodRepository: customFoodRepository);
           }),
         ],
-        child: MultiBlocProvider(providers: [
-          // TODO move these into their most tightly nested widget trees
-          BlocProvider(create: (context) => FoodBloc.fromContext(context)),
-          BlocProvider(create: (context) => SymptomTypeBloc.fromContext(context)),
-        ], child: child),
+        child: MultiBlocProvider(
+          providers: [
+            // TODO move these into their most tightly nested widget trees
+            BlocProvider(create: (context) => FoodBloc.fromContext(context)),
+            BlocProvider(create: (context) => SymptomTypeBloc.fromContext(context)),
+          ],
+          child: ChangeNotifierProvider(
+            create: (context) {
+              // TODO move this into its most tightly nested widget tree
+              return SensitivityService(
+                sensitivityRepository: context.read<SensitivityRepository>(),
+              );
+            },
+            child: child,
+          ),
+        ),
       );
     } else {
       return child;

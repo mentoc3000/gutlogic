@@ -8,7 +8,8 @@ import 'package:gutlogic/pages/diary/diary_page.dart';
 import 'package:gutlogic/pages/main_tabs.dart';
 import 'package:gutlogic/pages/settings/settings_page.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
-import 'package:gutlogic/resources/pantry_repository.dart';
+import 'package:gutlogic/resources/pantry_service.dart';
+import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mockito/mockito.dart' as mockito;
 
@@ -17,22 +18,27 @@ import '../util/test_overlay.dart';
 
 class MockDiaryRepository extends Mock implements DiaryRepository {}
 
-class MockPantryRepository extends Mock implements PantryRepository {}
+class MockPantryService extends Mock implements PantryService {}
+
+class MockSensitivityService extends Mock implements SensitivityService {}
 
 void main() {
   late Widget homepage;
   late DiaryRepository diaryRepository;
-  late PantryRepository pantryRepository;
+  late PantryService pantryService;
+  late SensitivityService sensitivityService;
 
   setUp(() {
     diaryRepository = MockDiaryRepository();
     when(() => diaryRepository.streamAll()).thenAnswer((_) => Stream.value(BuiltList<DiaryEntry>([])));
-    pantryRepository = MockPantryRepository();
-    when(() => pantryRepository.streamAll()).thenAnswer((_) => Stream.value(BuiltList<PantryEntry>([])));
+    pantryService = MockPantryService();
+    when(() => pantryService.streamAll()).thenAnswer((_) => Stream.value(BuiltList<PantryEntry>([])));
+    sensitivityService = MockSensitivityService();
     homepage = MultiRepositoryProvider(
       providers: [
         RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
-        RepositoryProvider<PantryRepository>(create: (context) => pantryRepository),
+        RepositoryProvider<PantryService>(create: (context) => pantryService),
+        RepositoryProvider<SensitivityService>(create: (context) => sensitivityService),
       ],
       child: TestOverlay(child: MainTabs(analytics: analyticsService)),
     );

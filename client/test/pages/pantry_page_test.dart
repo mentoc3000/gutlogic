@@ -8,7 +8,9 @@ import 'package:gutlogic/blocs/pantry_sort/pantry_sort.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/pantry/pantry_sort.dart';
-import 'package:gutlogic/models/sensitivity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
 import 'package:gutlogic/pages/pantry/pantry_page.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/routes/routes.dart';
@@ -39,6 +41,13 @@ void main() {
   late Widget pantryPage;
   late Routes routes;
   const defaultSort = PantrySort.alphabeticalAscending;
+  final foodReference = CustomFoodReference(id: 'foodid', name: 'Great Northern Beans');
+  final pantryEntry = PantryEntry(
+    userFoodDetailsId: 'id',
+    foodReference: foodReference,
+    sensitivity: Sensitivity(level: SensitivityLevel.severe, source: SensitivitySource.user),
+    notes: null,
+  );
 
   initializeTimeZones();
 
@@ -91,11 +100,6 @@ void main() {
     });
 
     testWidgets('removes entry when dragging pantry entry tile left', (WidgetTester tester) async {
-      final pantryEntry = PantryEntry(
-        id: 'id',
-        foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beans'),
-        sensitivity: Sensitivity.mild,
-      );
       whenListen(
           pantrySortCubit, Stream.value(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: defaultSort)),
           initialState: PantrySortLoading(sort: defaultSort));
@@ -117,11 +121,6 @@ void main() {
     });
 
     testWidgets('shows an undo snackbar after deleting an entry', (WidgetTester tester) async {
-      final pantryEntry = PantryEntry(
-        id: 'id',
-        foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beans'),
-        sensitivity: Sensitivity.mild,
-      );
       final entries = [pantryEntry].build();
       whenListen(
         pantryBloc,
@@ -143,11 +142,6 @@ void main() {
     });
 
     testWidgets('does nothing when dragging pantry entry tile right', (WidgetTester tester) async {
-      final pantryEntry = PantryEntry(
-        id: 'id',
-        foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beans'),
-        sensitivity: Sensitivity.mild,
-      );
       whenListen(
           pantrySortCubit, Stream.value(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: defaultSort)),
           initialState: PantrySortLoading(sort: defaultSort));
@@ -164,11 +158,6 @@ void main() {
     });
 
     testWidgets('tile routes to pantry entry page', (WidgetTester tester) async {
-      final pantryEntry = PantryEntry(
-        id: 'id',
-        foodReference: CustomFoodReference(id: 'foodid', name: 'Great Northern Beans'),
-        sensitivity: Sensitivity.mild,
-      );
       whenListen(
           pantrySortCubit, Stream.value(PantrySortLoaded(items: <PantryEntry>[pantryEntry].build(), sort: defaultSort)),
           initialState: PantrySortLoading(sort: defaultSort));

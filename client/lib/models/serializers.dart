@@ -27,15 +27,20 @@ import 'irritant.dart';
 import 'meal_element.dart';
 import 'measure.dart';
 import 'pantry/pantry_entry.dart';
-import 'pantry/pantry_entry_reference.dart';
 import 'quantity.dart';
-import 'sensitivity.dart';
+import 'sensitivity/sensitivity.dart';
+import 'sensitivity/sensitivity_entry.dart';
+import 'sensitivity/sensitivity_level.dart';
+import 'sensitivity/sensitivity_source.dart';
 import 'severity.dart';
 import 'symptom.dart';
 import 'symptom_type.dart';
+import 'user_food_details.dart';
+import 'user_food_details_api.dart';
 
 part 'serializers.g.dart';
 
+// TODO: remove classes that don't need to be serialized
 @SerializersFor([
   ApplicationUser,
   BowelMovement,
@@ -54,18 +59,22 @@ part 'serializers.g.dart';
   EdamamFoodReference,
   Food,
   FoodReference,
+  Sensitivity,
   MealElement,
   Measure,
   Irritant,
   MealEntry,
   PantryEntry,
-  PantryEntryReference,
   Quantity,
-  Sensitivity,
+  SensitivityLevel,
+  SensitivityEntry,
+  SensitivitySource,
   Severity,
   Symptom,
   SymptomEntry,
   SymptomType,
+  UserFoodDetails,
+  UserFoodDetailsApi,
 ])
 final Serializers serializers = (_$serializers.toBuilder()
       ..addPlugin(StandardJsonPlugin())

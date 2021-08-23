@@ -26,7 +26,7 @@ class PantryEntryLoaded extends PantryEntryState {
   List<Object?> get props => [pantryEntry, food];
 
   @override
-  String toString() => 'PantryEntryLoaded { pantryEntry: ${pantryEntry.id} }';
+  String toString() => 'PantryEntryLoaded { pantryEntry: ${pantryEntry.userFoodDetailsId} }';
 }
 
 class PantryEntryError extends PantryEntryState with ErrorState, ErrorRecorder {

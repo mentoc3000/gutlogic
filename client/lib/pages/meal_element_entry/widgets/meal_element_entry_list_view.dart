@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/meal_element/meal_element.dart';
 import '../../../models/food/food.dart';
 import '../../../models/meal_element.dart';
+import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/cards/food_details_card.dart';
 import '../../../widgets/cards/notes_card.dart';
@@ -27,16 +28,15 @@ class MealElementEntryListView extends StatelessWidget {
   }) : super(key: key);
 
   void addFoodToPantry(BuildContext context) {
-    if (mealElement.pantryEntryReference != null) {
-      Navigator.push(
-          context, Routes.of(context).createPantryEntryPageRouteForReference(mealElement.pantryEntryReference!));
-    } else {
-      Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(mealElement.foodReference));
-    }
+    Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(mealElement.foodReference));
   }
 
   @override
   Widget build(BuildContext context) {
+    final mealElementSensitivityLevel = context.select((SensitivityService sensitivity) {
+      return sensitivity.of(mealElement.foodReference).level;
+    });
+
     final cards = [
       QuantityCard(
         quantity: mealElement.quantity,
@@ -46,7 +46,7 @@ class MealElementEntryListView extends StatelessWidget {
         measureOptions: food?.measures,
       ),
       MealElementSensitivityCard(
-        sensitivity: mealElement.pantryEntryReference?.sensitivity,
+        sensitivityLevel: mealElementSensitivityLevel,
         onTap: () => addFoodToPantry(context),
       ),
       if (food != null) FoodDetailsCard(food: food!),

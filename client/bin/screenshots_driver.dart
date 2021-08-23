@@ -16,18 +16,19 @@ void main() {
     await driver.tap(find.pageBack());
     await driver.tap(find.text('Bowel Movement'));
 
-    await capture('4. bowel_movement');
+    await capture('5. bowel_movement');
 
     await driver.tap(find.pageBack());
     await driver.tap(find.text('Bloated'));
 
-    await capture('5. symptom');
+    await capture('4. symptom');
 
     await driver.tap(find.pageBack());
     await driver.tap(find.text('Pantry'));
 
     await capture('0. pantry');
 
+    await driver.tap(find.text('Details'));
     await driver.tap(find.text('Wheat Bread'));
 
     await capture('1. sensitivity');

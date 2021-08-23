@@ -7,7 +7,7 @@ import '../../blocs/pantry_filter/pantry_filter.dart';
 import '../../blocs/pantry_sort/pantry_sort.dart';
 import '../../pages/search_delegate/food_search_delegate.dart';
 import '../../pages/search_delegate/pantry_search_delegate.dart';
-import '../../resources/pantry_repository.dart';
+import '../../resources/pantry_service.dart';
 import '../../routes/routes.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_app_bar.dart';
@@ -51,7 +51,7 @@ class PantryPage extends StatelessWidget {
   }
 
   void showPantrySearch(BuildContext context) {
-    final pantryBloc = PantryBloc(repository: context.read<PantryRepository>());
+    final pantryBloc = PantryBloc(pantryService: context.read<PantryService>());
 
     showSearch(
       context: context,

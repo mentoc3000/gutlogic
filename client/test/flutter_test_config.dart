@@ -19,12 +19,17 @@ import 'package:gutlogic/blocs/symptom_entry/symptom_entry.dart';
 import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
 import 'package:gutlogic/blocs/gut_logic_bloc_observer.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
+import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
+import 'package:gutlogic/models/food_reference/food_reference.dart';
+import 'package:gutlogic/models/user_food_details_api.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/pantry/pantry_sort.dart';
 import 'package:gutlogic/models/pantry/pantry_filter.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
-import 'package:gutlogic/models/sensitivity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
 import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
@@ -70,9 +75,10 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   setUpAll(() {
     // Register fallback values for using mocktail in page tests
     final foodReference = CustomFoodReference(id: '', name: '');
-    const sensitivity = Sensitivity.none;
+    const sensitivityLevel = SensitivityLevel.none;
     final symptomType = SymptomType(id: '', name: '');
     final symptom = Symptom(symptomType: symptomType, severity: Severity.mild);
+    final sensitivity = Sensitivity(level: sensitivityLevel, source: SensitivitySource.user);
 
     registerFallbackValue<BowelMovementEntryEvent>(BowelMovementEntryEventFake());
     registerFallbackValue<BowelMovementEntryState>(BowelMovementEntryLoading());
@@ -83,6 +89,10 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     registerFallbackValue<FoodEvent>(FoodEventFake());
     registerFallbackValue<FoodState>(FoodsLoading());
 
+    registerFallbackValue<FoodReference>(EdamamFoodReference(id: 'id', name: 'name'));
+    registerFallbackValue<EdamamFoodReference>(EdamamFoodReference(id: 'id', name: 'name'));
+    registerFallbackValue<CustomFoodReference>(CustomFoodReference(id: 'id', name: 'name'));
+
     registerFallbackValue<MealElement>(MealElement(id: '', foodReference: foodReference));
 
     registerFallbackValue<MealElementEvent>(MealElementEventFake());
@@ -91,7 +101,8 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     registerFallbackValue<MealEntryEvent>(MealEntryEventFake());
     registerFallbackValue<MealEntryState>(MealEntryLoading());
 
-    registerFallbackValue<PantryEntry>(PantryEntry(id: '', foodReference: foodReference, sensitivity: sensitivity));
+    registerFallbackValue<PantryEntry>(
+        PantryEntry(userFoodDetailsId: '', foodReference: foodReference, sensitivity: sensitivity, notes: null));
 
     registerFallbackValue<PantryEvent>(PantryEventFake());
     registerFallbackValue<PantryState>(PantryLoading());
@@ -110,6 +121,9 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     registerFallbackValue<SymptomTypeState>(SymptomTypesLoading());
 
     registerFallbackValue<SymptomEntry>(SymptomEntry(id: '', datetime: DateTime.now(), symptom: symptom));
+
+    registerFallbackValue<UserFoodDetailsApi>(
+        UserFoodDetailsApi(id: '', foodReference: foodReference, sensitivityLevel: sensitivityLevel));
   });
 
   setUp(() {

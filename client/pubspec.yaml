@@ -13,7 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  built_collection: ^5.0.0
+  built_collection: ^5.1.0
   built_value: ^8.0.6
   crypto: ^3.0.0
   datetime_picker_formfield: ^2.0.0

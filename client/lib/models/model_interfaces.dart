@@ -7,6 +7,10 @@ mixin Ided {
   String get id;
 }
 
+mixin UserFoodDetail {
+  String get userFoodDetailsId;
+}
+
 mixin Named {
   String get name;
 }

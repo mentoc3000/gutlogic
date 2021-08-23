@@ -4,20 +4,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedantic/pedantic.dart';
 
-import '../../resources/pantry_repository.dart';
+import '../../resources/pantry_service.dart';
 import '../bloc_helpers.dart';
 import 'pantry_event.dart';
 import 'pantry_state.dart';
 
 class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
-  final PantryRepository repository;
+  final PantryService pantryService;
 
-  PantryBloc({required this.repository}) : super(PantryLoading());
+  PantryBloc({required this.pantryService}) : super(PantryLoading());
 
   factory PantryBloc.fromContext(BuildContext context) {
-    return PantryBloc(
-      repository: context.read<PantryRepository>(),
-    );
+    return PantryBloc(pantryService: context.read<PantryService>());
   }
 
   @override
@@ -33,7 +31,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
       if (event is StreamAllPantry) {
         yield PantryLoading();
         await streamSubscription?.cancel();
-        streamSubscription = repository.streamAll().listen(
+        streamSubscription = pantryService.streamAll().listen(
               (pantryEntries) => add(LoadPantry(items: pantryEntries)),
               onError: (error, StackTrace trace) => add(ThrowPantryError.fromError(error: error, trace: trace)),
             );
@@ -41,7 +39,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
       if (event is StreamPantryQuery) {
         yield PantryLoading();
         await streamSubscription?.cancel();
-        streamSubscription = repository.streamQuery(event.query).listen(
+        streamSubscription = pantryService.streamQuery(event.query).listen(
               (pantryEntries) => add(LoadPantry(items: pantryEntries)),
               onError: (error, StackTrace trace) => add(ThrowPantryError.fromError(error: error, trace: trace)),
             );
@@ -50,11 +48,11 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
         yield PantryLoaded(event.items);
       }
       if (event is DeletePantryEntry) {
-        await repository.delete(event.pantryEntry);
+        await pantryService.delete(event.pantryEntry);
         yield PantryEntryDeleted(event.pantryEntry);
       }
       if (event is UndeletePantryEntry) {
-        unawaited(repository.add(event.pantryEntry));
+        unawaited(pantryService.add(event.pantryEntry));
       }
       if (event is ThrowPantryError) {
         yield PantryError.fromReport(event.report);

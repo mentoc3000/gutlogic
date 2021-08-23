@@ -1,7 +1,7 @@
 import 'package:built_value/built_value.dart';
 
-import '../sensitivity.dart';
-import 'pantry_entry.dart';
+import '../pantry/pantry_entry.dart';
+import '../sensitivity/sensitivity_level.dart';
 
 part 'pantry_filter.g.dart';
 
@@ -31,61 +31,61 @@ abstract class PantryFilter implements Built<PantryFilter, PantryFilterBuilder> 
 
   factory PantryFilter.all() => PantryFilter();
 
-  PantryFilter show(Sensitivity sensitivity) => _setVisibility(sensitivity, true);
-  PantryFilter hide(Sensitivity sensitivity) => _setVisibility(sensitivity, false);
-  PantryFilter toggle(Sensitivity sensitivity) => _setVisibility(sensitivity, !isShown(sensitivity));
+  PantryFilter show(SensitivityLevel level) => _setVisibility(level, true);
+  PantryFilter hide(SensitivityLevel level) => _setVisibility(level, false);
+  PantryFilter toggle(SensitivityLevel level) => _setVisibility(level, !isShown(level));
 
-  PantryFilter _setVisibility(Sensitivity sensitivity, bool value) {
-    switch (sensitivity) {
-      case Sensitivity.unknown:
+  PantryFilter _setVisibility(SensitivityLevel level, bool value) {
+    switch (level) {
+      case SensitivityLevel.unknown:
         return rebuild((b) => b.showUnknownSensitivity = value);
-      case Sensitivity.none:
+      case SensitivityLevel.none:
         return rebuild((b) => b.showNoneSensitivity = value);
-      case Sensitivity.mild:
+      case SensitivityLevel.mild:
         return rebuild((b) => b.showMildSensitivity = value);
-      case Sensitivity.moderate:
+      case SensitivityLevel.moderate:
         return rebuild((b) => b.showModerateSensitivity = value);
-      case Sensitivity.severe:
+      case SensitivityLevel.severe:
         return rebuild((b) => b.showSevereSensitivity = value);
       default:
         // Should never be reached
-        throw ArgumentError.value(sensitivity);
+        throw ArgumentError.value(level);
     }
   }
 
-  bool isShown(Sensitivity sensitivity) {
-    switch (sensitivity) {
-      case Sensitivity.unknown:
+  bool isShown(SensitivityLevel level) {
+    switch (level) {
+      case SensitivityLevel.unknown:
         return showUnknownSensitivity;
-      case Sensitivity.none:
+      case SensitivityLevel.none:
         return showNoneSensitivity;
-      case Sensitivity.mild:
+      case SensitivityLevel.mild:
         return showMildSensitivity;
-      case Sensitivity.moderate:
+      case SensitivityLevel.moderate:
         return showModerateSensitivity;
-      case Sensitivity.severe:
+      case SensitivityLevel.severe:
         return showSevereSensitivity;
       default:
         // Should never be reached
-        throw ArgumentError.value(sensitivity);
+        throw ArgumentError.value(level);
     }
   }
 
   bool isIncluded(PantryEntry pantryEntry) {
-    switch (pantryEntry.sensitivity) {
-      case Sensitivity.unknown:
+    switch (pantryEntry.sensitivity.level) {
+      case SensitivityLevel.unknown:
         if (!showUnknownSensitivity) return false;
         break;
-      case Sensitivity.none:
+      case SensitivityLevel.none:
         if (!showNoneSensitivity) return false;
         break;
-      case Sensitivity.mild:
+      case SensitivityLevel.mild:
         if (!showMildSensitivity) return false;
         break;
-      case Sensitivity.moderate:
+      case SensitivityLevel.moderate:
         if (!showModerateSensitivity) return false;
         break;
-      case Sensitivity.severe:
+      case SensitivityLevel.severe:
         if (!showSevereSensitivity) return false;
         break;
       default:

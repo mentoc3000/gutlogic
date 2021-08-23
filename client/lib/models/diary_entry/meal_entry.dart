@@ -3,7 +3,6 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 import '../meal_element.dart';
-import '../sensitivity.dart';
 import 'diary_entry.dart';
 
 part 'meal_entry.g.dart';
@@ -23,12 +22,4 @@ abstract class MealEntry implements DiaryEntry, Built<MealEntry, MealEntryBuilde
   }) = _$MealEntry._;
 
   factory MealEntry.fromBuilder([MealEntryBuilder Function(MealEntryBuilder) updates]) = _$MealEntry;
-
-  Sensitivity getSensitivity() {
-    if (mealElements.isEmpty) {
-      return Sensitivity.unknown;
-    }
-    final sensitivities = mealElements.map((e) => e.getSensitivity());
-    return sensitivities.reduce((value, element) => value + element);
-  }
 }

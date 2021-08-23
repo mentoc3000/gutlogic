@@ -63,7 +63,6 @@ mixin DiaryEntryUpdater on FirestoreRepository {
     return firestoreService.instance.runTransaction((Transaction tx) async {
       final mealEntrySnapshot = await tx.get(diaryEntryRef);
       if (mealEntrySnapshot.exists) {
-        // TODO: version check the snapshot
         final serialized = serializers.serialize(diaryEntry) as Map<String, dynamic>?;
         if (serialized == null) return null;
         final serializedWithoutId = serialized..remove('id');

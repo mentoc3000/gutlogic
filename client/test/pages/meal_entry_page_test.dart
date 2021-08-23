@@ -10,9 +10,11 @@ import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/meal_entry/meal_entry_page.dart';
 import 'package:gutlogic/routes/routes.dart';
+import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +25,8 @@ class MockMealEntryBloc extends MockBloc<MealEntryEvent, MealEntryState> impleme
 
 class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
 
+class MockSensitivityService extends Mock implements SensitivityService {}
+
 class MealEntryPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(home: MealEntryPage());
@@ -31,6 +35,7 @@ class MealEntryPageWrapper extends StatelessWidget {
 void main() {
   late MealEntryBloc mealEntryBloc;
   late FoodBloc foodBloc;
+  late SensitivityService sensitivityService;
   late Routes routes;
   late Widget mealEntryPage;
   late MealEntry mealEntry;
@@ -53,6 +58,9 @@ void main() {
       notes: 'notes',
     );
 
+    sensitivityService = MockSensitivityService();
+    when(() => sensitivityService.of(any())).thenReturn(Sensitivity.unknown);
+
     mealEntryPage = Provider<Routes>.value(
       value: routes,
       child: MultiBlocProvider(
@@ -60,7 +68,10 @@ void main() {
           BlocProvider.value(value: mealEntryBloc),
           BlocProvider.value(value: foodBloc),
         ],
-        child: MealEntryPageWrapper(),
+        child: ChangeNotifierProvider.value(
+          value: sensitivityService,
+          child: MealEntryPageWrapper(),
+        ),
       ),
     );
   });
@@ -156,7 +167,11 @@ void main() {
 
       final newFood = CustomFood(id: '919', name: 'Hoisin Sauce');
       final foods = [newFood].build();
-      whenListen(foodBloc, Stream.value(FoodsLoaded(query: '', items: foods)), initialState: FoodsLoading());
+      whenListen(
+        foodBloc,
+        Stream.value(FoodsLoaded(query: '', items: foods)),
+        initialState: FoodsLoading(),
+      );
 
       // Show initial mealentry
       await tester.pumpWidget(mealEntryPage);

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/pantry/pantry_entry.dart';
 import '../../models/pantry/pantry_filter.dart';
-import '../../models/sensitivity.dart';
+import '../../models/sensitivity/sensitivity_level.dart';
 import '../bloc_helpers.dart';
 import '../pantry/pantry.dart';
 import 'pantry_filter_state.dart';
@@ -33,9 +33,9 @@ class PantryFilterCubit extends Cubit<PantryFilterState> with StreamSubscriber {
     );
   }
 
-  void show(Sensitivity sensitivity) => _updateFilter(_filter.show(sensitivity));
-  void hide(Sensitivity sensitivity) => _updateFilter(_filter.hide(sensitivity));
-  void toggle(Sensitivity sensitivity) => _updateFilter(_filter.toggle(sensitivity));
+  void show(SensitivityLevel level) => _updateFilter(_filter.show(level));
+  void hide(SensitivityLevel level) => _updateFilter(_filter.hide(level));
+  void toggle(SensitivityLevel level) => _updateFilter(_filter.toggle(level));
   void showAll() => _updateFilter(PantryFilter.all());
 
   void _updateFilter(PantryFilter filter) {

@@ -5,7 +5,6 @@ import '../food_reference/food_reference.dart';
 import '../irritant.dart';
 import '../measure.dart';
 import '../model_interfaces.dart';
-import '../pantry/pantry_entry_reference.dart';
 
 part 'food.g.dart';
 
@@ -17,9 +16,5 @@ abstract class Food with Ided, Named implements Searchable {
   BuiltList<Irritant>? get irritants;
   String? get brand;
 
-  @BuiltValueField(serialize: false)
-  PantryEntryReference? get pantryEntryReference;
-
   FoodReference toFoodReference();
-  Food addPantryEntryReference(PantryEntryReference? pantryEntryReference);
 }

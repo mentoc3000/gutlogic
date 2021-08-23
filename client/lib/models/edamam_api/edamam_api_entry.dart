@@ -4,7 +4,6 @@ import 'package:built_value/serializer.dart';
 
 import '../../util/null_utils.dart';
 import '../food/edamam_food.dart';
-import '../irritant.dart';
 import '../measure.dart';
 import './edamam_api_food.dart';
 import './edamam_api_irritant.dart';

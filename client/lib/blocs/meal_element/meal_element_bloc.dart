@@ -72,10 +72,6 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
       if (event is Update) {
         unawaited(mealElementRepository.update(event.mealElement));
       }
-      if (event is UpdateFoodReference) {
-        final mealElement = (state as MealElementLoaded).mealElement;
-        unawaited(mealElementRepository.updateFoodReference(mealElement, event.foodReference));
-      }
       if (event is UpdateQuantity) {
         final mealElement = (state as MealElementLoaded).mealElement;
         unawaited(mealElementRepository.updateQuantity(mealElement, event.quantity));

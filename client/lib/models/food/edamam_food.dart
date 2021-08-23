@@ -5,7 +5,6 @@ import 'package:built_value/serializer.dart';
 import '../food_reference/edamam_food_reference.dart';
 import '../irritant.dart';
 import '../measure.dart';
-import '../pantry/pantry_entry_reference.dart';
 import 'food.dart';
 
 part 'edamam_food.g.dart';
@@ -19,7 +18,6 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
     required String id,
     required String name,
     BuiltList<Measure>? measures,
-    PantryEntryReference? pantryEntryReference,
     String? brand,
     BuiltList<Irritant>? irritants,
   }) =>
@@ -27,7 +25,6 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
         id: id,
         name: name,
         measures: measures ?? Food.defaultMeasures,
-        pantryEntryReference: pantryEntryReference,
         brand: brand,
         irritants: irritants,
       );
@@ -42,9 +39,4 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
 
   @override
   EdamamFoodReference toFoodReference() => EdamamFoodReference(id: id, name: name, irritants: irritants);
-
-  @override
-  EdamamFood addPantryEntryReference(PantryEntryReference? pantryEntryReference) {
-    return rebuild((b) => b.pantryEntryReference = pantryEntryReference?.toBuilder());
-  }
 }

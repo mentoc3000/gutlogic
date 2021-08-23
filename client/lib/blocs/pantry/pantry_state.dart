@@ -35,7 +35,7 @@ class PantryEntryDeleted extends PantryState {
   List<Object?> get props => [pantryEntry];
 
   @override
-  String toString() => 'PantryEntryDeleted { pantryEntry: ${pantryEntry.id} }';
+  String toString() => 'PantryEntryDeleted { pantryEntry: ${pantryEntry.userFoodDetailsId} }';
 }
 
 class PantryError extends PantryState with ErrorState, ErrorRecorder {

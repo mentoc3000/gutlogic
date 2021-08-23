@@ -6,11 +6,16 @@ import 'package:gutlogic/blocs/meal_element/meal_element.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/meal_element_entry/meal_element_entry_page.dart';
+import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:provider/provider.dart';
 
 class MockMealElementBloc extends MockBloc<MealElementEvent, MealElementState> implements MealElementBloc {}
+
+class MockSensitivityService extends Mock implements SensitivityService {}
 
 class MealElementPageWrapper extends StatelessWidget {
   @override
@@ -19,6 +24,7 @@ class MealElementPageWrapper extends StatelessWidget {
 
 void main() {
   late MockMealElementBloc mealElementBloc;
+  late SensitivityService sensitivityService;
   late Widget mealElementPage;
   late MealElement mealElement;
 
@@ -32,9 +38,15 @@ void main() {
       notes: 'notes',
     );
 
+    sensitivityService = MockSensitivityService();
+    when(() => sensitivityService.of(any())).thenReturn(Sensitivity.unknown);
+
     mealElementPage = MultiBlocProvider(
       providers: [BlocProvider<MealElementBloc>.value(value: mealElementBloc)],
-      child: MealElementPageWrapper(),
+      child: ChangeNotifierProvider.value(
+        value: sensitivityService,
+        child: MealElementPageWrapper(),
+      ),
     );
   });
 

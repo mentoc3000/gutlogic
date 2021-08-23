@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart' hide when, verify, verifyNever;
+import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever;
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
@@ -25,6 +25,7 @@ import 'diary_bloc_test.mocks.dart';
 void main() {
   group('DiaryBloc', () {
     late MockDiaryRepository diaryRepository;
+
     final mealEntry = MealEntry(
       id: '1',
       datetime: DateTime.now().toUtc(),
@@ -38,9 +39,10 @@ void main() {
       notes: 'Better than yesterday',
     );
     final symptomEntry = SymptomEntry(
-        id: '3',
-        datetime: DateTime.now().toUtc(),
-        symptom: Symptom(severity: Severity.moderate, symptomType: SymptomType(id: 'symptomType1', name: 'Gas')));
+      id: '3',
+      datetime: DateTime.now().toUtc(),
+      symptom: Symptom(severity: Severity.moderate, symptomType: SymptomType(id: 'symptomType1', name: 'Gas')),
+    );
     final allDiaryEntries = BuiltList<DiaryEntry>([mealEntry, bowelMovementEntry, symptomEntry]);
 
     setUp(() {
@@ -78,9 +80,7 @@ void main() {
 
     blocTest<DiaryBloc, DiaryState>(
       'deletes meal entry',
-      build: () {
-        return DiaryBloc(repository: diaryRepository);
-      },
+      build: () => DiaryBloc(repository: diaryRepository),
       act: (bloc) => bloc.add(Delete(mealEntry)),
       expect: () => [DiaryEntryDeleted(mealEntry)],
       verify: (bloc) async {
@@ -91,15 +91,9 @@ void main() {
 
     blocTest<DiaryBloc, DiaryState>(
       'deletes symptom entry',
-      build: () {
-        return DiaryBloc(repository: diaryRepository);
-      },
-      act: (bloc) {
-        bloc.add(Delete(symptomEntry));
-      },
-      expect: () => [
-        DiaryEntryDeleted(symptomEntry),
-      ],
+      build: () => DiaryBloc(repository: diaryRepository),
+      act: (bloc) => bloc.add(Delete(symptomEntry)),
+      expect: () => [DiaryEntryDeleted(symptomEntry)],
       verify: (bloc) async {
         verify(diaryRepository.delete(symptomEntry)).called(1);
         verify(analyticsService.logEvent('delete_symptom_entry')).called(1);
@@ -108,15 +102,9 @@ void main() {
 
     blocTest<DiaryBloc, DiaryState>(
       'deletes bowel movement entry',
-      build: () {
-        return DiaryBloc(repository: diaryRepository);
-      },
-      act: (bloc) {
-        bloc.add(Delete(bowelMovementEntry));
-      },
-      expect: () => [
-        DiaryEntryDeleted(bowelMovementEntry),
-      ],
+      build: () => DiaryBloc(repository: diaryRepository),
+      act: (bloc) => bloc.add(Delete(bowelMovementEntry)),
+      expect: () => [DiaryEntryDeleted(bowelMovementEntry)],
       verify: (bloc) async {
         verify(diaryRepository.delete(bowelMovementEntry)).called(1);
         verify(analyticsService.logEvent('delete_bowel_movement_entry')).called(1);
@@ -129,10 +117,7 @@ void main() {
         when(diaryRepository.streamAll()).thenThrow(Exception());
         return DiaryBloc(repository: diaryRepository);
       },
-      expect: () => [
-        DiaryLoading(),
-        isA<DiaryError>(),
-      ],
+      expect: () => [DiaryLoading(), isA<DiaryError>()],
       act: (bloc) => bloc.add(const StreamAllDiary()),
     );
 

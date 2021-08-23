@@ -8,18 +8,18 @@ import '../../models/food/food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../resources/food/food_service.dart';
-import '../../resources/pantry_repository.dart';
+import '../../resources/pantry_service.dart';
 import '../bloc_helpers.dart';
 import 'pantry_entry.dart';
 
 class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with StreamSubscriber {
-  final PantryRepository repository;
+  final PantryService repository;
   final FoodService foodService;
 
   PantryEntryBloc({required this.repository, required this.foodService}) : super(PantryEntryLoading());
 
   factory PantryEntryBloc.fromContext(BuildContext context) {
-    return PantryEntryBloc(repository: context.read<PantryRepository>(), foodService: context.read<FoodService>());
+    return PantryEntryBloc(repository: context.read<PantryService>(), foodService: context.read<FoodService>());
   }
 
   @override
@@ -53,20 +53,6 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
               onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
             );
       }
-      if (event is StreamReference) {
-        // TODO: load pantry entry without food first
-        yield PantryEntryLoading();
-        final pantryEntryStream = repository.streamEntry(event.pantryEntryReference);
-        final pantryEntry = (await pantryEntryStream.first)!;
-        final food = await _pantryEntryFood(pantryEntry);
-
-        yield PantryEntryLoaded(pantryEntry: pantryEntry, food: food);
-
-        streamSubscription = pantryEntryStream.listen(
-          (pantryEntry) => add(Load(pantryEntry: pantryEntry!, food: food)),
-          onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
-        );
-      }
       if (event is Load) {
         yield PantryEntryLoaded(pantryEntry: event.pantryEntry, food: event.food);
       }
@@ -75,16 +61,13 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
           unawaited(repository.delete((state as PantryEntryLoaded).pantryEntry));
         }
       }
-      if (event is UpdateEntry) {
-        unawaited(repository.updateEntry(event.pantryEntry));
-      }
       if (event is UpdateNotes) {
         final pantryEntry = (state as PantryEntryLoaded).pantryEntry;
         unawaited(repository.updateNotes(pantryEntry, event.notes));
       }
-      if (event is UpdateSensitivity) {
+      if (event is UpdateSensitivityLevel) {
         final pantryEntry = (state as PantryEntryLoaded).pantryEntry;
-        unawaited(repository.updateSensitivity(pantryEntry, event.sensitivity));
+        unawaited(repository.updateSensitivityLevel(pantryEntry, event.sensitivityLevel));
       }
       if (event is ThrowPantryEntryError) {
         yield PantryEntryError.fromReport(event.report);

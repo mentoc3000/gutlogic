@@ -26,8 +26,8 @@ class PantryEntryListView extends StatelessWidget {
 
     final cards = [
       SensitivitySlider(
-        sensitivity: pantryEntry.sensitivity,
-        onChanged: (sensitivity) => pantryBloc.add(UpdateSensitivity(sensitivity)),
+        sensitivityLevel: pantryEntry.sensitivity.level,
+        onChanged: (sensitivityLevel) => pantryBloc.add(UpdateSensitivityLevel(sensitivityLevel)),
       ),
       if (food != null) FoodDetailsCard(food: food!),
       NotesCard(

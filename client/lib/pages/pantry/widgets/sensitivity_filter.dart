@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../../blocs/pantry_filter/pantry_filter.dart';
 import '../../../models/pantry/pantry_filter.dart';
-import '../../../models/sensitivity.dart';
+import '../../../models/sensitivity/sensitivity_level.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/gl_icons.dart';
 
@@ -14,16 +14,16 @@ class SensitivityFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sensitivities = [
-      Sensitivity.unknown,
-      Sensitivity.none,
-      Sensitivity.mild,
-      Sensitivity.moderate,
-      Sensitivity.severe
+    final sensitivityLevels = [
+      SensitivityLevel.unknown,
+      SensitivityLevel.none,
+      SensitivityLevel.mild,
+      SensitivityLevel.moderate,
+      SensitivityLevel.severe
     ];
-    final sensitivityButtons = sensitivities
+    final sensitivityButtons = sensitivityLevels
         .map((s) => _SensitivityFilterButton(
-            color: GLColors.fromSensitivity(s),
+            color: GLColors.fromSensitivityLevel(s),
             enabled: filter.isShown(s),
             onPressed: () => pantryFilterCubit.toggle(s)))
         .toList();

@@ -11,6 +11,7 @@ import 'package:gutlogic/models/diary_entry/diary_entry.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/meal_element.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
@@ -18,6 +19,7 @@ import 'package:gutlogic/pages/diary/diary_page.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/routes/routes.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
+import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +33,8 @@ class MockDiaryBloc extends MockBloc<DiaryEvent, DiaryState> implements DiaryBlo
 
 class MockDiaryRepository extends Mock implements DiaryRepository {}
 
+class MockSensitivityService extends Mock implements SensitivityService {}
+
 class DiaryPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(home: DiaryPage());
@@ -43,27 +47,44 @@ Future<void> scrollToTop(WidgetTester tester) async {
 
 void main() {
   late DiaryBloc diaryBloc;
+  late SensitivityService sensitivityService;
   late Widget diaryPage;
   late Routes routes;
+
+  final mealEntry = MealEntry(
+    id: 'meal1',
+    datetime: DateTime(2019, 3, 4, 11, 23),
+    mealElements: BuiltList<MealElement>([]),
+  );
 
   initializeTimeZones();
 
   setUp(() {
     routes = MockRoutes();
+
     diaryBloc = MockDiaryBloc();
     when(() => diaryBloc.repository).thenReturn(MockDiaryRepository());
+
+    sensitivityService = MockSensitivityService();
+    when(() => sensitivityService.of(any())).thenReturn(Sensitivity.unknown);
+    when(() => sensitivityService.aggregate(any())).thenReturn(Sensitivity.unknown);
+
     diaryPage = Provider<Routes>.value(
       value: routes,
       child: BlocProvider<DiaryBloc>.value(
         value: diaryBloc,
-        child: DiaryPageWrapper(),
+        child: ChangeNotifierProvider.value(
+          value: sensitivityService,
+          child: DiaryPageWrapper(),
+        ),
       ),
     );
   });
 
   group('DiaryPage', () {
     testWidgets('shows empty diary', (WidgetTester tester) async {
-      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[].build())), initialState: DiaryLoading());
+      final diaryState = DiaryLoaded(<DiaryEntry>[].build());
+      whenListen(diaryBloc, Stream.value(diaryState), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
       expect(find.text('Timeline'), findsOneWidget);
       verifyNever(() => diaryBloc.add(any()));
@@ -87,12 +108,8 @@ void main() {
     });
 
     testWidgets('removes meal entry when dragging diary entry tile left', (WidgetTester tester) async {
-      final mealEntry = MealEntry(
-        id: 'meal1',
-        datetime: DateTime(2019, 3, 4, 11, 23),
-        mealElements: BuiltList<MealElement>([]),
-      );
-      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[mealEntry].build())), initialState: DiaryLoading());
+      final diaryState = DiaryLoaded(<DiaryEntry>[mealEntry].build());
+      whenListen(diaryBloc, Stream.value(diaryState), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
       await scrollToTop(tester);
@@ -112,11 +129,6 @@ void main() {
     });
 
     testWidgets('shows an undo snackbar after deleting an entry', (WidgetTester tester) async {
-      final mealEntry = MealEntry(
-        id: 'meal1',
-        datetime: DateTime(2019, 3, 4, 11, 23),
-        mealElements: BuiltList<MealElement>([]),
-      );
       whenListen(
           diaryBloc,
           Stream.fromIterable([
@@ -134,12 +146,11 @@ void main() {
     });
 
     testWidgets('does nothing when dragging diary entry tile right', (WidgetTester tester) async {
-      final mealEntry = MealEntry(
-        id: 'meal1',
-        datetime: DateTime(2019, 3, 4, 11, 23),
-        mealElements: BuiltList<MealElement>([]),
+      whenListen(
+        diaryBloc,
+        Stream.value(DiaryLoaded(<DiaryEntry>[mealEntry].build())),
+        initialState: DiaryLoading(),
       );
-      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[mealEntry].build())), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
       await scrollToTop(tester);
@@ -155,7 +166,11 @@ void main() {
 
     testWidgets('always shows today', (WidgetTester tester) async {
       final today = DateTime.now();
-      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[].build())), initialState: DiaryLoading());
+      whenListen(
+        diaryBloc,
+        Stream.value(DiaryLoaded(<DiaryEntry>[].build())),
+        initialState: DiaryLoading(),
+      );
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
 
@@ -167,24 +182,29 @@ void main() {
 
     testWidgets('start at today', (WidgetTester tester) async {
       final today = DateTime.now();
+      final todayMealEntry = MealEntry(
+        id: 'meal1',
+        datetime: today,
+        mealElements: BuiltList<MealElement>([]),
+      );
+
       final yesterday = today.subtract(const Duration(days: 1));
       final yesterdayMealEntry = MealEntry(
         id: 'meal1',
         datetime: yesterday,
         mealElements: BuiltList<MealElement>([]),
       );
-      final todayMealEntry = MealEntry(
-        id: 'meal1',
-        datetime: today,
-        mealElements: BuiltList<MealElement>([]),
-      );
+
+      final diaryEntries = <DiaryEntry>[
+        ...List.filled(5, yesterdayMealEntry),
+        ...List.filled(5, todayMealEntry),
+      ].build();
+
       whenListen(
-          diaryBloc,
-          Stream.value(DiaryLoaded(<DiaryEntry>[
-            ...List<MealEntry>.filled(5, yesterdayMealEntry),
-            ...List<MealEntry>.filled(5, todayMealEntry),
-          ].build())),
-          initialState: DiaryLoading());
+        diaryBloc,
+        Stream.value(DiaryLoaded(diaryEntries)),
+        initialState: DiaryLoading(),
+      );
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
 
@@ -205,8 +225,12 @@ void main() {
         datetime: datetime,
         mealElements: BuiltList<MealElement>([]),
       );
-      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[todayMealEntry].build())),
-          initialState: DiaryLoading());
+      whenListen(
+        diaryBloc,
+        Stream.value(DiaryLoaded(<DiaryEntry>[todayMealEntry].build())),
+        initialState: DiaryLoading(),
+      );
+
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
       await scrollToTop(tester);
@@ -236,12 +260,15 @@ void main() {
         datetime: lastMonth,
         mealElements: BuiltList<MealElement>([]),
       );
+
+      final diaryEntries = List<DiaryEntry>.filled(2, lastMonthMealEntry).build();
+
       whenListen(
-          diaryBloc,
-          Stream.value(DiaryLoaded(<DiaryEntry>[
-            ...List<MealEntry>.filled(2, lastMonthMealEntry),
-          ].build())),
-          initialState: DiaryLoading());
+        diaryBloc,
+        Stream.value(DiaryLoaded(diaryEntries)),
+        initialState: DiaryLoading(),
+      );
+
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
       await scrollToTop(tester);
@@ -263,8 +290,15 @@ void main() {
         datetime: afternoon,
         mealElements: BuiltList<MealElement>([]),
       );
-      whenListen(diaryBloc, Stream.value(DiaryLoaded(<DiaryEntry>[morningMealEntry, afternoonMealEntry].build())),
-          initialState: DiaryLoading());
+
+      final diaryEntries = <DiaryEntry>[morningMealEntry, afternoonMealEntry].build();
+
+      whenListen(
+        diaryBloc,
+        Stream.value(DiaryLoaded(diaryEntries)),
+        initialState: DiaryLoading(),
+      );
+
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
       await scrollToTop(tester);
@@ -285,8 +319,11 @@ void main() {
           mealElements: BuiltList<MealElement>([]),
           notes: 'notes',
         );
-        whenListen(diaryBloc, Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([mealEntry]))),
-            initialState: DiaryLoading());
+        whenListen(
+          diaryBloc,
+          Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([mealEntry]))),
+          initialState: DiaryLoading(),
+        );
       });
 
       testWidgets('shows tile', (WidgetTester tester) async {
@@ -325,8 +362,11 @@ void main() {
           bowelMovement: BowelMovement(volume: 3, type: 4),
           notes: 'notes',
         );
-        whenListen(diaryBloc, Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([bowelMovementEntry]))),
-            initialState: DiaryLoading());
+        whenListen(
+          diaryBloc,
+          Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([bowelMovementEntry]))),
+          initialState: DiaryLoading(),
+        );
       });
 
       testWidgets('shows bowel movement entry', (WidgetTester tester) async {
@@ -368,8 +408,11 @@ void main() {
               Symptom(symptomType: SymptomType(id: 'symptomType1', name: symptomName), severity: Severity.moderate),
           notes: 'notes',
         );
-        whenListen(diaryBloc, Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([symptomEntry]))),
-            initialState: DiaryLoading());
+        whenListen(
+          diaryBloc,
+          Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([symptomEntry]))),
+          initialState: DiaryLoading(),
+        );
       });
 
       testWidgets('shows symptom entry', (WidgetTester tester) async {
@@ -402,7 +445,11 @@ void main() {
 
     group('floating action button', () {
       setUp(() {
-        whenListen(diaryBloc, Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([]))), initialState: DiaryLoading());
+        whenListen(
+          diaryBloc,
+          Stream.value(DiaryLoaded(BuiltList<DiaryEntry>([]))),
+          initialState: DiaryLoading(),
+        );
       });
 
       testWidgets('shows speed dial', (WidgetTester tester) async {

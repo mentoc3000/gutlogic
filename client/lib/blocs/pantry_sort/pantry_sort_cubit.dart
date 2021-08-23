@@ -54,7 +54,7 @@ class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber {
 int _compareAlphabetically(PantryEntry a, PantryEntry b) =>
     a.foodReference.name.toLowerCase().compareTo(b.foodReference.name.toLowerCase());
 
-int _compareSensitivity(PantryEntry a, PantryEntry b) => a.sensitivity.compareTo(b.sensitivity);
+int _compareSensitivity(PantryEntry a, PantryEntry b) => a.sensitivity.level.compareTo(b.sensitivity.level);
 
 BuiltList<PantryEntry> _sortAlphabeticallyAscending(BuiltList<PantryEntry> pantryEntries) {
   final list = pantryEntries.toList();

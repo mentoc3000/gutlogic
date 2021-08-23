@@ -3,29 +3,35 @@ import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/pantry_entry/pantry_entry.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
-import 'package:gutlogic/models/sensitivity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
+import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
-import 'package:gutlogic/resources/pantry_repository.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';
 import 'pantry_entry_bloc_test.mocks.dart';
 
-@GenerateMocks([PantryRepository, FoodService])
+@GenerateMocks([PantryService, FoodService])
 void main() {
   group('PantryEntryBloc', () {
-    late MockPantryRepository repository;
+    late MockPantryService repository;
     late MockFoodService foodService;
     final food = EdamamFood(id: 'foodId', name: 'ham hock');
     final foodReference = food.toFoodReference();
-    final pantryEntry =
-        PantryEntry(id: food.id, foodReference: foodReference, sensitivity: Sensitivity.moderate, notes: 'Some notes');
+    final pantryEntry = PantryEntry(
+      userFoodDetailsId: food.id,
+      foodReference: foodReference,
+      sensitivity: Sensitivity(level: SensitivityLevel.severe, source: SensitivitySource.user),
+      notes: 'Some notes',
+    );
     final debounceWaitDuration = debounceDuration + const Duration(milliseconds: 100);
 
     setUp(() {
-      repository = MockPantryRepository();
+      repository = MockPantryService();
       when(repository.stream(pantryEntry)).thenAnswer((_) => Stream<PantryEntry>.fromIterable([pantryEntry]));
 
       foodService = MockFoodService();
@@ -129,35 +135,6 @@ void main() {
     );
 
     blocTest<PantryEntryBloc, PantryEntryState>(
-      'updates entry',
-      build: () {
-        return PantryEntryBloc(repository: repository, foodService: foodService);
-      },
-      act: (bloc) => bloc..add(Load(pantryEntry: pantryEntry))..add(UpdateEntry(pantryEntry)),
-      wait: debounceWaitDuration,
-      expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
-      verify: (bloc) {
-        verify(repository.updateEntry(pantryEntry)).called(1);
-        verify(analyticsService.logUpdateEvent('update_pantry_entry')).called(1);
-      },
-    );
-
-    blocTest<PantryEntryBloc, PantryEntryState>(
-      'debounces entry updates',
-      build: () => PantryEntryBloc(repository: repository, foodService: foodService),
-      act: (bloc) => bloc
-        ..add(Load(pantryEntry: pantryEntry))
-        ..add(UpdateEntry(pantryEntry))
-        ..add(UpdateEntry(pantryEntry))
-        ..add(UpdateEntry(pantryEntry)),
-      wait: debounceWaitDuration,
-      expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
-      verify: (bloc) {
-        verify(repository.updateEntry(pantryEntry)).called(1);
-      },
-    );
-
-    blocTest<PantryEntryBloc, PantryEntryState>(
       'updates notes',
       build: () {
         return PantryEntryBloc(repository: repository, foodService: foodService);
@@ -188,16 +165,17 @@ void main() {
     );
 
     blocTest<PantryEntryBloc, PantryEntryState>(
-      'updates sensitivity',
+      'updates sensitivity level',
       build: () {
         return PantryEntryBloc(repository: repository, foodService: foodService);
       },
-      act: (bloc) => bloc..add(Load(pantryEntry: pantryEntry))..add(const UpdateSensitivity(Sensitivity.severe)),
+      act: (bloc) =>
+          bloc..add(Load(pantryEntry: pantryEntry))..add(const UpdateSensitivityLevel(SensitivityLevel.severe)),
       wait: debounceWaitDuration,
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
-        verify(repository.updateSensitivity(pantryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_pantry_entry', 'sensitivity')).called(1);
+        verify(repository.updateSensitivityLevel(pantryEntry, any)).called(1);
+        verify(analyticsService.logUpdateEvent('update_pantry_entry', 'sensitivity_level')).called(1);
       },
     );
 
@@ -206,14 +184,14 @@ void main() {
       build: () => PantryEntryBloc(repository: repository, foodService: foodService),
       act: (bloc) => bloc
         ..add(Load(pantryEntry: pantryEntry))
-        ..add(const UpdateSensitivity(Sensitivity.moderate))
-        ..add(const UpdateSensitivity(Sensitivity.mild))
-        ..add(const UpdateSensitivity(Sensitivity.moderate))
-        ..add(const UpdateSensitivity(Sensitivity.severe)),
+        ..add(const UpdateSensitivityLevel(SensitivityLevel.moderate))
+        ..add(const UpdateSensitivityLevel(SensitivityLevel.mild))
+        ..add(const UpdateSensitivityLevel(SensitivityLevel.moderate))
+        ..add(const UpdateSensitivityLevel(SensitivityLevel.severe)),
       wait: debounceWaitDuration,
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
-        verify(repository.updateSensitivity(pantryEntry, Sensitivity.severe)).called(1);
+        verify(repository.updateSensitivityLevel(pantryEntry, SensitivityLevel.severe)).called(1);
         verifyNoMoreInteractions(repository);
       },
     );
@@ -223,14 +201,14 @@ void main() {
       act: (bloc) => bloc
         ..add(Load(pantryEntry: pantryEntry))
         ..add(const UpdateNotes('bad'))
-        ..add(const UpdateSensitivity(Sensitivity.mild))
+        ..add(const UpdateSensitivityLevel(SensitivityLevel.mild))
         ..add(const UpdateNotes('good'))
-        ..add(const UpdateSensitivity(Sensitivity.none)),
+        ..add(const UpdateSensitivityLevel(SensitivityLevel.none)),
       wait: debounceWaitDuration,
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
         verify(repository.updateNotes(pantryEntry, any)).called(1);
-        verify(repository.updateSensitivity(pantryEntry, any)).called(1);
+        verify(repository.updateSensitivityLevel(pantryEntry, any)).called(1);
         verifyNoMoreInteractions(repository);
       },
     );

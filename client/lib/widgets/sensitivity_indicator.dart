@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../models/sensitivity.dart';
+import '../models/sensitivity/sensitivity_level.dart';
 import '../style/gl_colors.dart';
 
 class SensitivityIndicator extends StatelessWidget {
-  final Sensitivity sensitivity;
+  final SensitivityLevel sensitivityLevel;
   final Color borderColor;
   final Color fillColor;
   final double size;
 
-  SensitivityIndicator(this.sensitivity, {this.size = 16})
-      : borderColor = _borderColor(sensitivity),
-        fillColor = _fillColor(sensitivity);
+  SensitivityIndicator(this.sensitivityLevel, {this.size = 16})
+      : borderColor = _borderColor(sensitivityLevel),
+        fillColor = _fillColor(sensitivityLevel);
 
-  static Color _fillColor(Sensitivity sensitivity) => GLColors.fromSensitivity(sensitivity);
+  static Color _fillColor(SensitivityLevel sensitivityLevel) => GLColors.fromSensitivityLevel(sensitivityLevel);
 
-  static Color _borderColor(Sensitivity sensitivity) => _fillColor(sensitivity);
+  static Color _borderColor(SensitivityLevel sensitivityLevel) => _fillColor(sensitivityLevel);
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +34,10 @@ class SensitivityIndicator extends StatelessWidget {
 }
 
 class SensitivityIndicatorLarge extends StatelessWidget {
-  final Sensitivity sensitivity;
+  final SensitivityLevel sensitivityLevel;
 
-  SensitivityIndicatorLarge({required this.sensitivity});
+  SensitivityIndicatorLarge({required this.sensitivityLevel});
 
   @override
-  Widget build(BuildContext context) => SensitivityIndicator(sensitivity, size: 30.0);
+  Widget build(BuildContext context) => SensitivityIndicator(sensitivityLevel, size: 30.0);
 }

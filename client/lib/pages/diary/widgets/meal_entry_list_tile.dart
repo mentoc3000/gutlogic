@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import '../../../models/diary_entry/meal_entry.dart';
+import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/sensitivity_indicator.dart';
@@ -13,13 +15,20 @@ class MealEntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final entryFoodReferences = entry.mealElements.map((e) => e.foodReference);
+
+    // Aggregate the sensitivities for the entire meal entry.
+    final entrySensitivityLevel = context.select((SensitivityService sensitivity) {
+      return sensitivity.aggregate(entryFoodReferences).level;
+    });
+
     return DiaryEntryListTile(
       heading: 'Meal/Snack',
       subheadings: entry.mealElements.map((e) => e.foodReference.name),
       diaryEntry: entry,
       barColor: GLColors.food,
       onTap: () => Navigator.push(context, Routes.of(context).createMealEntryRoute(entry: entry)),
-      trailing: SensitivityIndicator(entry.getSensitivity()),
+      trailing: SensitivityIndicator(entrySensitivityLevel),
     );
   }
 }

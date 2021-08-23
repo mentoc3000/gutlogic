@@ -1,6 +1,6 @@
 import 'package:gutlogic/resources/food/edamam_food_repository.dart';
 import 'package:gutlogic/resources/food/edamam_service.dart';
-import 'package:gutlogic/resources/pantry_repository.dart';
+import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/models/edamam_api/edamam_api_entry.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:mockito/mockito.dart';
@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 import 'edamam_food_repository_test.mocks.dart';
 import 'edamam_sample_data.dart';
 
-@GenerateMocks([EdamamService, PantryRepository])
+@GenerateMocks([EdamamService, PantryService])
 void main() {
   group('EdamamFoodRepository', () {
     late EdamamFoodRepository foodRepository;

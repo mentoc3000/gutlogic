@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart' hide when, verify;
+import 'package:bloc_test/bloc_test.dart' hide any, when, verify;
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/food/food.dart';
@@ -8,8 +8,8 @@ import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food/food.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';
@@ -20,16 +20,17 @@ import 'food_bloc_test.mocks.dart';
 void main() {
   group('Food Bloc', () {
     late MockFoodService foodService;
+
     final bread = CustomFood(id: '123', name: 'Bread');
     final beer = CustomFood(id: '120', name: 'Beer');
     final bacon = EdamamFood(id: '987', name: 'Bacon');
     final bResults = BuiltList<Food>([bacon, beer, bread]);
     final brResults = BuiltList<Food>([bread]);
+
     final debounceWaitDuration = debounceDuration + const Duration(milliseconds: 100);
 
     setUp(() {
       foodService = MockFoodService();
-
       when(foodService.fetchQuery('B')).thenAnswer((i) => Future<BuiltList<Food>>.value(bResults));
       when(foodService.streamQuery('B')).thenAnswer((i) => Stream.value(bResults));
     });
@@ -61,9 +62,7 @@ void main() {
     blocTest<FoodBloc, FoodState>(
       'streams queried foods',
       build: () => FoodBloc(foodService: foodService),
-      act: (bloc) async {
-        bloc.add(const StreamFoodQuery('B'));
-      },
+      act: (bloc) async => bloc.add(const StreamFoodQuery('B')),
       wait: debounceWaitDuration,
       expect: () => [FoodsLoading(), FoodsLoaded(query: 'B', items: bResults)],
       verify: (bloc) async {

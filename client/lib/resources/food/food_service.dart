@@ -8,8 +8,6 @@ import '../../models/food/food.dart';
 import '../../models/food_reference/custom_food_reference.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
 import '../../models/food_reference/food_reference.dart';
-import '../../util/null_utils.dart';
-import '../pantry_repository.dart';
 import '../searchable_repository.dart';
 import 'custom_food_repository.dart';
 import 'edamam_food_repository.dart';
@@ -17,19 +15,16 @@ import 'edamam_food_repository.dart';
 class FoodService implements SearchableRepository<Food> {
   final CustomFoodRepository customFoodRepository;
   final EdamamFoodRepository edamamFoodRepository;
-  final PantryRepository pantryRepository;
 
-  FoodService({required this.edamamFoodRepository, required this.customFoodRepository, required this.pantryRepository});
+  FoodService({required this.edamamFoodRepository, required this.customFoodRepository});
 
   Stream<Food?> streamFood(FoodReference? foodReference) {
     if (foodReference == null) return Stream.value(null);
 
     if (foodReference is EdamamFoodReference) {
-      final edamamFoodStream = edamamFoodRepository.streamFood(foodReference);
-      return _mergePantryEntryStream(edamamFoodStream);
+      return edamamFoodRepository.streamFood(foodReference);
     } else if (foodReference is CustomFoodReference) {
-      final customFoodStream = customFoodRepository.streamFood(foodReference);
-      return _mergePantryEntryStream(customFoodStream);
+      return customFoodRepository.streamFood(foodReference);
     } else {
       throw TypeError();
     }
@@ -39,11 +34,9 @@ class FoodService implements SearchableRepository<Food> {
     if (foodReference == null) return Future.value(null);
 
     if (foodReference is EdamamFoodReference) {
-      final edamamFood = edamamFoodRepository.fetchFood(foodReference);
-      return _mergePantryEntryFuture(edamamFood);
+      return edamamFoodRepository.fetchFood(foodReference);
     } else if (foodReference is CustomFoodReference) {
-      final customFood = customFoodRepository.fetchFood(foodReference);
-      return _mergePantryEntryFuture(customFood);
+      return customFoodRepository.fetchFood(foodReference);
     } else {
       throw TypeError();
     }
@@ -56,10 +49,7 @@ class FoodService implements SearchableRepository<Food> {
     final customFoodStream = customFoodRepository.streamQuery(query);
     final edamamFoodStream = edamamFoodRepository.streamQuery(query);
 
-    final customFoodWithPantryRefStream = _mergePantryEntryStreams(customFoodStream);
-    final edamamFoodWithPantryRefStream = _mergePantryEntryStreams(edamamFoodStream);
-
-    return CombineLatestStream([customFoodWithPantryRefStream, edamamFoodWithPantryRefStream], _combineFoodLists);
+    return CombineLatestStream([customFoodStream, edamamFoodStream], _combineFoodLists);
   }
 
   @override
@@ -69,10 +59,7 @@ class FoodService implements SearchableRepository<Food> {
     final customFoods = customFoodRepository.fetchQuery(query);
     final edamamFoods = edamamFoodRepository.fetchQuery(query);
 
-    final customFoodsWithPantryRef = _mergePantryEntryFutures(customFoods);
-    final edamamFoodsWithPantryRef = _mergePantryEntryFutures(edamamFoods);
-
-    return Future.wait([customFoodsWithPantryRef, edamamFoodsWithPantryRef]).then(_combineFoodLists);
+    return Future.wait([customFoods, edamamFoods]).then(_combineFoodLists);
   }
 
   Future<CustomFood?> add({required String name}) => customFoodRepository.add(name: name);
@@ -81,34 +68,6 @@ class FoodService implements SearchableRepository<Food> {
     if (food != null) {
       await customFoodRepository.delete(food);
     }
-  }
-
-  Stream<T?> _mergePantryEntryStream<T extends Food>(Stream<T?> foodStream) {
-    // Cast to T? to fix runtime type error
-    return foodStream.cast<T?>().switchMap<T?>((T? food) {
-      return pantryRepository
-          .streamByFood(food?.toFoodReference())
-          .map<T?>((pantryEntry) => (food?.addPantryEntryReference(pantryEntry?.toReference()) as T?));
-    });
-  }
-
-  Future<Food?> _mergePantryEntryFuture(Future<Food?> foodFuture) {
-    return _mergePantryEntryStream(Stream.fromFuture(foodFuture)).first;
-  }
-
-  Stream<Iterable<T>> _mergePantryEntryStreams<T extends Food>(Stream<Iterable<T>> foodStream) {
-    // Cast to T? to fix runtime type error
-    return foodStream.cast<Iterable<T>>().switchMap<Iterable<T>>((Iterable<T> foods) {
-      if (foods.isEmpty) return Stream.value(<T>[].build());
-      return CombineLatestStream(
-        foods.map((f) => _mergePantryEntryStream(Stream.value(f))),
-        (Iterable<T?> values) => values.whereNotNull(),
-      );
-    });
-  }
-
-  Future<Iterable<Food>> _mergePantryEntryFutures(Future<Iterable<Food>> foodFutures) {
-    return _mergePantryEntryStreams(Stream.fromFuture(foodFutures)).first;
   }
 }
 

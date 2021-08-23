@@ -1,27 +1,27 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../models/sensitivity.dart';
+import '../../../models/sensitivity/sensitivity_level.dart';
 import '../../../style/gl_text_style.dart';
 import '../../../widgets/cards/push_card.dart';
 import '../../../widgets/sensitivity_indicator.dart';
 
 class MealElementSensitivityCard extends StatelessWidget {
-  final Sensitivity sensitivity;
+  final SensitivityLevel sensitivityLevel;
   final VoidCallback? onTap;
 
-  const MealElementSensitivityCard({Key? key, Sensitivity? sensitivity, this.onTap})
-      : sensitivity = sensitivity ?? Sensitivity.unknown,
+  const MealElementSensitivityCard({Key? key, SensitivityLevel? sensitivityLevel, this.onTap})
+      : sensitivityLevel = sensitivityLevel ?? SensitivityLevel.unknown,
         super(key: key);
 
   String get _label {
-    switch (sensitivity) {
-      case Sensitivity.none:
+    switch (sensitivityLevel) {
+      case SensitivityLevel.none:
         return 'No sensitivity';
-      case Sensitivity.mild:
+      case SensitivityLevel.mild:
         return 'Mild sensitivity';
-      case Sensitivity.moderate:
+      case SensitivityLevel.moderate:
         return 'Moderate sensitivity';
-      case Sensitivity.severe:
+      case SensitivityLevel.severe:
         return 'Severe sensitivity';
       default:
         return 'Unknown sensitivity';
@@ -34,7 +34,7 @@ class MealElementSensitivityCard extends StatelessWidget {
     return PushCard(
       child: Row(
         children: [
-          SensitivityIndicator(sensitivity),
+          SensitivityIndicator(sensitivityLevel),
           const SizedBox(width: 8),
           Text(_label, style: style),
         ],
