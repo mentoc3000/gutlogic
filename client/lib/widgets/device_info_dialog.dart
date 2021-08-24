@@ -1,111 +1,116 @@
 import 'dart:io';
 
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../style/gl_colors.dart';
 import '../util/app_config.dart';
-import '../util/device_utils.dart';
-
-Color getAppEnvironmentColor(Environment env) {
-  switch (env) {
-    case Environment.development:
-      return GLColors.development;
-    case Environment.production:
-      return GLColors.production;
-  }
-}
 
 class DeviceInfoDialog extends StatelessWidget {
-  DeviceInfoDialog();
+  final Color color;
+
+  DeviceInfoDialog({required this.color});
 
   @override
   Widget build(BuildContext context) {
+    final plugin = DeviceInfoPlugin();
+    final config = context.read<AppConfig>();
+
+    Widget? content;
+
+    if (Platform.isAndroid) {
+      content = FutureBuilder(
+        future: plugin.androidInfo,
+        builder: (context, snapshot) => snapshot.hasData
+            ? AndroidDeviceInfoContent(config: config, device: snapshot.data as AndroidDeviceInfo)
+            : Container(),
+      );
+    } else if (Platform.isIOS) {
+      content = FutureBuilder(
+        future: plugin.iosInfo,
+        builder: (context, snapshot) => snapshot.hasData
+            ? IosDeviceInfoContent(config: config, device: snapshot.data as IosDeviceInfo)
+            : Container(),
+      );
+    }
+
     return AlertDialog(
       contentPadding: const EdgeInsets.only(bottom: 10.0),
       title: Container(
         padding: const EdgeInsets.all(15.0),
-        color: getAppEnvironmentColor(AppConfig.of(context)?.environment ?? Environment.development),
-        child: const Text(
-          'Device Info',
-          style: TextStyle(color: GLColors.white),
-        ),
+        color: color,
+        child: const Text('Device Info', style: TextStyle(color: GLColors.white)),
       ),
       titlePadding: const EdgeInsets.all(0),
-      content: _getContent(context),
+      content: content,
     );
   }
+}
 
-  Widget _getContent(BuildContext context) {
-    if (Platform.isAndroid) {
-      return _androidContent(context);
-    }
-    if (Platform.isIOS) {
-      return _iOSContent(context);
-    }
-    return const Text("You're not on Android neither iOS");
-  }
+class IosDeviceInfoContent extends StatelessWidget {
+  final AppConfig config;
+  final IosDeviceInfo device;
 
-  Widget _androidContent(BuildContext context) {
-    final appconfig = AppConfig.of(context);
+  IosDeviceInfoContent({required this.config, required this.device});
 
-    return FutureBuilder(
-        future: androidDeviceInfo,
-        builder: (context, AsyncSnapshot<AndroidDeviceInfo> snapshot) {
-          if (appconfig == null) return Container();
-          if (!snapshot.hasData) return Container();
-
-          final device = snapshot.requireData;
-
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _buildTile('Flavor:', appconfig.name),
-                _buildTile('Build mode:', appconfig.buildmode),
-                _buildTile('Physical device:', device.isPhysicalDevice),
-                _buildTile('Manufacturer:', device.manufacturer),
-                _buildTile('Model:', device.model),
-                _buildTile('Android version:', device.version.release),
-                _buildTile('Android SDK:', device.version.sdkInt)
-              ],
-            ),
-          );
-        });
-  }
-
-  Widget _iOSContent(BuildContext context) {
-    final appconfig = AppConfig.of(context);
-
-    return FutureBuilder(
-      future: iosDeviceInfo,
-      builder: (context, AsyncSnapshot<IosDeviceInfo> snapshot) {
-        if (appconfig == null) return Container();
-        if (!snapshot.hasData) return Container();
-
-        final device = snapshot.requireData;
-
-        return SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              _buildTile('Flavor:', appconfig.name),
-              _buildTile('Build mode:', appconfig.buildmode),
-              _buildTile('Physical device:', device.isPhysicalDevice),
-              _buildTile('Device:', device.name),
-              _buildTile('Model:', device.model),
-              _buildTile('System name:', device.systemName),
-              _buildTile('System version:', device.systemVersion)
-            ],
-          ),
-        );
-      },
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          DeviceInfoElement('Environment:', config.environment.name),
+          DeviceInfoElement('Build:', config.build),
+          DeviceInfoElement('Physical Device:', device.isPhysicalDevice),
+          DeviceInfoElement('Device:', device.name),
+          DeviceInfoElement('Model:', device.model),
+          DeviceInfoElement('System Name:', device.systemName),
+          DeviceInfoElement('System Version:', device.systemVersion)
+        ],
+      ),
     );
   }
+}
 
-  Widget _buildTile(String key, Object value) {
+class AndroidDeviceInfoContent extends StatelessWidget {
+  final AppConfig config;
+  final AndroidDeviceInfo device;
+
+  AndroidDeviceInfoContent({required this.config, required this.device});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          DeviceInfoElement('Environment:', config.environment.name),
+          DeviceInfoElement('Build:', config.build),
+          DeviceInfoElement('Physical Device:', device.isPhysicalDevice),
+          DeviceInfoElement('Manufacturer:', device.manufacturer),
+          DeviceInfoElement('Model:', device.model),
+          DeviceInfoElement('Android Version:', device.version.release),
+          DeviceInfoElement('Android SDK:', device.version.sdkInt)
+        ],
+      ),
+    );
+  }
+}
+
+class DeviceInfoElement extends StatelessWidget {
+  final String title;
+  final String value;
+
+  DeviceInfoElement(this.title, Object? value) : value = value?.toString() ?? 'null';
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Row(
-        children: [Text(key, style: const TextStyle(fontWeight: FontWeight.bold)), Text(value.toString())],
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(value),
+        ],
       ),
     );
   }

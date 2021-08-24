@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 import 'screenshots_util.dart';
 
@@ -13,8 +13,9 @@ Future<String> handler(String? message) async {
   }
 
   if (message == requestDeviceNameMessage) {
-    if (Platform.isAndroid) return (await DeviceInfoPlugin().androidInfo).device;
-    if (Platform.isIOS) return (await DeviceInfoPlugin().iosInfo).name;
+    final plugin = DeviceInfoPlugin();
+    if (Platform.isAndroid) return (await plugin.androidInfo).device ?? '';
+    if (Platform.isIOS) return (await plugin.iosInfo).name ?? '';
     throw ArgumentError('Unknown platform.');
   }
 

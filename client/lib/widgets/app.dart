@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../auth/auth.dart';
-import '../blocs/gut_logic_bloc_observer.dart';
 import '../pages/landing/landing_page.dart';
 import '../resources/firebase/analytics_service.dart';
-import '../resources/firebase/crashlytics_service.dart';
-import '../resources/firebase/remote_config_service.dart';
 import '../resources/user_repository.dart';
 import '../routes/routes.dart';
 import '../style/gl_colors.dart';
@@ -17,14 +14,7 @@ import 'flavor_banner.dart';
 import 'gl_widget_config.dart';
 
 class GutLogicApp extends StatelessWidget {
-  final AnalyticsService analytics;
-  final CrashlyticsService crashlytics;
-  final RemoteConfigService remoteConfigService;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
-  GutLogicApp({required this.analytics, required this.crashlytics, required this.remoteConfigService}) {
-    Bloc.observer = GutLogicBlocObserver(analytics: analytics, crashlytics: crashlytics);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +22,6 @@ class GutLogicApp extends StatelessWidget {
       providers: [
         Routes.provider(),
         Authenticator.provider(),
-        RepositoryProvider.value(value: analytics),
-        RepositoryProvider.value(value: crashlytics),
-        RepositoryProvider.value(value: remoteConfigService),
         RepositoryProvider(create: (context) => UserRepository()),
       ],
       child: createRootWidget(context),
@@ -52,7 +39,7 @@ class GutLogicApp extends StatelessWidget {
               children: [
                 Container(color: GLColors.lightestGray),
                 AuthenticatedResources(child: child ?? Container(), navigatorKey: _navigatorKey),
-                if (AppConfig.of(context)?.buildmode == BuildMode.debug) FlavorBanner(),
+                if (context.read<AppConfig>().isDebug) FlavorBanner(),
               ],
             ),
           );
@@ -60,7 +47,7 @@ class GutLogicApp extends StatelessWidget {
         theme: glTheme,
         navigatorKey: _navigatorKey,
         navigatorObservers: [
-          analytics.observer(),
+          context.read<AnalyticsService>().observer(),
         ],
       ),
     );

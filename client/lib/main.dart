@@ -1,11 +1,15 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:provider/provider.dart';
 
 import 'auth/apple/apple_auth.dart';
+import 'blocs/gut_logic_bloc_observer.dart';
 import 'resources/firebase/analytics_service.dart';
 import 'resources/firebase/crashlytics_service.dart';
 import 'resources/firebase/remote_config_service.dart';
@@ -14,11 +18,11 @@ import 'util/logger.dart';
 import 'widgets/app.dart';
 
 void main() async {
-  final env = await AppConfig.lookupEnvironment();
-  final build = await AppConfig.lookupBuildMode();
+  // Initialize the app config.
+  final config = await AppConfig.create();
 
-  final isDevelopment = env == Environment.development;
-  final isDebug = build == BuildMode.debug;
+  // Enable debug logs for development or debug builds.
+  Logger.level = (config.isDevelopment || config.isDebug) ? Level.debug : Level.error;
 
   // Initialize the default Firebase app for all dependencies.
   final firebase = await Firebase.initializeApp();
@@ -34,25 +38,12 @@ void main() async {
   // Set `enableInDevMode` to true to see reports while in debug mode. This is only to be used for confirming that
   // reports are being submitted as expected. It is not intended to be used for everyday development.
 
-  final crashlytics = await CrashlyticsService.initialize(enabled: !isDebug);
+  final crashlytics = await CrashlyticsService.initialize(enabled: config.isRelease);
 
   // Create and initialize [RemoteConfigService] in load screen
   // https://firebase.google.com/docs/remote-config/loading
 
-  final remoteConfigService = await RemoteConfigService.initialize(enabled: !isDevelopment);
-
-  final app = AppConfig(
-    name: env == Environment.development ? 'dev' : 'prod',
-    environment: env,
-    child: GutLogicApp(
-      analytics: analytics,
-      crashlytics: crashlytics,
-      remoteConfigService: remoteConfigService,
-    ),
-  );
-
-  // Enable debug logs for development or debug builds.
-  Logger.level = (isDevelopment || isDebug) ? Level.debug : Level.error;
+  final remoteConfigService = await RemoteConfigService.initialize(enabled: config.isProduction);
 
   // Cache Sign in with Apple availability so it can be used synchronously.
   await AppleAuth.queryAndCacheAvailability();
@@ -62,6 +53,16 @@ void main() async {
     await crashlytics.recordFlutterError(details);
     FlutterError.presentError(details);
   };
+
+  // Observe bloc transitions, report some things automatically to analytics/crashlytics.
+  Bloc.observer = GutLogicBlocObserver(analytics: analytics, crashlytics: crashlytics);
+
+  final app = MultiProvider(providers: [
+    Provider.value(value: config),
+    Provider.value(value: analytics),
+    Provider.value(value: crashlytics),
+    Provider.value(value: remoteConfigService),
+  ], child: GutLogicApp());
 
   // Forward zone errors to Crashlytics.
   runZonedGuarded(() => runApp(app), (error, trace) => unawaited(crashlytics.record(error, trace)));

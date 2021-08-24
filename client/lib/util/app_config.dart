@@ -1,53 +1,67 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'app_channel.dart';
 import 'logger.dart';
 
 enum Environment { development, production }
-enum BuildMode { debug, profile, release }
 
-class AppConfig extends InheritedWidget {
+extension EnvironmentExtensions on Environment {
+  String get name => this == Environment.development ? 'dev' : 'prod';
+}
+
+/// The type of build (debug, profile, or release).
+enum Build { debug, profile, release }
+
+class AppConfig {
   AppConfig({
-    required this.name,
+    required this.version,
     required this.environment,
-    required Widget child,
-  }) : super(child: child);
+  });
 
-  final String name;
+  /// The application version (as defined in pubspec.yaml).
+  final String version;
+
+  /// The overall application environment.
   final Environment environment;
 
-  static AppConfig? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<AppConfig>();
-  }
-
+  /// True if the environment is a development environment.
   bool get isDevelopment => environment == Environment.development;
+
+  /// True if the environment is a production environment.
   bool get isProduction => environment == Environment.production;
 
-  BuildMode get buildmode {
-    if (kReleaseMode) return BuildMode.release;
-    if (kProfileMode) return BuildMode.profile;
-    return BuildMode.debug;
+  /// True if the build is a release or profile build.
+  bool get isRelease => build == Build.release || build == Build.profile;
+
+  /// True if the build is a debug build.
+  bool get isDebug => build == Build.debug;
+
+  /// The build variant.
+  Build get build {
+    if (kReleaseMode) return Build.release;
+    if (kProfileMode) return Build.profile;
+    return Build.debug;
   }
 
-  @override
-  bool updateShouldNotify(InheritedWidget widget) => false;
+  static Future<AppConfig> create() async {
+    var environment = Environment.development;
 
-  static BuildMode lookupBuildMode() {
-    if (kReleaseMode) return BuildMode.release;
-    if (kProfileMode) return BuildMode.profile;
-    return BuildMode.debug;
-  }
-
-  static Future<Environment> lookupEnvironment() async {
     try {
       WidgetsFlutterBinding.ensureInitialized(); // explicitly call this in case `runApp` has not been called yet
       final flavor = await const AppChannel('flavor').invokeMethod<String>('get');
       logger.d('Received application flavor "$flavor" from native channel.');
-      return (flavor == 'production') ? Environment.production : Environment.development;
+      environment = (flavor == 'production') ? Environment.production : Environment.development;
     } on Exception {
       logger.e('Unable to load application flavor.');
-      return Environment.development;
     }
+
+    final version = (await PackageInfo.fromPlatform()).version;
+
+    return AppConfig(
+      version: version,
+      environment: environment,
+    );
   }
 }
