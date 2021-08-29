@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever, verifyNoMoreInteractions;
+import 'package:bloc_test/bloc_test.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/bowel_movement_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/models/bowel_movement.dart';

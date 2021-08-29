@@ -33,26 +33,6 @@ void main() {
       foodRepository = CustomFoodRepository(firestoreService: firestoreService);
     });
 
-    test('fetches query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery(food.name);
-      expect(fetchedFoods.length, 2);
-    });
-
-    test('fetches no foods for empty query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery('');
-      expect(fetchedFoods.length, 0);
-    });
-
-    test('fetches no foods for matchless query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery('tacos');
-      expect(fetchedFoods.length, 0);
-    });
-
-    test('streams query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery(food.name);
-      await expectLater(foodRepository.streamQuery(food.name), emits(fetchedFoods));
-    });
-
     test('streams no foods for matchless query', () async {
       await expectLater(foodRepository.streamQuery('tacos'), emits(<CustomFood>[].build()));
     });

@@ -30,18 +30,6 @@ class FoodService implements SearchableRepository<Food> {
     }
   }
 
-  Future<Food?> fetchFood(FoodReference? foodReference) {
-    if (foodReference == null) return Future.value(null);
-
-    if (foodReference is EdamamFoodReference) {
-      return edamamFoodRepository.fetchFood(foodReference);
-    } else if (foodReference is CustomFoodReference) {
-      return customFoodRepository.fetchFood(foodReference);
-    } else {
-      throw TypeError();
-    }
-  }
-
   @override
   Stream<BuiltList<Food>> streamQuery(String query) {
     if (query.isEmpty) return Stream.value(<CustomFood>[].build());
@@ -50,16 +38,6 @@ class FoodService implements SearchableRepository<Food> {
     final edamamFoodStream = edamamFoodRepository.streamQuery(query);
 
     return CombineLatestStream([customFoodStream, edamamFoodStream], _combineFoodLists);
-  }
-
-  @override
-  Future<BuiltList<Food>> fetchQuery(String query) {
-    if (query.isEmpty) return Future.value(<CustomFood>[].build());
-
-    final customFoods = customFoodRepository.fetchQuery(query);
-    final edamamFoods = edamamFoodRepository.fetchQuery(query);
-
-    return Future.wait([customFoods, edamamFoods]).then(_combineFoodLists);
   }
 
   Future<CustomFood?> add({required String name}) => customFoodRepository.add(name: name);

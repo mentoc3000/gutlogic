@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever, verifyNoMoreInteractions;
+import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/meal_element/meal_element.dart';
@@ -50,7 +50,7 @@ void main() {
       when(mealElementRepository.stream(customFoodMealElement)).thenAnswer((_) => Stream.value(customFoodMealElement));
 
       foodService = MockFoodService();
-      when(foodService.fetchFood(edamamFoodReference)).thenAnswer((_) async => await edamamFood);
+      when(foodService.streamFood(edamamFoodReference)).thenAnswer((_) => Stream.value(edamamFood));
     });
 
     test('initial state', () {
@@ -98,8 +98,8 @@ void main() {
     blocTest<MealElementBloc, MealElementState>(
       'streams mealElement with Edamam food with no measures',
       build: () {
-        when(foodService.fetchFood(edamamFoodReference))
-            .thenAnswer((_) async => await edamamFood.rebuild((b) => b..measures = null));
+        when(foodService.streamFood(edamamFoodReference))
+            .thenAnswer((_) => Stream.value(edamamFood.rebuild((b) => b..measures = null)));
         return MealElementBloc(
           mealElementRepository: mealElementRepository,
           foodService: foodService,

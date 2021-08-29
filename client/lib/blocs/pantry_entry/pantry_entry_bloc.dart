@@ -33,7 +33,7 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
   Stream<PantryEntryState> mapEventToState(PantryEntryEvent event) async* {
     try {
       if (event is CreateAndStreamEntry) {
-        final pantryEntry = await repository.addFood(event.foodReference);
+        final pantryEntry = await repository.addFood(event.foodReference).first;
         if (pantryEntry != null) {
           add(StreamEntry(pantryEntry));
         } else {
@@ -79,7 +79,7 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
 
   FutureOr<Food?> _pantryEntryFood(PantryEntry pantryEntry) {
     if (pantryEntry.foodReference is EdamamFoodReference) {
-      return foodService.fetchFood(pantryEntry.foodReference as EdamamFoodReference);
+      return foodService.streamFood(pantryEntry.foodReference as EdamamFoodReference).first;
     } else {
       return null;
     }

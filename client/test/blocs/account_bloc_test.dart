@@ -1,4 +1,4 @@
-import 'package:bloc_test/bloc_test.dart' hide when, verify;
+import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/auth/auth.dart';
 import 'package:gutlogic/blocs/account/account.dart';

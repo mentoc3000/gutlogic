@@ -26,7 +26,6 @@ class SymptomTypeRepository implements SearchableRepository<SymptomType> {
 
   Future<BuiltList<SymptomType>> fetchAll() async => items;
 
-  @override
   Future<BuiltList<SymptomType>> fetchQuery(String query) async {
     if (query.isEmpty) {
       return fetchAll();

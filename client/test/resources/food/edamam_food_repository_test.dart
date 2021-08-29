@@ -33,52 +33,47 @@ void main() {
       foodRepository = EdamamFoodRepository(edamamService: edamamService);
     });
 
-    test('fetches query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery('apple');
-      expect(fetchedFoods.length, appleQueryEntries.length);
+    test('streames query', () async {
+      final streamedFoods = foodRepository.streamQuery('apple');
+      await expectLater(streamedFoods, emits(appleQueryEntries.map((e) => e.toEdamamFood())));
     });
 
-    test('fetches query with incomplete measures', () async {
-      final fetchedFoods = await foodRepository.fetchQuery('avocado');
-      expect(fetchedFoods.length, avocadoQueryEntries.length);
+    test('streames query with incomplete measures', () async {
+      final streamedFoods = foodRepository.streamQuery('avocado');
+      await expectLater(streamedFoods, emits(avocadoQueryEntries.map((e) => e.toEdamamFood())));
     });
 
-    test('fetches no foods for empty query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery('');
-      expect(fetchedFoods.length, 0);
+    test('streames no foods for empty query', () async {
+      final streamedFoods = foodRepository.streamQuery('');
+      await expectLater(streamedFoods, emits(BuiltList<EdamamFood>([])));
     });
 
-    test('fetches no foods for matchless query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery('tacos');
-      expect(fetchedFoods.length, 0);
+    test('streames no foods for matchless query', () async {
+      final streamedFoods = foodRepository.streamQuery('tacos');
+      await expectLater(streamedFoods, emits(BuiltList<EdamamFood>([])));
     });
 
-    test('fetches single food', () async {
-      final fetchedFood = await foodRepository.fetchFood(food.toFoodReference());
-      expect(fetchedFood, food);
+    test('streames single food', () async {
+      final streamedFood = foodRepository.streamFood(food.toFoodReference());
+      await expectLater(streamedFood, emits(food));
     });
 
     test('reuses reference data for missing food', () async {
       final irritant = Irritant(name: 'fructan');
       final missingFoodRef = EdamamFoodReference(id: '007', name: 'Bond', irritants: [irritant].build());
-      final fetchedFood = await foodRepository.fetchFood(missingFoodRef);
+      final streamedFood = foodRepository.streamFood(missingFoodRef);
       final missingFood =
           EdamamFood(id: missingFoodRef.id, name: missingFoodRef.name, irritants: missingFoodRef.irritants);
-      expect(fetchedFood, missingFood);
-    });
-
-    test('streams query', () async {
-      final fetchedFoods = await foodRepository.fetchQuery('apple');
-      await expectLater(foodRepository.streamQuery('apple'), emits(fetchedFoods));
+      await expectLater(streamedFood, emits(missingFood));
     });
 
     test('reuses reference data for missing food stream', () async {
       final irritant = Irritant(name: 'fructan');
       final missingFoodRef = EdamamFoodReference(id: '007', name: 'Bond', irritants: [irritant].build());
-      final fetchedFood = foodRepository.streamFood(missingFoodRef);
+      final streamedFood = foodRepository.streamFood(missingFoodRef);
       final missingFood =
           EdamamFood(id: missingFoodRef.id, name: missingFoodRef.name, irritants: missingFoodRef.irritants);
-      await expectLater(fetchedFood, emits(missingFood));
+      await expectLater(streamedFood, emits(missingFood));
     });
   });
 }

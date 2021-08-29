@@ -34,15 +34,6 @@ class PantryService implements SearchableRepository<PantryEntry> {
   Stream<PantryEntry?> streamByFood(FoodReference? foodReference) =>
       userFoodDetailsRepository.stream(foodReference).switchMap(_streamPantryEntry);
 
-  Future<BuiltList<PantryEntry>> fetchAll() => streamAll().first;
-
-  @override
-  Future<BuiltList<PantryEntry>> fetchQuery(String query) => streamQuery(query).first;
-
-  Future<PantryEntry?> fetch(PantryEntry? pantryEntry) => stream(pantryEntry).first;
-
-  Future<PantryEntry?> fetchByFood(FoodReference? foodReference) => streamByFood(foodReference).first;
-
   Future<void> delete(PantryEntry pantryEntry) =>
       userFoodDetailsRepository.deleteByFoodReference(pantryEntry.foodReference);
 
@@ -59,15 +50,16 @@ class PantryService implements SearchableRepository<PantryEntry> {
     );
   }
 
-  Future<PantryEntry?> addFood(FoodReference foodReference) async {
-    final userFoodDetails = await userFoodDetailsRepository.addFood(foodReference);
-    if (userFoodDetails == null) return null;
-    return PantryEntry(
-      userFoodDetailsId: userFoodDetails.userFoodDetailsId,
-      foodReference: foodReference,
-      sensitivity: initialSensitivity,
-      notes: userFoodDetails.notes,
-    );
+  Stream<PantryEntry?> addFood(FoodReference foodReference) {
+    return userFoodDetailsRepository.addFood(foodReference).map((userFoodDetails) {
+      if (userFoodDetails == null) return null;
+      return PantryEntry(
+        userFoodDetailsId: userFoodDetails.userFoodDetailsId,
+        foodReference: foodReference,
+        sensitivity: initialSensitivity,
+        notes: userFoodDetails.notes,
+      );
+    });
   }
 
   Future<void> updateSensitivityLevel(PantryEntry pantryEntry, SensitivityLevel sensitivityLevel) async {
@@ -75,7 +67,7 @@ class PantryService implements SearchableRepository<PantryEntry> {
   }
 
   Future<void> updateNotes(PantryEntry pantryEntry, String newNotes) async {
-    final userFoodDetails = await userFoodDetailsRepository.fetch(pantryEntry.foodReference);
+    final userFoodDetails = await userFoodDetailsRepository.stream(pantryEntry.foodReference).first;
     if (userFoodDetails == null) return;
     return userFoodDetailsRepository.updateNotes(userFoodDetails, newNotes);
   }

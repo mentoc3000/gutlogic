@@ -1,4 +1,4 @@
-import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever, verifyNoMoreInteractions;
+import 'package:bloc_test/bloc_test.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/pantry_entry/pantry_entry.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
@@ -35,7 +35,7 @@ void main() {
       when(repository.stream(pantryEntry)).thenAnswer((_) => Stream<PantryEntry>.fromIterable([pantryEntry]));
 
       foodService = MockFoodService();
-      when(foodService.fetchFood(any)).thenAnswer((_) => Future<EdamamFood?>.value());
+      when(foodService.streamFood(any)).thenAnswer((_) => Stream<EdamamFood?>.value(null));
     });
 
     test('initial state', () {
@@ -45,7 +45,7 @@ void main() {
     blocTest<PantryEntryBloc, PantryEntryState>(
       'streams pantry entry with Edamam food',
       build: () {
-        when(foodService.fetchFood(foodReference)).thenAnswer((_) => Future<EdamamFood>.value(food));
+        when(foodService.streamFood(foodReference)).thenAnswer((_) => Stream<EdamamFood>.value(food));
         return PantryEntryBloc(repository: repository, foodService: foodService);
       },
       act: (bloc) => bloc.add(StreamEntry(pantryEntry)),
@@ -73,7 +73,7 @@ void main() {
     blocTest<PantryEntryBloc, PantryEntryState>(
       'creates and streams pantry entry',
       build: () {
-        when(repository.addFood(any)).thenAnswer((_) async => await pantryEntry);
+        when(repository.addFood(any)).thenAnswer((_) => Stream.value(pantryEntry));
         return PantryEntryBloc(repository: repository, foodService: foodService);
       },
       act: (bloc) => bloc.add(CreateAndStreamEntry(food.toFoodReference())),

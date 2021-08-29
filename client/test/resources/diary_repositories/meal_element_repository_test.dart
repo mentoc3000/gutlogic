@@ -74,7 +74,7 @@ void main() {
         sensitivity: Sensitivity(level: SensitivityLevel.severe, source: SensitivitySource.user),
         notes: null,
       );
-      when(pantryService.fetchByFood(any)).thenAnswer((_) async => pantryEntry);
+      when(pantryService.streamByFood(any)).thenAnswer((_) => Stream.value(pantryEntry));
 
       mealElementRepository = MealElementRepository(
         firestoreService: firestoreService,

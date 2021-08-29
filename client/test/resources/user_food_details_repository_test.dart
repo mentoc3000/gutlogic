@@ -61,16 +61,6 @@ void main() {
       await expectLater(repository.stream(food.toFoodReference()), emits(userFoodDetails));
     });
 
-    test('fetches all entries', () async {
-      final entries = await repository.fetchAll();
-      expect(entries, userfooddetailsEntries);
-    });
-
-    test('finds a food', () async {
-      final foundEntry = await repository.fetch(food.toFoodReference());
-      expect(foundEntry, userFoodDetails);
-    });
-
     test('adds an entry', () async {
       const userFoodDetailsId = 'entry2Id';
       final foodReference = CustomFoodReference(id: 'foodId2', name: 'Cabbage');
@@ -80,18 +70,18 @@ void main() {
         foodReference: foodReference,
         notes: notes,
       );
-      final newUserFoodDetails = await repository.add(userFoodDetails2);
+      final newUserFoodDetails = await repository.add(userFoodDetails2).first;
       expect(newUserFoodDetails!.foodReference, foodReference);
     });
 
     test('adds a food', () async {
       final food = CustomFood(id: 'food2', name: 'spinach');
-      final newUserFoodDetails = await repository.addFood(food.toFoodReference());
+      final newUserFoodDetails = await repository.addFood(food.toFoodReference()).first;
       expect(newUserFoodDetails!.foodReference, food.toFoodReference());
     });
 
     test('returns existing entry if adding food with existing entry', () async {
-      final existingUserFoodDetails = await repository.addFood(food.toFoodReference());
+      final existingUserFoodDetails = await repository.addFood(food.toFoodReference()).first;
       expect(existingUserFoodDetails!.foodReference.id, food.id);
       expect(existingUserFoodDetails.notes, userFoodDetailsApi.notes);
     });

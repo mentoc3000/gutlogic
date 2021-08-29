@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart' hide any, when, verify, verifyNever;
+import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart' hide when, verify;
+import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
@@ -38,9 +38,7 @@ void main() {
 
     blocTest<SymptomTypeBloc, SymptomTypeState>(
       'fetches all symptom types',
-      build: () {
-        return SymptomTypeBloc(repository: symptomTypeRepository);
-      },
+      build: () => SymptomTypeBloc(repository: symptomTypeRepository),
       act: (bloc) async {
         bloc.add(const FetchAllSymptomTypes());
       },
@@ -55,9 +53,7 @@ void main() {
 
     blocTest<SymptomTypeBloc, SymptomTypeState>(
       'fetches queried symptom types',
-      build: () {
-        return SymptomTypeBloc(repository: symptomTypeRepository);
-      },
+      build: () => SymptomTypeBloc(repository: symptomTypeRepository),
       act: (bloc) async {
         bloc.add(const FetchSymptomTypeQuery('Gas'));
       },
@@ -73,9 +69,7 @@ void main() {
 
     blocTest<SymptomTypeBloc, SymptomTypeState>(
       'streams queried symptom types',
-      build: () {
-        return SymptomTypeBloc(repository: symptomTypeRepository);
-      },
+      build: () => SymptomTypeBloc(repository: symptomTypeRepository),
       act: (bloc) async {
         bloc.add(const StreamSymptomTypeQuery('Gas'));
       },

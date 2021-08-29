@@ -46,24 +46,10 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
             .firstWhere((entry) => entry?.foodReference == foodReference, orElse: () => null));
   }
 
-  Future<BuiltList<UserFoodDetails>> fetchAll() => streamAll().first;
-
-  @override
-  Future<BuiltList<UserFoodDetails>> fetchQuery(String query) => streamQuery(query).first;
-
-  Future<UserFoodDetails?> fetch(FoodReference? foodReference) async {
-    if (foodReference == null) return null;
-    final userfooddetails = await fetchAll();
-    return userfooddetails
+  Stream<UserFoodDetails?> _streamdId(String id) {
+    return streamAll().map((userFoodDetailsList) => userFoodDetailsList
         .cast<UserFoodDetails?>()
-        .firstWhere((entry) => entry?.foodReference == foodReference, orElse: () => null);
-  }
-
-  Future<UserFoodDetails?> _fetchId(String id) async {
-    final userFoodDetails = await fetchAll();
-    return userFoodDetails
-        .cast<UserFoodDetails?>()
-        .firstWhere((element) => element?.userFoodDetailsId == id, orElse: () => null);
+        .firstWhere((element) => element?.userFoodDetailsId == id, orElse: () => null));
   }
 
   Future<void> delete(UserFoodDetails userFoodDetails) {
@@ -71,11 +57,11 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
   }
 
   Future<void> deleteByFoodReference(FoodReference foodReference) async {
-    final userFoodDetails = await fetch(foodReference);
+    final userFoodDetails = await stream(foodReference).first;
     if (userFoodDetails != null) return await delete(userFoodDetails);
   }
 
-  Future<UserFoodDetails?> add(UserFoodDetails userFoodDetails) async {
+  Stream<UserFoodDetails?> add(UserFoodDetails userFoodDetails) async* {
     final serializedNewEntry = serializers.serialize(userFoodDetails) as Map<String, dynamic>;
     serializedNewEntry['\$'] = 'UserFoodDetailsApi';
     serializedNewEntry.remove('userFoodDetailsId');
@@ -88,15 +74,17 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
     // before the change is propagated to the stream, so the latest addition cannot be found.
     await Future.delayed(const Duration(milliseconds: 1));
 
-    return await _fetchId(doc.id);
+    yield* _streamdId(doc.id);
   }
 
-  Future<UserFoodDetails?> addFood(FoodReference foodReference) async {
-    final existingEntry = await fetch(foodReference);
-    if (existingEntry != null) return existingEntry;
-
-    final userFoodDetails = UserFoodDetails(userFoodDetailsId: '', foodReference: foodReference);
-    return await add(userFoodDetails);
+  Stream<UserFoodDetails?> addFood(FoodReference foodReference) async* {
+    final existingEntry = await stream(foodReference).first;
+    if (existingEntry != null) {
+      yield* stream(foodReference);
+    } else {
+      final userFoodDetails = UserFoodDetails(userFoodDetailsId: '', foodReference: foodReference);
+      yield* add(userFoodDetails);
+    }
   }
 
   Future<void> updateEntry(UserFoodDetails userFoodDetails) {

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart' hide any, when, verify;
+import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
 import 'package:gutlogic/blocs/food/food.dart';
@@ -31,7 +31,6 @@ void main() {
 
     setUp(() {
       foodService = MockFoodService();
-      when(foodService.fetchQuery('B')).thenAnswer((i) => Future<BuiltList<Food>>.value(bResults));
       when(foodService.streamQuery('B')).thenAnswer((i) => Stream.value(bResults));
     });
 

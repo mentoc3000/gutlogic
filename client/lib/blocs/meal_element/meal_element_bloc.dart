@@ -45,7 +45,7 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
         if (mealElement.foodReference is EdamamFoodReference) {
           // TODO: load meal element without food first
           yield MealElementLoading();
-          food = await foodService.fetchFood(mealElement.foodReference);
+          food = await foodService.streamFood(mealElement.foodReference).first;
 
           // If the meal element doesn't have a measure yet, set it to the first option
           if (mealElement.quantity?.measure == null && (food?.measures.isNotEmpty ?? false)) {

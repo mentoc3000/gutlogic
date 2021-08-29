@@ -42,10 +42,6 @@ class SensitivityRepository with FirestoreRepository {
         : _sensitivityEntryStream.map((entries) => findSensitivityEntry(entries, foodReference)?.toSensitivity());
   }
 
-  Future<BuiltMap<FoodReference, Sensitivity>> fetchAll() => streamAll().first;
-
-  Future<Sensitivity?> fetch(FoodReference? foodReference) => stream(foodReference).first;
-
   Future<void> updateLevel(FoodReference foodReference, SensitivityLevel newSensitivityLevel) async {
     final sensitivityEntries = await _sensitivityEntryStream.first;
     final sensitivityEntry = findSensitivityEntry(sensitivityEntries, foodReference);

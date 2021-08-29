@@ -51,16 +51,12 @@ void main() {
       sensitivityRepository = MockSensitivityRepository();
       when(sensitivityRepository.stream(any)).thenAnswer((_) => Stream.value(Sensitivity.unknown));
       when(sensitivityRepository.stream(foodReference)).thenAnswer((_) => Stream.value(sensitivity));
-      when(sensitivityRepository.fetch(any)).thenAnswer((_) => Future.value(Sensitivity.unknown));
-      when(sensitivityRepository.fetch(foodReference)).thenAnswer((_) => Future.value(sensitivity));
 
       userFoodDetailsRepository = MockUserFoodDetailsRepository();
       when(userFoodDetailsRepository.stream(any)).thenAnswer((_) => Stream.value(null));
       when(userFoodDetailsRepository.stream(foodReference)).thenAnswer((_) => Stream.value(userFoodDetails));
       when(userFoodDetailsRepository.streamAll())
           .thenAnswer((realInvocation) => Stream.value([userFoodDetails].build()));
-      when(userFoodDetailsRepository.fetch(any)).thenAnswer((_) => Future.value(null));
-      when(userFoodDetailsRepository.fetch(foodReference)).thenAnswer((_) => Future.value(userFoodDetails));
 
       repository = PantryService(
         sensitivityRepository: sensitivityRepository,
@@ -80,16 +76,6 @@ void main() {
       await expectLater(repository.streamByFood(food.toFoodReference()), emits(pantryEntry));
     });
 
-    test('fetches all entries', () async {
-      final entries = await repository.fetchAll();
-      expect(entries, pantryEntries);
-    });
-
-    test('fetches one entry', () async {
-      final entry = await repository.fetch(pantryEntry);
-      expect(entry, pantryEntry);
-    });
-
     test('non-existant id returns null', () async {
       final foodReference = CustomFoodReference(id: 'food', name: 'butter');
       final fakeRef = PantryEntry(
@@ -98,12 +84,12 @@ void main() {
         foodReference: foodReference,
         notes: null,
       );
-      final entry = await repository.fetch(fakeRef);
+      final entry = await repository.stream(fakeRef).first;
       expect(entry, null);
     });
 
     test('finds a food', () async {
-      final foundEntry = await repository.fetchByFood(food.toFoodReference());
+      final foundEntry = await repository.streamByFood(food.toFoodReference()).first;
       expect(foundEntry, pantryEntry);
     });
 
@@ -124,7 +110,7 @@ void main() {
         notes: pantryEntry2.notes,
       );
 
-      when(userFoodDetailsRepository.add(userFoodDetails2)).thenAnswer((_) => Future.value(userFoodDetails2));
+      when(userFoodDetailsRepository.add(userFoodDetails2)).thenAnswer((_) => Stream.value(userFoodDetails2));
       when(sensitivityRepository.updateLevel(foodReference, any)).thenAnswer((realInvocation) => Future.value(null));
 
       await repository.add(pantryEntry2);
@@ -146,15 +132,15 @@ void main() {
         notes: newPantryEntry.notes,
       );
       when(userFoodDetailsRepository.addFood(food.toFoodReference()))
-          .thenAnswer((_) => Future.value(newUserFoodDetails));
-      final expectedPantryEntry = await repository.addFood(food.toFoodReference());
+          .thenAnswer((_) => Stream.value(newUserFoodDetails));
+      final expectedPantryEntry = await repository.addFood(food.toFoodReference()).first;
       expect(expectedPantryEntry, newPantryEntry);
     });
 
     test('returns existing entry if adding food with existing entry', () async {
       when(userFoodDetailsRepository.addFood(food.toFoodReference()))
-          .thenAnswer((realInvocation) => Future.value(userFoodDetails));
-      final existingPantryEntry = await repository.addFood(food.toFoodReference());
+          .thenAnswer((realInvocation) => Stream.value(userFoodDetails));
+      final existingPantryEntry = await repository.addFood(food.toFoodReference()).first;
       expect(existingPantryEntry!.foodReference.id, food.id);
       expect(existingPantryEntry.notes, userFoodDetails.notes);
     });

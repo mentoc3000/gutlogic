@@ -64,20 +64,15 @@ void main() {
       await expectLater(repository.stream(food.toFoodReference()), emits(sensitivity));
     });
 
-    test('fetches all entries', () async {
-      final entries = await repository.fetchAll();
-      expect(entries, sensitivityEntries);
-    });
-
     test('non-existant id returns null', () async {
       final fakeFood = CustomFoodReference(id: '', name: '');
-      final entry = await repository.fetch(fakeFood);
-      expect(entry, null);
+      final entryStream = repository.stream(fakeFood);
+      await expectLater(entryStream, emits(null));
     });
 
     test('finds a food', () async {
-      final foundEntry = await repository.fetch(food.toFoodReference());
-      expect(foundEntry, sensitivity);
+      final foundEntryStream = repository.stream(food.toFoodReference());
+      await expectLater(foundEntryStream, emits(sensitivity));
     });
 
     test('updates sensitivity level', () async {

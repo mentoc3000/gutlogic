@@ -46,10 +46,6 @@ class CustomFoodRepository with FirestoreRepository {
         .map((f) => f ?? CustomFood(id: foodReference.id, name: foodReference.name));
   }
 
-  Future<BuiltList<CustomFood>> fetchQuery(String query) => streamQuery(query).first;
-
-  Future<CustomFood?> fetchFood(CustomFoodReference foodReference) => streamFood(foodReference).first;
-
   Future<void> delete(CustomFood food) => deleteById(food.id);
 
   Future<void> deleteById(String id) => firestoreService.customFoodCollection.doc(id).delete();
@@ -58,7 +54,7 @@ class CustomFoodRepository with FirestoreRepository {
     if (name == '') return null;
 
     // If a food with a case-insensitive matching name already exists, use that.
-    final matches = await fetchQuery(name);
+    final matches = await streamQuery(name).first;
     if (matches.map((food) => food.name.toLowerCase()).contains(name.toLowerCase())) {
       return matches.firstWhere((food) => food.name.toLowerCase() == name.toLowerCase());
     }

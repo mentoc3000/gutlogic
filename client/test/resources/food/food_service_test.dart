@@ -23,16 +23,12 @@ void main() {
       customFood = CustomFood(id: '7', name: 'Escargot');
       customFoodRepository = MockCustomFoodRepository();
       when(customFoodRepository.streamFood(customFood.toFoodReference())).thenAnswer((_) => Stream.value(customFood));
-      when(customFoodRepository.fetchFood(customFood.toFoodReference())).thenAnswer((_) => Future.value(customFood));
       when(customFoodRepository.streamQuery(any)).thenAnswer((_) => Stream.value([customFood].build()));
-      when(customFoodRepository.fetchQuery(any)).thenAnswer((_) => Future.value([customFood].build()));
 
       edamamFood = EdamamFood(id: '8', name: 'Toast Corners');
       edamamFoodRepository = MockEdamamFoodRepository();
       when(edamamFoodRepository.streamFood(edamamFood.toFoodReference())).thenAnswer((_) => Stream.value(edamamFood));
-      when(edamamFoodRepository.fetchFood(edamamFood.toFoodReference())).thenAnswer((_) => Future.value(edamamFood));
       when(edamamFoodRepository.streamQuery(any)).thenAnswer((_) => Stream.value([edamamFood].build()));
-      when(edamamFoodRepository.fetchQuery(any)).thenAnswer((_) => Future.value([edamamFood].build()));
 
       foodService = FoodService(
         edamamFoodRepository: edamamFoodRepository,
