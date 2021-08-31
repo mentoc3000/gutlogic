@@ -8,8 +8,8 @@ import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food/food.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';

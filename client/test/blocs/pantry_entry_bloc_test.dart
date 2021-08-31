@@ -6,10 +6,10 @@ import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
-import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
-import 'package:mockito/mockito.dart';
+import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';
