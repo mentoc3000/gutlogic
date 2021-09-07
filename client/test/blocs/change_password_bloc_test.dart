@@ -10,7 +10,6 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../flutter_test_config.dart';
-import '../mocks/mock_firebase_auth.dart';
 import 'change_password_bloc_test.mocks.dart';
 
 @GenerateMocks([UserRepository])
@@ -41,8 +40,7 @@ void main() {
       when(userRepository.user).thenReturn(passwordUser);
       expect(
         ChangePasswordBloc(
-          userRepository: userRepository,
-          authenticator: MockAuthenticator(),
+          repository: userRepository,
         ).state,
         ChangePasswordEntry(
           user: passwordUser,
@@ -57,8 +55,7 @@ void main() {
       build: () {
         when(userRepository.user).thenReturn(passwordUser);
         return ChangePasswordBloc(
-          userRepository: userRepository,
-          authenticator: MockAuthenticator(),
+          repository: userRepository,
         );
       },
       act: (bloc) async {
@@ -85,8 +82,7 @@ void main() {
       build: () {
         when(userRepository.user).thenReturn(federatedUser);
         return ChangePasswordBloc(
-          userRepository: userRepository,
-          authenticator: MockAuthenticator(),
+          repository: userRepository,
         );
       },
       act: (bloc) async {
@@ -102,7 +98,7 @@ void main() {
       verify: (bloc) async {
         verify(userRepository.linkAuthProvider(
           provider: AuthProvider.password,
-          credential: captureAnyNamed('credential'),
+          password: captureAnyNamed('password'),
         )).called(1);
       },
     );

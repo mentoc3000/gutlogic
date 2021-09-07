@@ -11,13 +11,13 @@ import 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final UserRepository userRepository;
-  final Authenticator authenticator;
+  final AuthService authenticator;
 
   RegisterBloc({required this.userRepository, required this.authenticator}) : super(const RegisterReady());
 
   factory RegisterBloc.fromContext(BuildContext context) => RegisterBloc(
         userRepository: context.read<UserRepository>(),
-        authenticator: context.read<Authenticator>(),
+        authenticator: context.read<AuthService>(),
       );
 
   @override

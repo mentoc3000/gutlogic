@@ -10,16 +10,12 @@ import 'login_event.dart';
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final UserRepository userRepository;
-  final Authenticator authenticator;
+  final UserRepository repository;
 
-  LoginBloc({required this.userRepository, required this.authenticator}) : super(const LoginReady());
+  LoginBloc({required this.repository}) : super(const LoginReady());
 
   factory LoginBloc.fromContext(BuildContext context) {
-    return LoginBloc(
-      userRepository: context.read<UserRepository>(),
-      authenticator: Authenticator.of(context),
-    );
+    return LoginBloc(repository: context.read<UserRepository>());
   }
 
   @override
@@ -39,13 +35,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       yield const LoginLoading();
 
-      final auth = await authenticator.authenticate(
+      await repository.login(
         provider: AuthProvider.password,
         username: event.username,
         password: event.password,
       );
-
-      await userRepository.login(credential: auth.credential);
 
       yield const LoginSuccess();
     } on WrongPasswordException {

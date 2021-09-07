@@ -10,22 +10,16 @@ import 'change_password_event.dart';
 import 'change_password_state.dart';
 
 class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> {
-  final UserRepository userRepository;
-  final Authenticator authenticator;
+  final UserRepository repository;
 
-  ChangePasswordBloc({required this.userRepository, required this.authenticator})
-      : assert(userRepository.authenticated),
-        assert(userRepository.user != null),
-        super(ChangePasswordEntry(user: userRepository.user!, isValid: false, isRepeated: false));
+  ChangePasswordBloc({required this.repository})
+      : assert(repository.authenticated),
+        assert(repository.user != null),
+        super(ChangePasswordEntry(user: repository.user!, isValid: false, isRepeated: false));
 
   factory ChangePasswordBloc.fromContext(BuildContext context) {
-    return ChangePasswordBloc(
-      userRepository: context.read<UserRepository>(),
-      authenticator: Authenticator.of(context),
-    );
+    return ChangePasswordBloc(repository: context.read<UserRepository>());
   }
-
-  // TODO debounce events when rebased on JPs debounce mixin
 
   @override
   Stream<ChangePasswordState> mapEventToState(ChangePasswordEvent event) async* {
@@ -36,7 +30,7 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
   }
 
   Stream<ChangePasswordState> mapSubmittedToState(ChangePasswordSubmitted event) async* {
-    if (userRepository.user!.providers.contains(AuthProvider.password)) {
+    if (repository.user!.providers.contains(AuthProvider.password)) {
       yield* _mapUpdatePasswordToState(event);
     } else {
       yield* _mapCreatePasswordToState(event);
@@ -45,66 +39,45 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
 
   Stream<ChangePasswordState> _mapUpdatePasswordToState(ChangePasswordSubmitted event) async* {
     if (isValidPassword(event.updatedPassword) == false) {
-      yield ChangePasswordError.invalidUpdatedPassword(user: userRepository.user!);
+      yield ChangePasswordError.invalidUpdatedPassword(user: repository.user!);
       return;
     }
 
     try {
-      yield ChangePasswordLoading(user: userRepository.user!);
-
-      // Create a new password credential using the current password.
-      final auth = await authenticator.authenticate(
-        provider: AuthProvider.password,
-        username: userRepository.user!.username,
-        password: event.currentPassword,
-      );
-
-      // Acquire a recent authentication using the current password.
-      await userRepository.reauthenticate(
-        credential: auth.credential,
-      );
+      yield ChangePasswordLoading(user: repository.user!);
 
       // Replace the current password with the updated password.
-      await userRepository.updatePassword(
+      await repository.updatePassword(
         currentPassword: event.currentPassword,
         updatedPassword: event.updatedPassword,
       );
 
-      yield ChangePasswordSuccess(user: userRepository.user!);
+      yield ChangePasswordSuccess(user: repository.user!);
     } on WrongPasswordException {
-      yield ChangePasswordError.wrongCurrentPassword(user: userRepository.user!);
+      yield ChangePasswordError.wrongCurrentPassword(user: repository.user!);
     } catch (error, trace) {
-      yield ChangePasswordError.fromError(user: userRepository.user!, error: error, trace: trace);
+      yield ChangePasswordError.fromError(user: repository.user!, error: error, trace: trace);
     }
   }
 
   Stream<ChangePasswordState> _mapCreatePasswordToState(ChangePasswordSubmitted event) async* {
     if (isValidPassword(event.updatedPassword) == false) {
-      yield ChangePasswordError.invalidCreatedPassword(user: userRepository.user!);
+      yield ChangePasswordError.invalidCreatedPassword(user: repository.user!);
       return;
     }
 
     try {
-      yield ChangePasswordLoading(user: userRepository.user!);
+      yield ChangePasswordLoading(user: repository.user!);
 
-      // Create a new password credential using the updated password.
-      final auth = await authenticator.authenticate(
+      // Link the password credential with the account.
+      await repository.linkAuthProvider(
         provider: AuthProvider.password,
-        username: userRepository.user!.email,
         password: event.updatedPassword,
       );
 
-      // TODO reauthenticate with federated provider
-
-      // Link the password credential with the account.
-      await userRepository.linkAuthProvider(
-        provider: AuthProvider.password,
-        credential: auth.credential,
-      );
-
-      yield ChangePasswordSuccess(user: userRepository.user!);
+      yield ChangePasswordSuccess(user: repository.user!);
     } catch (error, trace) {
-      yield ChangePasswordError.fromError(user: userRepository.user!, error: error, trace: trace);
+      yield ChangePasswordError.fromError(user: repository.user!, error: error, trace: trace);
     }
   }
 }

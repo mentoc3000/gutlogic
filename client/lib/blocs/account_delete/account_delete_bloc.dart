@@ -6,13 +6,9 @@ import 'account_delete_event.dart';
 import 'account_delete_state.dart';
 
 class AccountDeleteBloc extends Bloc<AccountDeleteEvent, AccountDeleteState> {
-  final UserRepository _userRepository;
-  final Authenticator _authenticator;
+  final UserRepository repository;
 
-  AccountDeleteBloc({required Authenticator authenticator, required UserRepository userRepository})
-      : _authenticator = authenticator,
-        _userRepository = userRepository,
-        super(const AccountDeleteReady());
+  AccountDeleteBloc({required this.repository}) : super(const AccountDeleteReady());
 
   @override
   Stream<AccountDeleteState> mapEventToState(AccountDeleteEvent event) async* {
@@ -27,20 +23,8 @@ class AccountDeleteBloc extends Bloc<AccountDeleteEvent, AccountDeleteState> {
 
   Stream<AccountDeleteState> _mapPasswordConfirmToState(AccountDeletePasswordConfirm event) async* {
     try {
-      yield const AccountDeleteReauthenticating();
-
-      final auth = await _authenticator.authenticate(
-        provider: AuthProvider.password,
-        username: _userRepository.user!.username,
-        password: event.password,
-      );
-
-      await _userRepository.reauthenticate(credential: auth.credential);
-
       yield const AccountDeleteLoading();
-
-      await _userRepository.delete();
-
+      await repository.delete();
       yield const AccountDeleteDone();
     } on WrongPasswordException {
       yield AccountDeleteError.password();
@@ -57,9 +41,7 @@ class AccountDeleteBloc extends Bloc<AccountDeleteEvent, AccountDeleteState> {
   Stream<AccountDeleteState> _mapFederatedConfirmToState(AccountDeleteFederatedConfirm event) async* {
     try {
       yield const AccountDeleteLoading();
-
-      await _userRepository.delete();
-
+      await repository.delete();
       yield const AccountDeleteDone();
     } catch (error, trace) {
       yield AccountDeleteError.fromError(error: error, trace: trace);

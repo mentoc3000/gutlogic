@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../auth/auth.dart';
 import '../pages/landing/landing_page.dart';
 import '../resources/firebase/analytics_service.dart';
 import '../resources/user_repository.dart';
@@ -21,7 +20,6 @@ class GutLogicApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         Routes.provider(),
-        Authenticator.provider(),
         RepositoryProvider(create: (context) => UserRepository()),
       ],
       child: createRootWidget(context),

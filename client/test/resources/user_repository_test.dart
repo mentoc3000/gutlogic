@@ -1,6 +1,5 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/auth/auth.dart';
 import 'package:gutlogic/auth/auth_provider.dart';
@@ -39,7 +38,7 @@ void main() {
       userRepository = UserRepository(
         firebaseData: firebaseData,
         firebaseAuth: firebaseAuth,
-        authenticator: MockAuthenticator(),
+        authService: MockAuthService(),
       );
     });
 
@@ -56,7 +55,11 @@ void main() {
     test('can log in and out', () async {
       expectUnauthenticated();
 
-      await userRepository.login(credential: MockAuthCredential());
+      await userRepository.login(
+        provider: AuthProvider.password,
+        username: mockUsername,
+        password: mockPassword,
+      );
 
       expectAuthenticated();
 
@@ -66,21 +69,32 @@ void main() {
     });
 
     test('can register', () async {
-      await userRepository.register(username: mockUsername, password: mockPassword);
+      await userRepository.register(
+        username: mockUsername,
+        password: mockPassword,
+      );
 
       expectAuthenticated();
     });
 
     test('cannot login while authenticated', () async {
-      await userRepository.login(credential: MockAuthCredential());
+      await userRepository.login(
+        provider: AuthProvider.password,
+        username: mockUsername,
+        password: mockPassword,
+      );
 
       expectAuthenticated();
 
-      expect(userRepository.login(credential: MockAuthCredential()), throwsStateError);
+      expect(userRepository.login(provider: AuthProvider.password), throwsStateError);
     });
 
     test('cannot register while authenticated', () async {
-      await userRepository.login(credential: MockAuthCredential());
+      await userRepository.login(
+        provider: AuthProvider.password,
+        username: mockUsername,
+        password: mockPassword,
+      );
 
       expectAuthenticated();
 
@@ -88,27 +102,34 @@ void main() {
     });
 
     test('cannot update user while unauthenticated', () async {
-      const credential = AuthCredential(providerId: 'providerId', signInMethod: 'signInMethod');
       const provider = AuthProvider.password;
+
       final updatedUser = ApplicationUser(
-          id: 'id', email: 'email@gmail.com', verified: true, consented: true, providers: [provider].build());
+        id: 'id',
+        email: 'email@gmail.com',
+        verified: true,
+        consented: true,
+        providers: [provider].build(),
+      );
+
       // All of these methods require the repository to be authenticated.
       expect(userRepository.sendEmailVerification(), throwsStateError);
       expect(userRepository.refreshEmailVerification(), throwsStateError);
-      expect(userRepository.updateUsername(username: 'somethingnew'), throwsStateError);
-      expect(
-        userRepository.updatePassword(currentPassword: 'somethingnew', updatedPassword: 'somethingnew'),
-        throwsStateError,
-      );
+      expect(userRepository.updateUsername(username: ''), throwsStateError);
+      expect(userRepository.updatePassword(currentPassword: '', updatedPassword: ''), throwsStateError);
       expect(userRepository.updateMetadata(updatedUser: updatedUser), throwsStateError);
-      expect(userRepository.reauthenticate(credential: credential), throwsStateError);
-      expect(userRepository.linkAuthProvider(provider: provider, credential: credential), throwsStateError);
+      expect(userRepository.reauthenticate(provider: AuthProvider.password), throwsStateError);
+      expect(userRepository.linkAuthProvider(provider: provider), throwsStateError);
       expect(userRepository.unlinkAuthProvider(provider: provider), throwsStateError);
       expect(userRepository.delete(), throwsStateError);
     });
 
     test('can update username', () async {
-      await userRepository.login(credential: MockAuthCredential());
+      await userRepository.login(
+        provider: AuthProvider.password,
+        username: mockUsername,
+        password: mockPassword,
+      );
 
       expect(userRepository.user!.username, mockUsername);
 
@@ -119,18 +140,28 @@ void main() {
     });
 
     test('can update password', () async {
-      await userRepository.login(credential: MockAuthCredential());
+      await userRepository.login(
+        provider: AuthProvider.password,
+        username: mockUsername,
+        password: mockPassword,
+      );
 
       expect(userRepository.user!.username, mockUsername);
 
-      const updatedPassword = 'test-updated-password';
-      await userRepository.updatePassword(currentPassword: mockPassword, updatedPassword: updatedPassword);
+      await userRepository.updatePassword(
+        currentPassword: mockPassword,
+        updatedPassword: 'test-updated-password',
+      );
 
       expect(userRepository.user!.username, mockUsername);
     });
 
     test('can update metadata', () async {
-      await userRepository.login(credential: MockAuthCredential());
+      await userRepository.login(
+        provider: AuthProvider.password,
+        username: mockUsername,
+        password: mockPassword,
+      );
 
       expect(userRepository.user!.username, mockUsername);
 
@@ -148,16 +179,15 @@ void main() {
     }, skip: 'blocked by how cloud_firestore_mocks handles snapshots (issue #84)');
 
     test('cannot link duplicate provider', () async {
-      await userRepository.login(credential: MockAuthCredential());
+      await userRepository.login(provider: AuthProvider.password);
       expect(userRepository.user!.providers.contains(AuthProvider.password), true);
-      expect(userRepository.linkAuthProvider(provider: AuthProvider.password, credential: MockAuthCredential()),
-          throwsException);
+      expect(userRepository.linkAuthProvider(provider: AuthProvider.password), throwsException);
     });
 
     test('cannot unlink missing provider', () async {
-      await userRepository.login(credential: MockAuthCredential());
+      await userRepository.login(provider: AuthProvider.password);
       expect(userRepository.user!.providers.contains(AuthProvider.google), false);
       expect(userRepository.unlinkAuthProvider(provider: AuthProvider.google), throwsException);
     });
-  }, skip: 'Waiting for update to fix mockito errors. See #45');
+  });
 }

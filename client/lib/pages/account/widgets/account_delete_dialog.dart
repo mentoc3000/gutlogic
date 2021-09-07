@@ -27,10 +27,7 @@ class AccountDeleteDialog extends StatefulWidget {
     return showDialog<bool>(
       context: context,
       builder: (context) => BlocProvider<AccountDeleteBloc>(
-        create: (context) => AccountDeleteBloc(
-          userRepository: context.read<UserRepository>(),
-          authenticator: Authenticator.of(context),
-        ),
+        create: (context) => AccountDeleteBloc(repository: context.read<UserRepository>()),
         child: GLScaffold(body: AccountDeleteDialog(requirePassword: showPasswordEntry)),
       ),
       barrierDismissible: false, // require button interaction

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gutlogic/auth/auth.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
 import 'mock_firebase_auth.mocks.dart';
 
@@ -13,7 +13,7 @@ import 'mock_firebase_auth.mocks.dart';
   MockSpec<UserCredential>(as: #GeneratedMockUserCredential),
   MockSpec<UserInfo>(as: #GeneratedMockUserInfo),
   MockSpec<AuthCredential>(as: #GeneratedMockAuthCredential),
-  MockSpec<Authenticator>(as: #GeneratedMockAuthenticator),
+  MockSpec<AuthService>(as: #GeneratedMockAuthService),
 ])
 class MockFirebaseAuth extends GeneratedMockFirebaseAuth {
   final _stateChangedStreamController = StreamController<User?>();
@@ -105,7 +105,7 @@ class MockUserInfo extends GeneratedMockUserInfo {
 
 class MockAuthCredential extends GeneratedMockAuthCredential {}
 
-class MockAuthenticator extends GeneratedMockAuthenticator {
+class MockAuthService extends GeneratedMockAuthService {
   @override
   Future<AuthResult> authenticate({AuthProvider? provider, String? username, String? password}) async {
     return Future.value(AuthResult(provider: provider!, credential: MockAuthCredential()));

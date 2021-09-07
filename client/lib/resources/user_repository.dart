@@ -12,7 +12,7 @@ import 'firebase/firestore_service.dart';
 class UserRepository {
   final FirebaseFirestore _firebaseData;
   final FirebaseAuth _firebaseAuth;
-  final Authenticator _authenticator;
+  final AuthService _authService;
 
   /// The _currentUserStream emits every time the FirebaseUser or its associated metadata document is updated with
   /// distinct values. It will always contain the most recent distinct value of our application user.
@@ -28,10 +28,10 @@ class UserRepository {
   /// The current user, or null.
   ApplicationUser? get user => _currentUserStream.value;
 
-  UserRepository({FirebaseFirestore? firebaseData, FirebaseAuth? firebaseAuth, Authenticator? authenticator})
+  UserRepository({FirebaseFirestore? firebaseData, FirebaseAuth? firebaseAuth, AuthService? authService})
       : _firebaseData = firebaseData ?? FirebaseFirestore.instance,
         _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _authenticator = authenticator ?? Authenticator() {
+        _authService = authService ?? AuthService() {
     _currentUserStream = _createApplicationUserStream(_firebaseAuth.userChanges());
   }
 
@@ -98,7 +98,7 @@ class UserRepository {
     if (authenticated == false) throw StateError('This operation requires the repository to be authenticated.');
   }
 
-  /// Login with a [credential].
+  /// Login with a [provider].
   ///
   /// Throws a [StateError] if already authenticated. Throws a [DuplicateUsernameException] if a federated [credential]
   /// has an email already in use by different account. Throws an [InvalidCredentialException] if the [credential] is
@@ -106,13 +106,15 @@ class UserRepository {
   /// [DisabledUserException] if the [credential] is for a disabled account. Throws a [MissingUserException] if the
   /// [credential] is for an account that does not exist. Throws a [WrongPasswordException] if the [credential] has the
   /// wrong password for the account.
-  Future<void> login({required AuthCredential credential}) async {
+  Future<void> login({required AuthProvider provider, String? username, String? password}) async {
     _requireUnauthenticatedState();
+
+    final auth = await _authService.authenticate(provider: provider, username: username, password: password);
 
     UserCredential result;
 
     try {
-      result = await _firebaseAuth.signInWithCredential(credential);
+      result = await _firebaseAuth.signInWithCredential(auth.credential);
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
@@ -141,13 +143,11 @@ class UserRepository {
       throw ex.toAuthException();
     }
 
-    final authentication = await _authenticator.authenticate(
+    await login(
       provider: AuthProvider.password,
       username: username,
       password: password,
     );
-
-    await login(credential: authentication.credential);
   }
 
   /// Send an email verification to the current user.
@@ -222,6 +222,13 @@ class UserRepository {
 
     if (user!.providers.contains(AuthProvider.password) == false) throw MissingProviderException();
 
+    // Acquire a recent authentication using the current password.
+    await reauthenticate(
+      provider: AuthProvider.password,
+      username: _firebaseAuth.currentUser!.email,
+      password: currentPassword,
+    );
+
     try {
       await _firebaseAuth.currentUser!.updatePassword(updatedPassword);
     } on FirebaseAuthException catch (ex) {
@@ -279,11 +286,13 @@ class UserRepository {
   /// [InvalidCredentialException] if the [credential] is malformed or invalid. Throws an [InvalidUsernameException] if
   /// the [credential] has an invalid username. Throws an [InvalidPasswordException] if the [credential] has an
   /// invalid password. Throws a [WrongPasswordException] if the [credential] has the wrong password for the account.
-  Future<void> reauthenticate({required AuthCredential credential}) async {
+  Future<void> reauthenticate({required AuthProvider provider, String? username, String? password}) async {
     _requireAuthenticatedState();
 
+    final auth = await _authService.authenticate(provider: provider, username: username, password: password);
+
     try {
-      await _firebaseAuth.currentUser!.reauthenticateWithCredential(credential);
+      await _firebaseAuth.currentUser?.reauthenticateWithCredential(auth.credential);
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
@@ -299,13 +308,19 @@ class UserRepository {
   ///
   /// Throws a [StateError] if not authenticated. Throws a [DuplicateProviderException] if the user is already linked to
   /// the auth [provider].
-  Future<void> linkAuthProvider({required AuthProvider provider, required AuthCredential credential}) async {
+  Future<void> linkAuthProvider({required AuthProvider provider, String? password}) async {
     _requireAuthenticatedState();
 
     if (user!.providers.contains(provider)) throw DuplicateProviderException();
 
+    final auth = await _authService.authenticate(
+      provider: provider,
+      username: _firebaseAuth.currentUser!.email,
+      password: password,
+    );
+
     try {
-      await _firebaseAuth.currentUser!.linkWithCredential(credential);
+      await _firebaseAuth.currentUser!.linkWithCredential(auth.credential);
     } on FirebaseAuthException catch (ex) {
       throw ex.toAuthException();
     }
@@ -358,7 +373,7 @@ class UserRepository {
       throw ex.toAuthException();
     }
 
-    await _authenticator.deauthenticate();
+    await _authService.deauthenticate();
 
     await _firstUserWhere((user) => user == null);
   }
@@ -373,7 +388,7 @@ class UserRepository {
       throw ex.toAuthException();
     }
 
-    await _authenticator.deauthenticate();
+    await _authService.deauthenticate();
 
     await _firstUserWhere((user) => user == null);
   }

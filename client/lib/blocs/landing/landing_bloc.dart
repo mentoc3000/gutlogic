@@ -10,19 +10,14 @@ import 'landing_event.dart';
 import 'landing_state.dart';
 
 class LandingBloc extends Bloc<LandingEvent, LandingState> {
-  final UserRepository userRepository;
-  final Authenticator authenticator;
+  final UserRepository repository;
 
   LandingBloc({
-    required this.userRepository,
-    required this.authenticator,
+    required this.repository,
   }) : super(const LandingReady());
 
   factory LandingBloc.fromContext(BuildContext context) {
-    return LandingBloc(
-      userRepository: context.read<UserRepository>(),
-      authenticator: Authenticator.of(context),
-    );
+    return LandingBloc(repository: context.read<UserRepository>());
   }
 
   @override
@@ -38,13 +33,7 @@ class LandingBloc extends Bloc<LandingEvent, LandingState> {
   Stream<LandingState> _mapContinueGoogle(LandingContinueGoogle event) async* {
     try {
       yield const LandingLoading();
-
-      final auth = await authenticator.authenticate(
-        provider: AuthProvider.google,
-      );
-
-      await userRepository.login(credential: auth.credential);
-
+      await repository.login(provider: AuthProvider.google);
       yield const LandingSuccess();
     } on CancelledAuthenticationException {
       yield const LandingReady();
@@ -60,13 +49,7 @@ class LandingBloc extends Bloc<LandingEvent, LandingState> {
   Stream<LandingState> _mapContinueApple(LandingContinueApple event) async* {
     try {
       yield const LandingLoading();
-
-      final auth = await authenticator.authenticate(
-        provider: AuthProvider.apple,
-      );
-
-      await userRepository.login(credential: auth.credential);
-
+      await repository.login(provider: AuthProvider.apple);
       yield const LandingSuccess();
     } on CancelledAuthenticationException {
       yield const LandingReady();
