@@ -112,7 +112,7 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
-            final edamamService = EdamamService(edamamFoodSearchService: CloudFunctionService('edamamFoodSearch'));
+            final edamamService = EdamamService(cloudFunctionService: context.read<CloudFunctionService>());
             final edamamFoodRepository = EdamamFoodRepository(edamamService: edamamService);
             final customFoodRepository = CustomFoodRepository(firestoreService: context.read<FirestoreService>());
             return FoodService(edamamFoodRepository: edamamFoodRepository, customFoodRepository: customFoodRepository);

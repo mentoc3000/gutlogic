@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pedantic/pedantic.dart';
 
+import './untyped_data.dart';
+
 export 'package:cloud_firestore/cloud_firestore.dart';
 
-/// A type alias for untyped DocumentSnapshot data.
-typedef UntypedData = Map<String, dynamic>;
+export './untyped_data.dart';
 
 /// A type alias for untyped DocumentSnapshot.
 typedef UntypedSnapshot = DocumentSnapshot<UntypedData>;

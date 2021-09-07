@@ -39,13 +39,13 @@ dependencies:
   quiver: ^3.0.1
 
   # Firebase
-  cloud_firestore: ^2.2.0
-  cloud_functions: ^1.0.5
-  firebase_analytics: ^8.0.2
+  cloud_firestore: ^2.5.1
+  cloud_functions: ^3.0.2
+  firebase_analytics: ^8.3.1
   firebase_auth: ^1.1.2
-  firebase_core: ^1.1.0
-  firebase_crashlytics: ^2.0.2
-  firebase_remote_config: ^0.10.0-dev.2
+  firebase_core: ^1.6.0
+  firebase_crashlytics: ^2.2.1
+  firebase_remote_config: ^0.10.0+5
 
 dev_dependencies:
 

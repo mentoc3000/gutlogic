@@ -1,17 +1,16 @@
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
-import 'package:test/test.dart';
-import 'package:gutlogic/resources/food/edamam_service.dart';
 import 'package:gutlogic/resources/firebase/cloud_function_service.dart';
+import 'package:gutlogic/resources/food/edamam_service.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
 
 import 'edamam_sample_data.dart';
 import 'edamam_service_test.mocks.dart';
 
-@GenerateMocks([CloudFunctionService])
+@GenerateMocks([CloudFunctionService, CloudFunction])
 void main() {
-  late EdamamService edamamService;
   group('EdamamService', () {
-    late MockCloudFunctionService edamamFoodSearchService;
+    late EdamamService edamamService;
     const riceCakeId = 'food_a7t4ob2aynrl25ayhq4n8adgykn5';
     const riceCakeResponse = {
       'status': 200,
@@ -33,11 +32,15 @@ void main() {
     };
 
     setUp(() {
-      edamamFoodSearchService = MockCloudFunctionService();
-      when(edamamFoodSearchService.callWith({'query': riceCakeId})).thenAnswer((_) async => riceCakeResponse);
-      when(edamamFoodSearchService.callWith({'query': query})).thenAnswer((_) async => appleResponse);
-      when(edamamFoodSearchService.callWith({'query': missingId})).thenAnswer((_) async => missingResponse);
-      edamamService = EdamamService(edamamFoodSearchService: edamamFoodSearchService);
+      final cloudFunctionService = MockCloudFunctionService();
+      final cloudFunctionInstance = MockCloudFunction();
+
+      when(cloudFunctionService.function('edamamFoodSearch')).thenReturn(cloudFunctionInstance);
+      when(cloudFunctionInstance.call({'query': riceCakeId})).thenAnswer((_) async => riceCakeResponse);
+      when(cloudFunctionInstance.call({'query': query})).thenAnswer((_) async => appleResponse);
+      when(cloudFunctionInstance.call({'query': missingId})).thenAnswer((_) async => missingResponse);
+
+      edamamService = EdamamService(cloudFunctionService: cloudFunctionService);
     });
 
     test('gets food by id', () async {

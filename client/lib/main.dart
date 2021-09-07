@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'auth/apple/apple_auth.dart';
 import 'blocs/gut_logic_bloc_observer.dart';
 import 'resources/firebase/analytics_service.dart';
+import 'resources/firebase/cloud_function_service.dart';
 import 'resources/firebase/crashlytics_service.dart';
 import 'resources/firebase/remote_config_service.dart';
 import 'util/app_config.dart';
@@ -62,6 +63,7 @@ void main() async {
     Provider.value(value: analytics),
     Provider.value(value: crashlytics),
     Provider.value(value: remoteConfigService),
+    Provider.value(value: CloudFunctionService())
   ], child: GutLogicApp());
 
   // Forward zone errors to Crashlytics.

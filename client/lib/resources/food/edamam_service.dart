@@ -4,9 +4,10 @@ import '../../util/null_utils.dart';
 import '../firebase/cloud_function_service.dart';
 
 class EdamamService {
-  CloudFunctionService edamamFoodSearchService;
+  final CloudFunction edamamFoodSearchFunction;
 
-  EdamamService({required this.edamamFoodSearchService});
+  EdamamService({required CloudFunctionService cloudFunctionService})
+      : edamamFoodSearchFunction = cloudFunctionService.function('edamamFoodSearch');
 
   /// Search for food on Edamam
   ///
@@ -15,7 +16,7 @@ class EdamamService {
     if (query.isEmpty) {
       return [];
     }
-    final response = await edamamFoodSearchService.callWith({'query': query});
+    final response = await edamamFoodSearchFunction.call({'query': query});
     switch (response['status']) {
       case 200:
         try {
