@@ -10,15 +10,11 @@ import 'register_event.dart';
 import 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  final UserRepository userRepository;
-  final AuthService authenticator;
+  final UserRepository repository;
 
-  RegisterBloc({required this.userRepository, required this.authenticator}) : super(const RegisterReady());
+  RegisterBloc({required this.repository}) : super(const RegisterReady());
 
-  factory RegisterBloc.fromContext(BuildContext context) => RegisterBloc(
-        userRepository: context.read<UserRepository>(),
-        authenticator: context.read<AuthService>(),
-      );
+  factory RegisterBloc.fromContext(BuildContext context) => RegisterBloc(repository: context.read<UserRepository>());
 
   @override
   Stream<RegisterState> mapEventToState(RegisterEvent event) async* {
@@ -51,12 +47,12 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         return;
       }
 
-      await userRepository.register(
+      await repository.register(
         username: event.username,
         password: event.password,
       );
 
-      await userRepository.sendEmailVerification();
+      await repository.sendEmailVerification();
 
       yield const RegisterSuccess();
     } on DuplicateUsernameException {
