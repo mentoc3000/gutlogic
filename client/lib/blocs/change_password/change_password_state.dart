@@ -59,7 +59,7 @@ class ChangePasswordError extends ChangePasswordState with ErrorState, ErrorReco
   const ChangePasswordError({
     required ApplicationUser user,
     required this.message,
-  })   : report = null,
+  })  : report = null,
         super(user: user);
 
   factory ChangePasswordError.wrongCurrentPassword({required ApplicationUser user}) {
