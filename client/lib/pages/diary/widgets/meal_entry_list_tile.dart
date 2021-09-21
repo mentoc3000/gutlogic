@@ -18,8 +18,8 @@ class MealEntryListTile extends StatelessWidget {
     final entryFoodReferences = entry.mealElements.map((e) => e.foodReference);
 
     // Aggregate the sensitivities for the entire meal entry.
-    final entrySensitivityLevel = context.select((SensitivityService sensitivity) {
-      return sensitivity.aggregate(entryFoodReferences).level;
+    final entrySensitivity = context.select((SensitivityService sensitivity) {
+      return sensitivity.aggregateByRef(entryFoodReferences);
     });
 
     return DiaryEntryListTile(
@@ -28,7 +28,7 @@ class MealEntryListTile extends StatelessWidget {
       diaryEntry: entry,
       barColor: GLColors.food,
       onTap: () => Navigator.push(context, Routes.of(context).createMealEntryRoute(entry: entry)),
-      trailing: SensitivityIndicator(entrySensitivityLevel),
+      trailing: SensitivityIndicator(entrySensitivity),
     );
   }
 }

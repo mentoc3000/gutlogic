@@ -19,13 +19,13 @@ class FoodSearchResultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foodSensitivityLevel = context.select((SensitivityService sensitivity) {
-      return sensitivity.of(food.toFoodReference()).level;
+    final foodSensitivity = context.select((SensitivityService sensitivity) {
+      return sensitivity.ofFood(food);
     });
 
     return SearchResultTile(
       searchable: food,
-      trailing: SensitivityIndicator(foodSensitivityLevel),
+      trailing: SensitivityIndicator(Future.value(foodSensitivity)),
       onTap: onTap,
       onDelete: (food) {
         if (food is CustomFood) context.read<FoodBloc>().add(DeleteCustomFood(food));

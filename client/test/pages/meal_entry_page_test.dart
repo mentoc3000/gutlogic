@@ -59,7 +59,8 @@ void main() {
     );
 
     sensitivityService = MockSensitivityService();
-    when(() => sensitivityService.of(any())).thenReturn(Sensitivity.unknown);
+    when(() => sensitivityService.ofRef(any())).thenAnswer((_) async => Sensitivity.unknown);
+    when(() => sensitivityService.ofFood(any())).thenReturn(Sensitivity.unknown);
 
     mealEntryPage = Provider<Routes>.value(
       value: routes,

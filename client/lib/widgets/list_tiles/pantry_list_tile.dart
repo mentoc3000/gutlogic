@@ -23,7 +23,7 @@ class PantryListTile extends StatelessWidget {
     return DeleteDismissible(
       child: PushListTile(
         heading: pantryEntry.searchHeading(),
-        trailing: SensitivityIndicator(pantryEntry.sensitivity.level),
+        trailing: SensitivityIndicator(Future.value(pantryEntry.sensitivity)),
         onTap: onTap,
       ),
       onDelete: () => context.read<PantryBloc>().add(DeletePantryEntry(pantryEntry)),

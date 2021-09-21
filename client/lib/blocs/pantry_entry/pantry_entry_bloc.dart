@@ -41,7 +41,6 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
         }
       }
       if (event is StreamEntry) {
-        // TODO: load pantry entry without food first
         yield PantryEntryLoading();
 
         final food = await _pantryEntryFood(event.pantryEntry);

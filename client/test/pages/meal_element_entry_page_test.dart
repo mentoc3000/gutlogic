@@ -39,7 +39,7 @@ void main() {
     );
 
     sensitivityService = MockSensitivityService();
-    when(() => sensitivityService.of(any())).thenReturn(Sensitivity.unknown);
+    when(() => sensitivityService.ofRef(any())).thenAnswer((_) async => Sensitivity.unknown);
 
     mealElementPage = MultiBlocProvider(
       providers: [BlocProvider<MealElementBloc>.value(value: mealElementBloc)],

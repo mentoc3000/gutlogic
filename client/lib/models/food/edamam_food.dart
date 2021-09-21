@@ -38,5 +38,5 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
   String queryText() => name;
 
   @override
-  EdamamFoodReference toFoodReference() => EdamamFoodReference(id: id, name: name, irritants: irritants);
+  EdamamFoodReference toFoodReference() => EdamamFoodReference(id: id, name: name);
 }

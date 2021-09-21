@@ -31,7 +31,7 @@ abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>,
   factory CustomFood.fromBuilder([CustomFoodBuilder Function(CustomFoodBuilder) updates]) = _$CustomFood;
 
   @override
-  CustomFoodReference toFoodReference() => CustomFoodReference(id: id, name: name, irritants: irritants);
+  CustomFoodReference toFoodReference() => CustomFoodReference(id: id, name: name);
 
   @override
   String searchHeading() => name;

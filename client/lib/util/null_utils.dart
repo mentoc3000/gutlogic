@@ -1,9 +1,9 @@
-extension IterableExtensions<T> on Iterable<T?> {
+extension IterableNullExtension<T> on Iterable<T?> {
   /// Filters null values from an iterable and casts to a non-null iterable.
   Iterable<T> whereNotNull() => whereType<T>();
 }
 
-extension StreamExtensions<T> on Stream<T?> {
+extension StreamNullExtension<T> on Stream<T?> {
   /// Filters null values from a stream and casts to a non-null stream.
   Stream<T> whereNotNull() => where(isNotNull).cast<T>();
 }

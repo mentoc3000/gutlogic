@@ -23,8 +23,8 @@ class MealElementListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mealElementSensitivityLevel = context.select((SensitivityService sensitivity) {
-      return sensitivity.of(mealElement.foodReference).level;
+    final mealElementSensitivity = context.select((SensitivityService sensitivity) {
+      return sensitivity.ofRef(mealElement.foodReference);
     });
 
     return DeleteDismissible(
@@ -32,7 +32,7 @@ class MealElementListTile extends StatelessWidget {
         heading: mealElement.foodReference.name,
         // subheading: mealElement.foodReference.irritants.map((i) => i.name).join(', '),
         onTap: onTap,
-        trailing: SensitivityIndicator(mealElementSensitivityLevel),
+        trailing: SensitivityIndicator(mealElementSensitivity),
       ),
       onDelete: () =>
           context.read<MealEntryBloc>().add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),

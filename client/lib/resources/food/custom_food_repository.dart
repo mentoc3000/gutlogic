@@ -16,8 +16,7 @@ class CustomFoodRepository with FirestoreRepository {
 
   CustomFood? _documentSnapshotToCustomFood(UntypedSnapshot snapshot) {
     final documentData = FirestoreService.getDocumentData(snapshot);
-    if (documentData == null) return null;
-    return serializers.deserializeWith(CustomFood.serializer, documentData);
+    return documentData == null ? null : serializers.deserializeWith(CustomFood.serializer, documentData);
   }
 
   Iterable<CustomFood?> _documentSnapshotToResults(Iterable<UntypedSnapshot> snapshots, String query) {

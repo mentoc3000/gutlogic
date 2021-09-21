@@ -18,12 +18,14 @@ import '../resources/food/edamam_food_repository.dart';
 import '../resources/food/edamam_service.dart';
 import '../resources/food/food_service.dart';
 import '../resources/pantry_service.dart';
+import '../resources/sensitivity/heuristic_sensitivity_prediction_service.dart';
 import '../resources/sensitivity/sensitivity_repository.dart';
 import '../resources/sensitivity/sensitivity_service.dart';
 import '../resources/symptom_type_repository.dart';
 import '../resources/user_food_details_repository.dart';
 import '../resources/user_repository.dart';
 import '../routes/routes.dart';
+import '../util/app_config.dart';
 
 class AuthenticatedResources extends StatelessWidget {
   final Widget child;
@@ -127,8 +129,16 @@ class AuthenticatedResources extends StatelessWidget {
           child: ChangeNotifierProvider(
             create: (context) {
               // TODO move this into its most tightly nested widget tree
+              final sensitivityRepository = context.read<SensitivityRepository>();
+              final heuristicPredictionService = context.read<AppConfig>().isDevelopment
+                  ? HeuristicSensitivityPredictionService(
+                      foodService: context.read<FoodService>(),
+                      sensitivityMapStream: sensitivityRepository.streamAll(),
+                    )
+                  : null;
               return SensitivityService(
-                sensitivityRepository: context.read<SensitivityRepository>(),
+                sensitivityRepository: sensitivityRepository,
+                heuristicPredictionService: heuristicPredictionService,
               );
             },
             child: child,

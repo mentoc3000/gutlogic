@@ -18,6 +18,9 @@ import 'package:gutlogic/blocs/pantry_entry/pantry_entry.dart';
 import 'package:gutlogic/blocs/symptom_entry/symptom_entry.dart';
 import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
 import 'package:gutlogic/blocs/gut_logic_bloc_observer.dart';
+import 'package:gutlogic/models/food/custom_food.dart';
+import 'package:gutlogic/models/food/edamam_food.dart';
+import 'package:gutlogic/models/food/food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/food_reference/food_reference.dart';
@@ -88,6 +91,10 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 
     registerFallbackValue<FoodEvent>(FoodEventFake());
     registerFallbackValue<FoodState>(FoodsLoading());
+
+    registerFallbackValue<Food>(EdamamFood(id: 'id', name: 'name'));
+    registerFallbackValue<EdamamFood>(EdamamFood(id: 'id', name: 'name'));
+    registerFallbackValue<CustomFood>(CustomFood(id: 'id', name: 'name'));
 
     registerFallbackValue<FoodReference>(EdamamFoodReference(id: 'id', name: 'name'));
     registerFallbackValue<EdamamFoodReference>(EdamamFoodReference(id: 'id', name: 'name'));

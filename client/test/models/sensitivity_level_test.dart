@@ -44,9 +44,9 @@ void main() {
       expect(SensitivityLevel.combine(SensitivityLevel.moderate, SensitivityLevel.severe), SensitivityLevel.severe);
       expect(SensitivityLevel.combine(SensitivityLevel.severe, SensitivityLevel.severe), SensitivityLevel.severe);
 
-      expect(SensitivityLevel.sum([]), SensitivityLevel.unknown);
-      expect(SensitivityLevel.sum([SensitivityLevel.mild]), SensitivityLevel.mild);
-      expect(SensitivityLevel.sum([SensitivityLevel.mild, SensitivityLevel.moderate]),
+      expect(SensitivityLevel.aggregate([]), SensitivityLevel.unknown);
+      expect(SensitivityLevel.aggregate([SensitivityLevel.mild]), SensitivityLevel.mild);
+      expect(SensitivityLevel.aggregate([SensitivityLevel.mild, SensitivityLevel.moderate]),
           SensitivityLevel.combine(SensitivityLevel.mild, SensitivityLevel.moderate));
     });
   });

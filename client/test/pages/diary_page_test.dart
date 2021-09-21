@@ -66,8 +66,8 @@ void main() {
     when(() => diaryBloc.repository).thenReturn(MockDiaryRepository());
 
     sensitivityService = MockSensitivityService();
-    when(() => sensitivityService.of(any())).thenReturn(Sensitivity.unknown);
-    when(() => sensitivityService.aggregate(any())).thenReturn(Sensitivity.unknown);
+    when(() => sensitivityService.ofRef(any())).thenAnswer((_) async => Sensitivity.unknown);
+    when(() => sensitivityService.aggregateByRef(any())).thenAnswer((_) async => Sensitivity.unknown);
 
     diaryPage = Provider<Routes>.value(
       value: routes,

@@ -16,7 +16,7 @@ class SensitivityLevel extends EnumClass implements Comparable<SensitivityLevel>
 
   const SensitivityLevel._(String name) : super(name);
 
-  static SensitivityLevel sum(Iterable<SensitivityLevel> levels) {
+  static SensitivityLevel aggregate(Iterable<SensitivityLevel> levels) {
     if (levels.isEmpty) return SensitivityLevel.unknown;
     return levels.reduce(combine);
   }
@@ -38,7 +38,7 @@ class SensitivityLevel extends EnumClass implements Comparable<SensitivityLevel>
     }
   }
 
-  /// SensitivityLevel addition
+  /// SensitivityLevel and
   ///
   /// Adding two sensitivity levels results in the higher sensitivity.
   /// Adding an unknown sensitivity level to a mild, moderate, or severe sensitivity level results in that known sensitivity.
@@ -78,6 +78,14 @@ class SensitivityLevel extends EnumClass implements Comparable<SensitivityLevel>
     }
   }
 
+  bool operator >(SensitivityLevel other) {
+    return (this == SensitivityLevel.unknown || other == SensitivityLevel.unknown) ? false : (toInt() > other.toInt());
+  }
+
+  bool operator <(SensitivityLevel other) {
+    return (this == SensitivityLevel.unknown || other == SensitivityLevel.unknown) ? false : (toInt() < other.toInt());
+  }
+
   int toInt() {
     switch (this) {
       case SensitivityLevel.unknown:
@@ -97,6 +105,16 @@ class SensitivityLevel extends EnumClass implements Comparable<SensitivityLevel>
 
   @override
   int compareTo(SensitivityLevel other) => toInt().compareTo(other.toInt());
+
+  static List<SensitivityLevel> list() {
+    return [
+      SensitivityLevel.unknown,
+      SensitivityLevel.none,
+      SensitivityLevel.mild,
+      SensitivityLevel.moderate,
+      SensitivityLevel.severe,
+    ];
+  }
 }
 
 final _severitySerializer = SeveritySerializer();
@@ -105,7 +123,7 @@ class SeveritySerializer implements PrimitiveSerializer<SensitivityLevel> {
   @override
   final Iterable<Type> types = const <Type>[SensitivityLevel];
   @override
-  final String wireName = 'Sensitivity';
+  final String wireName = 'SensitivityLevel';
 
   @override
   Object serialize(Serializers serializers, SensitivityLevel sensitivity,

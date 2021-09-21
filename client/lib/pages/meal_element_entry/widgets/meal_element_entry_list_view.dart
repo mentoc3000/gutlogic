@@ -33,8 +33,8 @@ class MealElementEntryListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mealElementSensitivityLevel = context.select((SensitivityService sensitivity) {
-      return sensitivity.of(mealElement.foodReference).level;
+    final mealElementSensitivity = context.select((SensitivityService sensitivity) {
+      return food == null ? sensitivity.ofRef(mealElement.foodReference) : Future.value(sensitivity.ofFood(food!));
     });
 
     final cards = [
@@ -46,7 +46,7 @@ class MealElementEntryListView extends StatelessWidget {
         measureOptions: food?.measures,
       ),
       MealElementSensitivityCard(
-        sensitivityLevel: mealElementSensitivityLevel,
+        sensitivity: mealElementSensitivity,
         onTap: () => addFoodToPantry(context),
       ),
       if (food != null) FoodDetailsCard(food: food!),

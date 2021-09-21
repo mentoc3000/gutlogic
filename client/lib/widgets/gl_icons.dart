@@ -20,6 +20,7 @@ class GLIcons {
   static const meal = Icons.fastfood;
   static const pantry = MdiIcons.chartBoxOutline;
   static const password = Icons.lock;
+  static const predictedSensitivity = Icons.circle;
   static const privacy = Icons.security;
   static const search = Icons.search;
   static const selected = Icons.check;
@@ -28,4 +29,5 @@ class GLIcons {
   static const symptom = SickFaceIcon.sickFace;
   static const visibility = Icons.visibility;
   static const visibilityOff = Icons.visibility_off;
+  static const userSensitivity = Icons.verified;
 }

@@ -5,7 +5,6 @@ import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/models/edamam_api/edamam_api_entry.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
-import 'package:gutlogic/models/irritant.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:test/test.dart';
@@ -59,20 +58,16 @@ void main() {
     });
 
     test('reuses reference data for missing food', () async {
-      final irritant = Irritant(name: 'fructan');
-      final missingFoodRef = EdamamFoodReference(id: '007', name: 'Bond', irritants: [irritant].build());
+      final missingFoodRef = EdamamFoodReference(id: '007', name: 'Bond');
       final streamedFood = foodRepository.streamFood(missingFoodRef);
-      final missingFood =
-          EdamamFood(id: missingFoodRef.id, name: missingFoodRef.name, irritants: missingFoodRef.irritants);
+      final missingFood = EdamamFood(id: missingFoodRef.id, name: missingFoodRef.name);
       await expectLater(streamedFood, emits(missingFood));
     });
 
     test('reuses reference data for missing food stream', () async {
-      final irritant = Irritant(name: 'fructan');
-      final missingFoodRef = EdamamFoodReference(id: '007', name: 'Bond', irritants: [irritant].build());
+      final missingFoodRef = EdamamFoodReference(id: '007', name: 'Bond');
       final streamedFood = foodRepository.streamFood(missingFoodRef);
-      final missingFood =
-          EdamamFood(id: missingFoodRef.id, name: missingFoodRef.name, irritants: missingFoodRef.irritants);
+      final missingFood = EdamamFood(id: missingFoodRef.id, name: missingFoodRef.name);
       await expectLater(streamedFood, emits(missingFood));
     });
   });

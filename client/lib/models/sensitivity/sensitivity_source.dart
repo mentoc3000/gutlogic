@@ -8,6 +8,7 @@ class SensitivitySource extends EnumClass {
   static Serializer<SensitivitySource> get serializer => _$sensitivitySourceSerializer;
 
   static const SensitivitySource user = _$user;
+  static const SensitivitySource prediction = _$prediction;
   static const SensitivitySource aggregation = _$aggregation;
   static const SensitivitySource none = _$none;
 

@@ -73,6 +73,7 @@ class PantryService implements SearchableRepository<PantryEntry> {
   }
 
   Stream<BuiltList<PantryEntry>> _streamPantryEntries(BuiltList<UserFoodDetails> userFoodDetails) {
+    if (userFoodDetails.isEmpty) return Stream.value(BuiltList<PantryEntry>([]));
     final pantryEntryStreams = userFoodDetails.map((ufd) => _streamPantryEntry(ufd).whereNotNull());
     return CombineLatestStream(pantryEntryStreams, (Iterable<PantryEntry> entries) => entries.toBuiltList());
   }

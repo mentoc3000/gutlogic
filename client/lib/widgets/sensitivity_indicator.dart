@@ -1,43 +1,69 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../models/sensitivity/sensitivity.dart';
 import '../models/sensitivity/sensitivity_level.dart';
+import '../models/sensitivity/sensitivity_source.dart';
 import '../style/gl_colors.dart';
+import 'gl_icons.dart';
 
 class SensitivityIndicator extends StatelessWidget {
-  final SensitivityLevel sensitivityLevel;
-  final Color borderColor;
-  final Color fillColor;
-  final double size;
+  final Future<Sensitivity> sensitivity;
 
-  SensitivityIndicator(this.sensitivityLevel, {this.size = 16})
-      : borderColor = _borderColor(sensitivityLevel),
-        fillColor = _fillColor(sensitivityLevel);
-
-  static Color _fillColor(SensitivityLevel sensitivityLevel) => GLColors.fromSensitivityLevel(sensitivityLevel);
-
-  static Color _borderColor(SensitivityLevel sensitivityLevel) => _fillColor(sensitivityLevel);
+  SensitivityIndicator(this.sensitivity);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          border: Border.all(
-            width: 5.0,
-            color: borderColor,
-          ),
-          color: fillColor),
+    return FutureBuilder<Sensitivity>(
+      future: sensitivity,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final sensitivity = snapshot.data ?? Sensitivity.unknown;
+          final color = GLColors.fromSensitivityLevel(sensitivity.level);
+          final iconData =
+              sensitivity.source == SensitivitySource.prediction || sensitivity.level == SensitivityLevel.unknown
+                  ? GLIcons.predictedSensitivity
+                  : GLIcons.userSensitivity;
+          return Icon(iconData, color: color);
+        } else {
+          return _SensitivityIndicatorLoading();
+        }
+      },
     );
   }
 }
 
-class SensitivityIndicatorLarge extends StatelessWidget {
-  final SensitivityLevel sensitivityLevel;
-
-  SensitivityIndicatorLarge({required this.sensitivityLevel});
+class _SensitivityIndicatorLoading extends StatefulWidget {
+  _SensitivityIndicatorLoading({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SensitivityIndicator(sensitivityLevel, size: 30.0);
+  __SensitivityIndicatorLoadingState createState() => __SensitivityIndicatorLoadingState();
+}
+
+class __SensitivityIndicatorLoadingState extends State<_SensitivityIndicatorLoading>
+    with SingleTickerProviderStateMixin {
+  late final Animation<Color?> animation;
+  late final AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(duration: const Duration(seconds: 1), vsync: this)..repeat(reverse: true);
+    animation = ColorTween(begin: GLColors.lighterGray, end: GLColors.lightestGray).animate(controller);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) => Icon(GLIcons.predictedSensitivity, color: animation.value),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }
