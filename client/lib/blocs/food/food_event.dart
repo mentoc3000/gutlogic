@@ -18,7 +18,7 @@ abstract class FoodEvent extends Equatable {
   bool get stringify => true;
 }
 
-class StreamFoodQuery extends FoodEvent with FetchQuery, DebouncedEvent implements TrackedEvent {
+class StreamFoodQuery extends FoodEvent with FetchQuery, DebouncedEvent implements Tracked {
   @override
   final String query;
 
@@ -28,7 +28,7 @@ class StreamFoodQuery extends FoodEvent with FetchQuery, DebouncedEvent implemen
   void track(AnalyticsService analytics) => analytics.logEvent('food_search');
 }
 
-class CreateCustomFood extends FoodEvent implements TrackedEvent {
+class CreateCustomFood extends FoodEvent implements Tracked {
   final String foodName;
 
   const CreateCustomFood(this.foodName);
@@ -37,7 +37,7 @@ class CreateCustomFood extends FoodEvent implements TrackedEvent {
   void track(AnalyticsService analytics) => analytics.logEvent('create_custom_food');
 }
 
-class DeleteCustomFood extends FoodEvent implements TrackedEvent {
+class DeleteCustomFood extends FoodEvent implements Tracked {
   final CustomFood customFood;
 
   const DeleteCustomFood(this.customFood);

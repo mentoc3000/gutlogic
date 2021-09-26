@@ -26,7 +26,7 @@ class LoadSymptomEntry extends SymptomEntryEvent with LoadDiaryEntry {
   const LoadSymptomEntry(this.diaryEntry);
 }
 
-class CreateFromAndStreamSymptomEntry extends SymptomEntryEvent implements TrackedEvent {
+class CreateFromAndStreamSymptomEntry extends SymptomEntryEvent implements Tracked {
   final SymptomType symptomType;
 
   const CreateFromAndStreamSymptomEntry(this.symptomType);
@@ -45,7 +45,7 @@ class StreamSymptomEntry extends SymptomEntryEvent with StreamDiaryEntry {
   const StreamSymptomEntry(this.diaryEntry);
 }
 
-class DeleteSymptomEntry extends SymptomEntryEvent with DeleteDiaryEntry implements TrackedEvent {
+class DeleteSymptomEntry extends SymptomEntryEvent with DeleteDiaryEntry implements Tracked {
   @override
   final SymptomEntry diaryEntry;
 
@@ -55,7 +55,7 @@ class DeleteSymptomEntry extends SymptomEntryEvent with DeleteDiaryEntry impleme
   void track(AnalyticsService analytics) => analytics.logEvent('delete_symptom_entry');
 }
 
-class UpdateSymptomEntry extends SymptomEntryEvent with UpdateDiaryEntry implements DebouncedEvent, TrackedEvent {
+class UpdateSymptomEntry extends SymptomEntryEvent with UpdateDiaryEntry implements DebouncedEvent, Tracked {
   @override
   final SymptomEntry diaryEntry;
 
@@ -67,7 +67,7 @@ class UpdateSymptomEntry extends SymptomEntryEvent with UpdateDiaryEntry impleme
 
 class UpdateSymptomEntryDateTime extends SymptomEntryEvent
     with UpdateDiaryEntryDateTime
-    implements DebouncedEvent, TrackedEvent {
+    implements DebouncedEvent, Tracked {
   @override
   final DateTime dateTime;
 
@@ -77,9 +77,7 @@ class UpdateSymptomEntryDateTime extends SymptomEntryEvent
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry', 'dateTime');
 }
 
-class UpdateSymptomEntryNotes extends SymptomEntryEvent
-    with UpdateDiaryEntryNotes
-    implements DebouncedEvent, TrackedEvent {
+class UpdateSymptomEntryNotes extends SymptomEntryEvent with UpdateDiaryEntryNotes implements DebouncedEvent, Tracked {
   @override
   final String notes;
 
@@ -89,7 +87,7 @@ class UpdateSymptomEntryNotes extends SymptomEntryEvent
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry', 'notes');
 }
 
-class UpdateSymptomType extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
+class UpdateSymptomType extends SymptomEntryEvent with DebouncedEvent implements Tracked {
   final SymptomType symptomType;
 
   const UpdateSymptomType(this.symptomType);
@@ -104,7 +102,7 @@ class UpdateSymptomType extends SymptomEntryEvent with DebouncedEvent implements
   String toString() => 'UpdateSymptomType { symptomName: ${symptomType.name} } }';
 }
 
-class UpdateSymptomName extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
+class UpdateSymptomName extends SymptomEntryEvent with DebouncedEvent implements Tracked {
   final String symptomName;
 
   const UpdateSymptomName(this.symptomName);
@@ -119,7 +117,7 @@ class UpdateSymptomName extends SymptomEntryEvent with DebouncedEvent implements
   String toString() => 'UpdateSymptomName { symptomName: $symptomName } }';
 }
 
-class UpdateSymptom extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
+class UpdateSymptom extends SymptomEntryEvent with DebouncedEvent implements Tracked {
   final Symptom symptom;
 
   const UpdateSymptom(this.symptom);
@@ -134,7 +132,7 @@ class UpdateSymptom extends SymptomEntryEvent with DebouncedEvent implements Tra
   String toString() => 'UpdateSymptom { symptomName: ${symptom.symptomType.name} }';
 }
 
-class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements TrackedEvent {
+class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements Tracked {
   final Severity severity;
 
   const UpdateSeverity(this.severity);

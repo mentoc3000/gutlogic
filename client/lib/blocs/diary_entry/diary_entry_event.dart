@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../models/diary_entry/diary_entry.dart';
+import '../../resources/firebase/analytics_service.dart';
 import '../bloc_helpers.dart';
 
 mixin LoadDiaryEntry on Equatable {
@@ -25,7 +26,7 @@ mixin StreamDiaryEntry on Equatable {
   String toString() => 'StreamEntry { id: ${diaryEntry.id} }';
 }
 
-mixin DeleteDiaryEntry on Equatable implements TrackedEvent {
+mixin DeleteDiaryEntry on Equatable implements Tracked {
   DiaryEntry get diaryEntry;
 
   @override
@@ -35,7 +36,7 @@ mixin DeleteDiaryEntry on Equatable implements TrackedEvent {
   String toString() => 'Delete { diaryEntryId: ${diaryEntry.id} }';
 }
 
-mixin UpdateDiaryEntry on Equatable implements DebouncedEvent, TrackedEvent {
+mixin UpdateDiaryEntry on Equatable implements DebouncedEvent, Tracked {
   DiaryEntry get diaryEntry;
 
   @override
@@ -45,7 +46,7 @@ mixin UpdateDiaryEntry on Equatable implements DebouncedEvent, TrackedEvent {
   String toString() => 'Update { diaryEntryId: ${diaryEntry.id} }';
 }
 
-mixin UpdateDiaryEntryDateTime on Equatable implements DebouncedEvent, TrackedEvent {
+mixin UpdateDiaryEntryDateTime on Equatable implements DebouncedEvent, Tracked {
   DateTime get dateTime;
 
   @override
@@ -55,7 +56,7 @@ mixin UpdateDiaryEntryDateTime on Equatable implements DebouncedEvent, TrackedEv
   String toString() => 'UpdateDateTime { newDateTime: $dateTime } }';
 }
 
-mixin UpdateDiaryEntryNotes on Equatable implements DebouncedEvent, TrackedEvent {
+mixin UpdateDiaryEntryNotes on Equatable implements DebouncedEvent, Tracked {
   String get notes;
 
   @override

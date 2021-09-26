@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import '../../resources/firebase/analytics_service.dart';
-import '../bloc_helpers.dart';
 
 abstract class ChangePasswordEvent extends Equatable {
   ChangePasswordEvent();
@@ -13,7 +12,7 @@ abstract class ChangePasswordEvent extends Equatable {
   bool get stringify => true;
 }
 
-class ChangePasswordSubmitted extends ChangePasswordEvent implements TrackedEvent {
+class ChangePasswordSubmitted extends ChangePasswordEvent implements Tracked {
   /// The user's current password. This can be null if the user does not have a password provider.
   final String currentPassword;
 

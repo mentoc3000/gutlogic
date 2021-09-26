@@ -15,7 +15,7 @@ class GutLogicBlocObserver extends BlocObserver {
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
 
-    if (event is TrackedEvent) {
+    if (event is Tracked) {
       event.track(analytics);
     }
 
@@ -27,14 +27,28 @@ class GutLogicBlocObserver extends BlocObserver {
     super.onTransition(bloc, transition);
 
     logger.d(transition);
+  }
 
-    final nextState = transition.nextState;
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+
+    final nextState = change.nextState;
+
+    // Bloc and cubit states both invoke onChange, but only bloc states invoke onTransition. We handle analytics and
+    // crashlytics integration in onChange so that we handle both bloc and cubit state changes.
+
+    if (nextState is Tracked) {
+      nextState.track(analytics);
+    }
 
     if (nextState is ErrorRecorder) {
       nextState.recordError(crashlytics);
       logger.e(nextState.report?.error);
       logger.e(nextState.report?.trace);
     }
+
+    logger.d(change);
   }
 
   @override

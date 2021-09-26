@@ -28,7 +28,7 @@ class Load extends PantryEntryEvent {
   String toString() => 'Load { id: ${pantryEntry.userFoodDetailsId} }';
 }
 
-class CreateAndStreamEntry extends PantryEntryEvent implements TrackedEvent {
+class CreateAndStreamEntry extends PantryEntryEvent implements Tracked {
   final FoodReference foodReference;
 
   const CreateAndStreamEntry(this.foodReference);
@@ -55,7 +55,7 @@ class StreamEntry extends PantryEntryEvent {
   String toString() => 'StreamEntry { id: ${pantryEntry.userFoodDetailsId} }';
 }
 
-class Delete extends PantryEntryEvent implements TrackedEvent {
+class Delete extends PantryEntryEvent implements Tracked {
   const Delete();
 
   @override
@@ -65,7 +65,7 @@ class Delete extends PantryEntryEvent implements TrackedEvent {
   void track(AnalyticsService analytics) => analytics.logEvent('delete_pantry_entry');
 }
 
-class UpdateSensitivityLevel extends PantryEntryEvent with DebouncedEvent implements TrackedEvent {
+class UpdateSensitivityLevel extends PantryEntryEvent with DebouncedEvent implements Tracked {
   final SensitivityLevel sensitivityLevel;
 
   const UpdateSensitivityLevel(this.sensitivityLevel);
@@ -80,7 +80,7 @@ class UpdateSensitivityLevel extends PantryEntryEvent with DebouncedEvent implem
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_pantry_entry', 'sensitivity_level');
 }
 
-class UpdateNotes extends PantryEntryEvent with DebouncedEvent implements TrackedEvent {
+class UpdateNotes extends PantryEntryEvent with DebouncedEvent implements Tracked {
   final String notes;
 
   const UpdateNotes(this.notes);

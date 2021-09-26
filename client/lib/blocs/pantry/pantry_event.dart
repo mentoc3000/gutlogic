@@ -30,7 +30,7 @@ class LoadPantry extends PantryEvent with LoadSearchables {
   const LoadPantry({required this.items});
 }
 
-class StreamPantryQuery extends PantryEvent with StreamQuery implements TrackedEvent {
+class StreamPantryQuery extends PantryEvent with StreamQuery implements Tracked {
   @override
   final String query;
 
@@ -40,7 +40,7 @@ class StreamPantryQuery extends PantryEvent with StreamQuery implements TrackedE
   void track(AnalyticsService analytics) => analytics.logEvent('pantry_search');
 }
 
-class DeletePantryEntry extends PantryEvent implements TrackedEvent {
+class DeletePantryEntry extends PantryEvent implements Tracked {
   final PantryEntry pantryEntry;
 
   const DeletePantryEntry(this.pantryEntry);

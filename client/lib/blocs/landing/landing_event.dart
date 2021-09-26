@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 
 import '../../auth/auth.dart';
 import '../../resources/firebase/analytics_service.dart';
-import '../bloc_helpers.dart';
 
 @immutable
 abstract class LandingEvent extends Equatable {
@@ -16,14 +15,14 @@ abstract class LandingEvent extends Equatable {
   bool get stringify => true;
 }
 
-class LandingContinueGoogle extends LandingEvent implements TrackedEvent {
+class LandingContinueGoogle extends LandingEvent implements Tracked {
   const LandingContinueGoogle();
 
   @override
   void track(AnalyticsService analytics) => analytics.logLogin(AuthProvider.google);
 }
 
-class LandingContinueApple extends LandingEvent implements TrackedEvent {
+class LandingContinueApple extends LandingEvent implements Tracked {
   const LandingContinueApple();
 
   @override

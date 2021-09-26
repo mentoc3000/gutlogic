@@ -45,7 +45,7 @@ class Load extends DiaryEvent {
   String toString() => 'LoadEntries { diaryEntries: ${diaryEntries.length}}';
 }
 
-class Delete extends DiaryEvent implements TrackedEvent {
+class Delete extends DiaryEvent implements Tracked {
   final DiaryEntry diaryEntry;
 
   const Delete(this.diaryEntry);

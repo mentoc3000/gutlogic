@@ -4,18 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../resources/firebase/analytics_service.dart';
 import '../resources/firebase/crashlytics_service.dart';
 import '../util/error_report.dart';
-import '../util/logger.dart';
 
 mixin DebouncedEvent {}
-
-abstract class TrackedEvent {
-  void track(AnalyticsService analytics) {
-    logger.w('Unimplemented method $runtimeType.track().');
-  }
-}
 
 const Duration debounceDuration = Duration(milliseconds: 500);
 

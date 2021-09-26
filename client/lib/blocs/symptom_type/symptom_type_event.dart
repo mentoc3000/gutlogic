@@ -17,14 +17,14 @@ abstract class SymptomTypeEvent extends Equatable {
   bool get stringify => true;
 }
 
-class FetchAllSymptomTypes extends SymptomTypeEvent with FetchAll implements TrackedEvent {
+class FetchAllSymptomTypes extends SymptomTypeEvent with FetchAll implements Tracked {
   const FetchAllSymptomTypes();
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('symptom_type_search');
 }
 
-class FetchSymptomTypeQuery extends SymptomTypeEvent with FetchQuery implements TrackedEvent {
+class FetchSymptomTypeQuery extends SymptomTypeEvent with FetchQuery implements Tracked {
   @override
   final String query;
 
@@ -34,14 +34,14 @@ class FetchSymptomTypeQuery extends SymptomTypeEvent with FetchQuery implements 
   void track(AnalyticsService analytics) => analytics.logEvent('symptom_type_search');
 }
 
-class StreamAllSymptomTypes extends SymptomTypeEvent with StreamAll implements TrackedEvent {
+class StreamAllSymptomTypes extends SymptomTypeEvent with StreamAll implements Tracked {
   const StreamAllSymptomTypes();
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('symptom_type_search');
 }
 
-class StreamSymptomTypeQuery extends SymptomTypeEvent with StreamQuery implements TrackedEvent {
+class StreamSymptomTypeQuery extends SymptomTypeEvent with StreamQuery implements Tracked {
   @override
   final String query;
 

@@ -31,7 +31,7 @@ class Load extends MealElementEvent {
   String toString() => 'Load { mealElementId : ${mealElement.id} }';
 }
 
-class Delete extends MealElementEvent implements TrackedEvent {
+class Delete extends MealElementEvent implements Tracked {
   const Delete();
 
   @override
@@ -50,7 +50,7 @@ class StreamMealElement extends MealElementEvent {
   String toString() => 'StreamMealElement { mealElementId : ${mealElement.id} }';
 }
 
-class Update extends MealElementEvent with DebouncedEvent implements TrackedEvent {
+class Update extends MealElementEvent with DebouncedEvent implements Tracked {
   final MealElement mealElement;
 
   const Update(this.mealElement);
@@ -65,7 +65,7 @@ class Update extends MealElementEvent with DebouncedEvent implements TrackedEven
   String toString() => 'Update { mealElementId : ${mealElement.id} }';
 }
 
-class UpdateQuantity extends MealElementEvent with DebouncedEvent implements TrackedEvent {
+class UpdateQuantity extends MealElementEvent with DebouncedEvent implements Tracked {
   final Quantity quantity;
 
   const UpdateQuantity(this.quantity);
@@ -80,7 +80,7 @@ class UpdateQuantity extends MealElementEvent with DebouncedEvent implements Tra
   String toString() => 'Update { quantity: $quantity }';
 }
 
-class UpdateNotes extends MealElementEvent with DebouncedEvent implements TrackedEvent {
+class UpdateNotes extends MealElementEvent with DebouncedEvent implements Tracked {
   final String notes;
 
   const UpdateNotes(this.notes);
@@ -95,7 +95,7 @@ class UpdateNotes extends MealElementEvent with DebouncedEvent implements Tracke
   String toString() => 'Update { notes: $notes }';
 }
 
-class UpdateFoodReference extends MealElementEvent with DebouncedEvent implements TrackedEvent {
+class UpdateFoodReference extends MealElementEvent with DebouncedEvent implements Tracked {
   final FoodReference foodReference;
 
   const UpdateFoodReference(this.foodReference);

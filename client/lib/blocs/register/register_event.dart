@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../resources/firebase/analytics_service.dart';
-import '../bloc_helpers.dart';
 
 @immutable
 abstract class RegisterEvent extends Equatable {
@@ -15,7 +14,7 @@ abstract class RegisterEvent extends Equatable {
   bool get stringify => true;
 }
 
-class RegisterSubmitted extends RegisterEvent implements TrackedEvent {
+class RegisterSubmitted extends RegisterEvent implements Tracked {
   final String username;
   final String password;
 

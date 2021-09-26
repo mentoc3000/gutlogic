@@ -70,3 +70,8 @@ class AnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
     _firebaseAnalyticsObserver?.didPop(route, previousRoute);
   }
 }
+
+/// Interface for objects that can track something via the analytics service.
+abstract class Tracked {
+  void track(AnalyticsService analytics);
+}

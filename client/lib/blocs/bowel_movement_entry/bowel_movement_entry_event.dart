@@ -25,7 +25,7 @@ class LoadBowelMovementEntry extends BowelMovementEntryEvent with LoadDiaryEntry
 
 class CreateAndStreamBowelMovementEntry extends BowelMovementEntryEvent
     with CreateAndStreamDiaryEntry
-    implements TrackedEvent {
+    implements Tracked {
   const CreateAndStreamBowelMovementEntry();
 
   @override
@@ -39,7 +39,7 @@ class StreamBowelMovementEntry extends BowelMovementEntryEvent with StreamDiaryE
   const StreamBowelMovementEntry(this.diaryEntry);
 }
 
-class DeleteBowelMovementEntry extends BowelMovementEntryEvent with DeleteDiaryEntry implements TrackedEvent {
+class DeleteBowelMovementEntry extends BowelMovementEntryEvent with DeleteDiaryEntry implements Tracked {
   @override
   final BowelMovementEntry diaryEntry;
 
@@ -51,7 +51,7 @@ class DeleteBowelMovementEntry extends BowelMovementEntryEvent with DeleteDiaryE
 
 class UpdateBowelMovementEntry extends BowelMovementEntryEvent
     with UpdateDiaryEntry
-    implements DebouncedEvent, TrackedEvent {
+    implements DebouncedEvent, Tracked {
   @override
   final BowelMovementEntry diaryEntry;
 
@@ -63,7 +63,7 @@ class UpdateBowelMovementEntry extends BowelMovementEntryEvent
 
 class UpdateBowelMovementEntryDateTime extends BowelMovementEntryEvent
     with UpdateDiaryEntryDateTime
-    implements DebouncedEvent, TrackedEvent {
+    implements DebouncedEvent, Tracked {
   @override
   final DateTime dateTime;
 
@@ -75,7 +75,7 @@ class UpdateBowelMovementEntryDateTime extends BowelMovementEntryEvent
 
 class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent
     with UpdateDiaryEntryNotes
-    implements DebouncedEvent, TrackedEvent {
+    implements DebouncedEvent, Tracked {
   @override
   final String notes;
 
@@ -85,7 +85,7 @@ class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'notes');
 }
 
-class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements TrackedEvent {
+class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements Tracked {
   final int type;
 
   const UpdateType(this.type);
@@ -100,7 +100,7 @@ class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements 
   String toString() => 'UpdateType { type: $type } }';
 }
 
-class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implements TrackedEvent {
+class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implements Tracked {
   final int volume;
 
   const UpdateVolume(this.volume);

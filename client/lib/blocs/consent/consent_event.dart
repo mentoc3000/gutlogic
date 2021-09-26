@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../resources/firebase/analytics_service.dart';
-import '../bloc_helpers.dart';
 
 @immutable
 abstract class ConsentEvent extends Equatable {
@@ -15,7 +14,7 @@ abstract class ConsentEvent extends Equatable {
   bool get stringify => true;
 }
 
-class ConsentSubmitted extends ConsentEvent implements TrackedEvent {
+class ConsentSubmitted extends ConsentEvent implements Tracked {
   const ConsentSubmitted();
 
   @override

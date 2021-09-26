@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import '../../resources/firebase/analytics_service.dart';
-import '../bloc_helpers.dart';
 
 abstract class AccountEvent extends Equatable {
   const AccountEvent();
@@ -13,7 +12,7 @@ abstract class AccountEvent extends Equatable {
   bool get stringify => true;
 }
 
-class AccountUpdate extends AccountEvent implements TrackedEvent {
+class AccountUpdate extends AccountEvent implements Tracked {
   final String firstname;
   final String lastname;
 
@@ -26,7 +25,7 @@ class AccountUpdate extends AccountEvent implements TrackedEvent {
   void track(AnalyticsService analytics) => analytics.logEvent('profile_updated');
 }
 
-class AccountLogOut extends AccountEvent implements TrackedEvent {
+class AccountLogOut extends AccountEvent implements Tracked {
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('log_out');
 }
