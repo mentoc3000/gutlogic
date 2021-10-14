@@ -53,20 +53,22 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
           final items = state.items;
           return GLScaffold(
             floatingActionButton: buildAddFab(context),
-            body: PoweredByEdamam(
-              child: ListView.builder(
-                itemCount: items.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  final result = items[index];
-                  return FoodSearchResultTile(
-                    food: result,
-                    onTap: () {
-                      closeSearch(context);
-                      onSelect(result);
-                    },
-                  );
-                },
+            body: SafeArea(
+              child: PoweredByEdamam(
+                child: ListView.builder(
+                  itemCount: items.length,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    final result = items[index];
+                    return FoodSearchResultTile(
+                      food: result,
+                      onTap: () {
+                        closeSearch(context);
+                        onSelect(result);
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           );
