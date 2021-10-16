@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -27,6 +28,8 @@ void main() async {
 
   // Initialize the default Firebase app for all dependencies.
   final firebase = await Firebase.initializeApp();
+
+  FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: true);
 
   logger.i('Initialized Firebase project ${firebase.options.projectId}');
 

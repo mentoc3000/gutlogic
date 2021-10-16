@@ -34,7 +34,7 @@ class PantrySortLoaded extends PantrySortState with SearchableLoaded {
 
 class PantrySortError extends PantrySortState with ErrorState {
   @override
-  final String message;
+  final String? message;
 
   PantrySortError({required this.message, required PantrySort sort}) : super(sort: sort);
 

@@ -41,7 +41,7 @@ class UserRepository {
       return prev?.uid == next?.uid;
     }
 
-    Stream<UntypedSnapshot?> mapUserToSnapshotStream(User? user) {
+    Stream<UntypedDocumentSnapshot?> mapUserToSnapshotStream(User? user) {
       return user == null ? Stream.value(null) : _getUserMetaDocumentReference(user.uid).snapshots();
     }
 
@@ -56,7 +56,7 @@ class UserRepository {
       if (values[0] == null || values[1] == null) return null;
 
       final user = values[0] as User;
-      final snap = values[1] as UntypedSnapshot;
+      final snap = values[1] as UntypedDocumentSnapshot;
 
       final data = snap.data() ?? {};
 

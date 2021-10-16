@@ -14,12 +14,12 @@ class CustomFoodRepository with FirestoreRepository {
     this.firestoreService = firestoreService;
   }
 
-  CustomFood? _documentSnapshotToCustomFood(UntypedSnapshot snapshot) {
+  CustomFood? _documentSnapshotToCustomFood(UntypedDocumentSnapshot snapshot) {
     final documentData = FirestoreService.getDocumentData(snapshot);
     return documentData == null ? null : serializers.deserializeWith(CustomFood.serializer, documentData);
   }
 
-  Iterable<CustomFood?> _documentSnapshotToResults(Iterable<UntypedSnapshot> snapshots, String query) {
+  Iterable<CustomFood?> _documentSnapshotToResults(Iterable<UntypedDocumentSnapshot> snapshots, String query) {
     final customFoods = snapshots.map(_documentSnapshotToCustomFood);
     return _matchQuery(customFoods, query);
   }

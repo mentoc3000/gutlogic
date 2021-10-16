@@ -45,7 +45,7 @@ class PantryFilterLoaded extends PantryFilterState with Filter, SearchableLoaded
 
 class PantryFilterError extends PantryFilterState with ErrorState {
   @override
-  final String message;
+  final String? message;
 
   PantryFilterError({required this.message});
 

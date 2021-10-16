@@ -7,26 +7,28 @@ export 'package:cloud_firestore/cloud_firestore.dart';
 
 export './untyped_data.dart';
 
+/// A type alias for untyped DocumentReference.
+typedef UntypedDocumentReference = DocumentReference<UntypedData>;
+
 /// A type alias for untyped DocumentSnapshot.
-typedef UntypedSnapshot = DocumentSnapshot<UntypedData>;
+typedef UntypedDocumentSnapshot = DocumentSnapshot<UntypedData>;
 
 class FirestoreService {
   final String userID;
-  FirebaseFirestore get instance => FirebaseFirestore.instance;
+
+  late final FirebaseFirestore instance;
+
   CollectionReference<UntypedData> get userDiaryCollection => instance.collection('user_data/$userID/diary');
   CollectionReference<UntypedData> get customFoodCollection => instance.collection('user_data/$userID/foods');
   CollectionReference<UntypedData> get userFoodDetailsCollection => instance.collection('user_data/$userID/pantry');
+  DocumentReference<UntypedData> get userDocument => instance.doc('users/$userID');
 
-  FirestoreService({required this.userID}) {
-    // Web.
-    // await FirebaseFirestore.instance.enablePersistence();
-
-    // All other platforms.
-    instance.settings = const Settings(persistenceEnabled: true);
+  FirestoreService({required this.userID, FirebaseFirestore? instance}) {
+    this.instance = instance ?? FirebaseFirestore.instance;
   }
 
   /// Returns the [snapshot] data and adds the document id to the 'id' field
-  static UntypedData? getDocumentData(UntypedSnapshot snapshot) {
+  static UntypedData? getDocumentData(UntypedDocumentSnapshot snapshot) {
     final data = snapshot.data();
 
     if (data == null) return null;

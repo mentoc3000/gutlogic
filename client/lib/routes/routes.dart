@@ -18,6 +18,7 @@ import '../pages/main_tabs.dart';
 import '../pages/meal_element_entry/meal_element_entry_page.dart';
 import '../pages/meal_entry/meal_entry_page.dart';
 import '../pages/pantry_entry/pantry_entry_page.dart';
+import '../pages/profile/profile_page.dart';
 import '../pages/register/register_page.dart';
 import '../pages/reset_password/reset_password_page.dart';
 import '../pages/symptom_entry/symptom_entry_page.dart';
@@ -85,8 +86,15 @@ class Routes {
 
   Route get account {
     return MaterialPageRoute(
-      builder: (context) => AccountPage.provisioned(),
+      builder: (context) => AccountPage(),
       settings: const RouteSettings(name: 'Account Page'),
+    );
+  }
+
+  Route get profile {
+    return MaterialPageRoute(
+      builder: (context) => ProfilePage(),
+      settings: const RouteSettings(name: 'Profile Page'),
     );
   }
 

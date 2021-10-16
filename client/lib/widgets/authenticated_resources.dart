@@ -18,6 +18,7 @@ import '../resources/food/edamam_food_repository.dart';
 import '../resources/food/edamam_service.dart';
 import '../resources/food/food_service.dart';
 import '../resources/pantry_service.dart';
+import '../resources/profile_repository.dart';
 import '../resources/sensitivity/heuristic_sensitivity_prediction_service.dart';
 import '../resources/sensitivity/sensitivity_repository.dart';
 import '../resources/sensitivity/sensitivity_service.dart';
@@ -57,6 +58,9 @@ class AuthenticatedResources extends StatelessWidget {
         providers: [
           RepositoryProvider(create: (context) {
             return FirestoreService(userID: context.read<UserRepository>().user!.id);
+          }),
+          RepositoryProvider(create: (context) {
+            return ProfileRepository(firestore: context.read<FirestoreService>());
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree

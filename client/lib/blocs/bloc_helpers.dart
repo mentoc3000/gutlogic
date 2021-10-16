@@ -46,7 +46,7 @@ mixin StreamSubscriber<StreamData, State> on BlocBase<State> {
 }
 
 mixin ErrorState on Equatable {
-  String get message;
+  String? get message;
 
   @override
   List<Object?> get props => [message];
@@ -77,4 +77,38 @@ mixin ErrorEvent on Equatable {
 
   @override
   String toString() => '$runtimeType { error: ${report.error} }';
+}
+
+/// A base class for simple data update states.
+abstract class UpdateState extends Equatable {
+  const UpdateState();
+
+  @override
+  List<Object?> get props => [];
+
+  @override
+  bool? get stringify => true;
+}
+
+/// Emitted before the data has been updated.
+class UpdateInitialState extends UpdateState {
+  const UpdateInitialState();
+}
+
+/// Emitted while the data update is being performed.
+class UpdateSavingState extends UpdateState {
+  const UpdateSavingState();
+}
+
+/// Emitted after the data update was accepted.
+class UpdateSuccessState extends UpdateState {
+  const UpdateSuccessState();
+}
+
+/// Emitted after the data update was rejected.
+class UpdateFailureState extends UpdateState with ErrorState {
+  @override
+  final String? message;
+
+  const UpdateFailureState({this.message});
 }

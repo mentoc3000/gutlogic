@@ -32,18 +32,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
     if (event is AuthenticationProvided) {
-      yield* _mapProvidedToState(event);
+      yield const Authenticated();
     } else if (event is AuthenticationRevoked) {
-      yield* _mapRevokedToState(event);
+      yield const Unauthenticated();
+    } else if (event is AuthenticationLoggedOut) {
+      await _userRepository.logout();
     }
-  }
-
-  Stream<AuthenticationState> _mapProvidedToState(AuthenticationProvided event) async* {
-    yield const Authenticated();
-  }
-
-  Stream<AuthenticationState> _mapRevokedToState(AuthenticationRevoked event) async* {
-    yield const Unauthenticated();
   }
 
   @override

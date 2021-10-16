@@ -103,7 +103,7 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
   Future<void> updateNotes(UserFoodDetails userFoodDetails, String newNotes) =>
       updateEntry(userFoodDetails.rebuild((b) => b..notes = newNotes));
 
-  UserFoodDetails? _documentToUserFoodDetails(UntypedSnapshot snapshot) {
+  UserFoodDetails? _documentToUserFoodDetails(UntypedDocumentSnapshot snapshot) {
     try {
       final serializedData = FirestoreService.getDocumentData(snapshot);
       return serializers.deserializeWith(UserFoodDetailsApi.serializer, serializedData)?.toUserFoodDetails();

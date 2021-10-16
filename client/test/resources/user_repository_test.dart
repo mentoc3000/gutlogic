@@ -156,28 +156,6 @@ void main() {
       expect(userRepository.user!.username, mockUsername);
     });
 
-    test('can update metadata', () async {
-      await userRepository.login(
-        provider: AuthProvider.password,
-        username: mockUsername,
-        password: mockPassword,
-      );
-
-      expect(userRepository.user!.username, mockUsername);
-
-      const updatedFirstname = 'Updated Firstname';
-      const updatedLastname = 'Updated Lastname';
-
-      final updatedUser = userRepository.user!.rebuild((b) => b
-        ..firstname = updatedFirstname
-        ..lastname = updatedLastname);
-
-      await userRepository.updateMetadata(updatedUser: updatedUser);
-
-      expect(userRepository.user!.firstname, updatedFirstname);
-      expect(userRepository.user!.lastname, updatedLastname);
-    }, skip: 'blocked by how cloud_firestore_mocks handles snapshots (issue #84)');
-
     test('cannot link duplicate provider', () async {
       await userRepository.login(provider: AuthProvider.password);
       expect(userRepository.user!.providers.contains(AuthProvider.password), true);

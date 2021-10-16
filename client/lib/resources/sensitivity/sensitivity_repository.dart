@@ -62,7 +62,7 @@ class SensitivityRepository with FirestoreRepository {
     });
   }
 
-  SensitivityEntry? _documentTosensitivityEntry(UntypedSnapshot snapshot) {
+  SensitivityEntry? _documentTosensitivityEntry(UntypedDocumentSnapshot snapshot) {
     try {
       final serializedData = FirestoreService.getDocumentData(snapshot);
       return serializers.deserializeWith(UserFoodDetailsApi.serializer, serializedData)?.toSensitivityEntry();

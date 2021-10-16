@@ -25,19 +25,12 @@ abstract class ApplicationUser implements Built<ApplicationUser, ApplicationUser
   /// The set of authentication providers this user has connected.
   BuiltList<AuthProvider> get providers;
 
-  String? get firstname;
-  String? get lastname;
-  DateTime? get birthdate;
-
   factory ApplicationUser({
     required String id,
     required String email,
     required bool verified,
     required bool consented,
     required BuiltList<AuthProvider> providers,
-    String firstname,
-    String lastname,
-    DateTime birthdate,
   }) = _$ApplicationUser._;
 
   static void _initializeBuilder(ApplicationUserBuilder builder) => builder..consented = false;

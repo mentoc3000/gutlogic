@@ -14,7 +14,11 @@ import 'authentication_bloc_test.mocks.dart';
 @GenerateMocks([UserRepository])
 void main() {
   group('Authentication Bloc', () {
+    var userStream = BehaviorSubject<ApplicationUser?>.seeded(null);
+
     final userRepository = MockUserRepository();
+
+    when(userRepository.stream).thenAnswer((_) => userStream);
 
     final user = ApplicationUser(
       id: '123',
@@ -24,30 +28,41 @@ void main() {
       providers: <AuthProvider>[].build(),
     );
 
-    AuthenticationBloc build() {
-      return AuthenticationBloc(userRepository: userRepository);
-    }
-
     blocTest<AuthenticationBloc, AuthenticationState>(
-      'authenticates when stream emits user',
+      'emits authentication state when stream emits user',
       build: () {
-        when(userRepository.stream).thenAnswer((_) => BehaviorSubject.seeded(user));
-        return build();
+        userStream = BehaviorSubject<ApplicationUser?>.seeded(null);
+        return AuthenticationBloc(userRepository: userRepository);
+      },
+      act: (bloc) {
+        userStream.add(null);
+        userStream.add(user);
+        userStream.add(null);
       },
       expect: () => [
+        const Unauthenticated(),
         const Authenticated(),
+        const Unauthenticated(),
       ],
     );
 
     blocTest<AuthenticationBloc, AuthenticationState>(
-      'deauthenticates when stream emits null',
+      'deauthenticates on log out',
       build: () {
-        when(userRepository.stream).thenAnswer((_) => BehaviorSubject.seeded(null));
-        return build();
+        userStream = BehaviorSubject<ApplicationUser?>.seeded(user);
+        return AuthenticationBloc(userRepository: userRepository);
+      },
+      act: (bloc) {
+        bloc.add(const AuthenticationLoggedOut());
+        userStream.add(null);
       },
       expect: () => [
+        const Authenticated(),
         const Unauthenticated(),
       ],
+      verify: (bloc) {
+        verify(userRepository.logout()).called(1);
+      },
     );
   });
 }

@@ -4,7 +4,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../assets/sick_face_icon.dart';
 
 class GLIcons {
-  static const account = Icons.account_circle;
+  static const account = Icons.lock;
+  static const profile = Icons.face;
   static const add = Icons.add;
   static const arrowBack = Icons.arrow_back;
   static const arrowRight = Icons.keyboard_arrow_right;

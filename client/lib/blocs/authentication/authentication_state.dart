@@ -5,25 +5,19 @@ abstract class AuthenticationState extends Equatable {
 
   @override
   List<Object?> get props => [];
+
+  @override
+  bool? get stringify => true;
 }
 
 class AuthenticationUnknown extends AuthenticationState {
   const AuthenticationUnknown();
-
-  @override
-  String toString() => 'AuthenticationUnknown';
 }
 
 class Authenticated extends AuthenticationState {
   const Authenticated();
-
-  @override
-  String toString() => 'Authenticated';
 }
 
 class Unauthenticated extends AuthenticationState {
   const Unauthenticated();
-
-  @override
-  String toString() => 'Unauthenticated';
 }

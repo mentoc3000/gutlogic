@@ -1,8 +1,7 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_driver/driver_extension.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:gutlogic/blocs/account/account.dart';
 import 'package:gutlogic/blocs/authentication/authentication.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
@@ -14,8 +13,8 @@ import 'package:gutlogic/resources/diary_repositories/meal_entry_repository.dart
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
 import 'package:gutlogic/resources/firebase/analytics_service.dart';
 import 'package:gutlogic/resources/pantry_service.dart';
-import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_repository.dart';
+import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:gutlogic/resources/user_repository.dart';
 import 'package:gutlogic/routes/routes.dart';
 import 'package:gutlogic/style/gl_theme.dart';
@@ -106,7 +105,6 @@ void main() {
     ],
     child: MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => AccountBloc(userRepository: context.read<UserRepository>())),
         BlocProvider<AuthenticationBloc>(create: (context) => authenticationBloc),
         BlocProvider(create: (context) => DiaryBloc(repository: context.read<DiaryRepository>())),
         BlocProvider(create: (context) => PantryBloc(pantryService: context.read<PantryService>())),
