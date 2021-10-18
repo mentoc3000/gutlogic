@@ -26,7 +26,7 @@ class SearchResultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final leading = isCustom ? const Icon(GLIcons.account) : null;
+    final leading = isCustom ? const Icon(GLIcons.profile) : null;
     final tile = GLListTile(heading: searchable.searchHeading(), onTap: onTap, leading: leading, trailing: trailing);
 
     return isDismissible
