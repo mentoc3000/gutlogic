@@ -7,7 +7,6 @@ import '../widgets/gl_icons.dart';
 import '../widgets/gl_scaffold.dart';
 import 'diary/diary_page.dart';
 import 'pantry/pantry_page.dart';
-import 'settings/settings_page.dart';
 
 class MainTabs extends StatefulWidget {
   final AnalyticsService analytics;
@@ -37,17 +36,11 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
       text: 'Pantry',
       icon: Icon(GLIcons.pantry),
     ),
-    const Tab(
-      key: Keys.accountTab,
-      text: 'Settings',
-      icon: Icon(GLIcons.settings),
-    ),
   ];
 
   final pages = [
     DiaryPage.provisioned(),
     PantryPage.provisioned(),
-    SettingsPage(),
   ];
 
   @override

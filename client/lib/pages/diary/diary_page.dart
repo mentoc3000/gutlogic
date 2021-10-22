@@ -5,6 +5,7 @@ import '../../blocs/diary/diary.dart';
 import '../../util/keys.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
+import '../../widgets/icon_buttons/settings_icon_button.dart';
 import '../../widgets/snack_bars/undo_delete_snack_bar.dart';
 import '../error_page.dart';
 import '../loading_page.dart';
@@ -25,11 +26,8 @@ class DiaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GLScaffold(
-      appBar: GLAppBar(title: 'Timeline'),
-      body: BlocConsumer<DiaryBloc, DiaryState>(
-        builder: builder,
-        listener: listener,
-      ),
+      appBar: GLAppBar(title: 'Timeline', leading: const SettingsIconButton()),
+      body: BlocConsumer<DiaryBloc, DiaryState>(builder: builder, listener: listener),
       floatingActionButton: const DiaryFloatingActionButton(key: Keys.diaryFab),
     );
   }

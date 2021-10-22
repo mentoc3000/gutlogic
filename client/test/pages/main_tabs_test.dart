@@ -6,7 +6,7 @@ import 'package:gutlogic/models/diary_entry/diary_entry.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/pages/diary/diary_page.dart';
 import 'package:gutlogic/pages/main_tabs.dart';
-import 'package:gutlogic/pages/settings/settings_page.dart';
+import 'package:gutlogic/pages/pantry/pantry_page.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
@@ -58,15 +58,15 @@ void main() {
 
       // Start on diary page
       expect(find.byType(DiaryPage), findsOneWidget);
-      expect(find.byType(SettingsPage), findsNothing);
+      expect(find.byType(PantryPage), findsNothing);
 
-      // Switch to settings page
-      final settingsTab = find.text('Settings');
+      // Switch to pantry page
+      final settingsTab = find.text('Pantry');
       expect(settingsTab, findsOneWidget);
       await tester.tap(settingsTab);
       await tester.pumpAndSettle();
       expect(find.byType(DiaryPage), findsNothing);
-      expect(find.byType(SettingsPage), findsOneWidget);
+      expect(find.byType(PantryPage), findsOneWidget);
       mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
 
       // Switch back to diary page
@@ -76,7 +76,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(seconds: 1));
       expect(find.byType(DiaryPage), findsOneWidget);
-      expect(find.byType(SettingsPage), findsNothing);
+      expect(find.byType(PantryPage), findsNothing);
       mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
     });
   });

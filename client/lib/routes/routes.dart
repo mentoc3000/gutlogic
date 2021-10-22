@@ -21,6 +21,7 @@ import '../pages/pantry_entry/pantry_entry_page.dart';
 import '../pages/profile/profile_page.dart';
 import '../pages/register/register_page.dart';
 import '../pages/reset_password/reset_password_page.dart';
+import '../pages/settings/settings_page.dart';
 import '../pages/symptom_entry/symptom_entry_page.dart';
 import '../pages/verify_email/verify_email_page.dart';
 
@@ -81,6 +82,13 @@ class Routes {
     return MaterialPageRoute(
       builder: MainTabs.provisioned,
       settings: const RouteSettings(name: 'Main Page'),
+    );
+  }
+
+  Route get settings {
+    return MaterialPageRoute(
+      builder: (context) => SettingsPage(),
+      settings: const RouteSettings(name: 'Settings Page'),
     );
   }
 

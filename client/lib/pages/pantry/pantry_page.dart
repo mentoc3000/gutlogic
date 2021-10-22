@@ -14,6 +14,7 @@ import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/icon_buttons/filter_icon_button.dart';
 import '../../widgets/icon_buttons/search_icon_button.dart';
+import '../../widgets/icon_buttons/settings_icon_button.dart';
 import '../../widgets/list_tiles/gl_list_tile.dart';
 import '../../widgets/snack_bars/undo_delete_snack_bar.dart';
 import '../error_page.dart';
@@ -77,9 +78,10 @@ class PantryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GLScaffold(
       appBar: GLAppBar(
-        leading: Builder(builder: (context) => FilterIconButton(onPressed: () => showPantryFilter(context))),
+        leading: const SettingsIconButton(),
         title: 'Pantry',
         actions: [
+          Builder(builder: (context) => FilterIconButton(onPressed: () => showPantryFilter(context))),
           PantrySortPopupMenuButton(onSelected: (sort) => context.read<PantrySortCubit>().sortBy(sort)),
           SearchIconButton(onPressed: () => showPantrySearch(context)),
         ],
