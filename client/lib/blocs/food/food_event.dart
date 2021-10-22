@@ -13,9 +13,6 @@ abstract class FoodEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class StreamFoodQuery extends FoodEvent with FetchQuery, DebouncedEvent implements Tracked {
@@ -54,9 +51,6 @@ class LoadFoods extends FoodEvent {
 
   @override
   List<Object?> get props => [query, foods];
-
-  @override
-  String toString() => 'LoadFoods { foods: ${foods.length} }';
 }
 
 class ThrowFoodError extends FoodEvent with ErrorEvent {

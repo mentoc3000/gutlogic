@@ -10,9 +10,6 @@ abstract class LoginEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class LoginSubmitted extends LoginEvent implements Tracked {

@@ -12,9 +12,6 @@ abstract class SymptomTypeEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class FetchAllSymptomTypes extends SymptomTypeEvent with FetchAll implements Tracked {

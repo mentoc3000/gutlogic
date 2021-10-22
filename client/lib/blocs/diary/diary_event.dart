@@ -28,9 +28,6 @@ class StreamRange extends DiaryEvent {
 
   @override
   List<Object?> get props => [start, end];
-
-  @override
-  String toString() => 'StreamRange { start: $start, end: $end }';
 }
 
 class Load extends DiaryEvent {
@@ -40,9 +37,6 @@ class Load extends DiaryEvent {
 
   @override
   List<Object?> get props => [diaryEntries];
-
-  @override
-  String toString() => 'LoadEntries { diaryEntries: ${diaryEntries.length}}';
 }
 
 class Delete extends DiaryEvent implements Tracked {
@@ -65,9 +59,6 @@ class Delete extends DiaryEvent implements Tracked {
       analytics.logEvent('delete_symptom_entry');
     }
   }
-
-  @override
-  String toString() => 'Delete { id: ${diaryEntry.id} }';
 }
 
 class Undelete extends DiaryEvent {

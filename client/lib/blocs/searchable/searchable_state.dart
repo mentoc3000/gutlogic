@@ -6,9 +6,6 @@ import '../../models/model_interfaces.dart';
 mixin SearchableLoading on Equatable {
   @override
   List<Object?> get props => [];
-
-  @override
-  String toString() => '$runtimeType';
 }
 
 mixin SearchableLoaded on Equatable {
@@ -16,7 +13,4 @@ mixin SearchableLoaded on Equatable {
 
   @override
   List<Object?> get props => [items];
-
-  @override
-  String toString() => '$runtimeType { Searchable: ${items.length} }';
 }

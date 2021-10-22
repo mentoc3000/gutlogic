@@ -14,9 +14,6 @@ abstract class PantryEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class StreamAllPantry extends PantryEvent with StreamAll {
@@ -47,9 +44,6 @@ class DeletePantryEntry extends PantryEvent implements Tracked {
 
   @override
   List<Object?> get props => [pantryEntry];
-
-  @override
-  String toString() => 'Delete { id: ${pantryEntry.userFoodDetailsId} }';
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('delete_pantry_entry');

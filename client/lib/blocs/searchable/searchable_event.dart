@@ -11,9 +11,6 @@ mixin FetchQuery on Equatable {
 
   @override
   List<Object?> get props => [query];
-
-  @override
-  String toString() => '$runtimeType { query: $query }';
 }
 
 mixin StreamAll on Equatable {}
@@ -23,9 +20,6 @@ mixin StreamQuery on Equatable {
 
   @override
   List<Object?> get props => [query];
-
-  @override
-  String toString() => '$runtimeType { query: $query }';
 }
 
 mixin LoadSearchables on Equatable {
@@ -33,7 +27,4 @@ mixin LoadSearchables on Equatable {
 
   @override
   List<Object?> get props => [items];
-
-  @override
-  String toString() => '$runtimeType { item count: ${items.length} }';
 }

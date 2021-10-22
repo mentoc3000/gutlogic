@@ -11,10 +11,7 @@ abstract class DiaryState extends Equatable {
   List<Object?> get props => [];
 }
 
-class DiaryLoading extends DiaryState {
-  @override
-  String toString() => 'DiaryLoading';
-}
+class DiaryLoading extends DiaryState {}
 
 class DiaryLoaded extends DiaryState {
   final BuiltList<DiaryEntry> diaryEntries;
@@ -23,9 +20,6 @@ class DiaryLoaded extends DiaryState {
 
   @override
   List<Object?> get props => [diaryEntries];
-
-  @override
-  String toString() => 'DiaryLoaded { DiaryEntries: ${diaryEntries.length} }';
 }
 
 class DiaryEntryDeleted extends DiaryState {
@@ -35,9 +29,6 @@ class DiaryEntryDeleted extends DiaryState {
 
   @override
   List<Object?> get props => [diaryEntry];
-
-  @override
-  String toString() => 'DiaryEntryDeleted { diaryEntry: ${diaryEntry.id} }';
 }
 
 class DiaryError extends DiaryState with ErrorState, ErrorRecorder {

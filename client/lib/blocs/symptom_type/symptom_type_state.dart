@@ -12,9 +12,6 @@ abstract class SymptomTypeState extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class SymptomTypesLoading extends SymptomTypeState with SearchableLoading {}

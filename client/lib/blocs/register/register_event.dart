@@ -9,9 +9,6 @@ abstract class RegisterEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class RegisterSubmitted extends RegisterEvent implements Tracked {

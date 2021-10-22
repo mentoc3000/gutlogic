@@ -5,9 +5,6 @@ import '../../resources/firebase/analytics_service.dart';
 abstract class VerifyEmailEvent extends Equatable {
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 /// Added when the bloc automatically refreshes its own state.

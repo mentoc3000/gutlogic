@@ -14,9 +14,6 @@ abstract class SymptomEntryEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class LoadSymptomEntry extends SymptomEntryEvent with LoadDiaryEntry {
@@ -97,9 +94,6 @@ class UpdateSymptomType extends SymptomEntryEvent with DebouncedEvent implements
 
   @override
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry', 'type');
-
-  @override
-  String toString() => 'UpdateSymptomType { symptomName: ${symptomType.name} } }';
 }
 
 class UpdateSymptomName extends SymptomEntryEvent with DebouncedEvent implements Tracked {
@@ -112,9 +106,6 @@ class UpdateSymptomName extends SymptomEntryEvent with DebouncedEvent implements
 
   @override
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_symptom_entry', 'symptom_name');
-
-  @override
-  String toString() => 'UpdateSymptomName { symptomName: $symptomName } }';
 }
 
 class UpdateSymptom extends SymptomEntryEvent with DebouncedEvent implements Tracked {
@@ -127,9 +118,6 @@ class UpdateSymptom extends SymptomEntryEvent with DebouncedEvent implements Tra
 
   @override
   void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'symptom');
-
-  @override
-  String toString() => 'UpdateSymptom { symptomName: ${symptom.symptomType.name} }';
 }
 
 class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements Tracked {
@@ -142,9 +130,6 @@ class UpdateSeverity extends SymptomEntryEvent with DebouncedEvent implements Tr
 
   @override
   void track(AnalyticsService analyticsService) => analyticsService.logUpdateEvent('update_symptom_entry', 'severity');
-
-  @override
-  String toString() => 'UpdateSeverity { severity: $severity } }';
 }
 
 class ThrowSymptomEntryError extends SymptomEntryEvent with ErrorEvent {

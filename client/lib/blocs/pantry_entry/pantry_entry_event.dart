@@ -23,9 +23,6 @@ class Load extends PantryEntryEvent {
 
   @override
   List<Object?> get props => [pantryEntry, food];
-
-  @override
-  String toString() => 'Load { id: ${pantryEntry.userFoodDetailsId} }';
 }
 
 class CreateAndStreamEntry extends PantryEntryEvent implements Tracked {
@@ -35,9 +32,6 @@ class CreateAndStreamEntry extends PantryEntryEvent implements Tracked {
 
   @override
   List<Object?> get props => [foodReference];
-
-  @override
-  String toString() => 'CreateAndStreamEntry { new PantryEntry }';
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('create_pantry_entry');
@@ -50,16 +44,10 @@ class StreamEntry extends PantryEntryEvent {
 
   @override
   List<Object?> get props => [pantryEntry];
-
-  @override
-  String toString() => 'StreamEntry { id: ${pantryEntry.userFoodDetailsId} }';
 }
 
 class Delete extends PantryEntryEvent implements Tracked {
   const Delete();
-
-  @override
-  String toString() => 'Delete';
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('delete_pantry_entry');
@@ -74,9 +62,6 @@ class UpdateSensitivityLevel extends PantryEntryEvent with DebouncedEvent implem
   List<Object?> get props => [sensitivityLevel];
 
   @override
-  String toString() => 'UpdateSensitivity { newSensitivity: $sensitivityLevel } }';
-
-  @override
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_pantry_entry', 'sensitivity_level');
 }
 
@@ -87,9 +72,6 @@ class UpdateNotes extends PantryEntryEvent with DebouncedEvent implements Tracke
 
   @override
   List<Object?> get props => [notes];
-
-  @override
-  String toString() => 'UpdateNotes { newNotes: $notes } }';
 
   @override
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_pantry_entry', 'notes');

@@ -12,9 +12,6 @@ abstract class FoodState extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class FoodsLoading extends FoodState with SearchableLoading {}

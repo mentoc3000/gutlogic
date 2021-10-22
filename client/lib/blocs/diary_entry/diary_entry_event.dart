@@ -9,9 +9,6 @@ mixin LoadDiaryEntry on Equatable {
 
   @override
   List<Object?> get props => [diaryEntry];
-
-  @override
-  String toString() => 'Load { id: ${diaryEntry.id} }';
 }
 
 mixin CreateAndStreamDiaryEntry on Equatable {}
@@ -21,9 +18,6 @@ mixin StreamDiaryEntry on Equatable {
 
   @override
   List<Object?> get props => [diaryEntry];
-
-  @override
-  String toString() => 'StreamEntry { id: ${diaryEntry.id} }';
 }
 
 mixin DeleteDiaryEntry on Equatable implements Tracked {
@@ -31,9 +25,6 @@ mixin DeleteDiaryEntry on Equatable implements Tracked {
 
   @override
   List<Object?> get props => [diaryEntry];
-
-  @override
-  String toString() => 'Delete { diaryEntryId: ${diaryEntry.id} }';
 }
 
 mixin UpdateDiaryEntry on Equatable implements DebouncedEvent, Tracked {
@@ -41,9 +32,6 @@ mixin UpdateDiaryEntry on Equatable implements DebouncedEvent, Tracked {
 
   @override
   List<Object?> get props => [diaryEntry];
-
-  @override
-  String toString() => 'Update { diaryEntryId: ${diaryEntry.id} }';
 }
 
 mixin UpdateDiaryEntryDateTime on Equatable implements DebouncedEvent, Tracked {
@@ -51,9 +39,6 @@ mixin UpdateDiaryEntryDateTime on Equatable implements DebouncedEvent, Tracked {
 
   @override
   List<Object?> get props => [dateTime];
-
-  @override
-  String toString() => 'UpdateDateTime { newDateTime: $dateTime } }';
 }
 
 mixin UpdateDiaryEntryNotes on Equatable implements DebouncedEvent, Tracked {
@@ -61,7 +46,4 @@ mixin UpdateDiaryEntryNotes on Equatable implements DebouncedEvent, Tracked {
 
   @override
   List<Object?> get props => [notes];
-
-  @override
-  String toString() => 'UpdateNotes { newNotes: $notes } }';
 }

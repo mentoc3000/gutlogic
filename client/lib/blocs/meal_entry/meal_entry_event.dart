@@ -13,9 +13,6 @@ abstract class MealEntryEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class LoadMealEntry extends MealEntryEvent with LoadDiaryEntry {
@@ -89,9 +86,6 @@ class AddMealElement extends MealEntryEvent implements Tracked {
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('create_meal_element');
-
-  @override
-  String toString() => 'AddMealElement { food: ${food.name} }';
 }
 
 class MoveMealElement extends MealEntryEvent implements Tracked {
@@ -105,9 +99,6 @@ class MoveMealElement extends MealEntryEvent implements Tracked {
 
   @override
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_meal_entry', 'move_meal_element');
-
-  @override
-  String toString() => 'MoveMealElement { fromIndex: $fromIndex, toIndex: $toIndex }';
 }
 
 class DeleteMealElement extends MealEntryEvent implements Tracked {
@@ -121,9 +112,6 @@ class DeleteMealElement extends MealEntryEvent implements Tracked {
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('delete_meal_element');
-
-  @override
-  String toString() => 'RemoveMealElement { mealElementId: ${mealElement.id} }';
 }
 
 class UndeleteMealElement extends MealEntryEvent {
@@ -134,9 +122,6 @@ class UndeleteMealElement extends MealEntryEvent {
 
   @override
   List<Object?> get props => [mealEntry, mealElement];
-
-  @override
-  String toString() => 'UndeleteMealElement { mealElementId: ${mealElement.id} }';
 }
 
 class ThrowMealEntryError extends MealEntryEvent with ErrorEvent {

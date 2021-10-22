@@ -11,9 +11,6 @@ abstract class ConsentState extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class ConsentLoading extends ConsentState {

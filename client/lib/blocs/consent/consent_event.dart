@@ -9,9 +9,6 @@ abstract class ConsentEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class ConsentSubmitted extends ConsentEvent implements Tracked {

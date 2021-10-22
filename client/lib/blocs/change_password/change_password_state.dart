@@ -30,23 +30,14 @@ class ChangePasswordEntry extends ChangePasswordState {
 
   @override
   List<Object?> get props => [user, isValid, isRepeated];
-
-  @override
-  String toString() => 'ChangePasswordEntry { id: ${user.id}, isValid: $isValid, isRepeated: $isRepeated }';
 }
 
 class ChangePasswordLoading extends ChangePasswordState {
   const ChangePasswordLoading({required user}) : super(user: user);
-
-  @override
-  String toString() => 'ChangePasswordLoading { id: ${user.id} }';
 }
 
 class ChangePasswordSuccess extends ChangePasswordState {
   const ChangePasswordSuccess({required user}) : super(user: user);
-
-  @override
-  String toString() => 'ChangePasswordSuccess { id: ${user.id} }';
 }
 
 class ChangePasswordError extends ChangePasswordState with ErrorState, ErrorRecorder {
@@ -78,7 +69,4 @@ class ChangePasswordError extends ChangePasswordState with ErrorState, ErrorReco
       : message = connectionExceptionMessage(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace),
         super(user: user);
-
-  @override
-  String toString() => 'ChangePasswordError { id: ${user.id}, message: $message }';
 }

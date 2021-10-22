@@ -10,9 +10,6 @@ abstract class LandingEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class LandingContinueGoogle extends LandingEvent implements Tracked {

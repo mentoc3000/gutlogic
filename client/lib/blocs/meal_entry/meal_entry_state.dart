@@ -30,9 +30,6 @@ class MealElementDeleted extends MealEntryState {
 
   @override
   List<Object?> get props => [mealEntry, mealElement];
-
-  @override
-  String toString() => 'MealElementDeleted { mealElement.id: ${mealElement.id} }';
 }
 
 class MealEntryError extends MealEntryState with DiaryEntryError, ErrorRecorder {

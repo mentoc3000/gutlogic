@@ -9,9 +9,6 @@ import '../bloc_helpers.dart';
 abstract class PantryEntryState extends Equatable {
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class PantryEntryLoading extends PantryEntryState {}
@@ -24,9 +21,6 @@ class PantryEntryLoaded extends PantryEntryState {
 
   @override
   List<Object?> get props => [pantryEntry, food];
-
-  @override
-  String toString() => 'PantryEntryLoaded { pantryEntry: ${pantryEntry.userFoodDetailsId} }';
 }
 
 class PantryEntryError extends PantryEntryState with ErrorState, ErrorRecorder {

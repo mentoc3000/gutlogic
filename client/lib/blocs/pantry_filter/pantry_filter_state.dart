@@ -11,9 +11,6 @@ abstract class PantryFilterState extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 mixin Filter {

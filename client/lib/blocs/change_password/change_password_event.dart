@@ -7,9 +7,6 @@ abstract class ChangePasswordEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class ChangePasswordSubmitted extends ChangePasswordEvent implements Tracked {
@@ -29,6 +26,4 @@ class ChangePasswordSubmitted extends ChangePasswordEvent implements Tracked {
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('password_change');
-
-  // TODO remove password value logging in production
 }

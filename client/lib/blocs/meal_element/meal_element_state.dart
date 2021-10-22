@@ -9,9 +9,6 @@ import '../bloc_helpers.dart';
 abstract class MealElementState extends Equatable {
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class MealElementLoading extends MealElementState {}
@@ -24,9 +21,6 @@ class MealElementLoaded extends MealElementState {
 
   @override
   List<Object?> get props => [mealElement, food];
-
-  @override
-  String toString() => 'MealElementLoaded { MealElementId: ${mealElement.id} }';
 }
 
 class MealElementError extends MealElementState with ErrorState, ErrorRecorder {

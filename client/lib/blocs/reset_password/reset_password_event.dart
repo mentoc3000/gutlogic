@@ -7,9 +7,6 @@ abstract class ResetPasswordEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class ResetPasswordSubmitted extends ResetPasswordEvent {

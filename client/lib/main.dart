@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,7 +25,9 @@ void main() async {
   final config = await AppConfig.create();
 
   // Enable debug logs for development or debug builds.
-  Logger.level = (config.isDevelopment || config.isDebug) ? Level.debug : Level.error;
+  final showDebugLogs = config.isDevelopment || config.isDebug;
+  Logger.level = showDebugLogs ? Level.debug : Level.error;
+  EquatableConfig.stringify = showDebugLogs;
 
   // Initialize the default Firebase app for all dependencies.
   final firebase = await Firebase.initializeApp();

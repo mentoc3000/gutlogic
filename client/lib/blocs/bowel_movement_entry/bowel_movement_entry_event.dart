@@ -11,9 +11,6 @@ abstract class BowelMovementEntryEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class LoadBowelMovementEntry extends BowelMovementEntryEvent with LoadDiaryEntry {
@@ -95,9 +92,6 @@ class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements 
 
   @override
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'type');
-
-  @override
-  String toString() => 'UpdateType { type: $type } }';
 }
 
 class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implements Tracked {
@@ -110,9 +104,6 @@ class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implement
 
   @override
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'volume');
-
-  @override
-  String toString() => 'UpdateVolume { volume: $volume } }';
 }
 
 class ThrowBowelMovementEntryError extends BowelMovementEntryEvent with ErrorEvent {

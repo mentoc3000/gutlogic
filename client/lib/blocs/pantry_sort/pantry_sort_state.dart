@@ -13,9 +13,6 @@ abstract class PantrySortState extends Equatable {
 
   @override
   List<Object?> get props => [sort];
-
-  @override
-  bool get stringify => true;
 }
 
 class PantrySortLoading extends PantrySortState with SearchableLoading {

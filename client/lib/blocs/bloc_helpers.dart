@@ -50,9 +50,6 @@ mixin ErrorState on Equatable {
 
   @override
   List<Object?> get props => [message];
-
-  @override
-  String toString() => '$runtimeType { message: $message }';
 }
 
 mixin ErrorRecorder on ErrorState {
@@ -74,9 +71,6 @@ mixin ErrorEvent on Equatable {
 
   @override
   List<Object?> get props => [report];
-
-  @override
-  String toString() => '$runtimeType { error: ${report.error} }';
 }
 
 /// A base class for simple data update states.
@@ -85,9 +79,6 @@ abstract class UpdateState extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool? get stringify => true;
 }
 
 /// Emitted before the data has been updated.

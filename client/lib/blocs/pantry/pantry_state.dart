@@ -12,9 +12,6 @@ abstract class PantryState extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class PantryLoading extends PantryState with SearchableLoading {}
@@ -33,9 +30,6 @@ class PantryEntryDeleted extends PantryState {
 
   @override
   List<Object?> get props => [pantryEntry];
-
-  @override
-  String toString() => 'PantryEntryDeleted { pantryEntry: ${pantryEntry.userFoodDetailsId} }';
 }
 
 class PantryError extends PantryState with ErrorState, ErrorRecorder {

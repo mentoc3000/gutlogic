@@ -11,9 +11,6 @@ abstract class LandingState extends Equatable {
 
   @override
   List<Object?> get props => [];
-
-  @override
-  bool get stringify => true;
 }
 
 class LandingReady extends LandingState {
