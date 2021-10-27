@@ -121,8 +121,8 @@ server:test:
   extends:
     - .server
   script:
-    # copy GC_KEYS from environment into fastlane target
-    - cp "$GC_KEYS_DEV" "$(pwd)/gutlogic-dev-firebase-adminsdk.json"
+    # copy GOOGLE_APPLICATION_CREDENTIALS from environment into fastlane target
+    - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/gutlogic-dev-firebase-adminsdk.json"
     - npm run test
   rules:
     - *server-merge-request-rule
@@ -346,8 +346,8 @@ client:deploy:ios:
     - export FLUTTER_APP_VERSION=$(flutter pub run bin/version)
     # move into ios
     - cd ios
-    # copy GC_KEYS from environment into fastlane target
-    - cp "$GC_KEYS" "$(pwd)/gc_keys.json"
+    # copy GOOGLE_APPLICATION_CREDENTIALS from environment into fastlane target
+    - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/gc_keys.json"
     # prep fastlane
     - gem install --user-install bundler
     - bundle install

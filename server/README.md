@@ -62,9 +62,9 @@ Below is a list of config values and how to set them.
 
 Set the following variables in the GitLab CI/CD settings
 
-| Type     | Key                 | Value                                                                                                                                        |
-| -------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Variable | `FASTLANE_PASSWORD` | App Store Connect password                                                                                                                   |
-| Variable | `FIREBASE_PROJECT`  | `default` or `production`, depending on environment                                                                                          |
-| Variable | `FIREBASE_TOKEN`    | Token obtained from `firebase login:ci`                                                                                                      |
-| File     | `GC_KEYS`           | Key generated for GCP account to access storage bucket for certificates. Obtain by running `fastlane match init` and following instructions. |
+| Type     | Key                              | Value                                                                                                                                        |
+| -------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variable | `FASTLANE_PASSWORD`              | App Store Connect password                                                                                                                   |
+| Variable | `FIREBASE_PROJECT`               | `default` or `production`, depending on environment                                                                                          |
+| Variable | `FIREBASE_TOKEN`                 | Token obtained from `firebase login:ci`                                                                                                      |
+| File     | `GOOGLE_APPLICATION_CREDENTIALS` | Key generated for GCP account to access storage bucket for certificates. Obtain by running `fastlane match init` and following instructions. |
