@@ -1,6 +1,4 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
-import 'package:gutlogic/models/irritant.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:test/test.dart';
 
@@ -9,14 +7,6 @@ void main() {
     test('constructs with empty irritant list', () {
       final food = EdamamFood(id: '123', name: 'Bread');
       expect(food.name, 'Bread');
-      expect(food.irritants, null);
-    });
-
-    test('constructs with irritant list', () {
-      final irritants = [Irritant(name: 'Fructan', concentration: .0032), Irritant(name: 'Sorbitol')].build();
-      final food = EdamamFood(id: '123', name: 'Bread', irritants: irritants);
-      expect(food.name, 'Bread');
-      expect(food.irritants!.length, irritants.length);
     });
 
     test('is equatable', () {

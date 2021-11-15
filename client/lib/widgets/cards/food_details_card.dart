@@ -1,6 +1,10 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/food/food.dart';
+import '../../models/irritant/irritant.dart';
+import '../../resources/irritant_repository.dart';
 import 'expansion_card.dart';
 
 class FoodDetailsCard extends StatelessWidget {
@@ -10,14 +14,24 @@ class FoodDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final irritantNames =
-        (food.irritants?.isEmpty ?? true) ? 'None' : (food.irritants!.map((i) => i.name).toList()..sort()).join('\n');
-    return ExpansionCard(
-      heading: 'Details',
-      items: [
-        if (food.brand != null) _TwoColumnListTile(label: 'Brand', value: food.brand!),
-        if (food.irritants != null) _TwoColumnListTile(label: 'Irritants', value: irritantNames),
-      ],
+    final irritants = context.select((IrritantRepository irritantRepo) {
+      return irritantRepo.ofRef(food.toFoodReference());
+    });
+
+    return FutureBuilder<BuiltList<Irritant>?>(
+      future: irritants,
+      builder: (context, snapshot) {
+        final irritants = snapshot.data;
+        final irritantNames =
+            (irritants?.isEmpty ?? true) ? 'None' : (irritants!.map((i) => i.name).toList()..sort()).join('\n');
+        return ExpansionCard(
+          heading: 'Details',
+          items: [
+            if (food.brand != null) _TwoColumnListTile(label: 'Brand', value: food.brand!),
+            if (irritants != null) _TwoColumnListTile(label: 'Irritants', value: irritantNames),
+          ],
+        );
+      },
     );
   }
 }

@@ -2,11 +2,9 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-import '../../util/null_utils.dart';
 import '../food/edamam_food.dart';
 import '../measure.dart';
 import './edamam_api_food.dart';
-import './edamam_api_irritant.dart';
 import './edamam_api_measure.dart';
 
 part 'edamam_api_entry.g.dart';
@@ -16,7 +14,6 @@ abstract class EdamamApiEntry implements Built<EdamamApiEntry, EdamamApiEntryBui
 
   EdamamApiFood get food;
   BuiltList<EdamamApiMeasure> get measures;
-  BuiltList<EdamamApiIrritant>? get irritants;
 
   EdamamApiEntry._();
 
@@ -49,14 +46,11 @@ abstract class EdamamApiEntry implements Built<EdamamApiEntry, EdamamApiEntryBui
       }
     }
 
-    final irritants = this.irritants?.map((i) => i.toIrritant()).whereNotNull().toBuiltList();
-
     return EdamamFood(
       id: food.foodId!,
       name: food.label!,
       measures: measures.build(),
       brand: food.brand,
-      irritants: irritants,
     );
   }
 }

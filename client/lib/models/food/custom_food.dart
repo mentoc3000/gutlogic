@@ -3,7 +3,6 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 import '../food_reference/custom_food_reference.dart';
-import '../irritant.dart';
 import '../measure.dart';
 import '../model_interfaces.dart';
 import 'food.dart';
@@ -18,13 +17,11 @@ abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>,
   factory CustomFood({
     required String id,
     required String name,
-    BuiltList<Irritant>? irritants,
   }) =>
       _$CustomFood._(
         id: id,
         name: name,
         measures: Food.defaultMeasures,
-        irritants: irritants,
         brand: null,
       );
 

@@ -19,7 +19,7 @@ class MealEntryListTile extends StatelessWidget {
 
     // Aggregate the sensitivities for the entire meal entry.
     final entrySensitivity = context.select((SensitivityService sensitivity) {
-      return sensitivity.aggregateByRef(entryFoodReferences);
+      return sensitivity.aggregate(entryFoodReferences);
     });
 
     return DiaryEntryListTile(

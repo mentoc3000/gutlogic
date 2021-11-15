@@ -7,17 +7,12 @@ void main() {
     test('is deserializable', () {
       final edamamApiEntry = serializers.deserializeWith(EdamamApiEntry.serializer, asparagusResponse)!;
       expect(edamamApiEntry.food.label, 'Asparagus');
-      expect(edamamApiEntry.irritants!.firstWhere((i) => i.name == 'Kestose').concentration, 0.0009);
     });
 
     test('converts to food', () {
       final edamamApiEntry = serializers.deserializeWith(EdamamApiEntry.serializer, asparagusResponse)!;
       final edamamFood = edamamApiEntry.toEdamamFood()!;
-      expect(edamamFood.irritants!.length, 6);
-      expect(edamamFood.irritants!.firstWhere((i) => i.name == 'Mannitol').concentration, 0.0009);
-      expect(edamamFood.irritants!.firstWhere((i) => i.name == 'Oligosaccharides').concentration, null);
-      expect(edamamFood.irritants!.map((e) => e.name).contains('Raffinose'), false);
-      expect(edamamFood.irritants!.map((e) => e.name).contains('Sorbitol'), false);
+      expect(edamamFood.name, 'Asparagus');
     });
   });
 }

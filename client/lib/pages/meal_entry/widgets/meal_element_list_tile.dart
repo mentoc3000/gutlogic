@@ -24,7 +24,7 @@ class MealElementListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mealElementSensitivity = context.select((SensitivityService sensitivity) {
-      return sensitivity.ofRef(mealElement.foodReference);
+      return sensitivity.of(mealElement.foodReference);
     });
 
     return DeleteDismissible(

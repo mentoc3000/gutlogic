@@ -8,9 +8,8 @@ service cloud.firestore {
     match /user_data/{userID}/{document=**} {
       allow read, write: if request.auth.uid == userID;
     }
-    match /test/{document=**} {
-      // admin API will always have access
-      allow read, write: if false;
+    match /food_irritants/{document=**} {
+      allow read: if request.auth.uid == userID;
     }
   }
 }

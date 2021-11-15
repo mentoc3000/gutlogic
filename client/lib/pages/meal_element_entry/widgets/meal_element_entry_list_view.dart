@@ -34,7 +34,7 @@ class MealElementEntryListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mealElementSensitivity = context.select((SensitivityService sensitivity) {
-      return food == null ? sensitivity.ofRef(mealElement.foodReference) : Future.value(sensitivity.ofFood(food!));
+      return sensitivity.of(mealElement.foodReference);
     });
 
     final cards = [

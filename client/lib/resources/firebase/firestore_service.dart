@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pedantic/pedantic.dart';
 
-import './untyped_data.dart';
+import 'untyped_data.dart';
 
 export 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,6 +13,9 @@ typedef UntypedDocumentReference = DocumentReference<UntypedData>;
 /// A type alias for untyped DocumentSnapshot.
 typedef UntypedDocumentSnapshot = DocumentSnapshot<UntypedData>;
 
+/// A type alias for untyped DocumentReference.
+typedef UntypedQuerySnapshot = QuerySnapshot<UntypedData>;
+
 class FirestoreService {
   final String userID;
 
@@ -21,6 +24,7 @@ class FirestoreService {
   CollectionReference<UntypedData> get userDiaryCollection => instance.collection('user_data/$userID/diary');
   CollectionReference<UntypedData> get customFoodCollection => instance.collection('user_data/$userID/foods');
   CollectionReference<UntypedData> get userFoodDetailsCollection => instance.collection('user_data/$userID/pantry');
+  CollectionReference<UntypedData> get irritantCollection => instance.collection('food_irritants');
   DocumentReference<UntypedData> get userDocument => instance.doc('users/$userID');
 
   FirestoreService({required this.userID, FirebaseFirestore? instance}) {

@@ -137,6 +137,7 @@ server:deploy:
     - .server
   script:
     - firebase deploy --token $FIREBASE_TOKEN
+    - npm run update-data
   rules:
     - *server-commit-rule
     - *manual-commit-rule

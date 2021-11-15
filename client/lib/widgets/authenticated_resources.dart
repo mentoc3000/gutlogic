@@ -17,6 +17,7 @@ import '../resources/food/custom_food_repository.dart';
 import '../resources/food/edamam_food_repository.dart';
 import '../resources/food/edamam_service.dart';
 import '../resources/food/food_service.dart';
+import '../resources/irritant_repository.dart';
 import '../resources/pantry_service.dart';
 import '../resources/profile_repository.dart';
 import '../resources/sensitivity/heuristic_sensitivity_prediction_service.dart';
@@ -68,6 +69,9 @@ class AuthenticatedResources extends StatelessWidget {
               firestoreService: context.read<FirestoreService>(),
               crashlytics: context.read<CrashlyticsService>(),
             );
+          }),
+          RepositoryProvider(create: (context) {
+            return IrritantRepository(firestoreService: context.read<FirestoreService>());
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
@@ -136,7 +140,7 @@ class AuthenticatedResources extends StatelessWidget {
               final sensitivityRepository = context.read<SensitivityRepository>();
               final heuristicPredictionService = context.read<AppConfig>().isDevelopment
                   ? HeuristicSensitivityPredictionService(
-                      foodService: context.read<FoodService>(),
+                      irritantRepository: context.read<IrritantRepository>(),
                       sensitivityMapStream: sensitivityRepository.streamAll(),
                     )
                   : null;

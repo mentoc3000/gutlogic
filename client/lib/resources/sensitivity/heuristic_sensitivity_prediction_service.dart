@@ -1,20 +1,19 @@
 import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../models/food/food.dart';
 import '../../models/food_reference/food_reference.dart';
+import '../../models/irritant/irritant.dart';
 import '../../models/sensitivity/sensitivity.dart';
 import '../../models/sensitivity/sensitivity_level.dart';
 import '../../models/sensitivity/sensitivity_source.dart';
-import '../food/food_service.dart';
+import '../irritant_repository.dart';
 import 'models/reaction.dart';
 import 'models/sensitivity_profile.dart';
 
 class HeuristicSensitivityPredictionService {
-  final FoodService foodService;
+  final IrritantRepository irritantRepository;
   late final BehaviorSubject<SensitivityProfile> _behaviorSubject;
   SensitivityProfile get sensitivityProfile => _behaviorSubject.valueOrNull ?? SensitivityProfile.unknown();
 
@@ -22,7 +21,7 @@ class HeuristicSensitivityPredictionService {
   final Map<FoodReference, Map<String, Reaction>> _reactionCache = <FoodReference, Map<String, Reaction>>{};
 
   HeuristicSensitivityPredictionService({
-    required this.foodService,
+    required this.irritantRepository,
     required Stream<BuiltMap<FoodReference, Sensitivity>> sensitivityMapStream,
   }) {
     _behaviorSubject = BehaviorSubject();
@@ -44,10 +43,10 @@ class HeuristicSensitivityPredictionService {
     // Add new or updated food references
     final upsertedFoodRefs =
         latestSensitivityEntries.entries.where((e) => _sensitivityEntries[e.key] != e.value).map((e) => e.key);
-    final newFoods = await Future.wait(upsertedFoodRefs.map((f) => foodService.streamFood(f).first));
-    final reactionMaps = newFoods
-        .whereNotNull()
-        .map((f) => getReactions(food: f, sensitivityLevel: latestSensitivityEntries[f.toFoodReference()]!.level));
+    final irritants = await Future.wait(upsertedFoodRefs.map(irritantRepository.ofRef));
+    final irritantsMap = Map.fromIterables(upsertedFoodRefs, irritants);
+    final reactionMaps = irritantsMap.entries.map(
+        (entry) => getReactions(irritants: entry.value, sensitivityLevel: latestSensitivityEntries[entry.key]!.level));
 
     final additions = Map.fromIterables(upsertedFoodRefs, reactionMaps);
     _reactionCache.addAll(additions);
@@ -65,14 +64,10 @@ class HeuristicSensitivityPredictionService {
     return SensitivityProfile.fromCensus(census);
   }
 
-  Sensitivity predictFromFood(Food food) {
-    final sensitivityLevel = sensitivityProfile.evaluateFood(food);
-    return Sensitivity(level: sensitivityLevel, source: SensitivitySource.prediction);
-  }
-
-  Future<Sensitivity> predictFromRef(FoodReference foodReference) async {
-    final food = await foodService.streamFood(foodReference).first;
-    final sensitivityLevel = food == null ? SensitivityLevel.unknown : sensitivityProfile.evaluateFood(food);
+  Future<Sensitivity> predict(FoodReference foodReference) async {
+    final irritants = await irritantRepository.ofRef(foodReference);
+    final sensitivityLevel =
+        irritants == null ? SensitivityLevel.unknown : sensitivityProfile.evaluateIrritants(irritants);
     return Sensitivity(level: sensitivityLevel, source: SensitivitySource.prediction);
   }
 
@@ -84,14 +79,8 @@ class HeuristicSensitivityPredictionService {
 }
 
 /// Map irritant name to reaction
-Map<String, Reaction> getReactions({required Food food, required SensitivityLevel sensitivityLevel}) {
-  final irritants = food.irritants?.where((i) => i.concentration != null);
+Map<String, Reaction> getReactions(
+    {required Iterable<Irritant>? irritants, required SensitivityLevel sensitivityLevel}) {
   if (irritants == null) return {};
-
-  final servingSize = food.measures.firstWhereOrNull((m) => m.unit == 'Serving')?.weight ?? Reaction.defaultServingSize;
-
-  return {
-    for (final i in irritants)
-      i.name: Reaction(dose: i.concentration! * servingSize, sensitivityLevel: sensitivityLevel)
-  };
+  return {for (final i in irritants) i.name: Reaction(dose: i.dosePerServing, sensitivityLevel: sensitivityLevel)};
 }

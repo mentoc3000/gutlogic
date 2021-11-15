@@ -1,7 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../models/food/food.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../models/sensitivity/sensitivity.dart';
 import '../../resources/sensitivity/sensitivity_repository.dart';
@@ -26,21 +25,12 @@ class SensitivityService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Sensitivity> ofRef(FoodReference food) async {
-    return _cache[food] ?? (await heuristicPredictionService?.predictFromRef(food)) ?? Sensitivity.unknown;
+  Future<Sensitivity> of(FoodReference food) async {
+    return _cache[food] ?? (await heuristicPredictionService?.predict(food)) ?? Sensitivity.unknown;
   }
 
-  Sensitivity ofFood(Food food) {
-    return _cache[food.toFoodReference()] ?? heuristicPredictionService?.predictFromFood(food) ?? Sensitivity.unknown;
-  }
-
-  Future<Sensitivity> aggregateByRef(Iterable<FoodReference> foods) async {
-    final sensitivities = await Future.wait(foods.map(ofRef));
-    return Sensitivity.aggregate(sensitivities);
-  }
-
-  Sensitivity aggregateByFood(Iterable<Food> foods) {
-    final sensitivities = foods.map(ofFood);
+  Future<Sensitivity> aggregate(Iterable<FoodReference> foods) async {
+    final sensitivities = await Future.wait(foods.map(of));
     return Sensitivity.aggregate(sensitivities);
   }
 }

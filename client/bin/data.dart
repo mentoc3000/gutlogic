@@ -7,7 +7,6 @@ import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
-import 'package:gutlogic/models/irritant.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/measure.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
@@ -43,9 +42,9 @@ final food = EdamamFood(
   name: 'Multi-Grain Bread',
   brand: null,
   measures: [Measure(unit: 'Slice')].build(),
-  irritants: ['Fructose', 'Glucose', 'Oligosaccharides', 'Raffinose', 'Total Fructan']
-      .map((n) => Irritant(name: n))
-      .toBuiltList(),
+  // irritants: ['Fructose', 'Glucose', 'Oligosaccharides', 'Raffinose', 'Total Fructan']
+  //     .map((n) => Irritant(name: n))
+  //     .toBuiltList(),
 );
 
 final mealElement = MealElement(
