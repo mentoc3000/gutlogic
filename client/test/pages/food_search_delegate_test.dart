@@ -3,27 +3,37 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/food/food.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food/food.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/search_delegate/food_search_delegate.dart';
+import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:gutlogic/widgets/gl_app_bar.dart';
 import 'package:gutlogic/widgets/gl_icons.dart';
 import 'package:gutlogic/widgets/gl_scaffold.dart';
+import 'package:mocktail/mocktail.dart';
 
 class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
 
+class MockSensitivityService extends Mock implements SensitivityService {}
+
 void main() {
   late FoodBloc foodBloc;
+  late SensitivityService sensitivityService;
   late CustomFood food;
 
   setUp(() {
     foodBloc = MockFoodBloc();
     whenListen(foodBloc, const Stream.empty(), initialState: FoodsLoading());
     food = CustomFood(id: '1', name: 'Fruit Cake');
+
+    sensitivityService = MockSensitivityService();
+    when(() => sensitivityService.of(any())).thenAnswer((_) => Future.value(Sensitivity.unknown));
   });
 
   tearDown(() {
@@ -101,7 +111,10 @@ void main() {
 
       final homepage = MultiBlocProvider(
         providers: [BlocProvider<FoodBloc>.value(value: foodBloc)],
-        child: TestHomePage(delegate: delegate),
+        child: ChangeNotifierProvider(
+          create: (context) => sensitivityService,
+          child: TestHomePage(delegate: delegate),
+        ),
       );
 
       await tester.pumpWidget(homepage);
@@ -135,7 +148,10 @@ void main() {
 
       final homepage = MultiBlocProvider(
         providers: [BlocProvider<FoodBloc>.value(value: foodBloc)],
-        child: TestHomePage(delegate: delegate),
+        child: ChangeNotifierProvider(
+          create: (context) => sensitivityService,
+          child: TestHomePage(delegate: delegate),
+        ),
       );
 
       await tester.pumpWidget(homepage);
@@ -204,7 +220,7 @@ void main() {
 
       expect(find.text(message), findsOneWidget);
     });
-  }, skip: true);
+  });
 }
 
 class TestHomePage extends StatelessWidget {
