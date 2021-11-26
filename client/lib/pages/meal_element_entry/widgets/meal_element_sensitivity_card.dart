@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
 
 import '../../../models/sensitivity/sensitivity.dart';
 import '../../../models/sensitivity/sensitivity_level.dart';
@@ -20,24 +21,18 @@ class MealElementSensitivityCard extends StatelessWidget {
       builder: (context, snapshot) {
         final sensitivity = snapshot.data;
         late final String _label;
-        switch (sensitivity?.level) {
-          case SensitivityLevel.none:
-            _label = 'No sensitivity';
-            break;
-          case SensitivityLevel.mild:
-            _label = 'Mild sensitivity';
-            break;
-          case SensitivityLevel.moderate:
-            _label = 'Moderate sensitivity';
-            break;
-          case SensitivityLevel.severe:
-            _label = 'Severe sensitivity';
-            break;
-          case SensitivityLevel.unknown:
-            _label = 'Severe sensitivity';
-            break;
-          default:
-            _label = '';
+        if (sensitivity?.level == SensitivityLevel.none) {
+          _label = 'No sensitivity';
+        } else if (sensitivity?.level == SensitivityLevel.mild) {
+          _label = 'Mild sensitivity';
+        } else if (sensitivity?.level == SensitivityLevel.moderate) {
+          _label = 'Moderate sensitivity';
+        } else if (sensitivity?.level == SensitivityLevel.severe) {
+          _label = 'Severe sensitivity';
+        } else if (sensitivity == Sensitivity(level: SensitivityLevel.unknown, source: SensitivitySource.user)) {
+          _label = 'Unknown sensitivity';
+        } else {
+          _label = 'Add to Pantry';
         }
 
         return PushCard(
