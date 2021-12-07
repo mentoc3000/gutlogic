@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:built_collection/src/list.dart';
 import 'package:gutlogic/blocs/bloc_helpers.dart';
-import 'package:gutlogic/blocs/food/food.dart';
+import 'package:gutlogic/blocs/food_search/food_search.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food/food.dart';
@@ -35,12 +35,12 @@ void main() {
     });
 
     test('initial state', () {
-      expect(FoodBloc(foodService: foodService).state, FoodsLoading());
+      expect(FoodSearchBloc(foodService: foodService).state, FoodSearchLoading());
     });
 
-    blocTest<FoodBloc, FoodState>(
+    blocTest<FoodSearchBloc, FoodSearchState>(
       'creates custom food',
-      build: () => FoodBloc(foodService: foodService),
+      build: () => FoodSearchBloc(foodService: foodService),
       act: (bloc) async => bloc.add(const CreateCustomFood('new food name')),
       verify: (bloc) async {
         verifyNamedParameter(foodService.add, 'name', 'new food name');
@@ -48,9 +48,9 @@ void main() {
       },
     );
 
-    blocTest<FoodBloc, FoodState>(
+    blocTest<FoodSearchBloc, FoodSearchState>(
       'deletes custom food',
-      build: () => FoodBloc(foodService: foodService),
+      build: () => FoodSearchBloc(foodService: foodService),
       act: (bloc) async => bloc.add(DeleteCustomFood(bread)),
       verify: (bloc) async {
         verify(foodService.delete(bread)).called(1);
@@ -58,32 +58,32 @@ void main() {
       },
     );
 
-    blocTest<FoodBloc, FoodState>(
+    blocTest<FoodSearchBloc, FoodSearchState>(
       'streams queried foods',
-      build: () => FoodBloc(foodService: foodService),
+      build: () => FoodSearchBloc(foodService: foodService),
       act: (bloc) async => bloc.add(const StreamFoodQuery('B')),
       wait: debounceWaitDuration,
-      expect: () => [FoodsLoading(), FoodsLoaded(query: 'B', items: bResults)],
+      expect: () => [FoodSearchLoading(), FoodSearchLoaded(query: 'B', items: bResults)],
       verify: (bloc) async {
         verify(foodService.streamQuery('B')).called(1);
         verify(analyticsService.logEvent('food_search')).called(1);
       },
     );
 
-    blocTest<FoodBloc, FoodState>(
+    blocTest<FoodSearchBloc, FoodSearchState>(
       'updates results when one source emits event',
       build: () {
         when(foodService.streamQuery('B')).thenAnswer((i) => Stream.fromIterable([bResults, brResults]));
-        return FoodBloc(foodService: foodService);
+        return FoodSearchBloc(foodService: foodService);
       },
       act: (bloc) async {
         bloc.add(const StreamFoodQuery('B'));
       },
       wait: debounceWaitDuration,
       expect: () => [
-        FoodsLoading(),
-        FoodsLoaded(query: 'B', items: bResults),
-        FoodsLoaded(query: 'B', items: brResults),
+        FoodSearchLoading(),
+        FoodSearchLoaded(query: 'B', items: bResults),
+        FoodSearchLoaded(query: 'B', items: brResults),
       ],
       verify: (bloc) async {
         verify(foodService.streamQuery('B')).called(1);
@@ -92,7 +92,7 @@ void main() {
     );
 
     test('errors are recorded', () {
-      expect(FoodError(message: '') is ErrorRecorder, true);
+      expect(FoodSearchError(message: '') is ErrorRecorder, true);
     });
   });
 }

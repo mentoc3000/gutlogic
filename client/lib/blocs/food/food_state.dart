@@ -1,46 +1,29 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/food/food.dart';
 import '../../util/error_report.dart';
 import '../../util/exception_messages.dart';
 import '../bloc_helpers.dart';
-import '../searchable/searchable_state.dart';
 
 abstract class FoodState extends Equatable {
   const FoodState();
 
   @override
   List<Object?> get props => [];
+
+  @override
+  bool get stringify => true;
 }
 
-class FoodsLoading extends FoodState with SearchableLoading {}
+class FoodLoading extends FoodState {}
 
-mixin Query {
-  String get query;
-}
+class FoodLoaded extends FoodState {
+  final Food food;
 
-class NoFoodsFound extends FoodState with Query {
-  @override
-  final String query;
-
-  NoFoodsFound({required this.query});
+  FoodLoaded({required this.food});
 
   @override
-  List<Object?> get props => [query];
-}
-
-class FoodsLoaded extends FoodState with Query, SearchableLoaded {
-  @override
-  final String query;
-
-  @override
-  final BuiltList<Food> items;
-
-  FoodsLoaded({required this.query, required this.items});
-
-  @override
-  List<Object?> get props => [query, items];
+  List<Object?> get props => [food];
 }
 
 class FoodError extends FoodState with ErrorState, ErrorRecorder {

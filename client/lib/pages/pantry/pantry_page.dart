@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/food/food_bloc.dart';
+import '../../blocs/food_search/food_search_bloc.dart';
 import '../../blocs/pantry/pantry.dart';
 import '../../blocs/pantry_filter/pantry_filter.dart';
 import '../../blocs/pantry_sort/pantry_sort.dart';
@@ -39,7 +39,7 @@ class PantryPage extends StatelessWidget {
   }
 
   void showFoodSearch(BuildContext context) {
-    final foodBloc = BlocProvider.of<FoodBloc>(context);
+    final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
 
     showSearch(
       context: context,

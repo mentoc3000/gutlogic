@@ -1,0 +1,712 @@
+[
+    {
+        "foodRefs": [
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a24i0asarijf6nbnhkbbrbgy91bw",
+                "name": "Manderin Orange"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a4cpj4kba6a6tnb09wy09bzmseur",
+                "name": "Persimmon"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a5jyw74bd45tgfazfags0akmsjlv",
+                "name": "Grapefruit"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a9ua70bboyd4rebvrdwb0benu8pn",
+                "name": "Dried Coconut"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aa33st8bj36tz2b6qb1aobm49r19",
+                "name": "Plum"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_al3e7s2a1lm4i6bga7o0abp399zg",
+                "name": "Raspberry"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_an1dqoib8xj3tyb3pr7c0abi4rbw",
+                "name": "Mango"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_anhgglnb5bls9sal69fgvayy4pz7",
+                "name": "Nectarine"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aom4czfarp4wsxaeshkohaig1ou5",
+                "name": "Watermelon"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aybp22baeccp87bw6pirta5ul8bc",
+                "name": "Lychee"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b0bnl8oayiqhs2at63ifxbm6i3o3",
+                "name": "Navel Orange"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b2xge7wbefa8agb43pk4mbgqilt2",
+                "name": "Honeydew"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b43po6ubmv934gb4dfd1kaic8fxa",
+                "name": "Pomegranate"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b4s2ibkbrrucmbabbaxhfau8ay42",
+                "name": "Strawberry"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b5maw38amr54vpat8d5vhbgmqfxn",
+                "name": "Pineapple"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b6psjgwa9q7g2bagbja2qa9bdu41",
+                "name": "Yellow Peach"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b6uht2mb142pb2aqz5cwkavqmb3m",
+                "name": "Clingstone Peach"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b8pgy4cbnid3sfawqjg92a63pq85",
+                "name": "Peach"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bd5ldx7afzcrgyafpy532axk65p2",
+                "name": "Durian"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bglm6vxahuauteb0n6ynfbg9eryu",
+                "name": "Lemon Juice"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_birl02fapy1ae8aywe9qmbsew3d1",
+                "name": "Dried Apricot"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_biv9aofbb2c93xapbup7nbp1wgf5",
+                "name": "Dried Pear"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bncple4a2uagu1b4hov92budz2vs",
+                "name": "Grapes"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bpi6nyjanaz6y3bnozq4jbtf5slb",
+                "name": "Fig"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bq6stkiaxkwhxia9q4v7wanjnew0",
+                "name": "Pear"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bqj114aab4xnl6b6j3dt0bi4sznd",
+                "name": "Kiwi"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bqw8b5famg8hehazz1pb8abvk2bt",
+                "name": "Rambutan"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_by36al7bk75fmua8mvur5a750hjo",
+                "name": "Prunes"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bn7zicravp7kdrb8h9knhadt6kei",
+                "name": "Orange Juice"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a1gb9ubb72c7snbuxr3weagwv0dd",
+                "name": "Apple"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ahpid76by0of7kau7y8jqbw3zofy",
+                "name": "Blackberry"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b0yuze4b1g3afpanijno5abtiu28",
+                "name": "Avocado"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b2eupkrbr3b81waz5nxitbdzdzde",
+                "name": "Canteloupe"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bgkl0cuasoeomtbolalmcauhha54",
+                "name": "Blueberry"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bho2lf2b0mb8uea94o2jcagdd26v",
+                "name": "Starfruit"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bjsfxtcaidvmhaa3afrbna43q3hu",
+                "name": "Banan"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bv3hog1bd5qa4oafi7lb3bjz8i92",
+                "name": "Cherries"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bvx5yziae3dkjob1pzayhav2od1q",
+                "name": "Boysenberry"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bxjhe96a3l9rwkbwnlrn7a4t11h2",
+                "name": "Apricot"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ai7w4okaoeknd5b5j9o66bm6nu10",
+                "name": "Apple Juice"
+            }
+        ],
+        "name": "Fruits"
+    },
+    {
+        "foodRefs": [
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a0d1h1cbporq98adlzq8tadghm2a",
+                "name": "Quinoa Pasta"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a0v5s62b5xwjn7bwx4rt5ahga1zo",
+                "name": "Wheat Bran"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a0w916xb0gf9ssbfuq20aayvh9tf",
+                "name": "Naan"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a3cjp5kafvbygsbq6aotmaukolie",
+                "name": "Wholegrain Bread"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a3g7g0kb4xvknbbdl91t8a19a6ci",
+                "name": "Basmati Rice"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a7b184wacucsr3aphsmiaaqu3lao",
+                "name": "Dark Rye Bread"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a8hs60uayl5icia1qe8qoba1kwp8",
+                "name": "Wheat Pasta"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ab6prz9aabij22b7vfkpoa9avqqv",
+                "name": "Spelt Bread"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_afll5kaalk8ti2bpw12n6bnucdth",
+                "name": "Oat Bran"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aj8qyl6ap2bot8b2tomgkbsf8c60",
+                "name": "Corn Flakes"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_akjf74ibll2id8aqb8xbha4t4axl",
+                "name": "Oats"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_apfkb38arv8inbbxphfutad9m9fm",
+                "name": "Multigrain Wheat Bread"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aro09r9avsklizbsberuoaegj0uh",
+                "name": "Brown Rice"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ath4mfgbrn9z6gaijwn1wb2pf4oq",
+                "name": "Couscous"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_atk2hx2a6ptphka9npfssb25wl7v",
+                "name": "Muesli"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ayfve5obrs9lz2a4wd0qva0duk4w",
+                "name": "Pumpernickel"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b05sp8gagykqhgb4uo2jhbsbfftc",
+                "name": "Polenta"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b28c1jgahefvdvbxhjosqadf300h",
+                "name": "Gluten Free Bread"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bafr0faak1gt25a6o0lljbnrw4a2",
+                "name": "Wholemeal Bread"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bkwbi4gbu7k75ha7ad8eralgwvlk",
+                "name": "Rice Noodles"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bpumdjzb5rtqaeabb0kbgbcgr4t9",
+                "name": "White Rice"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_brmmsyyaw5o9p2amxw53ba3gp0uk",
+                "name": "Rye Bread"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_brx2zamapnrhi0a8t5aanbeo8uyj",
+                "name": "Gnocchi"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bubvqpia8mbzkdaiqx5wjan275zi",
+                "name": "Gluten Free Pasta"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bugz9egbw8io77aa650wabxoqdks",
+                "name": "Light Rye Sourdough Bread"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bwj0ujvbsgrpnoaifz0edandszvg",
+                "name": "White Bread"
+            }
+        ],
+        "name": "Grains"
+    },
+    {
+        "foodRefs": [
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aft8y4gab0fvs5bcgjac6boztho3",
+                "name": "Peanut"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_at8u6lsaw8dehkbv3dm2za4k83m7",
+                "name": "Split Peas"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bg13k5uafva4jta78xnjcaqkli85",
+                "name": "Green Lentils"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bh0xrcsbwy52d9a4ugv9bam51wnv",
+                "name": "Red Kidney Bean"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bx3fkcubyl2t7ha8jfdm5anoirlx",
+                "name": "Soybeans"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_byrqdxub7tpxx1bgsmaghbk3ix0x",
+                "name": "Red Lentils"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a63lcoybzox4krbbrj8eba9g8cz5",
+                "name": "Chickpeas, canned"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aa3vawdabgm9zmapkfl78bk049g2",
+                "name": "Cashew"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_baux5rqbkto336asd7w3lbbi1koo",
+                "name": "Chickpeas, boiled"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bq4d2wras281i0br37nrnaglo3yc",
+                "name": "Almond"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bqv5h0nb5eu3aobinvwzjaj5mt0a",
+                "name": "Borlotti Beans"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_br66stnb5yfn4aasfv5j7amppvi6",
+                "name": "Lima Bean"
+            }
+        ],
+        "name": "Proteins"
+    },
+    {
+        "foodRefs": [
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a27jevnb06c1m9ax7k41xbbcwcuo",
+                "name": "Leek"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a30b0hpbvavginafe0tocbf6ymje",
+                "name": "Cherry Tomato"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a4sdbkob8ixokpb07a42dbt3typw",
+                "name": "Fennel"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a62ic8jbisg999a11qxfxaf5ibav",
+                "name": "Endive"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a6g98mqatzj7vca6ms3bnbzqxf3s",
+                "name": "Red Chili"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a6k79rrahp8fe2b26zussa3wtkqh",
+                "name": "Tomato"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a7d8j1ma2msbdlbqllxhfacln7y6",
+                "name": "Rhubarb"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a8g63g7ak6bnmvbu7agxibp4a0dy",
+                "name": "Green Capsicum"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_a8l38voaf1algubwcsji2a8z2yh3",
+                "name": "Bean Sprout"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aahw0jha9f8337ajbopx9aec6z7i",
+                "name": "Broccoli"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aauwsy2b30wim3a7jsdwfbbfkyuu",
+                "name": "Celeriac"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ab8jymba5i5xv3apgymg7a90bxb5",
+                "name": "Roma Tomato"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_abiw5baauresjmb6xpap2bg3otzu",
+                "name": "Potato"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ac9n68caswlpggbp7727varlyjk5",
+                "name": "Eggplant"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aceucvpau4a8v6atkx5eabxyoqdn",
+                "name": "Green Beans"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_admr9qdb3d66y9blt7afaazt0dbq",
+                "name": "Parsnip"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_advhqk1a09o2noblosrg6a4z10xv",
+                "name": "Iceberg Lettuce"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_afb4o8kb767k0iapchxupaifxk1z",
+                "name": "Cabbage"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_afr1xalbanh8elb1szv1nakwcj0o",
+                "name": "Brown Onion"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ai215e5b85pdh5ajd4aafa3w2zm8",
+                "name": "Carrot"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_ampdt7za0sr3pob8c1e0wb1uanyw",
+                "name": "Cos Lettuce"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aneqha3aarf9vmawbdwibaf8jnus",
+                "name": "Artichoke Heart"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aoceuc6bshdej1bbsdammbnj6l6o",
+                "name": "Spinach"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aqdc0pjbbr7wddbvgrka4bihwsm7",
+                "name": "Savoy Cabbage"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_au2sbdxab6gazqbg40zk8alrx2dp",
+                "name": "Water Chestnut"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_avlwv78af3cmk9akryrzjbp5sm4g",
+                "name": "Haricot Beans"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_avpihljbuwpd8ibbmahcabaros5s",
+                "name": "Zucchini"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_avtcmx6bgjv1jvay6s6stan8dnyp",
+                "name": "Garlic"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_axypy6pakiktpcb6151czakqj1sd",
+                "name": "Snow Peas"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_axypy6pakiktpcb6151czakqj1sd",
+                "name": "Sugar Snap Peas"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_aylvcuubuoxe1nawqrmnjbqjplem",
+                "name": "Tamarillo"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_azzxfccb55c06lalc8vfobrxispc",
+                "name": "Okra"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b18ctxdbw2ktnpbejotkwbnalyrj",
+                "name": "Wasabi"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b18l5bgbk88v6zawje5rybd5ngk1",
+                "name": "Sun Dried Tomato"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b1a90x2by6m8pnbsdfxnmascz2tc",
+                "name": "Squash"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b54ahckarp9qwwak6d1gobrmfxfd",
+                "name": "Fennel Leaves"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_b7bgzddbqq26mia27xpv7acn083m",
+                "name": "Asparagus"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_baga212bywb6n2as0ylgkaf8fcok",
+                "name": "Butternut Squash"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bf5fxtkbc9alwoajuvsi7amonr5w",
+                "name": "Butter Lettuce"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bffeoksbyyur8ja4da73ub2xs57g",
+                "name": "Celery"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bi2ki2xb5zmmvbaiwf7ztbgktzp6",
+                "name": "Ginger"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_binrtnib8lnqofait7t9gacuadu0",
+                "name": "Sweet Potato"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bkr6xbxbvl7pgua0vy4ibblf93qq",
+                "name": "Brussel Sprouts"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bld46lwb614pf9awsxki0b3pbq2n",
+                "name": "Sweet Corn"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bmrvi4ob4binw9a5m7l07amlfcoy",
+                "name": "Onion"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bmv8z27b1o25vcbu41ooyawd2zj4",
+                "name": "Onion Powder"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bn5prizbgsrr0tact46ataaj7b5p",
+                "name": "Seaweed"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bofj0lnbbcv11zblx10sob7clgvp",
+                "name": "Beetroot"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bq7w3usaxapk30b8utp6lasy79lv",
+                "name": "Bok Choy"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_brzhn72aca36jrbeufka9b1p6fic",
+                "name": "Jerusalem Artichoke"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bs6xkukbtd85e7b2lh5zfazpe45y",
+                "name": "Radish"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_btg1uzjak79lawbirsitkaeai60l",
+                "name": "Chives"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bu2ver7a5f52dfap8q9f0bn085qb",
+                "name": "Shallot"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_buj0e74bxco8n0betbsnzayddt6a",
+                "name": "Turnip"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_buqfaxubzh6hi5asev8a5aj9sr71",
+                "name": "Cauliflower"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bv2gevdbd1orbiarnp1vfaez1r85",
+                "name": "Green Chili"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bv7aggjag9rxsaatklqzobca5fzn",
+                "name": "Cucumber"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bvlose6arfl26ra396sjrb7hetqh",
+                "name": "Button Mushroom"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bvlose6arfl26ra396sjrb7hetqh",
+                "name": "Mushroom"
+            },
+            {
+                "$": "EdamamFoodReference",
+                "id": "food_bw9ie6ib7oob4wbvmip3sbekyqd2",
+                "name": "Swede"
+            }
+        ],
+        "name": "Vegetables"
+    }
+]

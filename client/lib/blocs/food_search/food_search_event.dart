@@ -8,14 +8,14 @@ import '../../util/error_report.dart';
 import '../bloc_helpers.dart';
 import '../searchable/searchable_event.dart';
 
-abstract class FoodEvent extends Equatable {
-  const FoodEvent();
+abstract class FoodSearchEvent extends Equatable {
+  const FoodSearchEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class StreamFoodQuery extends FoodEvent with FetchQuery, DebouncedEvent implements Tracked {
+class StreamFoodQuery extends FoodSearchEvent with FetchQuery, DebouncedEvent implements Tracked {
   @override
   final String query;
 
@@ -25,7 +25,7 @@ class StreamFoodQuery extends FoodEvent with FetchQuery, DebouncedEvent implemen
   void track(AnalyticsService analytics) => analytics.logEvent('food_search');
 }
 
-class CreateCustomFood extends FoodEvent implements Tracked {
+class CreateCustomFood extends FoodSearchEvent implements Tracked {
   final String foodName;
 
   const CreateCustomFood(this.foodName);
@@ -34,7 +34,7 @@ class CreateCustomFood extends FoodEvent implements Tracked {
   void track(AnalyticsService analytics) => analytics.logEvent('create_custom_food');
 }
 
-class DeleteCustomFood extends FoodEvent implements Tracked {
+class DeleteCustomFood extends FoodSearchEvent implements Tracked {
   final CustomFood customFood;
 
   const DeleteCustomFood(this.customFood);
@@ -43,7 +43,7 @@ class DeleteCustomFood extends FoodEvent implements Tracked {
   void track(AnalyticsService analytics) => analytics.logEvent('delete_custom_food');
 }
 
-class LoadFoods extends FoodEvent {
+class LoadFoods extends FoodSearchEvent {
   final String query;
   final BuiltList<Food> foods;
 
@@ -53,12 +53,12 @@ class LoadFoods extends FoodEvent {
   List<Object?> get props => [query, foods];
 }
 
-class ThrowFoodError extends FoodEvent with ErrorEvent {
+class ThrowFoodSearchError extends FoodSearchEvent with ErrorEvent {
   @override
   final ErrorReport report;
 
-  const ThrowFoodError({required this.report});
+  const ThrowFoodSearchError({required this.report});
 
-  factory ThrowFoodError.fromError({required dynamic error, required StackTrace trace}) =>
-      ThrowFoodError(report: ErrorReport(error: error, trace: trace));
+  factory ThrowFoodSearchError.fromError({required dynamic error, required StackTrace trace}) =>
+      ThrowFoodSearchError(report: ErrorReport(error: error, trace: trace));
 }

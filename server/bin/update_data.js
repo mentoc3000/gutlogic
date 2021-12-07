@@ -5,6 +5,7 @@ const { initializeApp, applicationDefault, cert } = require('firebase-admin/lib/
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/lib/firestore');
 
 const foodIrritantData = require('../data/irritants.json');
+const foodGroupsData = require('../data/food_groups.json');
 
 const maxBatchSize = 500;
 
@@ -14,6 +15,7 @@ initializeApp({
 
 const db = getFirestore();
 const foodIrritantsCollection = db.collection('food_irritants');
+const foodGroupsCollection = db.collection('food_groups');
 
 async function deleteCollection(collectionRef, batchSize) {
   const query = collectionRef.orderBy('name').limit(batchSize);
@@ -68,7 +70,9 @@ async function addData(collectionRef, data) {
 (async () => {
   // Delete old data
   await deleteCollection(foodIrritantsCollection, maxBatchSize);
+  await deleteCollection(foodGroupsCollection, maxBatchSize);
 
   // Add new data
   await addData(foodIrritantsCollection, foodIrritantData);
+  await addData(foodGroupsCollection, foodGroupsData);
 })();

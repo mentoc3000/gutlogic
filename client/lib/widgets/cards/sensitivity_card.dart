@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
-import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
 
-import '../../../models/sensitivity/sensitivity.dart';
-import '../../../models/sensitivity/sensitivity_level.dart';
-import '../../../style/gl_text_style.dart';
-import '../../../widgets/cards/push_card.dart';
-import '../../../widgets/sensitivity_indicator.dart';
+import '../../models/sensitivity/sensitivity.dart';
+import '../../models/sensitivity/sensitivity_level.dart';
+import '../../models/sensitivity/sensitivity_source.dart';
+import '../../style/gl_text_style.dart';
+import '../sensitivity_indicator.dart';
+import 'push_card.dart';
 
-class MealElementSensitivityCard extends StatelessWidget {
+class SensitivityCard extends StatelessWidget {
   final Future<Sensitivity> sensitivity;
   final VoidCallback? onTap;
 
-  const MealElementSensitivityCard({Key? key, required this.sensitivity, this.onTap}) : super(key: key);
+  const SensitivityCard({Key? key, required this.sensitivity, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

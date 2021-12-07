@@ -10,6 +10,7 @@ class GLIcons {
   static const arrowBack = Icons.arrow_back;
   static const arrowRight = Icons.keyboard_arrow_right;
   static const bowelMovement = MdiIcons.toilet;
+  static const browse = Icons.manage_search;
   static const clear = Icons.clear;
   static const dataSources = Icons.list;
   static const delete = Icons.delete;

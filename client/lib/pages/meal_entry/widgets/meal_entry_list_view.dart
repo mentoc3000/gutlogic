@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../blocs/food/food.dart';
+import '../../../blocs/food_search/food_search.dart';
 import '../../../blocs/meal_entry/meal_entry.dart';
 import '../../../models/diary_entry/meal_entry.dart';
 import '../../../widgets/cards/datetime_card.dart';
@@ -16,7 +16,7 @@ class MealEntryListView extends StatelessWidget {
   const MealEntryListView({Key? key, required this.mealEntry, required this.notesController}) : super(key: key);
 
   void addMealElement(BuildContext context) {
-    final foodBloc = BlocProvider.of<FoodBloc>(context);
+    final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
     final mealEntryBloc = context.read<MealEntryBloc>();
 
     showSearch(

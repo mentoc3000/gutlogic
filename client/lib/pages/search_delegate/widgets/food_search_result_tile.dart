@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../blocs/food/food.dart';
+import '../../../blocs/food_search/food_search.dart';
 import '../../../models/food/custom_food.dart';
 import '../../../models/food/food.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
@@ -28,7 +28,7 @@ class FoodSearchResultTile extends StatelessWidget {
       trailing: SensitivityIndicator(foodSensitivity),
       onTap: onTap,
       onDelete: (food) {
-        if (food is CustomFood) context.read<FoodBloc>().add(DeleteCustomFood(food));
+        if (food is CustomFood) context.read<FoodSearchBloc>().add(DeleteCustomFood(food));
       },
       isCustom: food is CustomFood,
     );

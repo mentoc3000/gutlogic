@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gutlogic/blocs/food/food.dart';
+import 'package:gutlogic/blocs/food_search/food_search.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food/food.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
@@ -18,18 +18,18 @@ import 'package:gutlogic/widgets/gl_icons.dart';
 import 'package:gutlogic/widgets/gl_scaffold.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
+class MockFoodBloc extends MockBloc<FoodSearchEvent, FoodSearchState> implements FoodSearchBloc {}
 
 class MockSensitivityService extends Mock implements SensitivityService {}
 
 void main() {
-  late FoodBloc foodBloc;
+  late FoodSearchBloc foodBloc;
   late SensitivityService sensitivityService;
   late CustomFood food;
 
   setUp(() {
     foodBloc = MockFoodBloc();
-    whenListen(foodBloc, const Stream.empty(), initialState: FoodsLoading());
+    whenListen(foodBloc, const Stream.empty(), initialState: FoodSearchLoading());
     food = CustomFood(id: '1', name: 'Fruit Cake');
 
     sensitivityService = MockSensitivityService();
@@ -46,7 +46,7 @@ void main() {
       final selectedResults = <Food>[];
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodBloc>.value(value: foodBloc)],
+        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
         child: TestHomePage(
           delegate: delegate,
           results: selectedResults,
@@ -77,11 +77,11 @@ void main() {
     });
 
     testWidgets('displays message when no results are found', (WidgetTester tester) async {
-      whenListen(foodBloc, Stream.value(NoFoodsFound(query: '')), initialState: FoodsLoading());
+      whenListen(foodBloc, Stream.value(NoFoodsFound(query: '')), initialState: FoodSearchLoading());
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodBloc>.value(value: foodBloc)],
+        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
         child: TestHomePage(delegate: delegate),
       );
 
@@ -103,14 +103,14 @@ void main() {
     testWidgets('shows search results', (WidgetTester tester) async {
       whenListen(
         foodBloc,
-        Stream.value(FoodsLoaded(query: '', items: [food].build())),
-        initialState: FoodsLoading(),
+        Stream.value(FoodSearchLoaded(query: '', items: [food].build())),
+        initialState: FoodSearchLoading(),
       );
 
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodBloc>.value(value: foodBloc)],
+        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
           child: TestHomePage(delegate: delegate),
@@ -141,13 +141,13 @@ void main() {
     testWidgets('clears search', (WidgetTester tester) async {
       whenListen(
         foodBloc,
-        Stream.value(FoodsLoaded(query: '', items: [food].build())),
-        initialState: FoodsLoading(),
+        Stream.value(FoodSearchLoaded(query: '', items: [food].build())),
+        initialState: FoodSearchLoading(),
       );
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodBloc>.value(value: foodBloc)],
+        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
           child: TestHomePage(delegate: delegate),
@@ -176,11 +176,11 @@ void main() {
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
-      whenListen(foodBloc, Stream.fromIterable([FoodsLoading()]));
+      whenListen(foodBloc, Stream.fromIterable([FoodSearchLoading()]));
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodBloc>.value(value: foodBloc)],
+        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
         child: TestHomePage(delegate: delegate),
       );
 
@@ -200,11 +200,11 @@ void main() {
 
     testWidgets('shows error', (WidgetTester tester) async {
       const message = 'Oh no! Something TERRIBLE happened!';
-      whenListen(foodBloc, Stream.value(FoodError(message: message)), initialState: FoodsLoading());
+      whenListen(foodBloc, Stream.value(FoodSearchError(message: message)), initialState: FoodSearchLoading());
       final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodBloc>.value(value: foodBloc)],
+        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
         child: TestHomePage(delegate: delegate),
       );
 

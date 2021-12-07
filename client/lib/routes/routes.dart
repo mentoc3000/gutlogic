@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/diary_entry/bowel_movement_entry.dart';
 import '../models/diary_entry/meal_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
+import '../models/food_group.dart';
 import '../models/food_reference/food_reference.dart';
 import '../models/meal_element.dart';
 import '../models/pantry/pantry_entry.dart';
@@ -12,6 +13,8 @@ import '../pages/account/account_page.dart';
 import '../pages/bowel_movement_entry/bowel_movement_entry_page.dart';
 import '../pages/change_password/change_password_page.dart';
 import '../pages/consent/consent_page.dart';
+import '../pages/food/food_page.dart';
+import '../pages/food_group/food_group_page.dart';
 import '../pages/landing/landing_page.dart';
 import '../pages/login/login_page.dart';
 import '../pages/main_tabs.dart';
@@ -165,5 +168,13 @@ class Routes {
 
   Route createPantryEntryPageRouteForFood(FoodReference foodReference) {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forFood(foodReference));
+  }
+
+  Route createFoodPageRoute(FoodReference foodReference) {
+    return MaterialPageRoute(builder: (context) => FoodPage.forFood(foodReference));
+  }
+
+  Route createFoodGroupRoute(FoodGroup foodGroup) {
+    return MaterialPageRoute(builder: (context) => FoodGroupPage(foodGroup: foodGroup));
   }
 }

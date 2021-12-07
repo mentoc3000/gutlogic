@@ -1,43 +1,43 @@
 import 'dart:async';
-import 'package:test/test.dart';
-import 'package:mockito/mockito.dart' as mockito;
-import 'package:mockito/annotations.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:logger/logger.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gutlogic/blocs/bowel_movement_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
-import 'package:gutlogic/blocs/food/food.dart';
+import 'package:gutlogic/blocs/food_search/food_search.dart';
+import 'package:gutlogic/blocs/gut_logic_bloc_observer.dart';
 import 'package:gutlogic/blocs/meal_element/meal_element.dart';
 import 'package:gutlogic/blocs/meal_entry/meal_entry.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
+import 'package:gutlogic/blocs/pantry_entry/pantry_entry.dart';
 import 'package:gutlogic/blocs/pantry_filter/pantry_filter.dart';
 import 'package:gutlogic/blocs/pantry_sort/pantry_sort.dart';
-import 'package:gutlogic/blocs/pantry_entry/pantry_entry.dart';
 import 'package:gutlogic/blocs/symptom_entry/symptom_entry.dart';
 import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
-import 'package:gutlogic/blocs/gut_logic_bloc_observer.dart';
+import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food/food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/food_reference/food_reference.dart';
-import 'package:gutlogic/models/user_food_details_api.dart';
-import 'package:gutlogic/models/pantry/pantry_entry.dart';
-import 'package:gutlogic/models/pantry/pantry_sort.dart';
-import 'package:gutlogic/models/pantry/pantry_filter.dart';
 import 'package:gutlogic/models/meal_element.dart';
-import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_entry.dart';
+import 'package:gutlogic/models/pantry/pantry_filter.dart';
+import 'package:gutlogic/models/pantry/pantry_sort.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
 import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
+import 'package:gutlogic/models/user_food_details_api.dart';
 import 'package:gutlogic/resources/firebase/analytics_service.dart';
 import 'package:gutlogic/resources/firebase/crashlytics_service.dart';
+import 'package:logger/logger.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart' as mockito;
+import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 import 'flutter_test_config.mocks.dart';
 
@@ -45,7 +45,7 @@ class BowelMovementEntryEventFake extends Fake implements BowelMovementEntryEven
 
 class DiaryEventFake extends Fake implements DiaryEvent {}
 
-class FoodEventFake extends Fake implements FoodEvent {}
+class FoodEventFake extends Fake implements FoodSearchEvent {}
 
 class MealElementEventFake extends Fake implements MealElementEvent {}
 
@@ -89,8 +89,8 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     registerFallbackValue<DiaryEvent>(DiaryEventFake());
     registerFallbackValue<DiaryState>(DiaryLoading());
 
-    registerFallbackValue<FoodEvent>(FoodEventFake());
-    registerFallbackValue<FoodState>(FoodsLoading());
+    registerFallbackValue<FoodSearchEvent>(FoodEventFake());
+    registerFallbackValue<FoodSearchState>(FoodSearchLoading());
 
     registerFallbackValue<Food>(EdamamFood(id: 'id', name: 'name'));
     registerFallbackValue<EdamamFood>(EdamamFood(id: 'id', name: 'name'));

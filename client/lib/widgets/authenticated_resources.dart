@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import '../blocs/authentication/authentication.dart';
-import '../blocs/food/food_bloc.dart';
+import '../blocs/food_search/food_search_bloc.dart';
 import '../blocs/symptom_type/symptom_type_bloc.dart';
 import '../resources/diary_repositories/bowel_movement_entry_repository.dart';
 import '../resources/diary_repositories/diary_repository.dart';
@@ -17,6 +17,7 @@ import '../resources/food/custom_food_repository.dart';
 import '../resources/food/edamam_food_repository.dart';
 import '../resources/food/edamam_service.dart';
 import '../resources/food/food_service.dart';
+import '../resources/food_group_repository.dart';
 import '../resources/irritant_repository.dart';
 import '../resources/pantry_service.dart';
 import '../resources/profile_repository.dart';
@@ -72,6 +73,9 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) {
             return IrritantRepository(firestoreService: context.read<FirestoreService>());
+          }),
+          RepositoryProvider(create: (context) {
+            return FoodGroupsRepository(firestoreService: context.read<FirestoreService>());
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
@@ -131,7 +135,7 @@ class AuthenticatedResources extends StatelessWidget {
         child: MultiBlocProvider(
           providers: [
             // TODO move these into their most tightly nested widget trees
-            BlocProvider(create: (context) => FoodBloc.fromContext(context)),
+            BlocProvider(create: (context) => FoodSearchBloc.fromContext(context)),
             BlocProvider(create: (context) => SymptomTypeBloc.fromContext(context)),
           ],
           child: ChangeNotifierProvider(

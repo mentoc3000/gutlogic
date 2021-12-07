@@ -3,7 +3,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gutlogic/blocs/food/food.dart';
+import 'package:gutlogic/blocs/food_search/food_search.dart';
 import 'package:gutlogic/blocs/meal_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
@@ -23,7 +23,7 @@ import '../mocks/mock_router.dart';
 
 class MockMealEntryBloc extends MockBloc<MealEntryEvent, MealEntryState> implements MealEntryBloc {}
 
-class MockFoodBloc extends MockBloc<FoodEvent, FoodState> implements FoodBloc {}
+class MockFoodBloc extends MockBloc<FoodSearchEvent, FoodSearchState> implements FoodSearchBloc {}
 
 class MockSensitivityService extends Mock implements SensitivityService {}
 
@@ -34,7 +34,7 @@ class MealEntryPageWrapper extends StatelessWidget {
 
 void main() {
   late MealEntryBloc mealEntryBloc;
-  late FoodBloc foodBloc;
+  late FoodSearchBloc foodBloc;
   late SensitivityService sensitivityService;
   late Routes routes;
   late Widget mealEntryPage;
@@ -169,8 +169,8 @@ void main() {
       final foods = [newFood].build();
       whenListen(
         foodBloc,
-        Stream.value(FoodsLoaded(query: '', items: foods)),
-        initialState: FoodsLoading(),
+        Stream.value(FoodSearchLoaded(query: '', items: foods)),
+        initialState: FoodSearchLoading(),
       );
 
       // Show initial mealentry

@@ -5,6 +5,7 @@ import '../resources/firebase/analytics_service.dart';
 import '../util/keys.dart';
 import '../widgets/gl_icons.dart';
 import '../widgets/gl_scaffold.dart';
+import 'browse/browse_page.dart';
 import 'diary/diary_page.dart';
 import 'pantry/pantry_page.dart';
 
@@ -32,6 +33,11 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
       icon: Icon(GLIcons.diary),
     ),
     const Tab(
+      key: Keys.browseTab,
+      text: 'Browse',
+      icon: Icon(GLIcons.browse),
+    ),
+    const Tab(
       key: Keys.pantryTab,
       text: 'Pantry',
       icon: Icon(GLIcons.pantry),
@@ -40,6 +46,7 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
 
   final pages = [
     DiaryPage.provisioned(),
+    const BrowsePage(),
     PantryPage.provisioned(),
   ];
 

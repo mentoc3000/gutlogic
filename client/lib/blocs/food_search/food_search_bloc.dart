@@ -6,25 +6,25 @@ import 'package:pedantic/pedantic.dart';
 
 import '../../resources/food/food_service.dart';
 import '../bloc_helpers.dart';
-import 'food_event.dart';
-import 'food_state.dart';
+import 'food_search_event.dart';
+import 'food_search_state.dart';
 
-class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
+class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> with StreamSubscriber {
   final FoodService foodService;
 
-  FoodBloc({required this.foodService}) : super(FoodsLoading());
+  FoodSearchBloc({required this.foodService}) : super(FoodSearchLoading());
 
-  factory FoodBloc.fromContext(BuildContext context) => FoodBloc(foodService: context.read<FoodService>());
+  factory FoodSearchBloc.fromContext(BuildContext context) => FoodSearchBloc(foodService: context.read<FoodService>());
 
   @override
-  Stream<Transition<FoodEvent, FoodState>> transformEvents(
-    Stream<FoodEvent> events,
-    TransitionFunction<FoodEvent, FoodState> transition,
+  Stream<Transition<FoodSearchEvent, FoodSearchState>> transformEvents(
+    Stream<FoodSearchEvent> events,
+    TransitionFunction<FoodSearchEvent, FoodSearchState> transition,
   ) =>
       super.transformEvents(debounceDebouncedByType(events), transition);
 
   @override
-  Stream<FoodState> mapEventToState(FoodEvent event) async* {
+  Stream<FoodSearchState> mapEventToState(FoodSearchEvent event) async* {
     try {
       if (event is StreamFoodQuery) {
         // Don't create a new stream if the query is the same
@@ -33,13 +33,13 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
         // TODO: remove these loading pages? Or maybe only show them if the fetch takes a long time.
         // https://stackoverflow.com/questions/64885470/can-dart-streams-emit-a-value-if-the-stream-is-not-done-within-a-duration/64978139
         // This should be implemented as a general feature that could be applied to many blocs
-        yield FoodsLoading();
+        yield FoodSearchLoading();
 
         await streamSubscription?.cancel();
 
         streamSubscription = foodService.streamQuery(event.query).listen(
               (foods) => add(LoadFoods(query: event.query, foods: foods)),
-              onError: (error, StackTrace trace) => add(ThrowFoodError.fromError(error: error, trace: trace)),
+              onError: (error, StackTrace trace) => add(ThrowFoodSearchError.fromError(error: error, trace: trace)),
             );
       }
       if (event is LoadFoods) {
@@ -47,7 +47,7 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
         if (foods.isEmpty) {
           yield NoFoodsFound(query: event.query);
         } else {
-          yield FoodsLoaded(query: event.query, items: foods);
+          yield FoodSearchLoaded(query: event.query, items: foods);
         }
       }
       if (event is CreateCustomFood) {
@@ -56,11 +56,11 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> with StreamSubscriber {
       if (event is DeleteCustomFood) {
         unawaited(foodService.delete(event.customFood));
       }
-      if (event is ThrowFoodError) {
-        yield FoodError.fromReport(event.report);
+      if (event is ThrowFoodSearchError) {
+        yield FoodSearchError.fromReport(event.report);
       }
     } catch (error, trace) {
-      yield FoodError.fromError(error: error, trace: trace);
+      yield FoodSearchError.fromError(error: error, trace: trace);
     }
   }
 }

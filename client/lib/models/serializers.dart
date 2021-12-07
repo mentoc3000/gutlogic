@@ -19,6 +19,7 @@ import 'edamam_api/edamam_api_qualifier.dart';
 import 'food/custom_food.dart';
 import 'food/edamam_food.dart';
 import 'food/food.dart';
+import 'food_group.dart';
 import 'food_reference/custom_food_reference.dart';
 import 'food_reference/edamam_food_reference.dart';
 import 'food_reference/food_reference.dart';
@@ -59,6 +60,7 @@ part 'serializers.g.dart';
   EdamamFoodReference,
   Food,
   FoodIrritantsApi,
+  FoodGroup,
   FoodReference,
   Sensitivity,
   MealElement,

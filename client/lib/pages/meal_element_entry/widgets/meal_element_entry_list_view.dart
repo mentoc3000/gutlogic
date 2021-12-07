@@ -8,7 +8,7 @@ import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/cards/food_details_card.dart';
 import '../../../widgets/cards/notes_card.dart';
-import 'meal_element_sensitivity_card.dart';
+import '../../../widgets/cards/sensitivity_card.dart';
 import 'quantity_card.dart';
 
 class MealElementEntryListView extends StatelessWidget {
@@ -45,7 +45,7 @@ class MealElementEntryListView extends StatelessWidget {
         amountController: amountController,
         measureOptions: food?.measures,
       ),
-      MealElementSensitivityCard(
+      SensitivityCard(
         sensitivity: mealElementSensitivity,
         onTap: () => addFoodToPantry(context),
       ),

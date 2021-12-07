@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/food/food.dart';
+import '../../blocs/food_search/food_search.dart';
 import '../../models/food/food.dart';
 import '../../pages/error_page.dart';
 import '../../pages/loading_page.dart';
@@ -14,7 +14,7 @@ import 'widgets/add_food_dialog.dart';
 import 'widgets/food_search_result_tile.dart';
 
 class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
-  final FoodBloc foodBloc;
+  final FoodSearchBloc foodBloc;
   final String noResultsMessage = 'No matches found. Try adding a food!';
 
   FoodSearchDelegate({required this.foodBloc, required void Function(Food) onSelect})
@@ -28,7 +28,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
 
   Widget buildAddFab(BuildContext context) {
     return AddFloatingActionButton(onPressed: () async {
-      final foodBloc = context.read<FoodBloc>();
+      final foodBloc = context.read<FoodSearchBloc>();
 
       final foodName = await showDialog<String>(
         context: context,
@@ -42,14 +42,14 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
     });
   }
 
-  Widget buildList(BuildContext context, FoodBloc foodBloc) {
-    return BlocBuilder<FoodBloc, FoodState>(
+  Widget buildList(BuildContext context, FoodSearchBloc foodBloc) {
+    return BlocBuilder<FoodSearchBloc, FoodSearchState>(
       bloc: foodBloc,
-      builder: (BuildContext context, FoodState state) {
+      builder: (BuildContext context, FoodSearchState state) {
         if (query.isEmpty) {
           return Column(children: []);
         }
-        if (state is FoodsLoaded) {
+        if (state is FoodSearchLoaded) {
           final items = state.items;
           return GLScaffold(
             floatingActionButton: buildAddFab(context),
@@ -81,13 +81,13 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
             ),
           );
         }
-        if (state is FoodsLoading) {
+        if (state is FoodSearchLoading) {
           return GLScaffold(
             floatingActionButton: buildAddFab(context),
             body: LoadingPage(),
           );
         }
-        if (state is FoodError) {
+        if (state is FoodSearchError) {
           return ErrorPage(message: state.message);
         }
         return ErrorPage();
