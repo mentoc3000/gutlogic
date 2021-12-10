@@ -75,8 +75,6 @@ compliance:
     - *pipeline-channel-variable
     # move into the server directory
     - cd server
-    # install alpine deps (ideally this would happen in a custom dockerfile)
-    - apk add --quiet --no-cache openjdk8
     # install the server dependencies
     - npm ci --cache .npm-cache --prefer-offline --log-level error
     # add locally installed bins to the path so we can run firebase-tools
