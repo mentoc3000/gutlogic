@@ -6,13 +6,13 @@ ENV["GOOGLE_AUTH_SUPPRESS_CREDENTIALS_WARNINGS"] = "true"
 lane :get_app_store_connect_api_key do
   ensure_env_vars(
     env_vars: [
-      'APP_STORE_CONNECT_API_KEY'
+      'APP_STORE_CONNECT_API_KEY_CONTENT'
     ]
   ) 
   app_store_connect_api_key(
-    key_id: "WJN68YHT59",
+    key_id: "75HNR98N37",
     issuer_id: "9fd8aa47-a866-4f2d-b5c5-90e44847c4ca",
-    key_content: "#{ENV["APP_STORE_CONNECT_API_KEY"]}".gsub('\n', '\\n'),
+    key_content: "#{ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]}".gsub('\n', '\\n'),
     in_house: false,
   )
 end
