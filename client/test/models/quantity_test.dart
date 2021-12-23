@@ -1,5 +1,5 @@
-import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/measure.dart';
+import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:test/test.dart';
 

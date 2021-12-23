@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
+import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/food_reference/food_reference.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
-import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_entry.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
-import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/resources/irritant_repository.dart';
 import 'package:gutlogic/resources/sensitivity/heuristic_sensitivity_prediction_service.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'heuristic_sensitivity_prediction_service_test.mocks.dart';

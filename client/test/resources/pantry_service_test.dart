@@ -1,11 +1,11 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
-import 'package:gutlogic/models/user_food_details.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
+import 'package:gutlogic/models/user_food_details.dart';
 import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_repository.dart';
 import 'package:gutlogic/resources/user_food_details_repository.dart';

@@ -1,6 +1,6 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/resources/symptom_type_repository.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:test/test.dart';
 
 void main() {

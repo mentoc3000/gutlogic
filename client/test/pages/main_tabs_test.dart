@@ -10,8 +10,8 @@ import 'package:gutlogic/pages/pantry/pantry_page.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:mockito/mockito.dart' as mockito;
+import 'package:mocktail/mocktail.dart';
 
 import '../flutter_test_config.dart';
 import '../util/test_overlay.dart';
@@ -46,38 +46,41 @@ void main() {
 
   group('MainTabs', () {
     testWidgets('starts on diary page', (WidgetTester tester) async {
-      await tester.pumpWidget(homepage);
-      await tester.pumpWidget(homepage);
-      expect(find.byType(DiaryPage), findsOneWidget);
-      expect(find.byType(TabBar), findsOneWidget);
+      await tester.runAsync(() async {
+        await tester.pumpWidget(homepage);
+        expect(find.byType(DiaryPage), findsOneWidget);
+        expect(find.byType(TabBar), findsOneWidget);
+      });
     });
 
     testWidgets('switches between tabs', (WidgetTester tester) async {
-      await tester.pumpWidget(homepage);
-      await tester.pumpWidget(homepage);
+      await tester.runAsync(() async {
+        await tester.pumpWidget(homepage);
+        await tester.pumpWidget(homepage);
 
-      // Start on diary page
-      expect(find.byType(DiaryPage), findsOneWidget);
-      expect(find.byType(PantryPage), findsNothing);
+        // Start on diary page
+        expect(find.byType(DiaryPage), findsOneWidget);
+        expect(find.byType(PantryPage), findsNothing);
 
-      // Switch to pantry page
-      final settingsTab = find.text('Pantry');
-      expect(settingsTab, findsOneWidget);
-      await tester.tap(settingsTab);
-      await tester.pumpAndSettle();
-      expect(find.byType(DiaryPage), findsNothing);
-      expect(find.byType(PantryPage), findsOneWidget);
-      mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
+        // Switch to pantry page
+        final settingsTab = find.text('Pantry');
+        expect(settingsTab, findsOneWidget);
+        await tester.tap(settingsTab);
+        await tester.pumpAndSettle();
+        expect(find.byType(DiaryPage), findsNothing);
+        expect(find.byType(PantryPage), findsOneWidget);
+        mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
 
-      // Switch back to diary page
-      final diaryTab = find.text('Timeline');
-      expect(diaryTab, findsOneWidget);
-      await tester.tap(diaryTab);
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(DiaryPage), findsOneWidget);
-      expect(find.byType(PantryPage), findsNothing);
-      mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
+        // Switch back to diary page
+        final diaryTab = find.text('Timeline');
+        expect(diaryTab, findsOneWidget);
+        await tester.tap(diaryTab);
+        await tester.pump();
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(DiaryPage), findsOneWidget);
+        expect(find.byType(PantryPage), findsNothing);
+        mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
+      });
     });
   });
 }

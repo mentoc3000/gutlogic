@@ -51,7 +51,11 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'does not debounce streaming',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc..add(StreamSymptomEntry(diaryEntry))..add(StreamSymptomEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(StreamSymptomEntry(diaryEntry))
+          ..add(StreamSymptomEntry(diaryEntry));
+      },
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.stream(diaryEntry)).called(2);
@@ -96,8 +100,11 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'does not debounce loading',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async =>
-          bloc..add(LoadSymptomEntry(diaryEntry))..add(LoadSymptomEntry(diaryEntry.rebuild((b) => b.notes = 'asdf'))),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(LoadSymptomEntry(diaryEntry.rebuild((b) => b.notes = 'asdf')));
+      },
       expect: () => [SymptomEntryLoaded(diaryEntry), SymptomEntryLoaded(diaryEntry.rebuild((b) => b.notes = 'asdf'))],
       verify: (bloc) async {
         verifyNever(repository.stream(diaryEntry));
@@ -109,7 +116,11 @@ void main() {
       build: () {
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadSymptomEntry(diaryEntry))..add(DeleteSymptomEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(DeleteSymptomEntry(diaryEntry));
+      },
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.delete(diaryEntry)).called(1);
@@ -120,10 +131,12 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'does not debounce deletion',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(DeleteSymptomEntry(diaryEntry))
-        ..add(DeleteSymptomEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(DeleteSymptomEntry(diaryEntry))
+          ..add(DeleteSymptomEntry(diaryEntry));
+      },
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.delete(diaryEntry)).called(2);
@@ -135,7 +148,11 @@ void main() {
       build: () {
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadSymptomEntry(diaryEntry))..add(UpdateSymptomEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(UpdateSymptomEntry(diaryEntry));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -147,11 +164,13 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'debounces entry updates',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(UpdateSymptomEntry(diaryEntry))
-        ..add(UpdateSymptomEntry(diaryEntry))
-        ..add(UpdateSymptomEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(UpdateSymptomEntry(diaryEntry))
+          ..add(UpdateSymptomEntry(diaryEntry))
+          ..add(UpdateSymptomEntry(diaryEntry));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -164,8 +183,11 @@ void main() {
       build: () {
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async =>
-          bloc..add(LoadSymptomEntry(diaryEntry))..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc())),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc()));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -177,11 +199,13 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'debounces datetime updates',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc()))
-        ..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc()))
-        ..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc())),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc()))
+          ..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc()))
+          ..add(UpdateSymptomEntryDateTime(DateTime.now().toUtc()));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -194,7 +218,11 @@ void main() {
       build: () {
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadSymptomEntry(diaryEntry))..add(const UpdateSymptomEntryNotes('noted')),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(const UpdateSymptomEntryNotes('noted'));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -206,11 +234,13 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'debounces notes updates',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(const UpdateSymptomEntryNotes('noted'))
-        ..add(const UpdateSymptomEntryNotes('note'))
-        ..add(const UpdateSymptomEntryNotes('not')),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(const UpdateSymptomEntryNotes('noted'))
+          ..add(const UpdateSymptomEntryNotes('note'))
+          ..add(const UpdateSymptomEntryNotes('not'));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -223,10 +253,12 @@ void main() {
       build: () {
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(UpdateSymptom(
-            Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat')))),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(UpdateSymptom(
+              Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -238,16 +270,18 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'debounces symptom updates',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(UpdateSymptom(
-            Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
-        ..add(UpdateSymptom(
-            Symptom(severity: Severity.moderate, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
-        ..add(UpdateSymptom(
-            Symptom(severity: Severity.mild, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
-        ..add(UpdateSymptom(
-            Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Skinny')))),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(UpdateSymptom(
+              Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
+          ..add(UpdateSymptom(
+              Symptom(severity: Severity.moderate, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
+          ..add(UpdateSymptom(
+              Symptom(severity: Severity.mild, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Fat'))))
+          ..add(UpdateSymptom(
+              Symptom(severity: Severity.intense, symptomType: SymptomType(id: 'symptomTyp.mild', name: 'Skinny'))));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -263,9 +297,11 @@ void main() {
       build: () {
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Tall'))),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Tall')));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -277,12 +313,14 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'debounces symptom type updates',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Tall')))
-        ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Short')))
-        ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Lean')))
-        ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Bulky'))),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Tall')))
+          ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Short')))
+          ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Lean')))
+          ..add(UpdateSymptomType(SymptomType(id: 'symptomType1', name: 'Bulky')));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -296,7 +334,11 @@ void main() {
       build: () {
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadSymptomEntry(diaryEntry))..add(const UpdateSymptomName('Jeff')),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(const UpdateSymptomName('Jeff'));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -326,7 +368,11 @@ void main() {
       build: () {
         return SymptomEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadSymptomEntry(diaryEntry))..add(const UpdateSeverity(Severity.intense)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(const UpdateSeverity(Severity.intense));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -338,12 +384,14 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'debounces severity updates',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(const UpdateSeverity(Severity.intense))
-        ..add(const UpdateSeverity(Severity.severe))
-        ..add(const UpdateSeverity(Severity.intense))
-        ..add(const UpdateSeverity(Severity.moderate)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(const UpdateSeverity(Severity.intense))
+          ..add(const UpdateSeverity(Severity.severe))
+          ..add(const UpdateSeverity(Severity.intense))
+          ..add(const UpdateSeverity(Severity.moderate));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -355,11 +403,13 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'maps multiple debounced events',
       build: () => SymptomEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadSymptomEntry(diaryEntry))
-        ..add(const UpdateSeverity(Severity.intense))
-        ..add(const UpdateSymptomName('Gas'))
-        ..add(const UpdateSeverity(Severity.moderate)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadSymptomEntry(diaryEntry))
+          ..add(const UpdateSeverity(Severity.intense))
+          ..add(const UpdateSymptomName('Gas'))
+          ..add(const UpdateSeverity(Severity.moderate));
+      },
       wait: debounceWaitDuration,
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {

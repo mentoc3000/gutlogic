@@ -4,8 +4,8 @@ import 'package:built_value/serializer.dart';
 
 import '../food/edamam_food.dart';
 import '../measure.dart';
-import './edamam_api_food.dart';
-import './edamam_api_measure.dart';
+import 'edamam_api_food.dart';
+import 'edamam_api_measure.dart';
 
 part 'edamam_api_entry.g.dart';
 

@@ -1,7 +1,7 @@
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
-import 'package:gutlogic/models/user_food_details_api.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
 import 'package:gutlogic/models/serializers.dart';
+import 'package:gutlogic/models/user_food_details_api.dart';
 import 'package:test/test.dart';
 
 void main() {

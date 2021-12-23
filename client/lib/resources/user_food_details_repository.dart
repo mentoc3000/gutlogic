@@ -94,7 +94,9 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
       final userFoodDetailsSnapshot = await tx.get(userFoodDetailsRef);
       if (userFoodDetailsSnapshot.exists) {
         final serialized = serializers.serialize(userFoodDetails) as Map<String, dynamic>;
-        final serializedWithoutId = serialized..remove('userFoodDetailsId')..remove('\$');
+        final serializedWithoutId = serialized
+          ..remove('userFoodDetailsId')
+          ..remove('\$');
         await tx.update(userFoodDetailsRef, serializedWithoutId);
       }
     });

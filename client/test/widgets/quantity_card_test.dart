@@ -1,8 +1,8 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/measure.dart';
+import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/pages/meal_element_entry/widgets/quantity_card.dart';
 import 'package:gutlogic/pages/meal_element_entry/widgets/unit_dropdown.dart';
 

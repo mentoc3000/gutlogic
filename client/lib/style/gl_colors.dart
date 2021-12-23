@@ -4,7 +4,6 @@ import '../models/sensitivity/sensitivity_level.dart';
 
 export 'package:flutter/material.dart' show Color;
 
-// ignore: avoid_classes_with_only_static_members
 class GLColors {
   static const green = Color(0xFF0AD488);
   // static const lightGreen = Color(0xFF13EBA2); // Color from 2 color logo

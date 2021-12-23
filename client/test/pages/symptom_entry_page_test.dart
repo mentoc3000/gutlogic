@@ -72,17 +72,18 @@ void main() {
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
-      whenListen(
-        symptomEntryBloc,
-        Stream.value(SymptomEntryLoading()),
-        initialState: SymptomEntryLoading(),
-      );
+      await tester.runAsync(() async {
+        whenListen(
+          symptomEntryBloc,
+          Stream.value(SymptomEntryLoading()),
+          initialState: SymptomEntryLoading(),
+        );
 
-      await tester.pumpWidget(symptomEntryPage);
-      await tester.pump(const Duration(milliseconds: 100));
-      expect(find.text('Symptom'), findsOneWidget);
-      expect(find.byType(LoadingPage), findsOneWidget);
-      verifyNever(() => symptomEntryBloc.add(any()));
+        await tester.pumpWidget(symptomEntryPage);
+        expect(find.text('Symptom'), findsOneWidget);
+        expect(find.byType(LoadingPage), findsOneWidget);
+        verifyNever(() => symptomEntryBloc.add(any()));
+      });
     });
 
     testWidgets('shows error', (WidgetTester tester) async {

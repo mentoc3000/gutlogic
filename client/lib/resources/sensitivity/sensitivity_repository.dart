@@ -56,7 +56,9 @@ class SensitivityRepository with FirestoreRepository {
       final sensitivityEntrySnapshot = await tx.get(userFoodDetailsApiRef);
       if (sensitivityEntrySnapshot.exists) {
         final serialized = serializers.serialize(newSensitivityEntry) as Map<String, dynamic>;
-        final serializedWithoutId = serialized..remove('userFoodDetailsId')..remove('\$');
+        final serializedWithoutId = serialized
+          ..remove('userFoodDetailsId')
+          ..remove('\$');
         await tx.update(userFoodDetailsApiRef, serializedWithoutId);
       }
     });

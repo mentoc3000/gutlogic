@@ -58,7 +58,11 @@ void main() {
     blocTest<PantryEntryBloc, PantryEntryState>(
       'does not debounce streaming',
       build: () => PantryEntryBloc(repository: repository, foodService: foodService),
-      act: (bloc) => bloc..add(StreamEntry(pantryEntry))..add(StreamEntry(pantryEntry)),
+      act: (bloc) {
+        bloc
+          ..add(StreamEntry(pantryEntry))
+          ..add(StreamEntry(pantryEntry));
+      },
       expect: () => [
         PantryEntryLoading(),
         PantryEntryLoaded(pantryEntry: pantryEntry),
@@ -99,9 +103,11 @@ void main() {
     blocTest<PantryEntryBloc, PantryEntryState>(
       'does not debounce loading',
       build: () => PantryEntryBloc(repository: repository, foodService: foodService),
-      act: (bloc) => bloc
-        ..add(Load(pantryEntry: pantryEntry))
-        ..add(Load(pantryEntry: pantryEntry.rebuild((b) => b.notes = 'asdf'))),
+      act: (bloc) {
+        bloc
+          ..add(Load(pantryEntry: pantryEntry))
+          ..add(Load(pantryEntry: pantryEntry.rebuild((b) => b.notes = 'asdf')));
+      },
       expect: () => [
         PantryEntryLoaded(pantryEntry: pantryEntry),
         PantryEntryLoaded(pantryEntry: pantryEntry.rebuild((b) => b.notes = 'asdf'))
@@ -116,7 +122,11 @@ void main() {
       build: () {
         return PantryEntryBloc(repository: repository, foodService: foodService);
       },
-      act: (bloc) => bloc..add(Load(pantryEntry: pantryEntry))..add(const Delete()),
+      act: (bloc) {
+        bloc
+          ..add(Load(pantryEntry: pantryEntry))
+          ..add(const Delete());
+      },
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
         verify(repository.delete(pantryEntry)).called(1);
@@ -127,7 +137,12 @@ void main() {
     blocTest<PantryEntryBloc, PantryEntryState>(
       'does not debounce deletion',
       build: () => PantryEntryBloc(repository: repository, foodService: foodService),
-      act: (bloc) => bloc..add(Load(pantryEntry: pantryEntry))..add(const Delete())..add(const Delete()),
+      act: (bloc) {
+        bloc
+          ..add(Load(pantryEntry: pantryEntry))
+          ..add(const Delete())
+          ..add(const Delete());
+      },
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
         verify(repository.delete(pantryEntry)).called(2);
@@ -139,7 +154,11 @@ void main() {
       build: () {
         return PantryEntryBloc(repository: repository, foodService: foodService);
       },
-      act: (bloc) => bloc..add(Load(pantryEntry: pantryEntry))..add(const UpdateNotes('noted')),
+      act: (bloc) {
+        bloc
+          ..add(Load(pantryEntry: pantryEntry))
+          ..add(const UpdateNotes('noted'));
+      },
       wait: debounceWaitDuration,
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
@@ -151,11 +170,13 @@ void main() {
     blocTest<PantryEntryBloc, PantryEntryState>(
       'debounces notes updates',
       build: () => PantryEntryBloc(repository: repository, foodService: foodService),
-      act: (bloc) => bloc
-        ..add(Load(pantryEntry: pantryEntry))
-        ..add(const UpdateNotes('noted'))
-        ..add(const UpdateNotes('note'))
-        ..add(const UpdateNotes('not')),
+      act: (bloc) {
+        bloc
+          ..add(Load(pantryEntry: pantryEntry))
+          ..add(const UpdateNotes('noted'))
+          ..add(const UpdateNotes('note'))
+          ..add(const UpdateNotes('not'));
+      },
       wait: debounceWaitDuration,
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
@@ -169,8 +190,11 @@ void main() {
       build: () {
         return PantryEntryBloc(repository: repository, foodService: foodService);
       },
-      act: (bloc) =>
-          bloc..add(Load(pantryEntry: pantryEntry))..add(const UpdateSensitivityLevel(SensitivityLevel.severe)),
+      act: (bloc) {
+        bloc
+          ..add(Load(pantryEntry: pantryEntry))
+          ..add(const UpdateSensitivityLevel(SensitivityLevel.severe));
+      },
       wait: debounceWaitDuration,
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
@@ -182,12 +206,14 @@ void main() {
     blocTest<PantryEntryBloc, PantryEntryState>(
       'debounces food updates',
       build: () => PantryEntryBloc(repository: repository, foodService: foodService),
-      act: (bloc) => bloc
-        ..add(Load(pantryEntry: pantryEntry))
-        ..add(const UpdateSensitivityLevel(SensitivityLevel.moderate))
-        ..add(const UpdateSensitivityLevel(SensitivityLevel.mild))
-        ..add(const UpdateSensitivityLevel(SensitivityLevel.moderate))
-        ..add(const UpdateSensitivityLevel(SensitivityLevel.severe)),
+      act: (bloc) {
+        bloc
+          ..add(Load(pantryEntry: pantryEntry))
+          ..add(const UpdateSensitivityLevel(SensitivityLevel.moderate))
+          ..add(const UpdateSensitivityLevel(SensitivityLevel.mild))
+          ..add(const UpdateSensitivityLevel(SensitivityLevel.moderate))
+          ..add(const UpdateSensitivityLevel(SensitivityLevel.severe));
+      },
       wait: debounceWaitDuration,
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
@@ -198,12 +224,14 @@ void main() {
     blocTest<PantryEntryBloc, PantryEntryState>(
       'maps multiple debounced events',
       build: () => PantryEntryBloc(repository: repository, foodService: foodService),
-      act: (bloc) => bloc
-        ..add(Load(pantryEntry: pantryEntry))
-        ..add(const UpdateNotes('bad'))
-        ..add(const UpdateSensitivityLevel(SensitivityLevel.mild))
-        ..add(const UpdateNotes('good'))
-        ..add(const UpdateSensitivityLevel(SensitivityLevel.none)),
+      act: (bloc) {
+        bloc
+          ..add(Load(pantryEntry: pantryEntry))
+          ..add(const UpdateNotes('bad'))
+          ..add(const UpdateSensitivityLevel(SensitivityLevel.mild))
+          ..add(const UpdateNotes('good'))
+          ..add(const UpdateSensitivityLevel(SensitivityLevel.none));
+      },
       wait: debounceWaitDuration,
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {

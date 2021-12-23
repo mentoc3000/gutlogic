@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-// ignore: avoid_classes_with_only_static_members
 class _ExceptionMessages {
   // Connection exceptions
   static String noInternet = 'No internet connection.';

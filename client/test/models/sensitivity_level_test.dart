@@ -1,6 +1,6 @@
 import 'package:built_value/serializer.dart';
-import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
+import 'package:gutlogic/models/serializers.dart';
 import 'package:test/test.dart';
 
 void main() {

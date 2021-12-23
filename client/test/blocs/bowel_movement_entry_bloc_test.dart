@@ -49,7 +49,11 @@ void main() {
     blocTest<BowelMovementEntryBloc, BowelMovementEntryState>(
       'does not debounce streaming',
       build: () => BowelMovementEntryBloc(repository: repository),
-      act: (bloc) async => bloc..add(StreamBowelMovementEntry(diaryEntry))..add(StreamBowelMovementEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(StreamBowelMovementEntry(diaryEntry))
+          ..add(StreamBowelMovementEntry(diaryEntry));
+      },
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.stream(diaryEntry)).called(2);
@@ -70,7 +74,6 @@ void main() {
       'creates and streams diary entry',
       build: () {
         when(repository.create()).thenAnswer((_) async => await diaryEntry);
-
         return BowelMovementEntryBloc(repository: repository);
       },
       act: (bloc) async => bloc.add(const CreateAndStreamBowelMovementEntry()),
@@ -111,7 +114,11 @@ void main() {
       build: () {
         return BowelMovementEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadBowelMovementEntry(diaryEntry))..add(DeleteBowelMovementEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(DeleteBowelMovementEntry(diaryEntry));
+      },
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.delete(diaryEntry)).called(1);
@@ -122,10 +129,12 @@ void main() {
     blocTest<BowelMovementEntryBloc, BowelMovementEntryState>(
       'does not debounce deletion',
       build: () => BowelMovementEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadBowelMovementEntry(diaryEntry))
-        ..add(DeleteBowelMovementEntry(diaryEntry))
-        ..add(DeleteBowelMovementEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(DeleteBowelMovementEntry(diaryEntry))
+          ..add(DeleteBowelMovementEntry(diaryEntry));
+      },
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.delete(diaryEntry)).called(2);
@@ -137,7 +146,11 @@ void main() {
       build: () {
         return BowelMovementEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadBowelMovementEntry(diaryEntry))..add(UpdateBowelMovementEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(UpdateBowelMovementEntry(diaryEntry));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -149,11 +162,13 @@ void main() {
     blocTest<BowelMovementEntryBloc, BowelMovementEntryState>(
       'debounces entry updates',
       build: () => BowelMovementEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadBowelMovementEntry(diaryEntry))
-        ..add(UpdateBowelMovementEntry(diaryEntry))
-        ..add(UpdateBowelMovementEntry(diaryEntry))
-        ..add(UpdateBowelMovementEntry(diaryEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(UpdateBowelMovementEntry(diaryEntry))
+          ..add(UpdateBowelMovementEntry(diaryEntry))
+          ..add(UpdateBowelMovementEntry(diaryEntry));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -166,8 +181,11 @@ void main() {
       build: () {
         return BowelMovementEntryBloc(repository: repository);
       },
-      act: (bloc) async =>
-          bloc..add(LoadBowelMovementEntry(diaryEntry))..add(UpdateBowelMovementEntryDateTime(DateTime.now().toUtc())),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(UpdateBowelMovementEntryDateTime(DateTime.now().toUtc()));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -181,11 +199,13 @@ void main() {
       build: () {
         return BowelMovementEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc
-        ..add(LoadBowelMovementEntry(diaryEntry))
-        ..add(UpdateBowelMovementEntryDateTime(DateTime.now().toUtc()))
-        ..add(UpdateBowelMovementEntryDateTime(DateTime.now().toUtc()))
-        ..add(UpdateBowelMovementEntryDateTime(DateTime.now().toUtc())),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(UpdateBowelMovementEntryDateTime(DateTime.now().toUtc()))
+          ..add(UpdateBowelMovementEntryDateTime(DateTime.now().toUtc()))
+          ..add(UpdateBowelMovementEntryDateTime(DateTime.now().toUtc()));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -198,8 +218,11 @@ void main() {
       build: () {
         return BowelMovementEntryBloc(repository: repository);
       },
-      act: (bloc) async =>
-          bloc..add(LoadBowelMovementEntry(diaryEntry))..add(const UpdateBowelMovementEntryNotes('noted')),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(const UpdateBowelMovementEntryNotes('noted'));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -211,11 +234,13 @@ void main() {
     blocTest<BowelMovementEntryBloc, BowelMovementEntryState>(
       'debounces notes updates',
       build: () => BowelMovementEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadBowelMovementEntry(diaryEntry))
-        ..add(const UpdateBowelMovementEntryNotes('noted'))
-        ..add(const UpdateBowelMovementEntryNotes('note'))
-        ..add(const UpdateBowelMovementEntryNotes('not')),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(const UpdateBowelMovementEntryNotes('noted'))
+          ..add(const UpdateBowelMovementEntryNotes('note'))
+          ..add(const UpdateBowelMovementEntryNotes('not'));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -229,7 +254,11 @@ void main() {
       build: () {
         return BowelMovementEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadBowelMovementEntry(diaryEntry))..add(const UpdateType(3)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(const UpdateType(3));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -241,12 +270,14 @@ void main() {
     blocTest<BowelMovementEntryBloc, BowelMovementEntryState>(
       'debounces type updates',
       build: () => BowelMovementEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadBowelMovementEntry(diaryEntry))
-        ..add(const UpdateType(3))
-        ..add(const UpdateType(4))
-        ..add(const UpdateType(3))
-        ..add(const UpdateType(2)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(const UpdateType(3))
+          ..add(const UpdateType(4))
+          ..add(const UpdateType(3))
+          ..add(const UpdateType(2));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -260,7 +291,11 @@ void main() {
       build: () {
         return BowelMovementEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadBowelMovementEntry(diaryEntry))..add(const UpdateVolume(3)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(const UpdateVolume(3));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -272,11 +307,13 @@ void main() {
     blocTest<BowelMovementEntryBloc, BowelMovementEntryState>(
       'debounces volume updates',
       build: () => BowelMovementEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadBowelMovementEntry(diaryEntry))
-        ..add(const UpdateVolume(3))
-        ..add(const UpdateVolume(2))
-        ..add(const UpdateVolume(1)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(const UpdateVolume(3))
+          ..add(const UpdateVolume(2))
+          ..add(const UpdateVolume(1));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
@@ -288,12 +325,14 @@ void main() {
     blocTest<BowelMovementEntryBloc, BowelMovementEntryState>(
       'maps multiple debounced events',
       build: () => BowelMovementEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadBowelMovementEntry(diaryEntry))
-        ..add(const UpdateVolume(3))
-        ..add(const UpdateType(3))
-        ..add(const UpdateVolume(2))
-        ..add(const UpdateType(2)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadBowelMovementEntry(diaryEntry))
+          ..add(const UpdateVolume(3))
+          ..add(const UpdateType(3))
+          ..add(const UpdateVolume(2))
+          ..add(const UpdateType(2));
+      },
       wait: debounceWaitDuration,
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {

@@ -138,8 +138,11 @@ void main() {
         mealElementRepository: mealElementRepository,
         foodService: foodService,
       ),
-      act: (bloc) async =>
-          bloc..add(StreamMealElement(edamamFoodMealElement))..add(StreamMealElement(edamamFoodMealElement)),
+      act: (bloc) async {
+        bloc
+          ..add(StreamMealElement(edamamFoodMealElement))
+          ..add(StreamMealElement(edamamFoodMealElement));
+      },
       expect: () => [
         MealElementLoading(),
         MealElementLoaded(mealElement: edamamFoodMealElement, food: edamamFood),
@@ -171,7 +174,7 @@ void main() {
         foodService: foodService,
       ),
       act: (bloc) async {
-        return bloc
+        bloc
           ..add(Load(mealElement: edamamFoodMealElement))
           ..add(Load(mealElement: edamamFoodMealElement.rebuild((b) => b.notes = 'asdf')));
       },
@@ -193,7 +196,9 @@ void main() {
         );
       },
       act: (bloc) async {
-        return bloc..add(Load(mealElement: edamamFoodMealElement))..add(const Delete());
+        bloc
+          ..add(Load(mealElement: edamamFoodMealElement))
+          ..add(const Delete());
       },
       expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement)],
       verify: (bloc) async {
@@ -209,7 +214,10 @@ void main() {
         foodService: foodService,
       ),
       act: (bloc) async {
-        return bloc..add(Load(mealElement: edamamFoodMealElement))..add(const Delete())..add(const Delete());
+        bloc
+          ..add(Load(mealElement: edamamFoodMealElement))
+          ..add(const Delete())
+          ..add(const Delete());
       },
       expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement)],
       verify: (bloc) async {
@@ -226,7 +234,9 @@ void main() {
         );
       },
       act: (bloc) async {
-        return bloc..add(Load(mealElement: edamamFoodMealElement))..add(Update(edamamFoodMealElement));
+        bloc
+          ..add(Load(mealElement: edamamFoodMealElement))
+          ..add(Update(edamamFoodMealElement));
       },
       wait: debounceWaitDuration,
       expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement)],
@@ -243,7 +253,7 @@ void main() {
         foodService: foodService,
       ),
       act: (bloc) async {
-        return bloc
+        bloc
           ..add(Load(mealElement: edamamFoodMealElement))
           ..add(Update(edamamFoodMealElement))
           ..add(Update(edamamFoodMealElement))
@@ -265,7 +275,9 @@ void main() {
         );
       },
       act: (bloc) async {
-        return bloc..add(Load(mealElement: edamamFoodMealElement))..add(const UpdateNotes('noted'));
+        bloc
+          ..add(Load(mealElement: edamamFoodMealElement))
+          ..add(const UpdateNotes('noted'));
       },
       wait: debounceWaitDuration,
       expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement)],
@@ -282,7 +294,7 @@ void main() {
         foodService: foodService,
       ),
       act: (bloc) async {
-        return bloc
+        bloc
           ..add(Load(mealElement: edamamFoodMealElement))
           ..add(const UpdateNotes('noted'))
           ..add(const UpdateNotes('note'))
@@ -305,7 +317,7 @@ void main() {
         );
       },
       act: (bloc) async {
-        return bloc
+        bloc
           ..add(Load(mealElement: edamamFoodMealElement))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.1, unit: 'cup')));
       },
@@ -324,7 +336,7 @@ void main() {
         foodService: foodService,
       ),
       act: (bloc) async {
-        return bloc
+        bloc
           ..add(Load(mealElement: edamamFoodMealElement))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.1, unit: 'cup')))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.2, unit: 'cup')))
@@ -348,7 +360,7 @@ void main() {
         foodService: foodService,
       ),
       act: (bloc) async {
-        return bloc
+        bloc
           ..add(Load(mealElement: edamamFoodMealElement))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.4, unit: 'cup')))
           ..add(const UpdateNotes('too much'))

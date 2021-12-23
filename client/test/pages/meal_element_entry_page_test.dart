@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/meal_element/meal_element.dart';
@@ -67,13 +67,14 @@ void main() {
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
-      whenListen(mealElementBloc, Stream.value(MealElementLoading()), initialState: MealElementLoading());
+      await tester.runAsync(() async {
+        whenListen(mealElementBloc, Stream.value(MealElementLoading()), initialState: MealElementLoading());
 
-      await tester.pumpWidget(mealElementPage);
-      await tester.pump(const Duration(milliseconds: 100));
-      expect(find.text('Ingredient'), findsOneWidget);
-      expect(find.byType(LoadingPage), findsOneWidget);
-      verifyNever(() => mealElementBloc.add(any()));
+        await tester.pumpWidget(mealElementPage);
+        expect(find.text('Ingredient'), findsOneWidget);
+        expect(find.byType(LoadingPage), findsOneWidget);
+        verifyNever(() => mealElementBloc.add(any()));
+      });
     });
 
     testWidgets('shows error', (WidgetTester tester) async {

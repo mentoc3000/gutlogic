@@ -17,9 +17,9 @@ import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/pages/diary/diary_page.dart';
 import 'package:gutlogic/pages/loading_page.dart';
-import 'package:gutlogic/routes/routes.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
+import 'package:gutlogic/routes/routes.dart';
 import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
@@ -86,16 +86,19 @@ void main() {
       final diaryState = DiaryLoaded(<DiaryEntry>[].build());
       whenListen(diaryBloc, Stream.value(diaryState), initialState: DiaryLoading());
       await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
       expect(find.text('Timeline'), findsOneWidget);
       verifyNever(() => diaryBloc.add(any()));
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
-      whenListen(diaryBloc, Stream.value(DiaryLoading()), initialState: DiaryLoading());
-      await tester.pumpWidget(diaryPage);
-      expect(find.text('Timeline'), findsOneWidget);
-      expect(find.byType(LoadingPage), findsOneWidget);
-      verifyNever(() => diaryBloc.add(any()));
+      await tester.runAsync(() async {
+        whenListen(diaryBloc, Stream.value(DiaryLoading()), initialState: DiaryLoading());
+        await tester.pumpWidget(diaryPage);
+        expect(find.text('Timeline'), findsOneWidget);
+        expect(find.byType(LoadingPage), findsOneWidget);
+        verifyNever(() => diaryBloc.add(any()));
+      });
     });
 
     testWidgets('shows error', (WidgetTester tester) async {

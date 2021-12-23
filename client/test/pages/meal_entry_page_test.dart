@@ -13,8 +13,8 @@ import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/meal_entry/meal_entry_page.dart';
-import 'package:gutlogic/routes/routes.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
+import 'package:gutlogic/routes/routes.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 

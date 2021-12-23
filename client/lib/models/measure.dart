@@ -41,7 +41,9 @@ class MeasureSerializer implements StructuredSerializer<Measure> {
       serializers.serialize(object.unit, specifiedType: const FullType(String)),
     ];
     if (object.weight != null) {
-      result..add('weight')..add(serializers.serialize(object.weight, specifiedType: const FullType(double)));
+      result
+        ..add('weight')
+        ..add(serializers.serialize(object.weight, specifiedType: const FullType(double)));
     }
     return result;
   }

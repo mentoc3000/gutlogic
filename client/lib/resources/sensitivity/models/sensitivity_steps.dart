@@ -13,7 +13,9 @@ final _reactionSensitivityLevels = List<SensitivityLevel>.unmodifiable(
 
 // All sensitivity levels that will cause a reaction.
 final _nonzeroSensitivityLevels = List<SensitivityLevel>.unmodifiable(
-  SensitivityLevel.list()..remove(SensitivityLevel.unknown)..remove(SensitivityLevel.none),
+  SensitivityLevel.list()
+    ..remove(SensitivityLevel.unknown)
+    ..remove(SensitivityLevel.none),
 );
 
 /// The lowest doses to trigger each sensitivity level

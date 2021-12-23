@@ -57,17 +57,18 @@ void main() {
     });
 
     testWidgets('shows loading', (WidgetTester tester) async {
-      whenListen(
-        bowelmovementEntryBloc,
-        Stream.fromIterable([BowelMovementEntryLoading()]),
-        initialState: BowelMovementEntryLoading(),
-      );
+      await tester.runAsync(() async {
+        whenListen(
+          bowelmovementEntryBloc,
+          Stream.fromIterable([BowelMovementEntryLoading()]),
+          initialState: BowelMovementEntryLoading(),
+        );
 
-      await tester.pumpWidget(bowelmovementEntryPage);
-      await tester.pump(const Duration(milliseconds: 100));
-      expect(find.text('Bowel Movement'), findsOneWidget);
-      expect(find.byType(LoadingPage), findsOneWidget);
-      verifyNever(() => bowelmovementEntryBloc.add(any()));
+        await tester.pumpWidget(bowelmovementEntryPage);
+        expect(find.text('Bowel Movement'), findsOneWidget);
+        expect(find.byType(LoadingPage), findsOneWidget);
+        verifyNever(() => bowelmovementEntryBloc.add(any()));
+      });
     });
 
     testWidgets('shows error', (WidgetTester tester) async {

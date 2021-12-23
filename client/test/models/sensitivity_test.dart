@@ -1,6 +1,6 @@
+import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
-import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -50,7 +50,6 @@ void main() {
       'streams diary entry',
       build: () => MealEntryBloc(repository: repository),
       act: (bloc) async => bloc.add(StreamMealEntry(mealEntry)),
-      // wait: const Duration(milliseconds: 100),
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.stream(mealEntry)).called(1);
@@ -60,8 +59,11 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'does not debounce streaming',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async => bloc..add(StreamMealEntry(mealEntry))..add(StreamMealEntry(mealEntry)),
-      // wait: const Duration(milliseconds: 100),
+      act: (bloc) async {
+        bloc
+          ..add(StreamMealEntry(mealEntry))
+          ..add(StreamMealEntry(mealEntry));
+      },
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.stream(mealEntry)).called(2);
@@ -75,7 +77,6 @@ void main() {
         return MealEntryBloc(repository: repository);
       },
       act: (bloc) async => bloc.add(StreamMealEntry(mealEntry)),
-      // wait: const Duration(milliseconds: 100),
       expect: () => [isA<MealEntryLoaded>(), isA<MealEntryError>()],
     );
 
@@ -110,8 +111,11 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'does not debounce loading',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async =>
-          bloc..add(LoadMealEntry(mealEntry))..add(LoadMealEntry(mealEntry.rebuild((b) => b.notes = 'asdf'))),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(LoadMealEntry(mealEntry.rebuild((b) => b.notes = 'asdf')));
+      },
       expect: () => [
         MealEntryLoaded(mealEntry),
         MealEntryLoaded(mealEntry.rebuild((b) => b.notes = 'asdf')),
@@ -126,7 +130,11 @@ void main() {
       build: () {
         return MealEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadMealEntry(mealEntry))..add(DeleteMealEntry(mealEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(DeleteMealEntry(mealEntry));
+      },
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.delete(mealEntry)).called(1);
@@ -137,8 +145,12 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'does not debounce deletion',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async =>
-          bloc..add(LoadMealEntry(mealEntry))..add(DeleteMealEntry(mealEntry))..add(DeleteMealEntry(mealEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(DeleteMealEntry(mealEntry))
+          ..add(DeleteMealEntry(mealEntry));
+      },
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.delete(mealEntry)).called(2);
@@ -150,7 +162,11 @@ void main() {
       build: () {
         return MealEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadMealEntry(mealEntry))..add(UpdateMealEntry(mealEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(UpdateMealEntry(mealEntry));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -162,11 +178,13 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'debounces entry updates',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadMealEntry(mealEntry))
-        ..add(UpdateMealEntry(mealEntry))
-        ..add(UpdateMealEntry(mealEntry))
-        ..add(UpdateMealEntry(mealEntry)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(UpdateMealEntry(mealEntry))
+          ..add(UpdateMealEntry(mealEntry))
+          ..add(UpdateMealEntry(mealEntry));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -179,7 +197,11 @@ void main() {
       build: () {
         return MealEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadMealEntry(mealEntry))..add(UpdateMealEntryDateTime(DateTime.now().toUtc())),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -191,11 +213,13 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'debounces datetime updates',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadMealEntry(mealEntry))
-        ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()))
-        ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()))
-        ..add(UpdateMealEntryDateTime(DateTime.now().toUtc())),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()))
+          ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()))
+          ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -208,7 +232,11 @@ void main() {
       build: () {
         return MealEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadMealEntry(mealEntry))..add(const UpdateMealEntryNotes('noted')),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(const UpdateMealEntryNotes('noted'));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -220,11 +248,13 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'debounces notes updates',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadMealEntry(mealEntry))
-        ..add(const UpdateMealEntryNotes('noted'))
-        ..add(const UpdateMealEntryNotes('note'))
-        ..add(const UpdateMealEntryNotes('not')),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(const UpdateMealEntryNotes('noted'))
+          ..add(const UpdateMealEntryNotes('note'))
+          ..add(const UpdateMealEntryNotes('not'));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -238,7 +268,11 @@ void main() {
       build: () {
         return MealEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadMealEntry(mealEntry))..add(AddMealElement(food)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(AddMealElement(food));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -250,7 +284,12 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'does not debounce adding mealElement',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async => bloc..add(LoadMealEntry(mealEntry))..add(AddMealElement(food))..add(AddMealElement(food)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(AddMealElement(food))
+          ..add(AddMealElement(food));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -263,7 +302,11 @@ void main() {
       build: () {
         return MealEntryBloc(repository: repository);
       },
-      act: (bloc) async => bloc..add(LoadMealEntry(mealEntry))..add(const MoveMealElement(3, 2)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(const MoveMealElement(3, 2));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -275,12 +318,14 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'does not debounce reordering mealElement',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadMealEntry(mealEntry))
-        ..add(const MoveMealElement(3, 2))
-        ..add(const MoveMealElement(2, 3))
-        ..add(const MoveMealElement(3, 1))
-        ..add(const MoveMealElement(1, 2)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(const MoveMealElement(3, 2))
+          ..add(const MoveMealElement(2, 3))
+          ..add(const MoveMealElement(3, 1))
+          ..add(const MoveMealElement(1, 2));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
@@ -293,8 +338,11 @@ void main() {
       build: () {
         return MealEntryBloc(repository: repository);
       },
-      act: (bloc) async =>
-          bloc..add(LoadMealEntry(mealEntry))..add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement));
+      },
       wait: debounceWaitDuration,
       expect: () => [
         MealEntryLoaded(mealEntry),
@@ -309,10 +357,12 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'does not debounce mealElement removal',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadMealEntry(mealEntry))
-        ..add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement))
-        ..add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement2)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement))
+          ..add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement2));
+      },
       wait: debounceWaitDuration,
       expect: () => [
         MealEntryLoaded(mealEntry),
@@ -329,8 +379,11 @@ void main() {
       build: () {
         return MealEntryBloc(repository: repository);
       },
-      act: (bloc) async =>
-          bloc..add(LoadMealEntry(mealEntry))..add(UndeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(UndeleteMealElement(mealEntry: mealEntry, mealElement: mealElement));
+      },
       wait: debounceWaitDuration,
       expect: () => [
         MealEntryLoaded(mealEntry),
@@ -343,12 +396,14 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'maps multiple debounced events',
       build: () => MealEntryBloc(repository: repository),
-      act: (bloc) async => bloc
-        ..add(LoadMealEntry(mealEntry))
-        ..add(const UpdateMealEntryNotes('noted'))
-        ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()))
-        ..add(const UpdateMealEntryNotes('pass'))
-        ..add(UpdateMealEntryDateTime(DateTime.now().toUtc())),
+      act: (bloc) async {
+        bloc
+          ..add(LoadMealEntry(mealEntry))
+          ..add(const UpdateMealEntryNotes('noted'))
+          ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()))
+          ..add(const UpdateMealEntryNotes('pass'))
+          ..add(UpdateMealEntryDateTime(DateTime.now().toUtc()));
+      },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {

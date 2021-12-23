@@ -8,7 +8,7 @@ version: 1.1.0
 
 environment:
   sdk: ^2.13.0
-  flutter: ^2.2.0
+  flutter: ^2.5.0
 
 dependencies:
   flutter:
@@ -23,7 +23,7 @@ dependencies:
   flutter_bloc: ^7.0.0
   flutter_password_strength: ^0.1.6
   flutter_sfsymbols: ^2.0.0
-  flutter_speed_dial: ^3.0.5
+  flutter_speed_dial: ^5.0.0+1
   flutter_svg: ^0.22.0
   google_fonts: ^2.0.0
   google_sign_in: ^5.0.1
@@ -40,7 +40,7 @@ dependencies:
 
   # Firebase
   cloud_firestore: ^2.5.1
-  cloud_functions: ^3.0.2
+  cloud_functions: ^3.2.4
   firebase_analytics: ^8.3.1
   firebase_auth: ^1.1.2
   firebase_core: ^1.6.0

@@ -129,8 +129,13 @@ void main() {
       blocTest<PairBloc, Pair>(
         'bloc events separately',
         build: () => PairBloc(),
-        act: (bloc) async =>
-            bloc..add(SetFirstEvent(5))..add(SetSecondEvent(5))..add(SetFirstEvent(3))..add(SetSecondEvent(3)),
+        act: (bloc) async {
+          return bloc
+            ..add(SetFirstEvent(5))
+            ..add(SetSecondEvent(5))
+            ..add(SetFirstEvent(3))
+            ..add(SetSecondEvent(3));
+        },
         wait: const Duration(seconds: 2),
         expect: () => [Pair(3, 0), Pair(3, 3)],
       );

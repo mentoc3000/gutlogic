@@ -95,6 +95,7 @@ linter:
 
     # Custom
     avoid_catches_without_on_clauses: false
+    avoid_classes_with_only_static_members: false
     no_adjacent_strings_in_list: true
     prefer_const_constructors: true
     prefer_const_declarations: true

@@ -1,7 +1,7 @@
-import 'package:test/test.dart';
-
 import 'package:gutlogic/models/edamam_api/edamam_api_entry.dart';
 import 'package:gutlogic/models/serializers.dart';
+import 'package:test/test.dart';
+
 import '../resources/food/edamam_sample_data.dart';
 
 void main() {

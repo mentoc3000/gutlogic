@@ -1,11 +1,11 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:gutlogic/models/food/custom_food.dart';
+import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/resources/food/custom_food_repository.dart';
 import 'package:gutlogic/resources/food/edamam_food_repository.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
-import 'package:gutlogic/models/food/custom_food.dart';
-import 'package:gutlogic/models/food/edamam_food.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'food_service_test.mocks.dart';
