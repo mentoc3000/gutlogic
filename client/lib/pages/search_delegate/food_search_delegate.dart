@@ -5,17 +5,16 @@ import '../../blocs/food_search/food_search.dart';
 import '../../models/food/food.dart';
 import '../../pages/error_page.dart';
 import '../../pages/loading_page.dart';
+import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_scaffold.dart';
-import '../../widgets/list_tiles/gl_list_tile.dart';
-import '../../widgets/powered_by_edamam.dart';
 import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
-import 'widgets/food_search_result_tile.dart';
+import 'widgets/food_search_results_list_view.dart';
 
 class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
   final FoodSearchBloc foodBloc;
-  final String noResultsMessage = 'No matches found. Try adding a food!';
+  final String noResultsMessage = 'No matches found.\nNeed something special?\nCreate a custom food!';
 
   FoodSearchDelegate({required this.foodBloc, required void Function(Food) onSelect})
       : super(onSelect: onSelect, searchFieldLabel: 'Search for food');
@@ -53,32 +52,19 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
           final items = state.items;
           return GLScaffold(
             floatingActionButton: buildAddFab(context),
-            body: SafeArea(
-              child: PoweredByEdamam(
-                child: ListView.builder(
-                  itemCount: items.length,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    final result = items[index];
-                    return FoodSearchResultTile(
-                      food: result,
-                      onTap: () {
-                        closeSearch(context);
-                        onSelect(result);
-                      },
-                    );
-                  },
-                ),
-              ),
+            body: FoodSearchResultsListView(
+              foods: items,
+              onTap: (result) {
+                closeSearch(context);
+                onSelect(result);
+              },
             ),
           );
         }
         if (state is NoFoodsFound) {
           return GLScaffold(
             floatingActionButton: buildAddFab(context),
-            body: Column(
-              children: [GLListTile(heading: noResultsMessage)],
-            ),
+            body: FabGuide(message: noResultsMessage),
           );
         }
         if (state is FoodSearchLoading) {

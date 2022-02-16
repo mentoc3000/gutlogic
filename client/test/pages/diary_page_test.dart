@@ -167,8 +167,7 @@ void main() {
       verifyNever(() => diaryBloc.add(Delete(mealEntry)));
     });
 
-    testWidgets('always shows today', (WidgetTester tester) async {
-      final today = DateTime.now();
+    testWidgets('shows guide', (WidgetTester tester) async {
       whenListen(
         diaryBloc,
         Stream.value(DiaryLoaded(<DiaryEntry>[].build())),
@@ -177,10 +176,7 @@ void main() {
       await tester.pumpWidget(diaryPage);
       await tester.pumpAndSettle();
 
-      final dateFormatter = DateFormat.MMMEd();
-      final todayString = dateFormatter.format(today.toLocal());
-      expect(find.text(todayString), findsOneWidget);
-      expect(find.text('No Entries'), findsNothing);
+      expect(find.text('Start tracking here'), findsOneWidget);
     });
 
     testWidgets('start at today', (WidgetTester tester) async {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/diary/diary.dart';
 import '../../util/keys.dart';
+import '../../widgets/fab_guide.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/icon_buttons/settings_icon_button.dart';
@@ -37,6 +38,9 @@ class DiaryPage extends StatelessWidget {
       return LoadingPage();
     }
     if (state is DiaryLoaded) {
+      if (state.diaryEntries.isEmpty) {
+        return const FabGuide(message: 'Start tracking here');
+      }
       return DiaryListView(diaryEntries: state.diaryEntries);
     }
     if (state is DiaryError) {

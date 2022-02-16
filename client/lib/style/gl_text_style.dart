@@ -23,5 +23,5 @@ void addFontLicenseToRegistry(AssetBundle rootBundle) {
 }
 
 const tileHeadingStyle = TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
-
 const tileSubheadingStyle = TextStyle(fontSize: 16.0);
+final TextStyle guideTextStyle = TextStyle(fontSize: 16.0, color: GLColors.darkGray);

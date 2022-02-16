@@ -24,7 +24,7 @@ dependencies:
   flutter_password_strength: ^0.1.6
   flutter_sfsymbols: ^2.0.0
   flutter_speed_dial: ^5.0.0+1
-  flutter_svg: ^0.22.0
+  flutter_svg: ^1.0.3
   google_fonts: ^2.0.0
   google_sign_in: ^5.0.1
   intl: 0.17.0
@@ -48,7 +48,6 @@ dependencies:
   firebase_remote_config: ^0.10.0+5
 
 dev_dependencies:
-
   flutter_test:
     sdk: flutter
   flutter_driver:

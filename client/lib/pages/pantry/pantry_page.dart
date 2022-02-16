@@ -9,13 +9,13 @@ import '../../pages/search_delegate/food_search_delegate.dart';
 import '../../pages/search_delegate/pantry_search_delegate.dart';
 import '../../resources/pantry_service.dart';
 import '../../routes/routes.dart';
+import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/icon_buttons/filter_icon_button.dart';
 import '../../widgets/icon_buttons/search_icon_button.dart';
 import '../../widgets/icon_buttons/settings_icon_button.dart';
-import '../../widgets/list_tiles/gl_list_tile.dart';
 import '../../widgets/snack_bars/undo_delete_snack_bar.dart';
 import '../error_page.dart';
 import '../loading_page.dart';
@@ -105,7 +105,7 @@ class PantryPage extends StatelessWidget {
     if (state is PantrySortLoaded) {
       final items = state.items;
       if (items.isEmpty) {
-        return const GLListTile(heading: 'There is nothing in your pantry. Try adding a food!');
+        return const FabGuide(message: 'There is nothing in your Pantry.\nTry adding a food!');
       } else {
         return PantryListView(pantryEntries: items);
       }
