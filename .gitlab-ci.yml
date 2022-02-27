@@ -52,12 +52,12 @@ compliance:
 # Rule for automatic pipelines on merge requests with server changes.
 .server-merge-request-rule: &server-merge-request-rule
   if: $CI_MERGE_REQUEST_ID
-  changes: [ server/**/* ]
+  changes: [server/**/*]
 
 # Rule for automatic pipelines on critical commits with server changes.
 .server-commit-rule: &server-commit-rule
   if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-  changes: [ server/**/* ]
+  changes: [server/**/*]
 
 .server-cache: &server-cache
   key:
@@ -147,17 +147,24 @@ server:deploy:
 # Rule for client jobs that run on any merge request with client changes.
 .client-merge-request-rule: &client-merge-request-rule
   if: $CI_MERGE_REQUEST_ID
-  changes: [ client/**/* ]
+  changes: [client/**/*]
+
+# Optional, manual job for any merge request with client changes.
+.client-optional-job-rule: &client-optional-job-rule
+  if: $CI_MERGE_REQUEST_ID
+  changes: [client/**/*]
+  when: manual
+  allow_failure: true
 
 # Rule for client jobs that run on critical commits with client changes.
 .client-commit-rule: &client-commit-rule
   if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-  changes: [ client/**/* ]
+  changes: [client/**/*]
 
 # Rule for client jobs that run on critical commits with client changes (except develop).
 .client-deploy-rule: &client-deploy-rule
   if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-  changes: [ client/**/* ]
+  changes: [client/**/*]
 
 # Aliases flutter to use fvm if fvm is installed. This is so fvm is used on the mac runner, but not on docker, where it is redundant.
 # TODO use a custom docker image with fvm already installed so we can use fvm on both the macos and docker runners
@@ -302,7 +309,18 @@ client:screenshots:
   tags:
     - macos
   script:
+    # generate screenshots
     - flutter pub run bin/screenshots
+    # prep fastlane
+    - cd ios/fastlane
+    - gem install --user-install bundler
+    - bundle install
+    # place screenshots into frames
+    - bundle exec fastlane frameit download_frames
+    - bundle exec fastlane frames
+    # remove screenshots without frames so they aren't uploaded to App Store
+    - cd screenshots
+    - find . -type f ! -name '*_framed.*' -delete
   artifacts:
     paths:
       - client/android/fastlane
@@ -310,6 +328,7 @@ client:screenshots:
     expire_in: 1 day
   rules:
     - *client-deploy-rule
+    - *client-optional-job-rule
     - *manual-commit-rule
   dependencies:
     - client:prep

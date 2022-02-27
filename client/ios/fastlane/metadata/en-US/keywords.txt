@@ -1,1 +1,1 @@
-food,sensitivity,allergy,fodmap,gut,digestion,health
+food,sensitivity,allergy,fodmap,gut,digestion,health,wellness,personal,ai,assistant,ibs

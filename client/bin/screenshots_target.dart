@@ -12,6 +12,8 @@ import 'package:gutlogic/resources/diary_repositories/meal_element_repository.da
 import 'package:gutlogic/resources/diary_repositories/meal_entry_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
 import 'package:gutlogic/resources/firebase/analytics_service.dart';
+import 'package:gutlogic/resources/food/food_service.dart';
+import 'package:gutlogic/resources/irritant_repository.dart';
 import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_repository.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
@@ -20,6 +22,7 @@ import 'package:gutlogic/routes/routes.dart';
 import 'package:gutlogic/style/gl_theme.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 
 import 'data.dart';
 import 'screenshots/screenshots_handler.dart' as screenshots;
@@ -37,7 +40,9 @@ class MainTabsPageWrapper extends StatelessWidget {
   AnalyticsService,
   AuthenticationBloc,
   BowelMovementEntryRepository,
+  FoodService,
   DiaryRepository,
+  IrritantRepository,
   MealElementRepository,
   MealEntryRepository,
   PantryService,
@@ -61,9 +66,17 @@ void main() {
   final diaryRepository = MockDiaryRepository();
   when(diaryRepository.streamAll()).thenAnswer((_) => Stream.value(diary));
 
+  // Mock food service
+  final foodService = MockFoodService();
+  when(foodService.streamFood(any)).thenAnswer((_) => Stream.value(food));
+
+  // Mock irritant repository
+  final irritantRepository = MockIrritantRepository();
+  when(irritantRepository.ofRef(any)).thenAnswer((_) => Future.value(irritants));
+
   // Mock meal entry
   final mealEntryRepository = MockMealEntryRepository();
-  when(mealEntryRepository.stream(any)).thenAnswer((_) => Stream.value(mealEntry));
+  when(mealEntryRepository.stream(any)).thenAnswer((_) => Stream.value(mealEntry2));
 
   // Mock mealElement
   final mealElementRepository = MockMealElementRepository();
@@ -94,12 +107,12 @@ void main() {
       Routes.provider(),
       RepositoryProvider<BowelMovementEntryRepository>(create: (context) => bowelMovementEntryRepository),
       RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
+      RepositoryProvider<FoodService>(create: (context) => foodService),
+      RepositoryProvider<IrritantRepository>(create: (context) => irritantRepository),
       RepositoryProvider<MealElementRepository>(create: (context) => mealElementRepository),
       RepositoryProvider<MealEntryRepository>(create: (context) => mealEntryRepository),
       RepositoryProvider<PantryService>(create: (context) => pantryRepository),
       RepositoryProvider<SensitivityRepository>(create: (context) => sensitivityRepository),
-      RepositoryProvider<SensitivityService>(
-          create: (context) => SensitivityService(sensitivityRepository: context.read<SensitivityRepository>())),
       RepositoryProvider<SymptomEntryRepository>(create: (context) => symptomEntryRepository),
       RepositoryProvider<UserRepository>(create: (context) => userRepository),
     ],
@@ -109,7 +122,10 @@ void main() {
         BlocProvider(create: (context) => DiaryBloc(repository: context.read<DiaryRepository>())),
         BlocProvider(create: (context) => PantryBloc(pantryService: context.read<PantryService>())),
       ],
-      child: MainTabsPageWrapper(),
+      child: ChangeNotifierProvider(
+        create: (context) => SensitivityService(sensitivityRepository: context.read<SensitivityRepository>()),
+        child: MainTabsPageWrapper(),
+      ),
     ),
   );
 

@@ -82,6 +82,14 @@ Build the production app for the distribution, signed with the release certifica
 
 Push a new develop channel build to Firebase App Distribution.
 
+### ios frames
+
+```sh
+[bundle exec] fastlane ios frames
+```
+
+Frame screenshots
+
 ### ios staging
 
 ```sh

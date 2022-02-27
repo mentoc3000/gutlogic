@@ -12,11 +12,39 @@ Future<void> openAppleSimulator() async {
 /// Launch an Apple Simulator with the provided config.
 Future<void> launch(AppleSimulatorDevice device) async {
   await run('xcrun', ['simctl', 'bootstatus', device.udid, '-b']);
+  final statusBarArgs = [
+    'simctl',
+    'status_bar',
+    device.udid,
+    'override',
+    '--time',
+    '9:41',
+    '--dataNetwork',
+    'wifi',
+    '--wifiMode',
+    'active',
+    '--wifiBars',
+    '3',
+    '--cellularMode',
+    'active',
+    '--cellularBars',
+    '4',
+    '--batteryState',
+    'charged',
+    '--batteryLevel',
+    '100'
+  ];
+  await run('xcrun', statusBarArgs);
 }
 
 /// Close an Apple Simulator using a [handle] returned by launch.
 Future<void> close(AppleSimulatorDevice device) async {
   await run('xcrun', ['simctl', 'shutdown', device.udid]);
+}
+
+/// Close all Apple Simulators
+Future<void> closeAll() async {
+  await run('xcrun', ['simctl', 'shutdown', 'all']);
 }
 
 /// Returns a list of available Apple Simulator devices.

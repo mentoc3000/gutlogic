@@ -31,6 +31,7 @@ void main() async {
 
 Future<void> orchestrateIOSJobs(ScreenshotsConfig config) async {
   await ios.openAppleSimulator();
+  await ios.closeAll();
 
   final devices = await ios.devices();
 

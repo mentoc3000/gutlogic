@@ -40,7 +40,8 @@ Runner.ipa
 Runner.app.dSYM.zip
 
 # Fastlane
-fastlane/screenshots
+fastlane/screenshots/**/*.png
+!fastlane/screenshots/background.png
 fastlane/report.xml
 
 # Ruby bundle exec

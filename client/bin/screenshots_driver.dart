@@ -1,5 +1,6 @@
 import 'package:flutter_driver/flutter_driver.dart';
 
+import 'data.dart';
 import 'screenshots/screenshots_driver.dart';
 
 void main() {
@@ -9,7 +10,7 @@ void main() {
     // Start filename with a number to put them in the correct order on the App Store
     await capture('2. timeline');
 
-    await driver.tap(find.text('Oatmeal'));
+    await driver.tap(find.text(mealEntry2.mealElements[0].foodReference.name));
 
     await capture('3. meal');
 
@@ -19,7 +20,7 @@ void main() {
     await capture('5. bowel_movement');
 
     await driver.tap(find.pageBack());
-    await driver.tap(find.text('Bloated'));
+    await driver.tap(find.text(symptomEntry.symptom.symptomType.name));
 
     await capture('4. symptom');
 
@@ -28,8 +29,8 @@ void main() {
 
     await capture('0. pantry');
 
+    await driver.tap(find.text(food.name));
     await driver.tap(find.text('Details'));
-    await driver.tap(find.text('Wheat Bread'));
 
     await capture('1. sensitivity');
   });

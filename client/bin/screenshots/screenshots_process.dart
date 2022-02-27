@@ -3,8 +3,8 @@ import 'dart:io';
 import 'screenshots_util.dart';
 
 /// Wrap Process.run with error throwing for non-zero exit codes.
-Future<ProcessResult> run(String command, List<String> arguments) async {
-  final result = await Process.run(command, arguments);
+Future<ProcessResult> run(String command, List<String> arguments, {String? workingDirectory}) async {
+  final result = await Process.run(command, arguments, workingDirectory: workingDirectory);
 
   if (result.exitCode == 0) return result;
 
@@ -13,6 +13,11 @@ Future<ProcessResult> run(String command, List<String> arguments) async {
 
 /// Build the screenshots driver into a [package] (e.g ios/apk).
 Future<void> build(String package, String target) async {
+  if (package == 'ios') {
+    log.i('Installing pods');
+    await run('pod', ['install'], workingDirectory: 'ios');
+  }
+
   log.i('Building screenshots driver { package: $package }');
 
   await run('flutter', [
