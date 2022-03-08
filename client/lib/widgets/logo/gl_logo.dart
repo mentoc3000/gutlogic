@@ -11,12 +11,13 @@ class GLLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     if (text) {
       return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset('assets/logo_trans.png', height: 200),
-            Text('gut logic', style: logoFont.copyWith(fontSize: 48)),
-          ]);
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset('assets/logo_trans.png', height: 200),
+          Text('gut logic', style: logoFont.copyWith(fontSize: 48)),
+        ],
+      );
     } else {
       return Image.asset('assets/logo_trans.png', height: 200);
     }

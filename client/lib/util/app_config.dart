@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'app_channel.dart';
@@ -17,8 +16,12 @@ enum Build { debug, profile, release }
 class AppConfig {
   AppConfig({
     required this.version,
+    required this.package,
     required this.environment,
   });
+
+  /// The application package identifier.
+  final String package;
 
   /// The application version (as defined in pubspec.yaml).
   final String version;
@@ -46,22 +49,25 @@ class AppConfig {
   }
 
   static Future<AppConfig> create() async {
-    var environment = Environment.development;
+    final info = await PackageInfo.fromPlatform();
+
+    final version = info.version;
+    final package = info.packageName;
+    final environment = await _findApplicationEnvironment();
+
+    return AppConfig(version: version, package: package, environment: environment);
+  }
+
+  static Future<Environment> _findApplicationEnvironment() async {
+    const channel = AppChannel('flavor');
 
     try {
-      WidgetsFlutterBinding.ensureInitialized(); // explicitly call this in case `runApp` has not been called yet
-      final flavor = await const AppChannel('flavor').invokeMethod<String>('get');
-      logger.d('Received application flavor "$flavor" from native channel.');
-      environment = (flavor == 'production') ? Environment.production : Environment.development;
+      final flavor = await channel.invokeMethod<String>('get');
+      return (flavor == 'production') ? Environment.production : Environment.development;
     } on Exception {
       logger.e('Unable to load application flavor.');
     }
 
-    final version = (await PackageInfo.fromPlatform()).version;
-
-    return AppConfig(
-      version: version,
-      environment: environment,
-    );
+    return Environment.development;
   }
 }

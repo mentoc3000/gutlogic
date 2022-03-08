@@ -1,8 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
 
-import '../auth/auth_provider.dart';
+import '../auth/auth.dart';
 
 part 'application_user.g.dart';
 
@@ -10,11 +9,11 @@ abstract class ApplicationUser implements Built<ApplicationUser, ApplicationUser
   /// The database ID of the user. All of the user data is indexed with this ID.
   String get id;
 
-  /// The username of the account.
-  String get username => email;
-
   /// The primary email associated with the user account.
-  String get email;
+  String? get email;
+
+  /// The username of the account.
+  String? get username => email;
 
   /// True if the user email has been verified.
   bool get verified;
@@ -22,21 +21,20 @@ abstract class ApplicationUser implements Built<ApplicationUser, ApplicationUser
   /// True if the user has consented to the privacy policy and terms of use.
   bool get consented;
 
-  /// The set of authentication providers this user has connected.
+  /// True if the user account is anonymous.
+  bool get anonymous;
+
+  /// The set of authentication services this user has connected.
   BuiltList<AuthProvider> get providers;
+
+  ApplicationUser._(); // required by built_value
 
   factory ApplicationUser({
     required String id,
-    required String email,
+    required String? email,
     required bool verified,
     required bool consented,
+    required bool anonymous,
     required BuiltList<AuthProvider> providers,
   }) = _$ApplicationUser._;
-
-  static void _initializeBuilder(ApplicationUserBuilder builder) => builder..consented = false;
-
-  // built_value boilerplate
-  ApplicationUser._();
-  static Serializer<ApplicationUser> get serializer => _$applicationUserSerializer;
-  // built_value boilerplate
 }

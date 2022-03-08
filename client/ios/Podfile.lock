@@ -27,6 +27,9 @@ PODS:
   - Firebase/Crashlytics (8.9.0):
     - Firebase/CoreOnly
     - FirebaseCrashlytics (~> 8.9.0)
+  - Firebase/DynamicLinks (8.9.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 8.9.0)
   - Firebase/Firestore (8.9.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 8.9.0)
@@ -49,6 +52,10 @@ PODS:
     - Flutter
   - firebase_crashlytics (2.2.1):
     - Firebase/Crashlytics (= 8.9.0)
+    - firebase_core
+    - Flutter
+  - firebase_dynamic_links (4.0.4):
+    - Firebase/DynamicLinks (= 8.9.0)
     - firebase_core
     - Flutter
   - firebase_remote_config (0.10.0-5):
@@ -96,6 +103,8 @@ PODS:
     - GoogleUtilities/Environment (~> 7.6)
     - nanopb (~> 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
+  - FirebaseDynamicLinks (8.9.0):
+    - FirebaseCore (~> 8.0)
   - FirebaseFirestore (8.9.0):
     - FirebaseFirestore/AutodetectLeveldb (= 8.9.0)
   - FirebaseFirestore/AutodetectLeveldb (8.9.0):
@@ -196,6 +205,7 @@ DEPENDENCIES:
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
+  - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `8.9.0`)
   - Flutter (from `Flutter`)
@@ -215,6 +225,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseCrashlytics
+    - FirebaseDynamicLinks
     - FirebaseFunctions
     - FirebaseInstallations
     - FirebaseRemoteConfig
@@ -242,6 +253,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_crashlytics:
     :path: ".symlinks/plugins/firebase_crashlytics/ios"
+  firebase_dynamic_links:
+    :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   firebase_remote_config:
     :path: ".symlinks/plugins/firebase_remote_config/ios"
   FirebaseFirestore:
@@ -275,6 +288,7 @@ SPEC CHECKSUMS:
   firebase_auth: ac1e9916a3283d7cf1308c7b16aed61a7eeebad5
   firebase_core: c263d7daf1dc92fcd9895e6abdc04872b0ee07ff
   firebase_crashlytics: 849cb8be075f476ca12aa22d50ca7523591a058a
+  firebase_dynamic_links: 2c153a7ab3794a43eb7e58aeb0f5f295a5977947
   firebase_remote_config: 2a43c3a6d3430fedb4f9f7360acc757d4d962bff
   FirebaseABTesting: fc7255f7e96d3cf7a1131fd68636c47e312cef76
   FirebaseAnalytics: 4ab446ce08a3fe52e8a4303dd997cf26276bf968
@@ -282,6 +296,7 @@ SPEC CHECKSUMS:
   FirebaseCore: 599ee609343eaf4941bd188f85e3aa077ffe325b
   FirebaseCoreDiagnostics: 56fb7216d87e0e6ec2feddefa9d8a392fe8b2c18
   FirebaseCrashlytics: 40efbd81157dae307ec95612fa1328347284d2c2
+  FirebaseDynamicLinks: 50980cbe21d2bbe8374afcdccd94dc2db20dffca
   FirebaseFirestore: 7c22bff6c0e1f222920cd110e9da13a117b61fea
   FirebaseFunctions: c78ec2f93cd453f25fb5e4c694c830f7a31ab349
   FirebaseInstallations: 830327b45345ffc859eaa9c17bcd5ae893fd5425

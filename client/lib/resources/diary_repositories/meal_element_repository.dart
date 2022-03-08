@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../models/diary_entry/meal_entry.dart';
 import '../../models/food/food.dart';
 import '../../models/meal_element.dart';

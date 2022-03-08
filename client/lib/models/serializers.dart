@@ -3,8 +3,6 @@ import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../auth/auth_provider.dart';
-import 'application_user.dart';
 import 'bowel_movement.dart';
 import 'diary_entry/bowel_movement_entry.dart';
 import 'diary_entry/diary_entry.dart';
@@ -44,7 +42,6 @@ part 'serializers.g.dart';
 
 // TODO: remove classes that don't need to be serialized
 @SerializersFor([
-  ApplicationUser,
   BowelMovement,
   BowelMovementEntry,
   CustomFood,
@@ -82,8 +79,7 @@ part 'serializers.g.dart';
 ])
 final Serializers serializers = (_$serializers.toBuilder()
       ..addPlugin(StandardJsonPlugin())
-      ..add(TimestampDateTimeSerializer())
-      ..add(AuthProviderSerializer()))
+      ..add(TimestampDateTimeSerializer()))
     .build();
 
 /// Alternative serializer for [DateTime].
@@ -114,26 +110,5 @@ class TimestampDateTimeSerializer implements PrimitiveSerializer<DateTime> {
   @override
   DateTime deserialize(Serializers serializers, Object serialized, {FullType specifiedType = FullType.unspecified}) {
     return (serialized as Timestamp).toDate().toUtc();
-  }
-}
-
-class AuthProviderSerializer implements PrimitiveSerializer<AuthProvider> {
-  final bool structured = false;
-
-  @override
-  final Iterable<Type> types = BuiltList<Type>([AuthProvider]);
-
-  @override
-  final String wireName = 'AuthProvider';
-
-  @override
-  Object serialize(Serializers serializers, AuthProvider provider, {FullType specifiedType = FullType.unspecified}) {
-    return toFirebaseProviderID(provider);
-  }
-
-  @override
-  AuthProvider deserialize(Serializers serializers, Object serialized,
-      {FullType specifiedType = FullType.unspecified}) {
-    return fromFirebaseProviderID(serialized as String);
   }
 }

@@ -1,41 +1,35 @@
-import 'apple/apple_auth.dart';
-import 'auth_provider.dart';
-import 'auth_result.dart';
-import 'google/google_auth.dart';
-import 'password/password_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-/// An authenticator abstracts the various ways of authenticating (Google, Apple, etc).
-class AuthService {
-  final PasswordAuth _passwordAuth = PasswordAuth();
-  final GoogleAuth _googleAuth = GoogleAuth();
-  final AppleAuth _appleAuth = AppleAuth();
+import '../util/app_config.dart';
+import '../util/result.dart';
+import 'auth_data.dart';
+import 'services/auth_apple.dart';
+import 'services/auth_email.dart';
+import 'services/auth_google.dart';
 
-  /// Authenticate with a provider.
-  ///
-  /// Throws an [ArgumentError] if the [provider] cannot create credentials. Only the password, google, and apple auth
-  /// providers are supported. Throws an [ArgumentError] if the password [provider] is passed without a [username] and
-  /// [password].
-  Future<AuthResult> authenticate({required AuthProvider provider, String? username, String? password}) {
-    switch (provider) {
-      case AuthProvider.password:
-        if (username == null || password == null) throw ArgumentError('A username and password are required.');
-        return _passwordAuth.authenticate(username: username, password: password);
-      case AuthProvider.google:
-        return _googleAuth.authenticate();
-      case AuthProvider.apple:
-        return _appleAuth.authenticate();
-      default:
-        // AuthProvider.firebase is not included because it cannot create credentials.
-        throw ArgumentError('There is no credential provider for the auth provider $provider.');
-    }
+abstract class AuthService {
+  static Future<List<Provider>> providers({required AppConfig config}) async {
+    // TODO these might be better stored in some build config?
+    const prodEmailAuthUrl = 'https://gutlogic.co/email_auth';
+    const devEmailAuthUrl = 'https://gutlogicdev.page.link/email_auth';
+    final emailAuthUrl = config.isProduction ? prodEmailAuthUrl : devEmailAuthUrl;
+
+    return [
+      if (await AppleAuthService.available()) Provider<AppleAuthService>(create: (c) => AppleAuthService()),
+      Provider<EmailAuthService>(create: (c) => EmailAuthService(url: emailAuthUrl, package: config.package)),
+      Provider<GoogleAuthService>(create: (c) => GoogleAuthService()),
+    ];
   }
 
-  /// Deauthenticate with all providers.
-  Future<void> deauthenticate() {
-    return Future.wait([
-      _passwordAuth.deauthenticate(),
-      _googleAuth.deauthenticate(),
-      _appleAuth.deauthenticate(),
-    ]);
+  /// Deauthenticate all of the auth services in the context.
+  static Future<void> deauthenticate(BuildContext context) async {
+    await context.read<AppleAuthService?>()?.deauthenticate();
+    await context.read<GoogleAuthService?>()?.deauthenticate();
   }
+}
+
+abstract class AuthProviderService {
+  FutureResult<Authentication> authenticate();
+  Future<void> deauthenticate();
 }

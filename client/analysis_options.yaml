@@ -42,7 +42,7 @@ analyzer:
     - "**/*.mocks.dart"
 
 enable-experiment:
-  - extension-methods
+  - extension-services
 
 linter:
   rules:

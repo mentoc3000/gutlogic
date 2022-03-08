@@ -19,9 +19,11 @@ class ErrorSnackBar extends GLSnackBar {
   ///
   /// Pair this with BlocListener to automatically show error messages.
   static void listen(BuildContext context, dynamic state) {
-    if (state is ErrorState) {
-      final widget = ErrorSnackBar(text: state.message ?? 'Uh oh, something went wrong.');
-      ScaffoldMessenger.of(context).showSnackBar(widget);
-    }
+    if (state is ErrorState) ErrorSnackBar.show(context, state);
+  }
+
+  static void show(BuildContext context, ErrorState state) {
+    final message = state.message ?? 'Uh oh, something went wrong.';
+    ScaffoldMessenger.of(context).showSnackBar(ErrorSnackBar(text: message));
   }
 }

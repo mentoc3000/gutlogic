@@ -122,6 +122,7 @@ void main() {
     );
 
     test('errors are recorded', () {
+      // ignore: unnecessary_type_check
       expect(DiaryError(message: '') is ErrorRecorder, true);
     });
   });

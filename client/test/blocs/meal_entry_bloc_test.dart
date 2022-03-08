@@ -414,6 +414,7 @@ void main() {
     );
 
     test('errors are recorded', () {
+      // ignore: unnecessary_type_check
       expect(MealEntryError(message: '') is ErrorRecorder, true);
     });
   });

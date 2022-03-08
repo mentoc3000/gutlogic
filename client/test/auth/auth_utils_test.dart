@@ -1,4 +1,4 @@
-import 'package:gutlogic/auth/auth_utils.dart';
+import 'package:gutlogic/auth/auth_util.dart';
 import 'package:test/test.dart';
 
 void main() {

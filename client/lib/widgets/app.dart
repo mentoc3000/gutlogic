@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/user_cubit.dart';
 import '../pages/landing/landing_page.dart';
 import '../resources/firebase/analytics_service.dart';
 import '../resources/user_repository.dart';
-import '../routes/routes.dart';
 import '../style/gl_colors.dart';
 import '../style/gl_theme.dart';
-import '../util/app_config.dart';
 import 'authenticated_resources.dart';
-import 'flavor_banner.dart';
 import 'gl_widget_config.dart';
 
 class GutLogicApp extends StatelessWidget {
@@ -19,10 +17,12 @@ class GutLogicApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        Routes.provider(),
         RepositoryProvider(create: (context) => UserRepository()),
       ],
-      child: createRootWidget(context),
+      child: BlocProvider(
+        create: (context) => UserCubit(repository: context.read<UserRepository>()),
+        child: createRootWidget(context),
+      ),
     );
   }
 
@@ -31,13 +31,14 @@ class GutLogicApp extends StatelessWidget {
       onTap: () => _unfocus(context),
       child: MaterialApp(
         home: LandingPage.provisioned(),
+        debugShowCheckedModeBanner: false,
         builder: (context, child) {
           return GLWidgetConfig(
             child: Stack(
               children: [
                 Container(color: GLColors.lightestGray),
                 AuthenticatedResources(child: child ?? Container(), navigatorKey: _navigatorKey),
-                if (context.read<AppConfig>().isDebug) FlavorBanner(),
+                //if (context.read<AppConfig>().isDebug) FlavorBanner(),
               ],
             ),
           );

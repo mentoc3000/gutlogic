@@ -73,6 +73,14 @@ mixin ErrorEvent on Equatable {
   List<Object?> get props => [report];
 }
 
+/// A base class for empty bloc states that implements Equatable.
+class BaseState extends Equatable {
+  const BaseState();
+
+  @override
+  List<Object?> get props => [];
+}
+
 /// A base class for simple data update states.
 abstract class UpdateState extends Equatable {
   const UpdateState();
@@ -97,9 +105,15 @@ class UpdateSuccessState extends UpdateState {
 }
 
 /// Emitted after the data update was rejected.
-class UpdateFailureState extends UpdateState with ErrorState {
+class UpdateFailureState extends UpdateState with ErrorState, ErrorRecorder {
   @override
   final String? message;
 
-  const UpdateFailureState({this.message});
+  @override
+  final ErrorReport? report;
+
+  const UpdateFailureState({this.message}) : report = null;
+
+  UpdateFailureState.report({this.message, required dynamic error, required StackTrace trace})
+      : report = ErrorReport(error: error, trace: trace);
 }

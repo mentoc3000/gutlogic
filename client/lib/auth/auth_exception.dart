@@ -1,11 +1,30 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 
+import '../util/logger.dart';
+
 /// AuthException translates the weakly typed PlatformExceptions from firebase_auth into strongly typed exceptions.
 class AuthException implements Exception {
   final String message;
-  final String code;
 
-  AuthException({required this.message, this.code = 'unknown'});
+  AuthException({required this.message});
+
+  static AuthException from(FirebaseAuthException ex) {
+    if (ex.code == 'account-exists-different-credential') return DuplicateUsernameException();
+    if (ex.code == 'email-already-in-use') return DuplicateUsernameException();
+    if (ex.code == 'invalid-email') throw InvalidEmailException();
+    if (ex.code == 'invalid-credential') return InvalidCredentialException();
+    if (ex.code == 'wrong-password') return WrongPasswordException();
+    if (ex.code == 'weak-password') return InvalidPasswordException();
+    if (ex.code == 'user-not-found') return MissingUserException();
+    if (ex.code == 'user-disabled') return DisabledUserException();
+    if (ex.code == 'user-mismatch') return MismatchedUserException();
+    if (ex.code == 'requires-recent-login') return StaleAuthenticationException();
+    if (ex.code == 'operation-not-allowed') return InvalidOperationException();
+
+    logger.e('Unhandled FirebaseAuthException code: ${ex.code}\n  ${ex.message}');
+
+    return AuthException(message: 'Unknown auth exception.');
+  }
 }
 
 /// Thrown when attempting to register or update a username to a username already in use by another account.
@@ -23,8 +42,8 @@ class MissingProviderException extends AuthException {
 }
 
 /// Thrown when attempting to login, register, or update a username to an invalid email.
-class InvalidUsernameException extends AuthException {
-  InvalidUsernameException() : super(message: 'The username is invalid.');
+class InvalidEmailException extends AuthException {
+  InvalidEmailException() : super(message: 'The email is invalid.');
 }
 
 /// Thrown when attempting to login, register, or update a password to an invalid or weak password.
@@ -72,20 +91,7 @@ class InvalidOperationException extends AuthException {
   InvalidOperationException() : super(message: 'That operation is invalid.');
 }
 
-extension AuthExceptionExtension on FirebaseAuthException {
-  AuthException toAuthException() {
-    if (code == 'account-exists-different-credential') return DuplicateUsernameException();
-    if (code == 'email-already-in-use') return DuplicateUsernameException();
-    if (code == 'invalid-email') throw InvalidUsernameException();
-    if (code == 'invalid-credential') return InvalidCredentialException();
-    if (code == 'wrong-password') return WrongPasswordException();
-    if (code == 'weak-password') return InvalidPasswordException();
-    if (code == 'user-not-found') return MissingUserException();
-    if (code == 'user-disabled') return DisabledUserException();
-    if (code == 'user-mismatch') return MismatchedUserException();
-    if (code == 'requires-recent-login') return StaleAuthenticationException();
-    if (code == 'operation-not-allowed') return InvalidOperationException();
-
-    return AuthException(message: 'Unknown FirebaseAuthException code', code: code);
-  }
+/// Thrown when attempting to authenticate with a provider on a platform where it is unavailable.
+class ProviderUnavailableException extends AuthException {
+  ProviderUnavailableException() : super(message: 'The auth provider is unavailable on this platform.');
 }

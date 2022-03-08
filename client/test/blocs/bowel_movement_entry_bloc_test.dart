@@ -343,6 +343,7 @@ void main() {
     );
 
     test('errors are recorded', () {
+      // ignore: unnecessary_type_check
       expect(BowelMovementEntryError(message: '') is ErrorRecorder, true);
     });
   });

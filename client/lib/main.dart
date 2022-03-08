@@ -10,17 +10,21 @@ import 'package:logger/logger.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
-import 'auth/apple/apple_auth.dart';
+import 'auth/auth.dart';
 import 'blocs/gut_logic_bloc_observer.dart';
 import 'resources/firebase/analytics_service.dart';
-import 'resources/firebase/cloud_function_service.dart';
 import 'resources/firebase/crashlytics_service.dart';
 import 'resources/firebase/remote_config_service.dart';
+import 'resources/user_repository.dart';
+import 'routes/routes.dart';
 import 'util/app_config.dart';
 import 'util/logger.dart';
 import 'widgets/app.dart';
 
 void main() async {
+  // Fixes issues with using native channels before calling runApp.
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Initialize the app config.
   final config = await AppConfig.create();
 
@@ -52,9 +56,6 @@ void main() async {
 
   final remoteConfigService = await RemoteConfigService.initialize(enabled: config.isProduction);
 
-  // Cache Sign in with Apple availability so it can be used synchronously.
-  await AppleAuth.queryAndCacheAvailability();
-
   // Forward flutter errors to Crashlytics.
   FlutterError.onError = (FlutterErrorDetails details) async {
     await crashlytics.recordFlutterError(details);
@@ -64,12 +65,16 @@ void main() async {
   // Observe bloc transitions, report some things automatically to analytics/crashlytics.
   Bloc.observer = GutLogicBlocObserver(analytics: analytics, crashlytics: crashlytics);
 
+  final users = UserRepository();
+
   final app = MultiProvider(providers: [
     Provider.value(value: config),
     Provider.value(value: analytics),
     Provider.value(value: crashlytics),
     Provider.value(value: remoteConfigService),
-    Provider.value(value: CloudFunctionService())
+    Provider.value(value: users),
+    ...(await AuthService.providers(config: config)),
+    Provider(create: (_) => Routes()),
   ], child: GutLogicApp());
 
   // Forward zone errors to Crashlytics.

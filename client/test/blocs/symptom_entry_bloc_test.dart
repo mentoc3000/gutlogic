@@ -420,6 +420,7 @@ void main() {
     );
 
     test('errors are recorded', () {
+      // ignore: unnecessary_type_check
       expect(SymptomEntryError(message: '') is ErrorRecorder, true);
     });
   });

@@ -5,7 +5,7 @@ import '../style/gl_theme.dart';
 
 class GLScaffold extends StatelessWidget {
   final AppBar? appBar;
-  final Widget? body;
+  final Widget body;
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
   final Color? backgroundColor;
@@ -13,7 +13,7 @@ class GLScaffold extends StatelessWidget {
   const GLScaffold({
     Key? key,
     this.appBar,
-    this.body,
+    required this.body,
     this.floatingActionButton,
     this.bottomNavigationBar,
     this.backgroundColor,
@@ -39,7 +39,7 @@ class GLScaffold extends StatelessWidget {
 
     return Scaffold(
       appBar: appBar,
-      body: body,
+      body: SafeArea(child: body),
       floatingActionButton: floatingActionButton,
       // floatingActionButtonLocation:,
       // floatingActionButtonAnimator:,

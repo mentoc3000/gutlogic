@@ -1,47 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../blocs/consent/consent.dart';
-import '../../../routes/routes.dart';
-import '../../../style/gl_colors.dart';
 import '../../../widgets/buttons/buttons.dart';
-import '../../../widgets/snack_bars/error_snack_bar.dart';
-
-final _consentImage = SvgPicture.asset('assets/consent/consent_image.svg');
-
-final _consentText = Text.rich(
-  TextSpan(
-    children: [
-      const TextSpan(
-        text: 'Our goal at Gut Logic is to improve your health by analyzing what you eat and how it makes you feel. We '
-            'are committed to handling your data responsibly and will never sell your personal information.\n\nYou can '
-            'delete your data at any time. Please review our ',
-      ),
-      TextSpan(
-        text: 'privacy policy',
-        style: const TextStyle(color: GLColors.blue, fontWeight: FontWeight.bold),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () async {
-            const url = 'http://gutlogic.co/gut_logic_privacy_policy.pdf';
-            if (await canLaunch(url)) await launch(url);
-          },
-      ),
-      const TextSpan(
-        text: ' and email us at ',
-      ),
-      const TextSpan(
-        text: 'privacy@gutlogic.co',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      const TextSpan(
-        text: ' with any questions.',
-      ),
-    ],
-  ),
-);
 
 class ConsentForm extends StatefulWidget {
   @override
@@ -50,57 +11,71 @@ class ConsentForm extends StatefulWidget {
 
 class ConsentFormState extends State<ConsentForm> {
   bool _isMinimumAge = false;
-  bool _isPrivacyReviewed = false;
+  bool _isPrivacyPolicyReviewed = false;
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ConsentBloc, ConsentState>(listener: listener, builder: builder);
-  }
+    final state = context.select((ConsentCubit cubit) => cubit.state);
 
-  Widget builder(BuildContext context, ConsentState state) {
-    final isSubmittable = _isMinimumAge && _isPrivacyReviewed && (state is ConsentReady);
+    final editable = (state is ConsentInitial);
+    final submittable = editable && _isMinimumAge && _isPrivacyPolicyReviewed;
 
-    return ListView(children: [
-      SizedBox(height: 200, child: _consentImage),
-      Padding(
-        padding: const EdgeInsets.only(top: 40, bottom: 40),
-        child: _consentText,
-      ),
-      CheckboxListTile(
+    return Column(children: [
+      ConsentFormMinimumAgeCheckbox(
         value: _isMinimumAge,
-        title: const Text('I am 16 or older.'),
-        onChanged: state is ConsentReady ? (value) => onAgeCheckboxChanged(value: value) : null,
+        onChanged: editable ? (v) => setState(() => _isMinimumAge = v) : null,
       ),
-      CheckboxListTile(
-        value: _isPrivacyReviewed,
-        title: const Text('I have reviewed the privacy policy.'),
-        onChanged: state is ConsentReady ? (value) => onPrivacyCheckboxChanged(value: value) : null,
+      ConsentFormPrivacyCheckbox(
+        value: _isPrivacyPolicyReviewed,
+        onChanged: editable ? (v) => setState(() => _isPrivacyPolicyReviewed = v) : null,
       ),
-      GLPrimaryButton(
-        child: const StretchedButtonContent(label: 'Agree'),
-        onPressed: isSubmittable ? () => onAgreeButtonPressed(context) : null,
-      )
+      ConsentFormSubmitButton(onPressed: submittable ? () => context.read<ConsentCubit>().consent() : null)
     ]);
   }
+}
 
-  void onAgeCheckboxChanged({bool? value}) {
-    setState(() => {_isMinimumAge = value ?? false});
+class ConsentFormMinimumAgeCheckbox extends StatelessWidget {
+  final bool value;
+  final void Function(bool)? onChanged;
+
+  ConsentFormMinimumAgeCheckbox({required this.value, this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      value: value,
+      title: const Text('I am 16 or older.'),
+      onChanged: (b) => onChanged?.call(b ?? false),
+    );
   }
+}
 
-  void onPrivacyCheckboxChanged({bool? value}) {
-    setState(() => {_isPrivacyReviewed = value ?? false});
+class ConsentFormPrivacyCheckbox extends StatelessWidget {
+  final bool value;
+  final void Function(bool)? onChanged;
+
+  ConsentFormPrivacyCheckbox({required this.value, this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      value: value,
+      title: const Text('I have reviewed the privacy policy.'),
+      onChanged: (b) => onChanged?.call(b ?? false),
+    );
   }
+}
 
-  void onAgreeButtonPressed(BuildContext context) {
-    context.read<ConsentBloc>().add(const ConsentSubmitted());
-  }
+class ConsentFormSubmitButton extends StatelessWidget {
+  final VoidCallback? onPressed;
 
-  void listener(BuildContext context, ConsentState state) {
-    if (state is ConsentDone) {
-      Navigator.of(context).pushAndRemoveUntil(Routes.of(context).main, (_) => false);
-    }
-    if (state is ConsentError) {
-      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackBar(text: state.message));
-    }
+  ConsentFormSubmitButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return GLPrimaryButton(
+      child: const StretchedButtonContent(label: 'Agree'),
+      onPressed: onPressed,
+    );
   }
 }

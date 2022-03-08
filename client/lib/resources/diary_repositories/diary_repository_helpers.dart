@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../models/diary_entry/diary_entry.dart';
 import '../../models/serializers.dart';
 import '../firebase/firestore_repository.dart';

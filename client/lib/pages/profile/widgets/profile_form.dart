@@ -1,96 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
+import 'package:gap/gap.dart';
 
-import '../../../blocs/bloc_helpers.dart';
-import '../../../blocs/profile/profile_bloc.dart';
-import '../../../input/input.dart';
+import '../../../blocs/profile/profile.dart';
 import '../../../resources/profile_repository.dart';
 import '../../../widgets/buttons/buttons.dart';
 
-class ProfileForm extends StatelessWidget {
-  final Profile? profile;
+class ProfileForm extends StatefulWidget {
+  final Profile profile;
 
   ProfileForm({required this.profile});
 
   @override
+  ProfileFormState createState() => ProfileFormState(profile: profile);
+}
+
+class ProfileFormState extends State<ProfileForm> {
+  final TextEditingController _firstnameController;
+  final TextEditingController _lastnameController;
+
+  ProfileFormState({required Profile profile})
+      : _firstnameController = TextEditingController(text: profile.firstname),
+        _lastnameController = TextEditingController(text: profile.lastname);
+
+  @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        BlocProvider(create: (c) => ProfileBloc(repository: c.read<ProfileRepository>())),
-        BlocProvider(create: (c) => ProfileFormInputs(profile: profile)),
-      ],
-      child: BlocListener<ProfileBloc, UpdateState>(
-        listener: (context, state) {
-          if (state is UpdateSuccessState) Navigator.of(context).pop();
-        },
-        child: ListView(
-          children: [
-            ProfileFormFirstName(),
-            const SizedBox(height: 20),
-            ProfileFormLastName(),
-            const SizedBox(height: 20),
-            ProfileFormSaveButton(),
-          ],
+    void submit() {
+      final firstname = _firstnameController.text;
+      final lastname = _lastnameController.text;
+      context.read<ProfileCubit>().update(Profile(firstname: firstname, lastname: lastname));
+    }
+
+    return Column(
+      children: [
+        ProfileFormFirstName(
+          controller: _firstnameController,
         ),
-      ),
+        const Gap(20),
+        ProfileFormLastName(
+          controller: _lastnameController,
+        ),
+        const Gap(20),
+        ProfileFormSaveButton(onPressed: submit)
+      ],
     );
   }
 }
 
-class ProfileFormInputs extends InputGroup {
-  final InputText firstname;
-  final InputText lastname;
-
-  ProfileFormInputs({Profile? profile})
-      : firstname = InputText(value: profile?.firstname ?? ''),
-        lastname = InputText(value: profile?.lastname ?? '');
-
-  @override
-  List<Input> get inputs => [firstname, lastname];
-}
-
 class ProfileFormFirstName extends StatelessWidget {
+  final TextEditingController controller;
+
+  ProfileFormFirstName({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: const InputDecoration(labelText: 'First Name'),
-      controller: context.select((ProfileFormInputs i) => i.firstname.controller),
       textCapitalization: TextCapitalization.words,
     );
   }
 }
 
 class ProfileFormLastName extends StatelessWidget {
+  final TextEditingController controller;
+
+  ProfileFormLastName({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: const InputDecoration(labelText: 'Last Name'),
-      controller: context.select((ProfileFormInputs i) => i.lastname.controller),
       textCapitalization: TextCapitalization.words,
     );
   }
 }
 
 class ProfileFormSaveButton extends StatelessWidget {
+  final void Function() onPressed;
+
+  ProfileFormSaveButton({required this.onPressed});
+
   @override
   Widget build(BuildContext context) {
     return GLPrimaryButton(
       child: const StretchedButtonContent(label: 'Save'),
-      enabled: context.select((ProfileBloc c) => c.state is! UpdateSavingState),
-      onPressed: () => _submit(context),
-    );
-  }
-
-  void _submit(BuildContext context) {
-    final input = context.read<ProfileFormInputs>();
-    final cubit = context.read<ProfileBloc>();
-
-    cubit.update(
-      profile: Profile(
-        firstname: input.firstname.value,
-        lastname: input.lastname.value,
-      ),
+      enabled: context.select((ProfileCubit cubit) => cubit.state is! ProfileSaving),
+      onPressed: onPressed,
     );
   }
 }

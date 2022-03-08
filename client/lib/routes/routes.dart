@@ -10,8 +10,9 @@ import '../models/meal_element.dart';
 import '../models/pantry/pantry_entry.dart';
 import '../models/symptom_type.dart';
 import '../pages/account/account_page.dart';
+import '../pages/account_create/account_create_page.dart';
+import '../pages/account_delete/account_delete_page.dart';
 import '../pages/bowel_movement_entry/bowel_movement_entry_page.dart';
-import '../pages/change_password/change_password_page.dart';
 import '../pages/consent/consent_page.dart';
 import '../pages/food/food_page.dart';
 import '../pages/food_group/food_group_page.dart';
@@ -22,21 +23,15 @@ import '../pages/meal_element_entry/meal_element_entry_page.dart';
 import '../pages/meal_entry/meal_entry_page.dart';
 import '../pages/pantry_entry/pantry_entry_page.dart';
 import '../pages/profile/profile_page.dart';
+import '../pages/reauthenticate/reauthenticate_page.dart';
 import '../pages/register/register_page.dart';
-import '../pages/reset_password/reset_password_page.dart';
 import '../pages/settings/settings_page.dart';
 import '../pages/symptom_entry/symptom_entry_page.dart';
-import '../pages/verify_email/verify_email_page.dart';
 
 class Routes {
   /// Find a provided Routes in the widget tree.
   static Routes of(BuildContext context) {
     return RepositoryProvider.of<Routes>(context);
-  }
-
-  /// Create a new RepositoryProvider widget for the Routes.
-  static RepositoryProvider<Routes> provider() {
-    return RepositoryProvider<Routes>(create: (context) => Routes());
   }
 
   Route get root {
@@ -53,13 +48,6 @@ class Routes {
     );
   }
 
-  Route get resetPassword {
-    return MaterialPageRoute(
-      builder: (context) => ResetPasswordPage.provisioned(),
-      settings: const RouteSettings(name: 'Reset Password Page'),
-    );
-  }
-
   Route get register {
     return MaterialPageRoute(
       builder: (context) => RegisterPage.provisioned(),
@@ -71,13 +59,6 @@ class Routes {
     return MaterialPageRoute(
       builder: (context) => ConsentPage.provisioned(),
       settings: const RouteSettings(name: 'Verify Age Page'),
-    );
-  }
-
-  Route verifyEmail(String email) {
-    return MaterialPageRoute(
-      builder: (context) => VerifyEmailPage.provisioned(email: email),
-      settings: const RouteSettings(name: 'Verify Email Page'),
     );
   }
 
@@ -102,17 +83,31 @@ class Routes {
     );
   }
 
+  Route get createAccount {
+    return MaterialPageRoute(
+      builder: (context) => AccountCreatePage.provisioned(),
+      settings: const RouteSettings(name: 'Create Account Page'),
+    );
+  }
+
+  Route get deleteAccount {
+    return MaterialPageRoute(
+      builder: (context) => AccountDeletePage.provisioned(),
+      settings: const RouteSettings(name: 'Delete Account Page'),
+    );
+  }
+
+  Route get reauthenticate {
+    return MaterialPageRoute(
+      builder: (context) => ReauthenticatePage.provisioned(),
+      settings: const RouteSettings(name: 'Reauthenticate Page'),
+    );
+  }
+
   Route get profile {
     return MaterialPageRoute(
       builder: (context) => ProfilePage(),
       settings: const RouteSettings(name: 'Profile Page'),
-    );
-  }
-
-  Route get changePassword {
-    return MaterialPageRoute(
-      builder: (context) => ChangePasswordPage.provisioned(),
-      settings: const RouteSettings(name: 'Change Password Page'),
     );
   }
 

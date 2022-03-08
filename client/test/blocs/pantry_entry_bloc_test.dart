@@ -242,6 +242,7 @@ void main() {
     );
 
     test('errors are recorded', () {
+      // ignore: unnecessary_type_check
       expect(PantryEntryError(message: '') is ErrorRecorder, true);
     });
   });

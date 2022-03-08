@@ -1,18 +1,16 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../auth/auth.dart';
 import '../models/application_user.dart';
-import '../models/serializers.dart';
 import 'firebase/firestore_service.dart';
 
 class UserRepository {
   final FirebaseFirestore _firebaseData;
   final FirebaseAuth _firebaseAuth;
-  final AuthService _authService;
 
   /// The _currentUserStream emits every time the FirebaseUser or its associated metadata document is updated with
   /// distinct values. It will always contain the most recent distinct value of our application user.
@@ -28,10 +26,9 @@ class UserRepository {
   /// The current user, or null.
   ApplicationUser? get user => _currentUserStream.value;
 
-  UserRepository({FirebaseFirestore? firebaseData, FirebaseAuth? firebaseAuth, AuthService? authService})
+  UserRepository({FirebaseFirestore? firebaseData, FirebaseAuth? firebaseAuth})
       : _firebaseData = firebaseData ?? FirebaseFirestore.instance,
-        _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _authService = authService ?? AuthService() {
+        _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance {
     _currentUserStream = _createApplicationUserStream(_firebaseAuth.userChanges());
   }
 
@@ -57,15 +54,16 @@ class UserRepository {
 
       final user = values[0] as User;
       final snap = values[1] as UntypedDocumentSnapshot;
-
       final data = snap.data() ?? {};
 
-      data['id'] = user.uid;
-      data['email'] = user.email;
-      data['providers'] = user.providerData.map((data) => data.providerId);
-      data['verified'] = user.emailVerified;
-
-      return serializers.deserializeWith(ApplicationUser.serializer, data);
+      return ApplicationUser(
+        id: user.uid,
+        email: user.email,
+        verified: user.emailVerified,
+        consented: data['consented'] ?? false,
+        anonymous: user.isAnonymous,
+        providers: BuiltList.from(user.providerData.map((p) => AuthProviderUtil.fromFirebaseProviderID(p.providerId))),
+      );
     });
 
     // Filter out identical application users. This can happen when the FirebaseUser stream emits a new user with the
@@ -88,35 +86,28 @@ class UserRepository {
     return _firebaseData.collection('users').doc(uid);
   }
 
-  /// Throws a [StateError] if authenticated.
-  void _requireUnauthenticatedState() {
-    if (authenticated) throw StateError('This operation requires the repository to not be authenticated.');
+  /// Returns true if an account exists for the provided [email].
+  Future<bool> exists({required String email}) async {
+    try {
+      return (await _firebaseAuth.fetchSignInMethodsForEmail(email)).isNotEmpty;
+    } on FirebaseAuthException catch (ex) {
+      throw AuthException.from(ex);
+    }
   }
 
-  /// Throws a [StateError] if not authenticated.
-  void _requireAuthenticatedState() {
-    if (authenticated == false) throw StateError('This operation requires the repository to be authenticated.');
-  }
+  /// Login with a [credential]. If the email doesn't have an account already, a new account will be created. If the
+  /// [credential] is null, an anonymous user will be created.
+  Future<void> login({Authentication? authentication}) async {
+    if (authenticated) throw RequiresUnauthenticatedError();
 
-  /// Login with a [provider].
-  ///
-  /// Throws a [StateError] if already authenticated. Throws a [DuplicateUsernameException] if a federated [credential]
-  /// has an email already in use by different account. Throws an [InvalidCredentialException] if the [credential] is
-  /// malformed or invalid. Throws an [InvalidOperationException] if the [credential] provider is disabled. Throws a
-  /// [DisabledUserException] if the [credential] is for a disabled account. Throws a [MissingUserException] if the
-  /// [credential] is for an account that does not exist. Throws a [WrongPasswordException] if the [credential] has the
-  /// wrong password for the account.
-  Future<void> login({required AuthProvider provider, String? username, String? password}) async {
-    _requireUnauthenticatedState();
-
-    final auth = await _authService.authenticate(provider: provider, username: username, password: password);
-
-    UserCredential result;
+    late final UserCredential result;
 
     try {
-      result = await _firebaseAuth.signInWithCredential(auth.credential);
+      result = await (authentication == null
+          ? _firebaseAuth.signInAnonymously()
+          : _firebaseAuth.signInWithCredential(authentication.credential));
     } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
+      throw AuthException.from(ex);
     }
 
     if (result.user == null) {
@@ -126,270 +117,81 @@ class UserRepository {
     await _firstUserWhere((user) => user != null);
   }
 
-  /// Create a new account with a [username] and [password], and then login with a password credential.
-  ///
-  /// New accounts with federated providers are handled by simply logging in with the federated auth credential.
-  ///
-  /// Throws a [StateError] if already authenticated. Throws a [DuplicateUsernameException] if the [username] is already
-  /// in use. Throws an [InvalidUsernameException] if the [username] is invalid. Throws an [InvalidPasswordException] if
-  /// the [password] is invalid or weak. Throws an [InvalidOperationException] if the [password] auth provider is
-  /// disabled.
-  Future<void> register({required String username, required String password}) async {
-    _requireUnauthenticatedState();
+  /// Mark the [user] as having consented to the privacy policy.
+  Future<void> consent(ApplicationUser user) async {
+    await _getUserMetaDocumentReference(user.id).set({'consented': true}, SetOptions(merge: true));
+  }
+
+  /// Reauthenticate a user with a fresh credential.
+  Future<void> reauthenticate({required Authentication authentication}) async {
+    if (authenticated == false) throw RequiresAuthenticatedError();
 
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: username, password: password);
+      await _firebaseAuth.currentUser!.reauthenticateWithCredential(authentication.credential);
     } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
+      throw AuthException.from(ex);
     }
-
-    await login(
-      provider: AuthProvider.password,
-      username: username,
-      password: password,
-    );
   }
 
-  /// Send an email verification to the current user.
-  ///
-  /// Throws a [StateError] if not authenticated.
-  Future<void> sendEmailVerification() async {
-    _requireAuthenticatedState();
+  /// Link the current user with a new [authentication] provider.
+  Future<void> linkAuthProvider({required Authentication authentication}) async {
+    if (authenticated == false) throw RequiresAuthenticatedError();
 
     try {
-      await _firebaseAuth.currentUser!.sendEmailVerification();
+      await _firebaseAuth.currentUser!.linkWithCredential(authentication.credential);
     } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
-    }
-  }
-
-  /// Refresh the email verification of the current user. Returns true if the user has verified their email.
-  ///
-  /// Throws a [StateError] if not authenticated.
-  Future<bool> refreshEmailVerification() async {
-    _requireAuthenticatedState();
-
-    final isEmailVerified = _firebaseAuth.currentUser!.emailVerified;
-
-    // Skip reloading the user if we already have a verified user.
-    if (isEmailVerified) return true;
-
-    try {
-      await _firebaseAuth.currentUser!.reload();
-    } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
+      throw AuthException.from(ex);
     }
 
-    // Wait for the user stream to update with the user change if we reloaded a verified user.
-    if (_firebaseAuth.currentUser!.emailVerified) {
-      await _firstUserWhere((user) => user?.verified == true);
-    }
-
-    return user?.verified == true;
-  }
-
-  /// Update the [username] associated with the current user.
-  ///
-  /// This is only valid if the user is linked to a password auth provider, and requires a recent reauthentication.
-  ///
-  /// Throws a [StateError] if not authenticated. Throws a [MissingProviderException] if the user is not linked to a
-  /// password provider. Throws an [InvalidUsernameException] if the [username] is not a valid email. Throws a
-  /// [DuplicateUsernameException] if the username is already used. Throws a [StaleAuthenticationException] if the user
-  /// has not recently authenticated.
-  Future<void> updateUsername({required String username}) async {
-    _requireAuthenticatedState();
-
-    if (user!.providers.contains(AuthProvider.password) == false) throw MissingProviderException();
-
-    try {
-      await _firebaseAuth.currentUser!.updateEmail(username);
-    } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
-    }
-
-    await _firstUserWhere((user) => user?.username == username);
-  }
-
-  /// Update the [currentPassword] for the current user to [updatedPassword].
-  ///
-  /// This is only valid if the user is linked to a password auth provider, and requires a recent reauthentication.
-  ///
-  /// Throws a [StateError] if not authenticated. Throws a [MissingProviderException] if the user is not linked to a
-  /// password provider. Throws an [InvalidPasswordException] if the [updatedPassword] is an invalid or weak
-  /// password. Throws a [StaleAuthenticationException] if the user has not recently authenticated.
-  Future<void> updatePassword({required String currentPassword, required String updatedPassword}) async {
-    _requireAuthenticatedState();
-
-    if (user!.providers.contains(AuthProvider.password) == false) throw MissingProviderException();
-
-    // Acquire a recent authentication using the current password.
-    await reauthenticate(
-      provider: AuthProvider.password,
-      username: _firebaseAuth.currentUser!.email,
-      password: currentPassword,
-    );
-
-    try {
-      await _firebaseAuth.currentUser!.updatePassword(updatedPassword);
-    } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
-    }
-
-    // Updating the password does not emit a new user.
-  }
-
-  /// Update the user metadata with the values found in [updatedUser].
-  ///
-  /// This cannot be used to update the user ID, email, or auth providers.
-  ///
-  /// Throws a [StateError] if not authenticated.
-  Future<void> updateMetadata({required ApplicationUser updatedUser}) async {
-    _requireAuthenticatedState();
-
-    if (user == updatedUser) return;
-
-    final json = serializers.serializeWith(ApplicationUser.serializer, updatedUser) as Map<String, dynamic>;
-
-    // These properties need to be changed through other methods.
-    assert(user!.id == updatedUser.id);
-    assert(user!.email == updatedUser.email);
-    assert(user!.providers == updatedUser.providers);
-
-    // Manually strip the document JSON of properties we don't want to saved to the user document.
-    json.remove('id');
-    json.remove('email');
-    json.remove('providers');
-
-    await _getUserMetaDocumentReference(user!.id).set(json);
-
-    await _firstUserWhere((user) => user == updatedUser);
-  }
-
-  /// Get the set of auth providers linked to an account [username].
-  Future<Set<AuthProvider>> getAvailableAuthProviders({required String username}) async {
-    List<String> methods;
-
-    try {
-      methods = await _firebaseAuth.fetchSignInMethodsForEmail(username);
-    } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
-    }
-
-    return methods.map(fromFirebaseProviderID).toSet();
-  }
-
-  /// Reauthenticate a user with a fresh credential. Call this before modifying sensitive user data, like updating
-  /// the password or linking a new account.
-  ///
-  /// Throws a [StateError] if not authenticated. Throws a [MismatchedUserException] if the [credential] is for a
-  /// different user. Throws a [MissingUserException] if the [credential] does not correspond to any user. Throws an
-  /// [InvalidCredentialException] if the [credential] is malformed or invalid. Throws an [InvalidUsernameException] if
-  /// the [credential] has an invalid username. Throws an [InvalidPasswordException] if the [credential] has an
-  /// invalid password. Throws a [WrongPasswordException] if the [credential] has the wrong password for the account.
-  Future<void> reauthenticate({required AuthProvider provider, String? username, String? password}) async {
-    _requireAuthenticatedState();
-
-    final auth = await _authService.authenticate(provider: provider, username: username, password: password);
-
-    try {
-      await _firebaseAuth.currentUser?.reauthenticateWithCredential(auth.credential);
-    } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
-    }
-  }
-
-  /// Returns true if the [username] is linked with a certain auth [provider].
-  Future<bool> isAuthProviderLinked({required String username, required AuthProvider provider}) async {
-    final providers = await getAvailableAuthProviders(username: username);
-    return providers.contains(provider);
-  }
-
-  /// Link the current user with a new auth [provider] using the [credential]. This requires a recent reauthentication.
-  ///
-  /// Throws a [StateError] if not authenticated. Throws a [DuplicateProviderException] if the user is already linked to
-  /// the auth [provider].
-  Future<void> linkAuthProvider({required AuthProvider provider, String? password}) async {
-    _requireAuthenticatedState();
-
-    if (user!.providers.contains(provider)) throw DuplicateProviderException();
-
-    final auth = await _authService.authenticate(
-      provider: provider,
-      username: _firebaseAuth.currentUser!.email,
-      password: password,
-    );
-
-    try {
-      await _firebaseAuth.currentUser!.linkWithCredential(auth.credential);
-    } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
-    }
-
-    await _firstUserWhere((user) => user?.providers.contains(provider) == true);
+    await _firstUserWhere((user) => user?.providers.contains(authentication.provider) == true);
   }
 
   /// Unlink the current user from the auth [provider]. This requires a recent reauthentication.
-  ///
-  /// Throws a [StateError] if not authenticated. Throws a [MissingProviderException] if the user is not linked to the
-  /// auth [provider].
   Future<void> unlinkAuthProvider({required AuthProvider provider}) async {
-    _requireAuthenticatedState();
-
-    if (user!.providers.contains(provider) == false) throw MissingProviderException();
+    if (authenticated == false) throw RequiresAuthenticatedError();
 
     try {
-      await _firebaseAuth.currentUser!.unlink(toFirebaseProviderID(provider));
+      await _firebaseAuth.currentUser!.unlink(AuthProviderUtil.toFirebaseProviderID(provider));
     } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
+      throw AuthException.from(ex);
     }
 
     await _firstUserWhere((user) => user?.providers.contains(provider) == false);
   }
 
-  /// Send a password reset email to [email].
-  ///
-  /// Throws a [StateError] if not authenticated. Throws an [MissingUserException] if the email is not registered with
-  /// an account. Throws an [InvalidUsernameException] if the email is invalid.
-  Future<void> resetPassword({required String email}) async {
-    try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
-    }
-  }
-
   /// Delete the current user account. This requires a recent reauthentication.
   ///
   /// Deleting a user automatically deletes their user data and metadata via a background server job.
-  ///
-  /// Throws a [StateError] if not authenticated. Throws [StaleAuthenticationException] if the user has not recently
-  /// authenticated.
   Future<void> delete() async {
-    _requireAuthenticatedState();
+    if (authenticated == false) throw RequiresAuthenticatedError();
 
     try {
       await _firebaseAuth.currentUser!.delete();
     } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
+      throw AuthException.from(ex);
     }
-
-    await _authService.deauthenticate();
 
     await _firstUserWhere((user) => user == null);
   }
 
-  /// Log out and deauthenticate the current user.
+  /// Log out the current user.
   Future<void> logout() async {
     if (authenticated == false) return;
 
     try {
       await _firebaseAuth.signOut();
     } on FirebaseAuthException catch (ex) {
-      throw ex.toAuthException();
+      throw AuthException.from(ex);
     }
-
-    await _authService.deauthenticate();
 
     await _firstUserWhere((user) => user == null);
   }
+}
+
+class RequiresAuthenticatedError extends StateError {
+  RequiresAuthenticatedError() : super('This operation requires the repository to be authenticated.');
+}
+
+class RequiresUnauthenticatedError extends StateError {
+  RequiresUnauthenticatedError() : super('This operation requires the repository to be unauthenticated.');
 }

@@ -1,118 +1,96 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gutlogic/auth/auth.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
-import 'mock_firebase_auth.mocks.dart';
-
-@GenerateMocks([], customMocks: [
-  MockSpec<FirebaseAuth>(as: #GeneratedMockFirebaseAuth),
-  MockSpec<User>(as: #GeneratedMockUser),
-  MockSpec<UserCredential>(as: #GeneratedMockUserCredential),
-  MockSpec<UserInfo>(as: #GeneratedMockUserInfo),
-  MockSpec<AuthCredential>(as: #GeneratedMockAuthCredential),
-  MockSpec<AuthService>(as: #GeneratedMockAuthService),
-])
-class MockFirebaseAuth extends GeneratedMockFirebaseAuth {
-  final _stateChangedStreamController = StreamController<User?>();
-
-  User? _currentUser;
-
-  MockFirebaseAuth();
+class FakeFirebaseAuth extends Fake implements FirebaseAuth {
+  final _currentUserStream = BehaviorSubject<User?>();
 
   @override
-  User? get currentUser => _currentUser;
+  User? get currentUser => _currentUserStream.value;
 
   @override
-  Stream<User?> userChanges() => _stateChangedStreamController.stream.asBroadcastStream();
-
-  late MockUser Function() createMockFirebaseUser;
-
-  @override
-  Future<UserCredential> signInWithEmailAndPassword({String? email, String? password}) async {
-    return _mockSignIn(createMockFirebaseUser());
-  }
-
-  @override
-  Future<UserCredential> signInWithCustomToken(String? token) async {
-    return _mockSignIn(createMockFirebaseUser());
-  }
+  Stream<User?> userChanges() => _currentUserStream.asBroadcastStream();
 
   @override
   Future<UserCredential> signInWithCredential(AuthCredential? credential) async {
-    return _mockSignIn(createMockFirebaseUser());
+    final user = FakeUser(_currentUserStream);
+
+    _currentUserStream.add(user);
+
+    return FakeUserCredential(user: user);
   }
 
   @override
-  Future<UserCredential> createUserWithEmailAndPassword({String? email, String? password}) async {
-    return MockUserCredential(user: createMockFirebaseUser());
-  }
+  Future<UserCredential> signInAnonymously() async {
+    final user = FakeUser(_currentUserStream);
 
-  void _updateCurrentUser(User? user) {
-    _currentUser = user;
-    _stateChangedStreamController.add(user);
-  }
+    user.isAnonymous = true;
 
-  Future<MockUserCredential> _mockSignIn(User user) {
-    final result = MockUserCredential(user: user);
-    _updateCurrentUser(result.user);
-    return Future.value(result);
+    _currentUserStream.add(user);
+
+    return FakeUserCredential(user: user);
   }
 
   @override
   Future<void> signOut() async {
-    _updateCurrentUser(null);
+    _currentUserStream.add(null);
   }
 }
 
-class MockUser extends GeneratedMockUser {
-  final MockFirebaseAuth auth;
+class FakeUser extends Fake implements User {
+  @override
+  String uid = 'fake';
 
-  MockUser({required this.auth});
+  @override
+  String email = 'fake@fake.com';
+
+  @override
+  bool emailVerified = true;
+
+  @override
+  bool isAnonymous = false;
+
+  @override
+  List<FakeUserInfo> providerData = [FakeUserInfo(providerId: 'firebase')];
+
+  final BehaviorSubject<User?> _currentUserStream;
+
+  FakeUser(BehaviorSubject<User?> firebaseAuthUser) : _currentUserStream = firebaseAuthUser;
+
+  @override
+  Future<UserCredential> linkWithCredential(AuthCredential? cred) async {
+    _currentUserStream.add(this);
+    return FakeUserCredential(user: this);
+  }
 
   @override
   Future<UserCredential> reauthenticateWithCredential(AuthCredential? cred) async {
-    return MockUserCredential(user: this);
+    _currentUserStream.add(this);
+    return FakeUserCredential(user: this);
   }
 
   @override
-  Future<void> updateEmail(String? email) async {
-    when(this.email).thenReturn(email);
-    auth._updateCurrentUser(this);
-  }
-
-  @override
-  Future<void> updatePassword(String? password) async {
-    auth._updateCurrentUser(this);
+  Future<void> delete() async {
+    _currentUserStream.add(null);
   }
 }
 
-class MockUserCredential extends GeneratedMockUserCredential {
-  @override
-  final User? user;
-
-  MockUserCredential({required this.user});
+class FakeAuthCredential extends Fake implements AuthCredential {
+  FakeAuthCredential();
 }
 
-class MockUserInfo extends GeneratedMockUserInfo {
+class FakeUserCredential extends Fake implements UserCredential {
+  @override
+  final FakeUser? user;
+
+  FakeUserCredential({required this.user});
+}
+
+class FakeUserInfo extends Fake implements UserInfo {
   @override
   final String providerId;
 
-  MockUserInfo({required this.providerId});
-}
-
-class MockAuthCredential extends GeneratedMockAuthCredential {}
-
-class MockAuthService extends GeneratedMockAuthService {
-  @override
-  Future<AuthResult> authenticate({AuthProvider? provider, String? username, String? password}) async {
-    return Future.value(AuthResult(provider: provider!, credential: MockAuthCredential()));
-  }
-
-  @override
-  Future<void> deauthenticate() {
-    return Future.value();
-  }
+  FakeUserInfo({required this.providerId});
 }

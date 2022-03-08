@@ -25,6 +25,7 @@ dependencies:
   flutter_sfsymbols: ^2.0.0
   flutter_speed_dial: ^5.0.0+1
   flutter_svg: ^1.0.3
+  gap: ^2.0.0
   google_fonts: ^2.0.0
   google_sign_in: ^5.0.1
   intl: 0.17.0
@@ -36,6 +37,7 @@ dependencies:
   url_launcher: ^6.0.2
 
   # Utility
+  provider: ^6.0.0
   quiver: ^3.0.1
 
   # Firebase
@@ -46,6 +48,7 @@ dependencies:
   firebase_core: ^1.6.0
   firebase_crashlytics: ^2.2.1
   firebase_remote_config: ^0.10.0+5
+  firebase_dynamic_links: ^4.0.4
 
 dev_dependencies:
   flutter_test:

@@ -56,8 +56,8 @@ class GLButton extends StatelessWidget {
     final ShapeBorder shape =
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(height * 0.5)); // maximize radius
 
-    return ButtonTheme(
-      height: height,
+    return SizedBox.fromSize(
+      size: Size(double.infinity, height),
       child: MaterialButton(
         key: key,
         onPressed: onPressed,
@@ -88,6 +88,7 @@ class GLButton extends StatelessWidget {
         animationDuration: animationDuration,
         child: child,
         minWidth: height,
+        height: height,
       ),
     );
   }

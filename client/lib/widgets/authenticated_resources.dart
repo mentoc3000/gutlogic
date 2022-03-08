@@ -2,9 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-import '../blocs/authentication/authentication.dart';
+import '../auth/auth_service.dart';
 import '../blocs/food_search/food_search_bloc.dart';
 import '../blocs/symptom_type/symptom_type_bloc.dart';
+import '../blocs/user_cubit.dart';
+import '../models/application_user.dart';
 import '../resources/diary_repositories/bowel_movement_entry_repository.dart';
 import '../resources/diary_repositories/diary_repository.dart';
 import '../resources/diary_repositories/meal_element_repository.dart';
@@ -38,23 +40,20 @@ class AuthenticatedResources extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthenticationBloc>(
-      create: (context) => AuthenticationBloc.fromContext(context),
-      child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-        listener: listener,
-        buildWhen: condition,
-        builder: builder,
-      ),
+    return BlocConsumer<UserCubit, ApplicationUser?>(
+      listener: listener,
+      listenWhen: condition,
+      builder: builder,
+      buildWhen: condition,
     );
   }
 
-  bool condition(AuthenticationState prev, AuthenticationState next) {
-    // Ignore transitions into the AuthenticationUnknown state.
-    return (next is Authenticated || next is Unauthenticated);
+  bool condition(ApplicationUser? prev, ApplicationUser? next) {
+    return (prev == null && next != null) || (prev != null && next == null);
   }
 
-  Widget builder(BuildContext context, AuthenticationState state) {
-    if (state is Authenticated) {
+  Widget builder(BuildContext context, ApplicationUser? user) {
+    if (user is ApplicationUser) {
       // Wrap the child views in the global authenticated repositories/blocs.
       return MultiRepositoryProvider(
         providers: [
@@ -162,25 +161,14 @@ class AuthenticatedResources extends StatelessWidget {
     }
   }
 
-  void listener(BuildContext context, AuthenticationState state) {
+  void listener(BuildContext context, ApplicationUser? user) {
     Route dest;
 
-    if (state is Authenticated) {
-      // Navigate to the verify email page if the user has not verified their email yet.
-      final user = context.read<UserRepository>().user!;
-
-      if (user.verified == false) {
-        dest = Routes.of(context).verifyEmail(user.email);
-      } else if (user.consented == false) {
-        dest = Routes.of(context).consent;
-      } else {
-        dest = Routes.of(context).main;
-      }
-    } else if (state is Unauthenticated) {
-      // Always navigate to the root page if the user is unauthenticated.
-      dest = Routes.of(context).root;
+    if (user is ApplicationUser) {
+      dest = user.consented ? Routes.of(context).main : Routes.of(context).consent;
     } else {
-      return;
+      AuthService.deauthenticate(context);
+      dest = Routes.of(context).root;
     }
 
     final navigatorContext = navigatorKey.currentContext;

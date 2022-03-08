@@ -10,6 +10,8 @@ class ProfileRepository {
 
   final BehaviorSubject<Profile> stream = BehaviorSubject();
 
+  Profile get value => stream.valueOrNull ?? Profile();
+
   ProfileRepository({required FirestoreService firestore}) {
     _document = firestore.userDocument;
     _document.snapshots().map(_deserialize).pipe(stream);

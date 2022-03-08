@@ -2,9 +2,9 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_driver/driver_extension.dart';
-import 'package:gutlogic/blocs/authentication/authentication.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
+import 'package:gutlogic/blocs/user_cubit.dart';
 import 'package:gutlogic/pages/main_tabs.dart';
 import 'package:gutlogic/resources/diary_repositories/bowel_movement_entry_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
@@ -38,7 +38,6 @@ class MainTabsPageWrapper extends StatelessWidget {
 
 @GenerateMocks([
   AnalyticsService,
-  AuthenticationBloc,
   BowelMovementEntryRepository,
   FoodService,
   DiaryRepository,
@@ -57,10 +56,6 @@ void main() {
   // Mock user repository
   final userRepository = MockUserRepository();
   when(userRepository.user).thenReturn(user);
-
-  // Mock authentication bloc
-  final authenticationBloc = MockAuthenticationBloc();
-  when(authenticationBloc.state).thenReturn(const Authenticated());
 
   // Mock diary
   final diaryRepository = MockDiaryRepository();
@@ -102,9 +97,9 @@ void main() {
   // remove debug banner for screenshots
   WidgetsApp.debugAllowBannerOverride = false;
 
-  final app = MultiRepositoryProvider(
+  final app = MultiProvider(
     providers: [
-      Routes.provider(),
+      Provider(create: (context) => Routes()),
       RepositoryProvider<BowelMovementEntryRepository>(create: (context) => bowelMovementEntryRepository),
       RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
       RepositoryProvider<FoodService>(create: (context) => foodService),
@@ -118,7 +113,7 @@ void main() {
     ],
     child: MultiBlocProvider(
       providers: [
-        BlocProvider<AuthenticationBloc>(create: (context) => authenticationBloc),
+        BlocProvider(create: (context) => UserCubit(repository: context.read<UserRepository>())),
         BlocProvider(create: (context) => DiaryBloc(repository: context.read<DiaryRepository>())),
         BlocProvider(create: (context) => PantryBloc(pantryService: context.read<PantryService>())),
       ],

@@ -23,6 +23,10 @@ class GLColors {
   static const googleBlue = Color(0xFF4285F4);
   static const edamamGreen = Color(0xFF79CA38);
 
+  static const info = Colors.blue;
+
+  static const cancel = Colors.redAccent;
+
   static const food = Colors.blue;
   static const bowelMovement = Colors.purple;
   static const symptom = Colors.red;

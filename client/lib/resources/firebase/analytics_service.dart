@@ -24,11 +24,6 @@ class AnalyticsService {
     return AnalyticsObserver(_observer);
   }
 
-  /// Track an analytics event, with optional [parameters].
-  void _track({required String name, Map<String, Object>? parameters}) {
-    _analytics?.logEvent(name: name, parameters: parameters);
-  }
-
   // NAVIGATION
 
   void subscribeToRoute(RouteAware routeAware, PageRoute route) => _observer?.subscribe(routeAware, route);
@@ -41,12 +36,31 @@ class AnalyticsService {
 
   void setUser(ApplicationUser user) => _analytics?.setUserId(user.id);
 
-  void logEvent(String name) => _track(name: name);
+  void logEvent(String name) => _analytics?.logEvent(name: name);
 
-  void logLogin(AuthProvider provider) => _analytics?.logLogin(loginMethod: provider.toString());
+  void logLogin(AuthMethod method) => _analytics?.logLogin(loginMethod: method.toString());
+
+  void logRegistration(AuthMethod method) {
+    switch (method) {
+      case AuthMethod.anonymous:
+        _analytics?.logEvent(name: 'register_with_anonymous');
+        break;
+      case AuthMethod.apple:
+        _analytics?.logEvent(name: 'register_with_apple');
+        break;
+      case AuthMethod.email:
+        _analytics?.logEvent(name: 'register_with_email');
+        break;
+      case AuthMethod.google:
+        _analytics?.logEvent(name: 'register_with_google');
+        break;
+    }
+    // TODO replace above case statement with enum extension in Flutter 2.15
+    // _analytics?.logEvent(name: 'register_with_${method.name}');
+  }
 
   void logUpdateEvent(String name, [String? field]) {
-    _track(name: name, parameters: field == null ? null : {field: field});
+    _analytics?.logEvent(name: name, parameters: field == null ? null : {field: field});
   }
 }
 

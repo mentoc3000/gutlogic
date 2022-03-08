@@ -1,6 +1,5 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gutlogic/models/profile.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
 import 'package:gutlogic/resources/profile_repository.dart';
 

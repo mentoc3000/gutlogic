@@ -1,5 +1,5 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:gutlogic/auth/auth_provider.dart';
+import 'package:gutlogic/auth/auth.dart';
 import 'package:gutlogic/models/application_user.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
@@ -35,7 +35,8 @@ final user = ApplicationUser(
   email: 'email',
   verified: true,
   consented: true,
-  providers: [AuthProvider.password].build(),
+  anonymous: false,
+  providers: BuiltList<AuthProvider>([AuthProvider.firebase]),
 );
 
 final food = EdamamFood(
