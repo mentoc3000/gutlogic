@@ -10,7 +10,7 @@ const maxBatchSize = 500;
 
 admin.initializeApp();
 
-const db = admin.database();
+const db = admin.firestore();
 const foodIrritantsCollection = db.collection('food_irritants');
 const foodGroupsCollection = db.collection('food_groups');
 
