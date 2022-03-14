@@ -1,6 +1,6 @@
 const test = require('ava');
 
-const fft = require('./fft');
+const { fft } = require('./helpers');
 
 const functions = require('../index');
 

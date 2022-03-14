@@ -1,7 +1,7 @@
 const test = require('ava');
 const admin = require('firebase-admin');
 
-const fft = require('./fft');
+const { fft } = require('./helpers');
 
 const myFunctions = require('../index');
 const db = admin.firestore();
