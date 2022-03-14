@@ -1,19 +1,16 @@
 #!/usr/bin/env node
 
 const tools = require('firebase-tools');
-const { initializeApp, applicationDefault, cert } = require('firebase-admin/lib/app');
-const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/lib/firestore');
+const admin = require('firebase-admin');
 
 const foodIrritantData = require('../data/irritants.json');
 const foodGroupsData = require('../data/food_groups.json');
 
 const maxBatchSize = 500;
 
-initializeApp({
-  credential: applicationDefault(),
-});
+admin.initializeApp();
 
-const db = getFirestore();
+const db = admin.database();
 const foodIrritantsCollection = db.collection('food_irritants');
 const foodGroupsCollection = db.collection('food_groups');
 
