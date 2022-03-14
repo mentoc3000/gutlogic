@@ -67,7 +67,7 @@ compliance:
     - server/.npm-cache
 
 .server:
-  image: node:12-alpine
+  image: node:16-alpine
   tags:
     - docker
   before_script:
