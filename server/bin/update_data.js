@@ -8,9 +8,7 @@ const foodGroupsData = require('../data/food_groups.json');
 
 const maxBatchSize = 500;
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-});
+admin.initializeApp();
 
 const db = admin.database();
 const foodIrritantsCollection = db.collection('food_irritants');

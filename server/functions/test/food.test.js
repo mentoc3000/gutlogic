@@ -1,7 +1,6 @@
 const test = require('ava');
 
-const testHelpers = require('./_helpers');
-const fft = testHelpers.firebaseFunctionsTest;
+const fft = require('./fft');
 
 const functions = require('../index');
 

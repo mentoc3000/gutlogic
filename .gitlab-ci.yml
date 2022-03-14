@@ -121,8 +121,6 @@ server:test:
   extends:
     - .server
   script:
-    # copy GOOGLE_APPLICATION_CREDENTIALS from environment into fastlane target
-    - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/gutlogic-dev-firebase-adminsdk.json"
     - npm run test
   rules:
     - *server-merge-request-rule
@@ -136,8 +134,7 @@ server:deploy:
   extends:
     - .server
   script:
-    - firebase deploy --token $FIREBASE_TOKEN
-    - npm run update-data
+    - npm run deploy
   rules:
     - *server-commit-rule
     - *manual-commit-rule
