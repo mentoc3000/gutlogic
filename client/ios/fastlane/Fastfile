@@ -8,15 +8,14 @@ setup_ci()
 lane :get_app_store_connect_api_key do
   
   ensure_env_vars(
-    env_vars: ['APP_STORE_CONNECT_API_KEY_CONTENT']
+    env_vars: [
+      'APP_STORE_CONNECT_API_KEY_KEY_ID',
+      'APP_STORE_CONNECT_API_KEY_ISSUER_ID',
+      'APP_STORE_CONNECT_API_KEY_KEY'
+    ]
   )
   
-  app_store_connect_api_key(
-    key_id: "75HNR98N37",
-    issuer_id: "9fd8aa47-a866-4f2d-b5c5-90e44847c4ca",
-    key_content: "#{ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]}".gsub('\n', '\\n'),
-    in_house: false
-  )
+  app_store_connect_api_key()
 
 end
 
