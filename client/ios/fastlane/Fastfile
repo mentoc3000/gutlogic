@@ -4,17 +4,18 @@ default_platform :ios
 ENV["GOOGLE_AUTH_SUPPRESS_CREDENTIALS_WARNINGS"] = "true"
 
 lane :get_app_store_connect_api_key do
+  
   ensure_env_vars(
-    env_vars: [
-      'APP_STORE_CONNECT_API_KEY_CONTENT'
-    ]
-  ) 
+    env_vars: ['APP_STORE_CONNECT_API_KEY_CONTENT']
+  )
+  
   app_store_connect_api_key(
     key_id: "75HNR98N37",
     issuer_id: "9fd8aa47-a866-4f2d-b5c5-90e44847c4ca",
     key_content: "#{ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]}".gsub('\n', '\\n'),
-    in_house: false,
+    in_house: false
   )
+
 end
 
 desc "Match the local development certificate for the development app."
@@ -30,7 +31,8 @@ lane :certificate_develop_local do |options|
     type: "development",
     force: force,
     readonly: readonly,
-    force_for_new_devices: true)
+    force_for_new_devices: true
+  )
 
 end
 
@@ -47,7 +49,8 @@ lane :certificate_develop_adhoc do |options|
     type: "adhoc",
     force: force,
     readonly: readonly,
-    force_for_new_devices: true)
+    force_for_new_devices: true
+  )
 
 end
 
@@ -63,7 +66,8 @@ lane :certificate_release do |options|
     app_identifier: ["com.gutlogic.app"],
     type: "appstore",
     force: force,
-    readonly: readonly)
+    readonly: readonly
+  )
 
 end
 
@@ -85,10 +89,12 @@ platform :ios do
 
     certificate_develop_adhoc()
 
-    gym(workspace: "Runner.xcworkspace",
-        scheme: "development",
-        export_method: "ad-hoc",
-        include_bitcode: true)
+    gym(
+      workspace: "Runner.xcworkspace",
+      scheme: "development",
+      export_method: "ad-hoc",
+      include_bitcode: true
+    )
 
   end
 
@@ -99,10 +105,12 @@ platform :ios do
 
     certificate_release()
 
-    gym(workspace: "Runner.xcworkspace",
-        scheme: "production",
-        export_method: "app-store",
-        include_bitcode: true)
+    gym(
+      workspace: "Runner.xcworkspace",
+      scheme: "production",
+      export_method: "app-store",
+      include_bitcode: true
+    )
 
   end
 
@@ -113,7 +121,7 @@ platform :ios do
 
     firebase_app_distribution(
       groups: "develop-testers",
-      release_notes: "Gut Logic Dev",
+      release_notes: "Gut Logic Dev"
     )
 
   end
