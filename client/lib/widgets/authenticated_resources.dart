@@ -63,6 +63,7 @@ class AuthenticatedResources extends StatelessWidget {
           RepositoryProvider(create: (context) {
             return ProfileRepository(firestore: context.read<FirestoreService>());
           }),
+          RepositoryProvider(create: (context) => CloudFunctionService()),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
             return SensitivityRepository(
