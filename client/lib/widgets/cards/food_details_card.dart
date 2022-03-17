@@ -22,8 +22,9 @@ class FoodDetailsCard extends StatelessWidget {
       future: irritants,
       builder: (context, snapshot) {
         final irritants = snapshot.data;
-        final irritantNames =
-            (irritants?.isEmpty ?? true) ? 'None' : (irritants!.map((i) => i.name).toList()..sort()).join('\n');
+        final irritantNames = (irritants?.isEmpty ?? true)
+            ? 'None'
+            : (irritants!.where((i) => i.concentration > 0).map((i) => i.name).toList()..sort()).join('\n');
         return ExpansionCard(
           heading: 'Details',
           items: [
