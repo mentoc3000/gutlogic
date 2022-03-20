@@ -135,8 +135,8 @@ class AuthenticatedResources extends StatelessWidget {
         child: MultiBlocProvider(
           providers: [
             // TODO move these into their most tightly nested widget trees
-            BlocProvider(create: (context) => FoodSearchBloc.fromContext(context)),
-            BlocProvider(create: (context) => SymptomTypeBloc.fromContext(context)),
+            BlocProvider(create: FoodSearchBloc.fromContext),
+            BlocProvider(create: SymptomTypeBloc.fromContext),
           ],
           child: ChangeNotifierProvider(
             create: (context) {

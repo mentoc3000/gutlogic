@@ -34,10 +34,8 @@ class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber {
     });
   }
 
-  factory PantrySortCubit.fromContext(BuildContext context) {
-    return PantrySortCubit(
-      pantryFilterCubit: context.read<PantryFilterCubit>(),
-    );
+  static PantrySortCubit fromContext(BuildContext context) {
+    return PantrySortCubit(pantryFilterCubit: context.read<PantryFilterCubit>());
   }
 
   void sortBy(PantrySort pantrySort) {

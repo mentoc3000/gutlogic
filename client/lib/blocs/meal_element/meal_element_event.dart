@@ -41,7 +41,7 @@ class StreamMealElement extends MealElementEvent {
   List<Object?> get props => [mealElement];
 }
 
-class Update extends MealElementEvent with DebouncedEvent implements Tracked {
+class Update extends MealElementEvent implements Tracked {
   final MealElement mealElement;
 
   const Update(this.mealElement);
@@ -53,7 +53,7 @@ class Update extends MealElementEvent with DebouncedEvent implements Tracked {
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_meal_element');
 }
 
-class UpdateQuantity extends MealElementEvent with DebouncedEvent implements Tracked {
+class UpdateQuantity extends MealElementEvent implements Tracked {
   final Quantity quantity;
 
   const UpdateQuantity(this.quantity);
@@ -65,7 +65,7 @@ class UpdateQuantity extends MealElementEvent with DebouncedEvent implements Tra
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_meal_element', 'quantity');
 }
 
-class UpdateNotes extends MealElementEvent with DebouncedEvent implements Tracked {
+class UpdateNotes extends MealElementEvent implements Tracked {
   final String notes;
 
   const UpdateNotes(this.notes);
@@ -77,7 +77,7 @@ class UpdateNotes extends MealElementEvent with DebouncedEvent implements Tracke
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_meal_element', 'notes');
 }
 
-class UpdateFoodReference extends MealElementEvent with DebouncedEvent implements Tracked {
+class UpdateFoodReference extends MealElementEvent implements Tracked {
   final FoodReference foodReference;
 
   const UpdateFoodReference(this.foodReference);

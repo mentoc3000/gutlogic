@@ -1,29 +1,28 @@
-import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedantic/pedantic.dart';
+
 import '../../resources/diary_repositories/diary_repository_helpers.dart';
-import '../bloc_helpers.dart';
 import 'diary_entry_event.dart';
 import 'diary_entry_state.dart';
 
-mixin DiaryEntryMapper<TStreamData, TEvent, TState> on StreamSubscriber<TStreamData, TState> {
-  late final DiaryEntryStreamer diaryEntryStreamer;
-  late final DiaryEntryDeleter diaryEntryDeleter;
-  late final DiaryEntryUpdater diaryEntryUpdater;
+mixin DiaryEntryMapper<TStreamData, TState> on BlocBase<TState> {
+  late final TimelineRepository timelineRepository;
 
-  Stream<TState> mapDiaryEntryEventToState(TEvent event) async* {
-    if (event is DeleteDiaryEntry) {
-      unawaited(diaryEntryDeleter.delete(event.diaryEntry));
-    }
-    if (event is UpdateDiaryEntry) {
-      unawaited(diaryEntryUpdater.updateEntry(event.diaryEntry));
-    }
-    if (event is UpdateDiaryEntryDateTime) {
-      final diaryEntry = (state as DiaryEntryLoaded).diaryEntry;
-      unawaited(diaryEntryUpdater.updateDateTime(diaryEntry, event.dateTime));
-    }
-    if (event is UpdateDiaryEntryNotes) {
-      final diaryEntry = (state as DiaryEntryLoaded).diaryEntry;
-      unawaited(diaryEntryUpdater.updateNotes(diaryEntry, event.notes));
-    }
+  void onDeleteEntry(DeleteDiaryEntry event, Emitter<TState> emit) {
+    unawaited(timelineRepository.delete(event.diaryEntry));
+  }
+
+  void onUpdateEntry(UpdateDiaryEntry event, Emitter<TState> emit) {
+    unawaited(timelineRepository.updateEntry(event.diaryEntry));
+  }
+
+  void onUpdateDateTime(UpdateDiaryEntryDateTime event, Emitter<TState> emit) {
+    final diaryEntry = (state as DiaryEntryLoaded).diaryEntry;
+    unawaited(timelineRepository.updateDateTime(diaryEntry, event.dateTime));
+  }
+
+  void onUpdateNotes(UpdateDiaryEntryNotes event, Emitter<TState> emit) {
+    final diaryEntry = (state as DiaryEntryLoaded).diaryEntry;
+    unawaited(timelineRepository.updateNotes(diaryEntry, event.notes));
   }
 }

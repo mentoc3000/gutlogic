@@ -11,7 +11,7 @@ import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
 import 'diary_repository_helpers.dart';
 
-class DiaryRepository with FirestoreRepository, DiaryEntryAdder, DiaryEntryDeleter {
+class DiaryRepository with FirestoreRepository, TimelineRepository {
   final CrashlyticsService crashlytics;
   DiaryRepository({required FirestoreService firestoreService, required this.crashlytics}) {
     this.firestoreService = firestoreService;

@@ -30,9 +30,9 @@ class PantryPage extends StatelessWidget {
   static Widget provisioned() {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => PantryBloc.fromContext(context)..add(const StreamAllPantry())),
-        BlocProvider(create: (context) => PantryFilterCubit.fromContext(context)),
-        BlocProvider(create: (context) => PantrySortCubit.fromContext(context)),
+        BlocProvider(create: (c) => PantryBloc.fromContext(c)..add(const StreamAllPantry())),
+        BlocProvider(create: PantryFilterCubit.fromContext),
+        BlocProvider(create: PantrySortCubit.fromContext),
       ],
       child: PantryPage(),
     );

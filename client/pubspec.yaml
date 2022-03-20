@@ -20,7 +20,6 @@ dependencies:
   device_info_plus: ^2.1.0
   email_validator: ^2.0.1
   equatable: ^2.0.0
-  flutter_bloc: ^7.0.0
   flutter_password_strength: ^0.1.6
   flutter_sfsymbols: ^2.0.0
   flutter_speed_dial: ^5.0.0+1
@@ -35,6 +34,10 @@ dependencies:
   rxdart: ^0.27.0
   scrollable_positioned_list: ^0.2.0-nullsafety.0
   url_launcher: ^6.0.2
+
+  # Bloc
+  bloc_concurrency: ^0.1.0
+  flutter_bloc: ^7.2.0
 
   # Utility
   provider: ^6.0.0

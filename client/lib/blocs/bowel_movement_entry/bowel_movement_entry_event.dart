@@ -46,9 +46,7 @@ class DeleteBowelMovementEntry extends BowelMovementEntryEvent with DeleteDiaryE
   void track(AnalyticsService analytics) => analytics.logEvent('delete_bowel_movement_entry');
 }
 
-class UpdateBowelMovementEntry extends BowelMovementEntryEvent
-    with UpdateDiaryEntry
-    implements DebouncedEvent, Tracked {
+class UpdateBowelMovementEntry extends BowelMovementEntryEvent with UpdateDiaryEntry implements Tracked {
   @override
   final BowelMovementEntry diaryEntry;
 
@@ -60,7 +58,7 @@ class UpdateBowelMovementEntry extends BowelMovementEntryEvent
 
 class UpdateBowelMovementEntryDateTime extends BowelMovementEntryEvent
     with UpdateDiaryEntryDateTime
-    implements DebouncedEvent, Tracked {
+    implements Tracked {
   @override
   final DateTime dateTime;
 
@@ -70,9 +68,7 @@ class UpdateBowelMovementEntryDateTime extends BowelMovementEntryEvent
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'dateTime');
 }
 
-class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent
-    with UpdateDiaryEntryNotes
-    implements DebouncedEvent, Tracked {
+class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent with UpdateDiaryEntryNotes implements Tracked {
   @override
   final String notes;
 
@@ -82,7 +78,7 @@ class UpdateBowelMovementEntryNotes extends BowelMovementEntryEvent
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'notes');
 }
 
-class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements Tracked {
+class UpdateType extends BowelMovementEntryEvent implements Tracked {
   final int type;
 
   const UpdateType(this.type);
@@ -94,7 +90,7 @@ class UpdateType extends BowelMovementEntryEvent with DebouncedEvent implements 
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_bowel_movement_entry', 'type');
 }
 
-class UpdateVolume extends BowelMovementEntryEvent with DebouncedEvent implements Tracked {
+class UpdateVolume extends BowelMovementEntryEvent implements Tracked {
   final int volume;
 
   const UpdateVolume(this.volume);

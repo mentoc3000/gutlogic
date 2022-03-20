@@ -13,64 +13,83 @@ class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubs
   final MealEntryRepository repository;
 
   MealEntryBloc({required this.repository}) : super(MealEntryLoading()) {
-    diaryEntryStreamer = repository;
-    diaryEntryDeleter = repository;
-    diaryEntryUpdater = repository;
+    timelineRepository = repository;
+
+    on<StreamMealEntry>(_onStream);
+    on<LoadMealEntry>((event, emit) => emit(MealEntryLoaded(event.diaryEntry)));
+    on<CreateAndStreamMealEntry>(_onCreateAndStream);
+    on<AddMealElement>(_onAdd);
+    on<MoveMealElement>(_onMove);
+    on<DeleteMealElement>(_onDeleteMealElement);
+    on<UndeleteMealElement>(_onUndeleteMealElement);
+    on<UpdateMealEntry>(onUpdateEntry, transformer: debounceTransformer);
+    on<UpdateMealEntryDateTime>(onUpdateDateTime, transformer: debounceTransformer);
+    on<UpdateMealEntryNotes>(onUpdateNotes, transformer: debounceTransformer);
+    on<DeleteMealEntry>(onDeleteEntry);
+    on<ThrowMealEntryError>((event, emit) => emit(MealEntryError.fromReport(event.report)));
   }
 
-  factory MealEntryBloc.fromContext(BuildContext context) {
+  static MealEntryBloc fromContext(BuildContext context) {
     return MealEntryBloc(repository: context.read<MealEntryRepository>());
   }
 
-  @override
-  Stream<Transition<MealEntryEvent, MealEntryState>> transformEvents(
-    Stream<MealEntryEvent> events,
-    TransitionFunction<MealEntryEvent, MealEntryState> transition,
-  ) =>
-      super.transformEvents(debounceDebouncedByType(events), transition);
-
-  @override
-  Stream<MealEntryState> mapEventToState(MealEntryEvent event) async* {
+  void _onStream(StreamMealEntry event, Emitter<MealEntryState> emit) {
     try {
-      if (event is StreamMealEntry) {
-        yield MealEntryLoaded(event.diaryEntry);
-        streamSubscription = diaryEntryStreamer.stream(event.diaryEntry).listen(
-              (d) => add(LoadMealEntry(d as MealEntry)),
-              onError: (error, StackTrace trace) => add(ThrowMealEntryError.fromError(error: error, trace: trace)),
-            );
-      }
-      if (event is LoadMealEntry) {
-        yield MealEntryLoaded(event.diaryEntry);
-      }
-      if (event is CreateAndStreamDiaryEntry) {
-        final mealEntry = await repository.create();
-        if (mealEntry != null) {
-          add(StreamMealEntry(mealEntry));
-        } else {
-          yield MealEntryError(message: 'Failed to create meal entry');
-        }
-      }
-      if (event is AddMealElement) {
-        final mealEntry = (state as DiaryEntryLoaded).diaryEntry as MealEntry;
-        unawaited(repository.createMealElement(mealEntry, event.food));
-      }
-      if (event is MoveMealElement) {
-        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as MealEntry;
-        unawaited(repository.reorderMealElement(diaryEntry, event.fromIndex, event.toIndex));
-      }
-      if (event is DeleteMealElement) {
-        await repository.removeMealElement(event.mealEntry, event.mealElement);
-        yield MealElementDeleted(mealEntry: event.mealEntry, mealElement: event.mealElement);
-      }
-      if (event is UndeleteMealElement) {
-        unawaited(repository.addMealElement(event.mealEntry, event.mealElement));
-      }
-      yield* mapDiaryEntryEventToState(event);
-      if (event is ThrowMealEntryError) {
-        yield MealEntryError.fromReport(event.report);
+      emit(MealEntryLoaded(event.diaryEntry));
+      streamSubscription = timelineRepository.stream(event.diaryEntry).listen(
+            (d) => add(LoadMealEntry(d as MealEntry)),
+            onError: (error, StackTrace trace) => add(ThrowMealEntryError.fromError(error: error, trace: trace)),
+          );
+    } catch (error, trace) {
+      emit(MealEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  Future<void> _onCreateAndStream(CreateAndStreamMealEntry event, Emitter<MealEntryState> emit) async {
+    try {
+      final mealEntry = await repository.create();
+      if (mealEntry != null) {
+        add(StreamMealEntry(mealEntry));
+      } else {
+        emit(MealEntryError(message: 'Failed to create meal entry'));
       }
     } catch (error, trace) {
-      yield MealEntryError.fromError(error: error, trace: trace);
+      emit(MealEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onAdd(AddMealElement event, Emitter<MealEntryState> emit) {
+    try {
+      final mealEntry = (state as DiaryEntryLoaded).diaryEntry as MealEntry;
+      unawaited(repository.createMealElement(mealEntry, event.food));
+    } catch (error, trace) {
+      emit(MealEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onMove(MoveMealElement event, Emitter<MealEntryState> emit) {
+    try {
+      final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as MealEntry;
+      unawaited(repository.reorderMealElement(diaryEntry, event.fromIndex, event.toIndex));
+    } catch (error, trace) {
+      emit(MealEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  Future<void> _onDeleteMealElement(DeleteMealElement event, Emitter<MealEntryState> emit) async {
+    try {
+      await repository.removeMealElement(event.mealEntry, event.mealElement);
+      emit(MealElementDeleted(mealEntry: event.mealEntry, mealElement: event.mealElement));
+    } catch (error, trace) {
+      emit(MealEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onUndeleteMealElement(UndeleteMealElement event, Emitter<MealEntryState> emit) {
+    try {
+      unawaited(repository.addMealElement(event.mealEntry, event.mealElement));
+    } catch (error, trace) {
+      emit(MealEntryError.fromError(error: error, trace: trace));
     }
   }
 }

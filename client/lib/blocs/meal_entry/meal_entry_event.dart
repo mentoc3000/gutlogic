@@ -46,7 +46,7 @@ class DeleteMealEntry extends MealEntryEvent with DeleteDiaryEntry implements Tr
   void track(AnalyticsService analytics) => analytics.logEvent('delete_meal_entry');
 }
 
-class UpdateMealEntry extends MealEntryEvent with UpdateDiaryEntry implements DebouncedEvent, Tracked {
+class UpdateMealEntry extends MealEntryEvent with UpdateDiaryEntry implements Tracked {
   @override
   final MealEntry diaryEntry;
 
@@ -56,7 +56,7 @@ class UpdateMealEntry extends MealEntryEvent with UpdateDiaryEntry implements De
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_meal_entry');
 }
 
-class UpdateMealEntryDateTime extends MealEntryEvent with UpdateDiaryEntryDateTime implements DebouncedEvent, Tracked {
+class UpdateMealEntryDateTime extends MealEntryEvent with UpdateDiaryEntryDateTime implements Tracked {
   @override
   final DateTime dateTime;
 
@@ -66,7 +66,7 @@ class UpdateMealEntryDateTime extends MealEntryEvent with UpdateDiaryEntryDateTi
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_meal_entry', 'dateTime');
 }
 
-class UpdateMealEntryNotes extends MealEntryEvent with UpdateDiaryEntryNotes implements DebouncedEvent, Tracked {
+class UpdateMealEntryNotes extends MealEntryEvent with UpdateDiaryEntryNotes implements Tracked {
   @override
   final String notes;
 

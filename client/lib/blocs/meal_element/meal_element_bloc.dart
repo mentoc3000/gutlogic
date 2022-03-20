@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedantic/pedantic.dart';
@@ -16,75 +14,85 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
   final MealElementRepository mealElementRepository;
   final FoodService foodService;
 
-  MealElementBloc({required this.mealElementRepository, required this.foodService}) : super(MealElementLoading());
+  MealElementBloc({required this.mealElementRepository, required this.foodService}) : super(MealElementLoading()) {
+    on<StreamMealElement>(_onStreamMealElement);
+    on<Load>((event, emit) => emit(MealElementLoaded(mealElement: event.mealElement, food: event.food)));
+    on<Delete>(_onDelete);
+    on<Update>(_onUpdate, transformer: debounceTransformer);
+    on<UpdateQuantity>(_onUpdateQuantity, transformer: debounceTransformer);
+    on<UpdateNotes>(_onUpdateNotes, transformer: debounceTransformer);
+    on<ThrowMealElementError>((event, emit) => emit(MealElementError.fromReport(event.report)));
+  }
 
-  factory MealElementBloc.fromContext(BuildContext context) {
+  static MealElementBloc fromContext(BuildContext context) {
     return MealElementBloc(
       mealElementRepository: context.read<MealElementRepository>(),
       foodService: context.read<FoodService>(),
     );
   }
 
-  @override
-  Stream<Transition<MealElementEvent, MealElementState>> transformEvents(
-    Stream<MealElementEvent> events,
-    TransitionFunction<MealElementEvent, MealElementState> transition,
-  ) =>
-      super.transformEvents(debounceDebouncedByType(events), transition);
-
-  @override
-  Stream<MealElementState> mapEventToState(
-    MealElementEvent event,
-  ) async* {
+  Future<void> _onStreamMealElement(StreamMealElement event, Emitter<MealElementState> emit) async {
     try {
-      if (event is StreamMealElement) {
-        var mealElement = event.mealElement;
-        Food? food;
+      var mealElement = event.mealElement;
+      Food? food;
 
-        // If the meal element uses an Edamam food, fetch that food to get the measure options
-        if (mealElement.foodReference is EdamamFoodReference) {
-          // TODO: load meal element without food first
-          yield MealElementLoading();
-          food = await foodService.streamFood(mealElement.foodReference).first;
+      // If the meal element uses an Edamam food, fetch that food to get the measure options
+      if (mealElement.foodReference is EdamamFoodReference) {
+        // TODO: load meal element without food first
+        emit(MealElementLoading());
+        food = await foodService.streamFood(mealElement.foodReference).first;
 
-          // If the meal element doesn't have a measure yet, set it to the first option
-          if (mealElement.quantity?.measure == null && (food?.measures.isNotEmpty ?? false)) {
-            mealElement = mealElement.rebuild((b) => b..quantity.measure = food!.measures.first.toBuilder());
-            add(Update(mealElement));
-          }
+        // If the meal element doesn't have a measure yet, set it to the first option
+        if (mealElement.quantity?.measure == null && (food?.measures.isNotEmpty ?? false)) {
+          mealElement = mealElement.rebuild((b) => b..quantity.measure = food!.measures.first.toBuilder());
+          add(Update(mealElement));
         }
+      }
 
-        yield MealElementLoaded(mealElement: mealElement, food: food);
+      emit(MealElementLoaded(mealElement: mealElement, food: food));
 
-        // Subscribe to the stream, updating the mealElement but using the same food value, which cannot change.
-        streamSubscription = mealElementRepository.stream(event.mealElement).listen(
-              (mealElement) => add(Load(mealElement: mealElement!, food: food)),
-              onError: (error, StackTrace trace) => add(ThrowMealElementError.fromError(error: error, trace: trace)),
-            );
-      }
-      if (event is Load) {
-        yield MealElementLoaded(mealElement: event.mealElement, food: event.food);
-      }
-      if (event is Delete) {
-        final mealElement = (state as MealElementLoaded).mealElement;
-        unawaited(mealElementRepository.delete(mealElement));
-      }
-      if (event is Update) {
-        unawaited(mealElementRepository.update(event.mealElement));
-      }
-      if (event is UpdateQuantity) {
-        final mealElement = (state as MealElementLoaded).mealElement;
-        unawaited(mealElementRepository.updateQuantity(mealElement, event.quantity));
-      }
-      if (event is UpdateNotes) {
-        final mealElement = (state as MealElementLoaded).mealElement;
-        unawaited(mealElementRepository.updateNotes(mealElement, event.notes));
-      }
-      if (event is ThrowMealElementError) {
-        yield MealElementError.fromReport(event.report);
-      }
+      // Subscribe to the stream, updating the mealElement but using the same food value, which cannot change.
+      streamSubscription = mealElementRepository.stream(event.mealElement).listen(
+            (mealElement) => add(Load(mealElement: mealElement!, food: food)),
+            onError: (error, StackTrace trace) => add(ThrowMealElementError.fromError(error: error, trace: trace)),
+          );
     } catch (error, trace) {
-      yield MealElementError.fromError(error: error, trace: trace);
+      emit(MealElementError.fromError(error: error, trace: trace));
+    }
+  }
+
+  Future<void> _onDelete(Delete event, Emitter<MealElementState> emit) async {
+    try {
+      final mealElement = (state as MealElementLoaded).mealElement;
+      unawaited(mealElementRepository.delete(mealElement));
+    } catch (error, trace) {
+      emit(MealElementError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onUpdate(Update event, Emitter<MealElementState> emit) {
+    try {
+      unawaited(mealElementRepository.update(event.mealElement));
+    } catch (error, trace) {
+      emit(MealElementError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onUpdateQuantity(UpdateQuantity event, Emitter<MealElementState> emit) {
+    try {
+      final mealElement = (state as MealElementLoaded).mealElement;
+      unawaited(mealElementRepository.updateQuantity(mealElement, event.quantity));
+    } catch (error, trace) {
+      emit(MealElementError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onUpdateNotes(UpdateNotes event, Emitter<MealElementState> emit) {
+    try {
+      final mealElement = (state as MealElementLoaded).mealElement;
+      unawaited(mealElementRepository.updateNotes(mealElement, event.notes));
+    } catch (error, trace) {
+      emit(MealElementError.fromError(error: error, trace: trace));
     }
   }
 }

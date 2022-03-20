@@ -11,8 +11,7 @@ BowelMovementEntry? deserialize(Map<String, dynamic> object) {
   return serializers.deserializeWith(BowelMovementEntry.serializer, object);
 }
 
-class BowelMovementEntryRepository
-    with FirestoreRepository, DiaryEntryStreamer, DiaryEntryAdder, DiaryEntryDeleter, DiaryEntryUpdater {
+class BowelMovementEntryRepository with FirestoreRepository, TimelineRepository {
   static BowelMovement initialBowelMovementValue = BowelMovement(type: 4, volume: 3);
 
   BowelMovementEntryRepository({required FirestoreService firestoreService}) {

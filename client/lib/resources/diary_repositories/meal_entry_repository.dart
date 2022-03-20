@@ -15,8 +15,7 @@ MealEntry? deserialize(Map<String, dynamic> object) {
   return serializers.deserializeWith(MealEntry.serializer, object);
 }
 
-class MealEntryRepository
-    with FirestoreRepository, DiaryEntryStreamer, DiaryEntryAdder, DiaryEntryDeleter, DiaryEntryUpdater {
+class MealEntryRepository with FirestoreRepository, TimelineRepository {
   MealElementRepository mealElementRepository;
   MealEntryRepository({required FirestoreService firestoreService, required this.mealElementRepository}) {
     this.firestoreService = firestoreService;

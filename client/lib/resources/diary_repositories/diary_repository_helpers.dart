@@ -23,7 +23,7 @@ DiaryEntry? deserialize(Map<String, dynamic>? object) {
   throw TypeError();
 }
 
-mixin DiaryEntryStreamer on FirestoreRepository {
+mixin TimelineRepository on FirestoreRepository {
   Stream<DiaryEntry?> stream(DiaryEntry diaryEntry) => streamById(diaryEntry.id);
 
   Stream<DiaryEntry?> streamById(String diaryEntryId) {
@@ -34,9 +34,7 @@ mixin DiaryEntryStreamer on FirestoreRepository {
   Future<DiaryEntry?> getLatest(DiaryEntry diaryEntry) => stream(diaryEntry).first;
 
   Future<DiaryEntry?> getLatestById(String diaryEntryId) => streamById(diaryEntryId).first;
-}
 
-mixin DiaryEntryAdder on FirestoreRepository {
   /// Add a diary entry to the collection.
   /// Any `id` will be stripped and a new one assigned.
   Future<T?> add<T extends DiaryEntry>(T diaryEntry) async {
@@ -46,15 +44,11 @@ mixin DiaryEntryAdder on FirestoreRepository {
     final doc = await firestoreService.userDiaryCollection.addUnawaited(data).get();
     return serializers.deserialize(FirestoreService.getDocumentData(doc)) as T;
   }
-}
 
-mixin DiaryEntryDeleter on FirestoreRepository {
   Future<void> delete(DiaryEntry diaryEntry) => deleteById(diaryEntry.id);
 
   Future<void> deleteById(String diaryEntryId) => firestoreService.userDiaryCollection.doc(diaryEntryId).delete();
-}
 
-mixin DiaryEntryUpdater on FirestoreRepository {
   Future<void> updateEntry(DiaryEntry diaryEntry) {
     final diaryEntryRef = firestoreService.userDiaryCollection.doc(diaryEntry.id);
     // Use transaction to prevent data overwrite when simultaneously updating

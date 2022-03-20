@@ -53,7 +53,7 @@ class Delete extends PantryEntryEvent implements Tracked {
   void track(AnalyticsService analytics) => analytics.logEvent('delete_pantry_entry');
 }
 
-class UpdateSensitivityLevel extends PantryEntryEvent with DebouncedEvent implements Tracked {
+class UpdateSensitivityLevel extends PantryEntryEvent implements Tracked {
   final SensitivityLevel sensitivityLevel;
 
   const UpdateSensitivityLevel(this.sensitivityLevel);
@@ -65,7 +65,7 @@ class UpdateSensitivityLevel extends PantryEntryEvent with DebouncedEvent implem
   void track(AnalyticsService analytics) => analytics.logUpdateEvent('update_pantry_entry', 'sensitivity_level');
 }
 
-class UpdateNotes extends PantryEntryEvent with DebouncedEvent implements Tracked {
+class UpdateNotes extends PantryEntryEvent implements Tracked {
   final String notes;
 
   const UpdateNotes(this.notes);

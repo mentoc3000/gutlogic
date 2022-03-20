@@ -9,46 +9,59 @@ import 'symptom_type_state.dart';
 class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with StreamSubscriber {
   final SymptomTypeRepository repository;
 
-  SymptomTypeBloc({required this.repository}) : super(SymptomTypesLoading());
+  SymptomTypeBloc({required this.repository}) : super(SymptomTypesLoading()) {
+    on<StreamAllSymptomTypes>(_onStreamAll);
+    on<StreamSymptomTypeQuery>(_onStreamQuery);
+    on<FetchAllSymptomTypes>(_onFetchAll);
+    on<FetchSymptomTypeQuery>(_onFetchQuery);
+    on<LoadSymptomTypes>((event, emit) => emit(SymptomTypesLoaded(event.items)));
+    on<ThrowSymptomTypeError>((event, emit) => emit(SymptomTypeError.fromReport(event.report)));
+  }
 
-  factory SymptomTypeBloc.fromContext(BuildContext context) {
+  static SymptomTypeBloc fromContext(BuildContext context) {
     return SymptomTypeBloc(repository: context.read<SymptomTypeRepository>());
   }
 
-  @override
-  Stream<SymptomTypeState> mapEventToState(SymptomTypeEvent event) async* {
+  Future<void> _onStreamAll(StreamAllSymptomTypes event, Emitter<SymptomTypeState> emit) async {
     try {
-      if (event is StreamAllSymptomTypes) {
-        add(const StreamSymptomTypeQuery(''));
-      }
-      if (event is StreamSymptomTypeQuery) {
-        yield SymptomTypesLoading();
-        await streamSubscription?.cancel();
-        streamSubscription = repository.streamQuery(event.query).listen(
-              (symptomTypes) => add(LoadSymptomTypes(symptomTypes)),
-              onError: (error, StackTrace trace) => add(ThrowSymptomTypeError.fromError(error: error, trace: trace)),
-            );
-      }
-      if (event is FetchAllSymptomTypes) {
-        // TODO: remove these loading pages? Or maybe only show them if the fetch takes a long time.
-        // https://stackoverflow.com/questions/64885470/can-dart-streams-emit-a-value-if-the-stream-is-not-done-within-a-duration/64978139
-        yield SymptomTypesLoading();
-        final items = await repository.fetchQuery('');
-        yield SymptomTypesLoaded(items);
-      }
-      if (event is FetchSymptomTypeQuery) {
-        yield SymptomTypesLoading();
-        final items = await repository.fetchQuery(event.query);
-        yield SymptomTypesLoaded(items);
-      }
-      if (event is LoadSymptomTypes) {
-        yield SymptomTypesLoaded(event.items);
-      }
-      if (event is ThrowSymptomTypeError) {
-        yield SymptomTypeError.fromReport(event.report);
-      }
+      add(const StreamSymptomTypeQuery(''));
     } catch (error, trace) {
-      yield SymptomTypeError.fromError(error: error, trace: trace);
+      emit(SymptomTypeError.fromError(error: error, trace: trace));
+    }
+  }
+
+  Future<void> _onStreamQuery(StreamSymptomTypeQuery event, Emitter<SymptomTypeState> emit) async {
+    try {
+      emit(SymptomTypesLoading());
+      await streamSubscription?.cancel();
+      streamSubscription = repository.streamQuery(event.query).listen(
+            (symptomTypes) => add(LoadSymptomTypes(symptomTypes)),
+            onError: (error, StackTrace trace) => add(ThrowSymptomTypeError.fromError(error: error, trace: trace)),
+          );
+    } catch (error, trace) {
+      emit(SymptomTypeError.fromError(error: error, trace: trace));
+    }
+  }
+
+  Future<void> _onFetchAll(FetchAllSymptomTypes event, Emitter<SymptomTypeState> emit) async {
+    try {
+      // TODO: remove these loading pages? Or maybe only show them if the fetch takes a long time.
+      // https://stackoverflow.com/questions/64885470/can-dart-streams-emit-a-value-if-the-stream-is-not-done-within-a-duration/64978139
+      emit(SymptomTypesLoading());
+      final items = await repository.fetchQuery('');
+      emit(SymptomTypesLoaded(items));
+    } catch (error, trace) {
+      emit(SymptomTypeError.fromError(error: error, trace: trace));
+    }
+  }
+
+  Future<void> _onFetchQuery(FetchSymptomTypeQuery event, Emitter<SymptomTypeState> emit) async {
+    try {
+      emit(SymptomTypesLoading());
+      final items = await repository.fetchQuery(event.query);
+      emit(SymptomTypesLoaded(items));
+    } catch (error, trace) {
+      emit(SymptomTypeError.fromError(error: error, trace: trace));
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,6 +62,9 @@ void main() async {
     await crashlytics.recordFlutterError(details);
     FlutterError.presentError(details);
   };
+
+  // Handle all bloc events sequentially to retain bloc 7.1 behavior. TODO migrate to parallel events by default?
+  Bloc.transformer = sequential<dynamic>();
 
   // Observe bloc transitions, report some things automatically to analytics/crashlytics.
   Bloc.observer = GutLogicBlocObserver(analytics: analytics, crashlytics: crashlytics);

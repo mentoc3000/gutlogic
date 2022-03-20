@@ -13,65 +13,84 @@ class SymptomEntryBloc extends Bloc<SymptomEntryEvent, SymptomEntryState> with S
   final SymptomEntryRepository repository;
 
   SymptomEntryBloc({required this.repository}) : super(SymptomEntryLoading()) {
-    diaryEntryStreamer = repository;
-    diaryEntryDeleter = repository;
-    diaryEntryUpdater = repository;
+    timelineRepository = repository;
+
+    on<StreamSymptomEntry>(_onStream);
+    on<LoadSymptomEntry>((event, emit) => emit(SymptomEntryLoaded(event.diaryEntry)));
+    on<CreateFromAndStreamSymptomEntry>(_onCreateAndStream);
+    on<UpdateSymptom>(_onUpdateSymptom, transformer: debounceTransformer);
+    on<UpdateSymptomType>(_onUpdateType, transformer: debounceTransformer);
+    on<UpdateSymptomName>(_onUpdateName, transformer: debounceTransformer);
+    on<UpdateSeverity>(_onUpdateSeverity, transformer: debounceTransformer);
+    on<UpdateSymptomEntry>(onUpdateEntry, transformer: debounceTransformer);
+    on<UpdateSymptomEntryDateTime>(onUpdateDateTime, transformer: debounceTransformer);
+    on<UpdateSymptomEntryNotes>(onUpdateNotes, transformer: debounceTransformer);
+    on<DeleteSymptomEntry>(onDeleteEntry);
+    on<ThrowSymptomEntryError>((event, emit) => emit(SymptomEntryError.fromReport(event.report)));
   }
 
-  factory SymptomEntryBloc.fromContext(BuildContext context) {
+  static SymptomEntryBloc fromContext(BuildContext context) {
     return SymptomEntryBloc(repository: context.read<SymptomEntryRepository>());
   }
 
-  @override
-  Stream<Transition<SymptomEntryEvent, SymptomEntryState>> transformEvents(
-    Stream<SymptomEntryEvent> events,
-    TransitionFunction<SymptomEntryEvent, SymptomEntryState> transition,
-  ) =>
-      super.transformEvents(debounceDebouncedByType(events), transition);
-
-  @override
-  Stream<SymptomEntryState> mapEventToState(SymptomEntryEvent event) async* {
+  void _onStream(StreamSymptomEntry event, Emitter<SymptomEntryState> emit) {
     try {
-      if (event is StreamSymptomEntry) {
-        yield SymptomEntryLoaded(event.diaryEntry);
-        streamSubscription = diaryEntryStreamer.stream(event.diaryEntry).listen(
-              (d) => add(LoadSymptomEntry(d as SymptomEntry)),
-              onError: (error, StackTrace trace) => add(ThrowSymptomEntryError.fromError(error: error, trace: trace)),
-            );
-      }
-      if (event is LoadSymptomEntry) {
-        yield SymptomEntryLoaded(event.diaryEntry);
-      }
-      if (event is CreateFromAndStreamSymptomEntry) {
-        final symptomEntry = await repository.createFrom(event.symptomType);
-        if (symptomEntry != null) {
-          add(StreamSymptomEntry(symptomEntry));
-        } else {
-          yield SymptomEntryError(message: 'Failed to create symptom entry');
-        }
-      }
-      if (event is UpdateSymptom) {
-        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as SymptomEntry;
-        unawaited(repository.updateSymptom(diaryEntry, event.symptom));
-      }
-      if (event is UpdateSymptomType) {
-        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as SymptomEntry;
-        unawaited(repository.updateSymptomType(diaryEntry, event.symptomType));
-      }
-      if (event is UpdateSymptomName) {
-        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as SymptomEntry;
-        unawaited(repository.updateSymptomName(diaryEntry, event.symptomName));
-      }
-      if (event is UpdateSeverity) {
-        final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as SymptomEntry;
-        unawaited(repository.updateSeverity(diaryEntry, event.severity));
-      }
-      yield* mapDiaryEntryEventToState(event);
-      if (event is ThrowSymptomEntryError) {
-        yield SymptomEntryError.fromReport(event.report);
+      emit(SymptomEntryLoaded(event.diaryEntry));
+      streamSubscription = timelineRepository.stream(event.diaryEntry).listen(
+            (d) => add(LoadSymptomEntry(d as SymptomEntry)),
+            onError: (error, StackTrace trace) => add(ThrowSymptomEntryError.fromError(error: error, trace: trace)),
+          );
+    } catch (error, trace) {
+      emit(SymptomEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  Future<void> _onCreateAndStream(CreateFromAndStreamSymptomEntry event, Emitter<SymptomEntryState> emit) async {
+    try {
+      final symptomEntry = await repository.createFrom(event.symptomType);
+      if (symptomEntry != null) {
+        add(StreamSymptomEntry(symptomEntry));
+      } else {
+        emit(SymptomEntryError(message: 'Failed to create symptom entry'));
       }
     } catch (error, trace) {
-      yield SymptomEntryError.fromError(error: error, trace: trace);
+      emit(SymptomEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onUpdateSymptom(UpdateSymptom event, Emitter<SymptomEntryState> emit) {
+    try {
+      final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as SymptomEntry;
+      unawaited(repository.updateSymptom(diaryEntry, event.symptom));
+    } catch (error, trace) {
+      emit(SymptomEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onUpdateType(UpdateSymptomType event, Emitter<SymptomEntryState> emit) {
+    try {
+      final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as SymptomEntry;
+      unawaited(repository.updateSymptomType(diaryEntry, event.symptomType));
+    } catch (error, trace) {
+      emit(SymptomEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onUpdateName(UpdateSymptomName event, Emitter<SymptomEntryState> emit) {
+    try {
+      final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as SymptomEntry;
+      unawaited(repository.updateSymptomName(diaryEntry, event.symptomName));
+    } catch (error, trace) {
+      emit(SymptomEntryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  void _onUpdateSeverity(UpdateSeverity event, Emitter<SymptomEntryState> emit) {
+    try {
+      final diaryEntry = (state as DiaryEntryLoaded).diaryEntry as SymptomEntry;
+      unawaited(repository.updateSeverity(diaryEntry, event.severity));
+    } catch (error, trace) {
+      emit(SymptomEntryError.fromError(error: error, trace: trace));
     }
   }
 }

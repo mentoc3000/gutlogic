@@ -7,32 +7,10 @@ import 'package:rxdart/rxdart.dart';
 import '../resources/firebase/crashlytics_service.dart';
 import '../util/error_report.dart';
 
-mixin DebouncedEvent {}
-
 const Duration debounceDuration = Duration(milliseconds: 500);
 
-Stream<E> debounceAll<E>(Stream<E> events) {
-  return events.debounceTime(debounceDuration);
-}
-
-Stream<E> debounceAllByType<E>(Stream<E> events) {
-  return events.groupBy((event) => event.runtimeType).flatMap((stream) => stream.debounceTime(debounceDuration));
-}
-
-Stream<E> debounceAllDebounced<E>(Stream<E> events) {
-  assert(events.isBroadcast);
-  final nonDebounceStream = events.where((event) => event is! DebouncedEvent);
-  final debouncedStream = events.where((event) => event is DebouncedEvent).debounceTime(debounceDuration);
-  return MergeStream([nonDebounceStream, debouncedStream]);
-}
-
-Stream<E> debounceDebouncedByType<E>(Stream<E> events) {
-  assert(events.isBroadcast);
-  final nonDebounceStream = events.where((event) => event is! DebouncedEvent);
-  final debounceStream = events.where((event) => event is DebouncedEvent);
-  final debouncedStreams =
-      debounceStream.groupBy((event) => event.runtimeType).flatMap((stream) => stream.debounceTime(debounceDuration));
-  return MergeStream([nonDebounceStream, debouncedStreams]);
+Stream<E> debounceTransformer<E>(Stream<E> events, Stream<E> Function(E) mapper) {
+  return events.debounceTime(debounceDuration).flatMap(mapper);
 }
 
 mixin StreamSubscriber<StreamData, State> on BlocBase<State> {

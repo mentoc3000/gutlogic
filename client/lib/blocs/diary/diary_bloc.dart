@@ -12,37 +12,37 @@ import 'diary_state.dart';
 class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
   final DiaryRepository repository;
 
-  DiaryBloc({required this.repository}) : super(DiaryLoading());
+  DiaryBloc({required this.repository}) : super(DiaryLoading()) {
+    on<StreamAllDiary>(_onStreamAll);
+    on<Load>((event, emit) => emit(DiaryLoaded(event.diaryEntries)));
+    on<Delete>(_onDelete);
+    on<Undelete>((event, emit) => unawaited(repository.add(event.diaryEntry)));
+    on<ThrowDiaryError>((event, emit) => emit(DiaryError.fromReport(event.report)));
+  }
 
-  factory DiaryBloc.fromContext(BuildContext context) {
+  static DiaryBloc fromContext(BuildContext context) {
     return DiaryBloc(repository: context.read<DiaryRepository>());
   }
-  @override
-  Stream<DiaryState> mapEventToState(DiaryEvent event) async* {
+
+  Future<void> _onStreamAll(StreamAllDiary event, Emitter<DiaryState> emit) async {
     try {
-      if (event is StreamAllDiary) {
-        yield DiaryLoading();
-        await streamSubscription?.cancel();
-        streamSubscription = repository.streamAll().listen(
-              (diaryEntries) => add(Load(diaryEntries: diaryEntries)),
-              onError: (error, StackTrace trace) => add(ThrowDiaryError.fromError(error: error, trace: trace)),
-            );
-      }
-      if (event is Load) {
-        yield DiaryLoaded(event.diaryEntries);
-      }
-      if (event is Delete) {
-        await repository.delete(event.diaryEntry);
-        yield DiaryEntryDeleted(event.diaryEntry);
-      }
-      if (event is Undelete) {
-        unawaited(repository.add(event.diaryEntry));
-      }
-      if (event is ThrowDiaryError) {
-        yield DiaryError.fromReport(event.report);
-      }
+      emit(DiaryLoading());
+      await streamSubscription?.cancel();
+      streamSubscription = repository.streamAll().listen(
+            (diaryEntries) => add(Load(diaryEntries: diaryEntries)),
+            onError: (error, StackTrace trace) => add(ThrowDiaryError.fromError(error: error, trace: trace)),
+          );
     } catch (error, trace) {
-      yield DiaryError.fromError(error: error, trace: trace);
+      emit(DiaryError.fromError(error: error, trace: trace));
+    }
+  }
+
+  Future<void> _onDelete(Delete event, Emitter<DiaryState> emit) async {
+    try {
+      await repository.delete(event.diaryEntry);
+      emit(DiaryEntryDeleted(event.diaryEntry));
+    } catch (error, trace) {
+      emit(DiaryError.fromError(error: error, trace: trace));
     }
   }
 }

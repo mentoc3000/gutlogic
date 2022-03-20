@@ -5,12 +5,12 @@ abstract class ConsentState extends BaseState {
   const ConsentState();
 }
 
-class ConsentLoading extends ConsentState {
-  const ConsentLoading();
-}
-
 class ConsentInitial extends ConsentState {
   const ConsentInitial();
+}
+
+class ConsentLoading extends ConsentState {
+  const ConsentLoading();
 }
 
 class ConsentSuccess extends ConsentState implements Tracked {

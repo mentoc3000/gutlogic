@@ -13,8 +13,7 @@ SymptomEntry? deserialize(Map<String, dynamic> object) {
   return serializers.deserializeWith(SymptomEntry.serializer, object);
 }
 
-class SymptomEntryRepository
-    with FirestoreRepository, DiaryEntryStreamer, DiaryEntryAdder, DiaryEntryDeleter, DiaryEntryUpdater {
+class SymptomEntryRepository with FirestoreRepository, TimelineRepository {
   static Severity defaultSeverity = Severity.moderate;
 
   SymptomEntryRepository({required FirestoreService firestoreService}) {

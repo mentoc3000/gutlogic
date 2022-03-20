@@ -15,7 +15,7 @@ abstract class FoodSearchEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class StreamFoodQuery extends FoodSearchEvent with FetchQuery, DebouncedEvent implements Tracked {
+class StreamFoodQuery extends FoodSearchEvent with FetchQuery implements Tracked {
   @override
   final String query;
 

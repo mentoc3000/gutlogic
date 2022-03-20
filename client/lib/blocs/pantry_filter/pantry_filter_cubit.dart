@@ -27,10 +27,8 @@ class PantryFilterCubit extends Cubit<PantryFilterState> with StreamSubscriber {
     streamSubscription = pantryBloc.stream.listen((state) => _updateFilter(_filter));
   }
 
-  factory PantryFilterCubit.fromContext(BuildContext context) {
-    return PantryFilterCubit(
-      pantryBloc: context.read<PantryBloc>(),
-    );
+  static PantryFilterCubit fromContext(BuildContext context) {
+    return PantryFilterCubit(pantryBloc: context.read<PantryBloc>());
   }
 
   void show(SensitivityLevel level) => _updateFilter(_filter.show(level));
