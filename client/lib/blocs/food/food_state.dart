@@ -20,7 +20,7 @@ class FoodLoading extends FoodState {}
 class FoodLoaded extends FoodState {
   final Food food;
 
-  FoodLoaded({required this.food});
+  const FoodLoaded({required this.food});
 
   @override
   List<Object?> get props => [food];

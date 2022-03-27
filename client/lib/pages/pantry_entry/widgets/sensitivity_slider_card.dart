@@ -11,11 +11,11 @@ class SensitivitySlider extends StatefulWidget {
   const SensitivitySlider({required this.sensitivityLevel, this.onChanged});
 
   @override
-  _SensitivitySliderState createState() => _SensitivitySliderState(sensitivityLevel: sensitivityLevel);
+  _SensitivitySliderState createState() => _SensitivitySliderState();
 }
 
 class _SensitivitySliderState extends State<SensitivitySlider> {
-  SensitivityLevel sensitivityLevel;
+  late SensitivityLevel sensitivityLevel;
 
   Color get _color => GLColors.fromSensitivityLevel(sensitivityLevel);
 
@@ -35,7 +35,13 @@ class _SensitivitySliderState extends State<SensitivitySlider> {
     }
   }
 
-  _SensitivitySliderState({required this.sensitivityLevel});
+  _SensitivitySliderState();
+
+  @override
+  void initState() {
+    super.initState();
+    sensitivityLevel = widget.sensitivityLevel;
+  }
 
   @override
   Widget build(BuildContext context) {

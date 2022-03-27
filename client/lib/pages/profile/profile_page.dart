@@ -27,7 +27,7 @@ class ProfilePage extends StatelessWidget {
 class ProfilePageBody extends StatelessWidget {
   final Profile profile;
 
-  ProfilePageBody({required this.profile});
+  const ProfilePageBody({required this.profile});
 
   @override
   Widget build(BuildContext context) {

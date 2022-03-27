@@ -9,19 +9,24 @@ import '../../../widgets/buttons/buttons.dart';
 class ProfileForm extends StatefulWidget {
   final Profile profile;
 
-  ProfileForm({required this.profile});
+  const ProfileForm({required this.profile});
 
   @override
-  ProfileFormState createState() => ProfileFormState(profile: profile);
+  ProfileFormState createState() => ProfileFormState();
 }
 
 class ProfileFormState extends State<ProfileForm> {
-  final TextEditingController _firstnameController;
-  final TextEditingController _lastnameController;
+  late final TextEditingController _firstnameController;
+  late final TextEditingController _lastnameController;
 
-  ProfileFormState({required Profile profile})
-      : _firstnameController = TextEditingController(text: profile.firstname),
-        _lastnameController = TextEditingController(text: profile.lastname);
+  ProfileFormState();
+
+  @override
+  void initState() {
+    super.initState();
+    _firstnameController = TextEditingController(text: widget.profile.firstname);
+    _lastnameController = TextEditingController(text: widget.profile.lastname);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +55,7 @@ class ProfileFormState extends State<ProfileForm> {
 class ProfileFormFirstName extends StatelessWidget {
   final TextEditingController controller;
 
-  ProfileFormFirstName({required this.controller});
+  const ProfileFormFirstName({required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +70,7 @@ class ProfileFormFirstName extends StatelessWidget {
 class ProfileFormLastName extends StatelessWidget {
   final TextEditingController controller;
 
-  ProfileFormLastName({required this.controller});
+  const ProfileFormLastName({required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +85,7 @@ class ProfileFormLastName extends StatelessWidget {
 class ProfileFormSaveButton extends StatelessWidget {
   final void Function() onPressed;
 
-  ProfileFormSaveButton({required this.onPressed});
+  const ProfileFormSaveButton({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

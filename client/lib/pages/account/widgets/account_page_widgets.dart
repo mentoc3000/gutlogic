@@ -43,7 +43,7 @@ class AccountPageDeleteButton extends StatelessWidget {
 class AccountDetailsCard extends StatelessWidget {
   final ApplicationUser user;
 
-  AccountDetailsCard({required this.user});
+  const AccountDetailsCard({required this.user});
 
   @override
   Widget build(BuildContext context) {

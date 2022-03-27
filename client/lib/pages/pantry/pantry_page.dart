@@ -31,8 +31,8 @@ class PantryPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (c) => PantryBloc.fromContext(c)..add(const StreamAllPantry())),
-        BlocProvider(create: PantryFilterCubit.fromContext),
-        BlocProvider(create: PantrySortCubit.fromContext),
+        const BlocProvider(create: PantryFilterCubit.fromContext),
+        const BlocProvider(create: PantrySortCubit.fromContext),
       ],
       child: PantryPage(),
     );
@@ -113,7 +113,7 @@ class PantryPage extends StatelessWidget {
     if (state is PantrySortError) {
       return ErrorPage(message: state.message);
     }
-    return ErrorPage();
+    return const ErrorPage();
   }
 
   void listener(BuildContext context, PantryState state) {

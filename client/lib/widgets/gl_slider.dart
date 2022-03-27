@@ -17,15 +17,17 @@ class GLSlider extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _GLSliderState createState() => _GLSliderState(min: min, max: max, value: value);
+  _GLSliderState createState() => _GLSliderState();
 }
 
 class _GLSliderState extends State<GLSlider> {
-  final int divisions;
+  late int value;
 
-  int value;
-
-  _GLSliderState({required int min, required int max, required this.value}) : divisions = max - min;
+  @override
+  void initState() {
+    super.initState();
+    value = widget.value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +36,9 @@ class _GLSliderState extends State<GLSlider> {
       max: widget.max.toDouble(),
       value: value.toDouble(),
       label: '$value',
-      divisions: divisions,
+      divisions: widget.max - widget.min,
       onChanged: (double x) {
-        setState(() {
-          value = x.toInt();
-        });
+        setState(() => value = x.toInt());
         widget.onChanged(x.toInt());
       },
       onChangeEnd: (double x) => widget.onChangeEnd(x.floor()),

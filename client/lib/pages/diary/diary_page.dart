@@ -46,7 +46,7 @@ class DiaryPage extends StatelessWidget {
     if (state is DiaryError) {
       return ErrorPage(message: state.message);
     }
-    return ErrorPage();
+    return const ErrorPage();
   }
 
   void listener(BuildContext context, DiaryState state) {

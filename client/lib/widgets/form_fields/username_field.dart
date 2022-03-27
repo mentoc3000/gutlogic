@@ -7,7 +7,7 @@ class UsernameField extends StatelessWidget {
   final InputText input;
   final bool? enabled;
 
-  UsernameField({
+  const UsernameField({
     Key? key,
     this.enabled,
     required this.input,

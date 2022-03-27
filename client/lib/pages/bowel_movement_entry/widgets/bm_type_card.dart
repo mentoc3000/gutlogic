@@ -9,10 +9,10 @@ class BMTypeCard extends StatefulWidget {
   final int type;
   final void Function(int)? onChanged;
 
-  BMTypeCard({required this.type, this.onChanged});
+  const BMTypeCard({required this.type, this.onChanged});
 
   @override
-  _BMTypeCardState createState() => _BMTypeCardState(value: type);
+  _BMTypeCardState createState() => _BMTypeCardState();
 }
 
 class _BMTypeCardState extends State<BMTypeCard> {
@@ -26,9 +26,15 @@ class _BMTypeCardState extends State<BMTypeCard> {
     'Watery, no solid pieces',
   ];
 
-  int value;
+  late int value;
 
-  _BMTypeCardState({required this.value});
+  _BMTypeCardState();
+
+  @override
+  void initState() {
+    super.initState();
+    value = widget.type;
+  }
 
   @override
   Widget build(BuildContext context) {

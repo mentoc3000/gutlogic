@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pedantic/pedantic.dart';
 
 import '../../models/diary_entry/symptom_entry.dart';
 import '../../resources/diary_repositories/symptom_entry_repository.dart';

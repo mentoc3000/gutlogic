@@ -68,7 +68,7 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
         if (state is SymptomTypeError) {
           return ErrorPage(message: state.message);
         }
-        return ErrorPage();
+        return const ErrorPage();
       },
     );
   }

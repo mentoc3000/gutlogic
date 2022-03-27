@@ -168,7 +168,7 @@ server:deploy:
 # Aliases flutter to use fvm if fvm is installed. This is so fvm is used on the mac runner, but not on docker, where it is redundant.
 # TODO use a custom docker image with fvm already installed so we can use fvm on both the macos and docker runners
 .flutter-fvm: &flutter-fvm >
-  if command -v fvm; then
+  if [ -x "$(command -v fvm)" ]; then
     echo "Using FVM";
     fvm install;
     alias flutter="fvm flutter";
@@ -183,7 +183,7 @@ server:deploy:
     - client/.dart_tool/package_config.json
 
 .client:
-  image: cirrusci/flutter:2.5.3
+  image: cirrusci/flutter:2.10.3
   tags:
     - docker
   before_script:

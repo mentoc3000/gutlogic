@@ -36,7 +36,7 @@ class AuthenticatedResources extends StatelessWidget {
   final Widget child;
   final GlobalKey navigatorKey;
 
-  AuthenticatedResources({required this.child, required this.navigatorKey});
+  const AuthenticatedResources({required this.child, required this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +133,7 @@ class AuthenticatedResources extends StatelessWidget {
           }),
         ],
         child: MultiBlocProvider(
-          providers: [
+          providers: const [
             // TODO move these into their most tightly nested widget trees
             BlocProvider(create: FoodSearchBloc.fromContext),
             BlocProvider(create: SymptomTypeBloc.fromContext),

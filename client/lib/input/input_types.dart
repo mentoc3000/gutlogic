@@ -19,7 +19,7 @@ class InputState<T> extends Equatable {
   /// True if the value is valid.
   bool get valid => error == null;
 
-  InputState({
+  const InputState({
     required this.value,
     required this.dirty,
     this.error,

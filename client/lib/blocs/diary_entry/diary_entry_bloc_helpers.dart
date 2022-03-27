@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pedantic/pedantic.dart';
 
 import '../../resources/diary_repositories/diary_repository_helpers.dart';
 import 'diary_entry_event.dart';

@@ -12,7 +12,7 @@ import 'pantry/pantry_page.dart';
 class MainTabs extends StatefulWidget {
   final AnalyticsService analytics;
 
-  MainTabs({required this.analytics});
+  const MainTabs({required this.analytics});
 
   static Widget provisioned(BuildContext context) {
     return MainTabs(analytics: Provider.of<AnalyticsService>(context));

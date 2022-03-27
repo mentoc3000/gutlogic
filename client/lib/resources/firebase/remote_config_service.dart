@@ -12,7 +12,7 @@ class RemoteConfigService {
   static Future<RemoteConfigService> initialize({bool enabled = true}) async {
     if (enabled == false) return RemoteConfigService._(null);
 
-    final remoteConfig = await RemoteConfig.instance;
+    final remoteConfig = RemoteConfig.instance;
 
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
       fetchTimeout: const Duration(seconds: 5),

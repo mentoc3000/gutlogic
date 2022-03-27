@@ -8,7 +8,7 @@ class InputBuilder<T> extends StatelessWidget {
   final Input<T> input;
   final Widget Function(BuildContext context, InputState<T> state) builder;
 
-  InputBuilder({Key? key, required this.input, required this.builder}) : super(key: key);
+  const InputBuilder({Key? key, required this.input, required this.builder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class InputValueBuilder<T> extends StatelessWidget {
   final Input<T> input;
   final Widget Function(BuildContext context, T value) builder;
 
-  InputValueBuilder({Key? key, required this.input, required this.builder}) : super(key: key);
+  const InputValueBuilder({Key? key, required this.input, required this.builder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class InputErrorBuilder<T> extends StatelessWidget {
   final Input<T> input;
   final Widget Function(BuildContext context, String? error) builder;
 
-  InputErrorBuilder({
+  const InputErrorBuilder({
     Key? key,
     required this.input,
     required this.builder,
@@ -61,7 +61,7 @@ class InputErrorBuilder<T> extends StatelessWidget {
 class InputGroupBuilder<T extends InputGroup> extends StatelessWidget {
   final Widget Function(BuildContext context, InputGroupState state) builder;
 
-  InputGroupBuilder({Key? key, required this.builder}) : super(key: key);
+  const InputGroupBuilder({Key? key, required this.builder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => BlocBuilder<T, InputGroupState>(builder: builder);

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../models/food_reference/food_reference.dart';
@@ -97,7 +96,7 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
         final serializedWithoutId = serialized
           ..remove('userFoodDetailsId')
           ..remove('\$');
-        await tx.update(userFoodDetailsRef, serializedWithoutId);
+        tx.update(userFoodDetailsRef, serializedWithoutId);
       }
     });
   }

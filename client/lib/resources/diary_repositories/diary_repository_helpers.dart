@@ -56,9 +56,9 @@ mixin TimelineRepository on FirestoreRepository {
       final mealEntrySnapshot = await tx.get(diaryEntryRef);
       if (mealEntrySnapshot.exists) {
         final serialized = serializers.serialize(diaryEntry) as Map<String, dynamic>?;
-        if (serialized == null) return null;
+        if (serialized == null) return;
         final serializedWithoutId = serialized..remove('id');
-        await tx.update(diaryEntryRef, serializedWithoutId);
+        tx.update(diaryEntryRef, serializedWithoutId);
       }
     });
   }

@@ -73,7 +73,7 @@ void main() {
     blocTest<BowelMovementEntryBloc, BowelMovementEntryState>(
       'creates and streams diary entry',
       build: () {
-        when(repository.create()).thenAnswer((_) async => await diaryEntry);
+        when(repository.create()).thenAnswer((_) async => diaryEntry);
         return BowelMovementEntryBloc(repository: repository);
       },
       act: (bloc) async => bloc.add(const CreateAndStreamBowelMovementEntry()),

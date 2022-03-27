@@ -45,7 +45,7 @@ class RegisterPageBody extends StatelessWidget {
 class RegisterPageSkipButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
-  RegisterPageSkipButton({this.onPressed});
+  const RegisterPageSkipButton({this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -68,6 +68,6 @@ class PantryEntryPage extends StatelessWidget {
     if (state is PantryEntryError) {
       return ErrorPage(message: state.message);
     }
-    return ErrorPage();
+    return const ErrorPage();
   }
 }

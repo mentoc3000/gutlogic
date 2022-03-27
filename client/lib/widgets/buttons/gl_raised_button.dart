@@ -17,7 +17,7 @@ class GLRaisedButton extends StatelessWidget {
   final TextStyle? textStyle;
   final Widget? child;
 
-  GLRaisedButton({
+  const GLRaisedButton({
     Key? key,
     this.onPressed,
     this.textTheme,

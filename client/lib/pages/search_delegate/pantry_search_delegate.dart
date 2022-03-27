@@ -52,7 +52,7 @@ class PantrySearchDelegate extends SearchableSearchDelegate<PantryEntry> {
         if (state is PantryError) {
           return ErrorPage(message: state.message);
         }
-        return ErrorPage();
+        return const ErrorPage();
       },
     );
   }

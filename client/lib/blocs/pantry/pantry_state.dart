@@ -26,7 +26,7 @@ class PantryLoaded extends PantryState with SearchableLoaded {
 class PantryEntryDeleted extends PantryState {
   final PantryEntry pantryEntry;
 
-  PantryEntryDeleted(this.pantryEntry);
+  const PantryEntryDeleted(this.pantryEntry);
 
   @override
   List<Object?> get props => [pantryEntry];

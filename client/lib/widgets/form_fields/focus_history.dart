@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 class FocusHistory extends StatelessWidget {
   final Widget child;
 
-  FocusHistory({required this.child});
+  const FocusHistory({required this.child});
 
   @override
   Widget build(BuildContext context) {

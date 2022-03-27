@@ -11,7 +11,7 @@ class InputGroupState extends Equatable {
   /// True if all of the inputs are valid.
   final bool valid;
 
-  InputGroupState({required this.dirty, required this.valid});
+  const InputGroupState({required this.dirty, required this.valid});
 
   @override
   List<Object?> get props => [dirty, valid];
@@ -19,7 +19,7 @@ class InputGroupState extends Equatable {
 
 /// A base class for forms that automatically emits a validation state whenever any of its values change.
 abstract class InputGroup extends Cubit<InputGroupState> {
-  InputGroup() : super(InputGroupState(dirty: false, valid: false)) {
+  InputGroup() : super(const InputGroupState(dirty: false, valid: false)) {
     for (final input in inputs) {
       input.stream.listen(_onInputChanged);
     }

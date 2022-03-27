@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pedantic/pedantic.dart';
 
 import '../../models/food/food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';

@@ -7,19 +7,28 @@ publish_to: "none"
 version: 1.1.0
 
 environment:
-  sdk: ^2.13.0
-  flutter: ^2.5.0
+  sdk: 2.16.1
+  flutter: 2.10.3
 
 dependencies:
-  flutter:
-    sdk: flutter
+  bloc_concurrency: ^0.1.0
   built_collection: ^5.1.0
   built_value: ^8.0.6
+  cloud_firestore: ^2.5.1
+  cloud_functions: ^3.2.4
   crypto: ^3.0.0
   datetime_picker_formfield: ^2.0.0
   device_info_plus: ^2.1.0
   email_validator: ^2.0.1
   equatable: ^2.0.0
+  firebase_analytics: ^8.3.1
+  firebase_auth: ^1.1.2
+  firebase_core: ^1.6.0
+  firebase_crashlytics: ^2.2.1
+  firebase_dynamic_links: ^4.0.4
+  firebase_remote_config: ^0.10.0+5
+  flutter: { sdk: flutter }
+  flutter_bloc: ^7.2.0
   flutter_password_strength: ^0.1.6
   flutter_sfsymbols: ^2.0.0
   flutter_speed_dial: ^5.0.0+1
@@ -31,47 +40,27 @@ dependencies:
   logger: ^1.0.0
   material_design_icons_flutter: 5.0.5955-rc.1
   package_info_plus: ^1.0.4
+  provider: ^6.0.0
+  quiver: ^3.0.1
   rxdart: ^0.27.0
   scrollable_positioned_list: ^0.2.0-nullsafety.0
   url_launcher: ^6.0.2
 
-  # Bloc
-  bloc_concurrency: ^0.1.0
-  flutter_bloc: ^7.2.0
-
-  # Utility
-  provider: ^6.0.0
-  quiver: ^3.0.1
-
-  # Firebase
-  cloud_firestore: ^2.5.1
-  cloud_functions: ^3.2.4
-  firebase_analytics: ^8.3.1
-  firebase_auth: ^1.1.2
-  firebase_core: ^1.6.0
-  firebase_crashlytics: ^2.2.1
-  firebase_remote_config: ^0.10.0+5
-  firebase_dynamic_links: ^4.0.4
-
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_driver:
-    sdk: flutter
-  integration_test:
-    sdk: flutter
-
-  test: any
   bloc_test: ^8.0.0
   build_runner: ^2.0.2
   built_value_generator: ^8.0.6
   fake_cloud_firestore: ^1.1.0
-  effective_dart: ^1.3.1
+  flutter_driver: { sdk: flutter }
   flutter_launcher_icons: ^0.9.0
+  flutter_lints: ^1.0.4
+  flutter_test: { sdk: flutter }
+  integration_test: { sdk: flutter }
   mockito: ^5.0.7
   mocktail: ^0.1.2
-  timezone: ^0.7.0
   path: ^1.7.0
+  test: any
+  timezone: ^0.7.0
   yaml: ^3.1.0
 
 # For information on the generic Dart part of this file, see the

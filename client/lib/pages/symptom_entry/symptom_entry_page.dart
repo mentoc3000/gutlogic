@@ -67,7 +67,7 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
   }
 
   bool listenWhen(SymptomEntryState previousState, SymptomEntryState currentState) {
-    return currentState is SymptomEntryLoaded && !(previousState is SymptomEntryLoaded);
+    return currentState is SymptomEntryLoaded && previousState is! SymptomEntryLoaded;
   }
 
   Widget builder(BuildContext context, SymptomEntryState state) {
@@ -147,7 +147,7 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
 
       return GLScaffold(
         appBar: defaultAppBar,
-        body: ErrorPage(),
+        body: const ErrorPage(),
       );
     }
 

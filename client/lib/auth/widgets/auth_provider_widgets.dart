@@ -15,7 +15,7 @@ import '../services/auth_google.dart';
 class AuthProviderGroup extends StatelessWidget {
   final void Function(Authentication) onAuthentication;
 
-  AuthProviderGroup({required this.onAuthentication});
+  const AuthProviderGroup({required this.onAuthentication});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class AuthProviderGoogleButton extends StatelessWidget {
 
   final VoidCallback? onPressed;
 
-  AuthProviderGoogleButton({this.onPressed});
+  const AuthProviderGoogleButton({this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class AuthProviderAppleButton extends StatelessWidget {
 
   final VoidCallback? onPressed;
 
-  AuthProviderAppleButton({this.onPressed});
+  const AuthProviderAppleButton({this.onPressed});
 
   @override
   Widget build(BuildContext context) {

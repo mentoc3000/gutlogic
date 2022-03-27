@@ -15,7 +15,7 @@ class UserCubit extends Cubit<ApplicationUser?> {
 class AuthenticatedUserBuilder extends StatelessWidget {
   final Widget Function(BuildContext, ApplicationUser) builder;
 
-  AuthenticatedUserBuilder({required this.builder});
+  const AuthenticatedUserBuilder({required this.builder});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class AuthenticatedUserBuilder extends StatelessWidget {
 class AuthenticationBuilder extends StatelessWidget {
   final Widget Function(BuildContext, bool authenticated) builder;
 
-  AuthenticationBuilder({required this.builder});
+  const AuthenticationBuilder({required this.builder});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class AuthenticationBuilder extends StatelessWidget {
 class AuthenticationListener extends StatelessWidget {
   final Widget Function(BuildContext, bool authenticated) listener;
 
-  AuthenticationListener({required this.listener});
+  const AuthenticationListener({required this.listener});
 
   @override
   Widget build(BuildContext context) {

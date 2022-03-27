@@ -25,18 +25,17 @@ void main() {
     test('emits users', () {
       final repository = MockUserRepository();
 
-      final stream = BehaviorSubject<ApplicationUser?>.seeded(null, sync: true);
+      final stream = BehaviorSubject<ApplicationUser?>.seeded(null);
 
       when(repository.user).thenReturn(stream.value);
       when(repository.stream).thenAnswer((_) => stream);
 
       final cubit = UserCubit(repository: repository);
 
-      expect(cubit.state, null);
       stream.add(user);
-      expect(cubit.state, user);
       stream.add(null);
-      expect(cubit.state, null);
+
+      expect(cubit.stream, emitsInOrder([null, user, null]));
     });
   });
 }

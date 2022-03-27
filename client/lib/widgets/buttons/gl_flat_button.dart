@@ -17,7 +17,7 @@ class GLFlatButton extends StatelessWidget {
   final TextStyle? textStyle;
   final Widget? child;
 
-  GLFlatButton({
+  const GLFlatButton({
     Key? key,
     required this.onPressed,
     this.textTheme,

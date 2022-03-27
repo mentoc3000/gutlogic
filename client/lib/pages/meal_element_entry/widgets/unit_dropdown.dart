@@ -7,16 +7,23 @@ class UnitDropdown extends StatefulWidget {
   final Iterable<String> unitOptions;
   final void Function(String)? onChanged;
 
-  UnitDropdown({Key? key, required this.initialUnit, required this.unitOptions, this.onChanged}) : super(key: key);
+  const UnitDropdown({Key? key, required this.initialUnit, required this.unitOptions, this.onChanged})
+      : super(key: key);
 
   @override
-  _UnitDropdownState createState() => _UnitDropdownState(unit: initialUnit);
+  _UnitDropdownState createState() => _UnitDropdownState();
 }
 
 class _UnitDropdownState extends State<UnitDropdown> {
-  String unit;
+  late String unit;
 
-  _UnitDropdownState({required this.unit});
+  _UnitDropdownState();
+
+  @override
+  void initState() {
+    super.initState();
+    unit = widget.initialUnit;
+  }
 
   @override
   Widget build(BuildContext context) {

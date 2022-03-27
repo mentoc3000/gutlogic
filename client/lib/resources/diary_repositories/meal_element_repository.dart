@@ -37,8 +37,8 @@ class MealElementRepository with FirestoreRepository {
       final mealEntrySnapshot = await tx.get(mealEntryRef);
       if (mealEntrySnapshot.exists) {
         final serializedMealEntry = mealEntrySnapshot.data();
-        if (serializedMealEntry == null) return null;
-        await tx.update(mealEntryRef, updater(serializedMealEntry));
+        if (serializedMealEntry == null) return;
+        tx.update(mealEntryRef, updater(serializedMealEntry));
       }
     });
   }

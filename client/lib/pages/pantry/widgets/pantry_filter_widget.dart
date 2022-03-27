@@ -12,7 +12,7 @@ class PantryFilterWidget extends StatelessWidget {
   final PantryFilterCubit pantryFilterCubit;
   final void Function(BuildContext) onClose = Navigator.pop;
 
-  PantryFilterWidget({Key? key, required this.pantryFilterCubit}) : super(key: key);
+  const PantryFilterWidget({Key? key, required this.pantryFilterCubit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

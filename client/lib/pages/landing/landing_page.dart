@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../resources/user_repository.dart';
 import '../../routes/routes.dart';

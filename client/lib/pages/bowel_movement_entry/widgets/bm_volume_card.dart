@@ -9,10 +9,10 @@ class BMVolumeCard extends StatefulWidget {
   final int volume;
   final void Function(int)? onChanged;
 
-  BMVolumeCard({required this.volume, this.onChanged});
+  const BMVolumeCard({required this.volume, this.onChanged});
 
   @override
-  _BMVolumeCardState createState() => _BMVolumeCardState(value: volume);
+  _BMVolumeCardState createState() => _BMVolumeCardState();
 }
 
 class _BMVolumeCardState extends State<BMVolumeCard> {
@@ -24,9 +24,15 @@ class _BMVolumeCardState extends State<BMVolumeCard> {
     'High Volume',
   ];
 
-  int value;
+  late int value;
 
-  _BMVolumeCardState({required this.value});
+  _BMVolumeCardState();
+
+  @override
+  void initState() {
+    super.initState();
+    value = widget.volume;
+  }
 
   @override
   Widget build(BuildContext context) {

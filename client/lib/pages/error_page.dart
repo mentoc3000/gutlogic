@@ -5,7 +5,7 @@ import '../widgets/gl_scaffold.dart';
 class ErrorPage extends StatelessWidget {
   final String? message;
 
-  ErrorPage({this.message});
+  const ErrorPage({this.message});
 
   @override
   Widget build(BuildContext context) {

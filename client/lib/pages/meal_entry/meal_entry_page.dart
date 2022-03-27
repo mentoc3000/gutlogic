@@ -56,7 +56,7 @@ class MealEntryPage extends StatelessWidget {
   }
 
   bool listenWhen(MealEntryState previousState, MealEntryState currentState) {
-    final loadedAfterSomethingElse = currentState is MealEntryLoaded && !(previousState is MealEntryLoaded);
+    final loadedAfterSomethingElse = currentState is MealEntryLoaded && previousState is! MealEntryLoaded;
     final deleted = currentState is MealElementDeleted;
     return loadedAfterSomethingElse || deleted;
   }
@@ -75,6 +75,6 @@ class MealEntryPage extends StatelessWidget {
       return ErrorPage(message: state.message);
     }
 
-    return ErrorPage();
+    return const ErrorPage();
   }
 }

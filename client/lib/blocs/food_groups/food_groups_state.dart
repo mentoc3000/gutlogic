@@ -22,7 +22,7 @@ class FoodGroupsLoading extends FoodGroupsState {
 class FoodGroupsLoaded extends FoodGroupsState {
   final Iterable<FoodGroup> foodGroups;
 
-  FoodGroupsLoaded({required this.foodGroups});
+  const FoodGroupsLoaded({required this.foodGroups});
 
   @override
   List<Object?> get props => [foodGroups];

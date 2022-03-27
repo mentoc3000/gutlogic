@@ -218,7 +218,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
 const double paddingSize = 10;
 
 class MeasureLine extends StatelessWidget {
-  MeasureLine({
+  const MeasureLine({
     required this.handleTap,
     required this.animationValue,
     required this.states,
@@ -291,38 +291,36 @@ class MeasureLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            top: circleDiameter / 2,
-            left: width / 8,
-            width: width * 3 / 4,
-            child: Container(
-              width: width,
-              color: const Color(0xFFeceeef),
-              height: 3,
-            ),
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          top: circleDiameter / 2,
+          left: width / 8,
+          width: width * 3 / 4,
+          child: Container(
+            width: width,
+            color: const Color(0xFFeceeef),
+            height: 3,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: _buildUnits(),
-          ),
-        ],
-      ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: _buildUnits(),
+        ),
+      ],
     );
   }
 }
 
 class Face extends StatelessWidget {
-  Face({this.color = const Color(0xFF616154), required this.animationValue, required this.circleDiameter});
+  const Face({this.color = const Color(0xFF616154), required this.animationValue, required this.circleDiameter});
 
   final double animationValue;
   final Color color;
   final double circleDiameter;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: circleDiameter,
       width: circleDiameter,
       child: CustomPaint(
@@ -502,7 +500,7 @@ class MyPainter extends CustomPainter {
 }
 
 class MyIndicator extends StatelessWidget {
-  MyIndicator({
+  const MyIndicator({
     required this.animationValue,
     required this.width,
     required this.onDrag,
@@ -527,19 +525,19 @@ class MyIndicator extends StatelessWidget {
       onHorizontalDragStart: (_) => onDragStart,
       onHorizontalDragUpdate: (_) => onDrag,
       onHorizontalDragEnd: (_) => onDragEnd,
-      child: Container(
+      child: SizedBox(
         width: circleDiameter,
         height: circleDiameter,
         child: Stack(
           children: <Widget>[
-            Head(
-              color: const Color(0xFFE13D5E), // angry face color
+            const Head(
+              color: Color(0xFFE13D5E), // angry face color
               hasShadow: true,
             ),
             Opacity(
               opacity: opacityOfYellow,
-              child: Head(
-                color: const Color(0xFFfee385), // happy face color
+              child: const Head(
+                color: Color(0xFFfee385), // happy face color
               ),
             ),
             Face(
@@ -554,18 +552,16 @@ class MyIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Positioned(
-        top: 0,
-        left: width * position - circleDiameter / 2,
-        child: _buildIndicator(),
-      ),
+    return Positioned(
+      top: 0,
+      left: width * position - circleDiameter / 2,
+      child: _buildIndicator(),
     );
   }
 }
 
 class Head extends StatelessWidget {
-  Head({this.color = const Color(0xFFc9ced2), this.hasShadow = false, this.circleDiameter});
+  const Head({this.color = const Color(0xFFc9ced2), this.hasShadow = false, this.circleDiameter});
 
   final Color color;
   final bool hasShadow;

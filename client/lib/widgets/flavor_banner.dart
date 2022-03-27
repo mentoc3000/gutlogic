@@ -28,7 +28,7 @@ class FlavorBanner extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onLongPress: onLongPress,
-      child: Container(
+      child: SizedBox(
         width: 50,
         height: 50,
         child: CustomPaint(

@@ -3,7 +3,8 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [{
+  "configurations": [
+    {
       "name": "Python: Current File",
       "type": "python",
       "request": "launch",
@@ -16,21 +17,39 @@
       "request": "launch",
       "program": "client/lib/main.dart",
       "type": "dart",
-      "args": ["--flavor", "production"]
+      "args": [
+        "--flavor",
+        "production"
+      ]
     },
     {
       "name": "Flutter Develop",
       "request": "launch",
       "program": "client/lib/main.dart",
       "type": "dart",
-      "args": ["--flavor", "development"]
+      "args": [
+        "--flavor",
+        "development"
+      ]
     },
     {
       "name": "Flutter Driver App",
       "request": "launch",
       "program": "client/test_driver/app.dart",
       "type": "dart",
-      "args": ["--flavor", "development", "--observatory-port", "8887", "--disable-service-auth-codes"]
+      "args": [
+        "--flavor",
+        "development",
+        "--observatory-port",
+        "8887",
+        "--disable-service-auth-codes"
+      ]
+    },
+    {
+      "name": "All Tests",
+      "type": "dart",
+      "request": "launch",
+      "program": "client/test/", // or tests/foo for a subset of tests
     }
     // {
     //   "name": "Flutter Driver Tests",

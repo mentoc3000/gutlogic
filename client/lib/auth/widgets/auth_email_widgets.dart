@@ -51,7 +51,7 @@ class AuthEmailPendingGroup extends StatelessWidget {
 
   final VoidCallback? onCanceled;
 
-  AuthEmailPendingGroup({required this.email, required this.onCanceled});
+  const AuthEmailPendingGroup({required this.email, required this.onCanceled});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class AuthEmailPendingGroup extends StatelessWidget {
 class AuthEmailPendingInfo extends StatelessWidget {
   final String email;
 
-  AuthEmailPendingInfo({required this.email});
+  const AuthEmailPendingInfo({required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class AuthEmailPendingInfo extends StatelessWidget {
 class AuthEmailSubmitButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
-  AuthEmailSubmitButton({required this.onPressed});
+  const AuthEmailSubmitButton({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class AuthEmailSubmitButton extends StatelessWidget {
 class AuthEmailCancelButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
-  AuthEmailCancelButton({required this.onPressed});
+  const AuthEmailCancelButton({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +124,7 @@ class AuthEmailInput extends StatelessWidget {
   final bool enabled;
   final Function(String?) onChanged;
 
-  AuthEmailInput({required this.enabled, required this.valid, required this.onChanged});
+  const AuthEmailInput({required this.enabled, required this.valid, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

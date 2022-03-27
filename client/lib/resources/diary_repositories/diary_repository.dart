@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
-import 'package:pedantic/pedantic.dart';
 
 import '../../models/diary_entry/diary_entry.dart';
 import '../../util/logger.dart';

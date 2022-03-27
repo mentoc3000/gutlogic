@@ -11,7 +11,7 @@ import 'gl_icons.dart';
 class SensitivityIndicator extends StatelessWidget {
   final Future<Sensitivity> sensitivity;
 
-  SensitivityIndicator(this.sensitivity);
+  const SensitivityIndicator(this.sensitivity);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class SensitivityIndicator extends StatelessWidget {
                   : GLIcons.userSensitivity;
           return Icon(iconData, color: color);
         } else {
-          return _SensitivityIndicatorLoading();
+          return const _SensitivityIndicatorLoading();
         }
       },
     );
@@ -35,7 +35,7 @@ class SensitivityIndicator extends StatelessWidget {
 }
 
 class _SensitivityIndicatorLoading extends StatefulWidget {
-  _SensitivityIndicatorLoading({Key? key}) : super(key: key);
+  const _SensitivityIndicatorLoading({Key? key}) : super(key: key);
 
   @override
   __SensitivityIndicatorLoadingState createState() => __SensitivityIndicatorLoadingState();

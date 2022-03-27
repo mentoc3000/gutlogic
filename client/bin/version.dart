@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
+
 import 'package:yaml/yaml.dart' as yaml;
 
 /// Prints the local pubspec.yaml version.

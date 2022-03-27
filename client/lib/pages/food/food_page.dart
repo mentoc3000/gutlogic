@@ -50,6 +50,6 @@ class FoodPage extends StatelessWidget {
     if (state is FoodError) {
       return ErrorPage(message: state.message);
     }
-    return ErrorPage();
+    return const ErrorPage();
   }
 }

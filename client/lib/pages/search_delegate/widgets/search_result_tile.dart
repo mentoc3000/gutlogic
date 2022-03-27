@@ -16,7 +16,7 @@ class SearchResultTile extends StatelessWidget {
   final bool isCustom;
   bool get isDismissible => onDelete != null;
 
-  SearchResultTile({
+  const SearchResultTile({
     required this.searchable,
     this.trailing,
     required this.onTap,

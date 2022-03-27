@@ -8,7 +8,7 @@ class LoadingPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [const Center(child: GLCircularProgressIndicator())],
+      children: const [Center(child: GLCircularProgressIndicator())],
     );
   }
 }

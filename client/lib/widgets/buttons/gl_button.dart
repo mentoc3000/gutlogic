@@ -33,7 +33,7 @@ class GLButton extends StatelessWidget {
 
   bool get isDisabled => onPressed == null;
 
-  GLButton({
+  const GLButton({
     Key? key,
     required this.onPressed,
     this.textTheme,

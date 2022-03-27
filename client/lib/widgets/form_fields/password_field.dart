@@ -8,7 +8,7 @@ class PasswordField extends StatefulWidget {
   final String label;
   final bool? enabled;
 
-  PasswordField({
+  const PasswordField({
     Key? key,
     this.enabled,
     this.label = 'Password',

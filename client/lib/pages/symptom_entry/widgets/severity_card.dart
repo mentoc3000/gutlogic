@@ -11,13 +11,17 @@ class SeverityCard extends StatefulWidget {
   const SeverityCard({required this.severity, this.onChanged});
 
   @override
-  _SeverityCardState createState() => _SeverityCardState(severity);
+  _SeverityCardState createState() => _SeverityCardState();
 }
 
 class _SeverityCardState extends State<SeverityCard> {
-  Severity severity;
+  late Severity severity;
 
-  _SeverityCardState(this.severity);
+  @override
+  void initState() {
+    super.initState();
+    severity = widget.severity;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -83,7 +83,7 @@ void main() {
     blocTest<MealEntryBloc, MealEntryState>(
       'creates and streams diary entry',
       build: () {
-        when(repository.create()).thenAnswer((_) async => await mealEntry);
+        when(repository.create()).thenAnswer((_) async => mealEntry);
         return MealEntryBloc(repository: repository);
       },
       act: (bloc) async => bloc.add(const CreateAndStreamMealEntry()),

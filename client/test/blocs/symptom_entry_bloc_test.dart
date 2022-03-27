@@ -75,7 +75,7 @@ void main() {
     blocTest<SymptomEntryBloc, SymptomEntryState>(
       'creates and streams diary entry from symptom type',
       build: () {
-        when(repository.createFrom(any)).thenAnswer((_) async => await diaryEntry);
+        when(repository.createFrom(any)).thenAnswer((_) async => diaryEntry);
         return SymptomEntryBloc(repository: repository);
       },
       act: (bloc) async => bloc.add(CreateFromAndStreamSymptomEntry(symptomType)),

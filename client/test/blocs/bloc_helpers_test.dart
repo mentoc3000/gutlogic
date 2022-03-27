@@ -20,7 +20,7 @@ class Pair extends Equatable {
   final int first;
   final int second;
 
-  Pair(this.first, this.second);
+  const Pair(this.first, this.second);
 
   Pair setFirst(int x) => Pair(x, second);
   Pair setSecond(int x) => Pair(first, x);
@@ -33,7 +33,7 @@ class Pair extends Equatable {
 }
 
 class PairBloc extends Bloc<PairEvent, Pair> {
-  PairBloc() : super(Pair(0, 0)) {
+  PairBloc() : super(const Pair(0, 0)) {
     on<SetFirstEvent>(_onSetFirst, transformer: debounceTransformer);
     on<SetSecondEvent>(_onSetSecond, transformer: debounceTransformer);
   }
@@ -61,7 +61,7 @@ void main() {
             ..add(SetSecondEvent(3));
         },
         wait: const Duration(seconds: 2),
-        expect: () => [Pair(3, 0), Pair(3, 3)],
+        expect: () => [const Pair(3, 0), const Pair(3, 3)],
       );
     });
   });

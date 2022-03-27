@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pedantic/pedantic.dart';
 
 import '../../resources/food/food_service.dart';
 import '../bloc_helpers.dart';

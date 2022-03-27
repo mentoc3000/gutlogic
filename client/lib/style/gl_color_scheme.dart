@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'gl_colors.dart';
 
 final ColorScheme glColorScheme = ColorScheme(
@@ -11,8 +12,8 @@ final ColorScheme glColorScheme = ColorScheme(
   onSecondary: Colors.white,
   onSurface: Colors.black,
   primary: GLColors.darkGreen,
-  primaryVariant: GLColors.green,
+  primaryContainer: GLColors.green,
   secondary: GLColors.green,
-  secondaryVariant: GLColors.lightGreen,
+  secondaryContainer: GLColors.lightGreen,
   surface: GLColors.lightestGray,
 );

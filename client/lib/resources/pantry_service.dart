@@ -43,7 +43,7 @@ class PantryService implements SearchableRepository<PantryEntry> {
       foodReference: pantryEntry.foodReference,
       notes: pantryEntry.notes,
     );
-    await userFoodDetailsRepository.add(userFoodDetails);
+    userFoodDetailsRepository.add(userFoodDetails);
     await sensitivityRepository.updateLevel(
       pantryEntry.foodReference,
       pantryEntry.sensitivity.level,

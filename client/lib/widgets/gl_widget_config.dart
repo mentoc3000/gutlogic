@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 class GLWidgetConfig extends StatelessWidget {
   final Widget child;
 
-  GLWidgetConfig({required this.child});
+  const GLWidgetConfig({required this.child});
 
   @override
   Widget build(BuildContext context) {

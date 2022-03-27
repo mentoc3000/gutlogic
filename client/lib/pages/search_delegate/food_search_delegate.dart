@@ -46,7 +46,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
       bloc: foodBloc,
       builder: (BuildContext context, FoodSearchState state) {
         if (query.isEmpty) {
-          return Column(children: []);
+          return Column(children: const []);
         }
         if (state is FoodSearchLoaded) {
           final items = state.items;
@@ -76,7 +76,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
         if (state is FoodSearchError) {
           return ErrorPage(message: state.message);
         }
-        return ErrorPage();
+        return const ErrorPage();
       },
     );
   }

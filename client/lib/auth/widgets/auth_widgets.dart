@@ -9,7 +9,7 @@ import 'auth_provider_widgets.dart';
 class AuthSection extends StatelessWidget {
   final void Function(Authentication) onAuthentication;
 
-  AuthSection({required this.onAuthentication});
+  const AuthSection({required this.onAuthentication});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +26,10 @@ class AuthSection extends StatelessWidget {
 class AuthSectionDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      const Expanded(child: Divider(thickness: 1, color: Colors.grey)),
-      const Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text('or')),
-      const Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+    return Row(children: const [
+      Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+      Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text('or')),
+      Expanded(child: Divider(thickness: 1, color: Colors.grey)),
     ]);
   }
 }

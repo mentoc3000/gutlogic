@@ -11,7 +11,7 @@ class SubjectValueBuilder<T> extends StatelessWidget {
   final BehaviorSubject<T> subject;
   final AsyncWidgetBuilder<T> builder;
 
-  SubjectValueBuilder({required this.subject, required this.builder});
+  const SubjectValueBuilder({required this.subject, required this.builder});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class LoadingBuilder<T> extends StatelessWidget {
   final Future<T> future;
   final ValueBuilder<T> builder;
 
-  LoadingBuilder({required this.future, required this.builder});
+  const LoadingBuilder({required this.future, required this.builder});
 
   static LoadingBuilder<T> stream<T>({required ValueStream<T> stream, required ValueBuilder<T> builder}) {
     return LoadingBuilder(future: stream.hasValue ? Future.value(stream.value) : stream.first, builder: builder);

@@ -43,7 +43,7 @@ class MealElementEntryPage extends StatelessWidget {
   }
 
   bool listenWhen(MealElementState previousState, MealElementState currentState) {
-    return currentState is MealElementLoaded && !(previousState is MealElementLoaded);
+    return currentState is MealElementLoaded && previousState is! MealElementLoaded;
   }
 
   AppBar appBarBuilder(BuildContext context, MealElementState state) {
@@ -73,7 +73,7 @@ class MealElementEntryPage extends StatelessWidget {
       return ErrorPage(message: state.message);
     }
 
-    return ErrorPage();
+    return const ErrorPage();
   }
 
   Widget builder(BuildContext context, MealElementState state) {

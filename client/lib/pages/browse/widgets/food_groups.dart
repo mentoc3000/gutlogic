@@ -27,6 +27,6 @@ class FoodGroups extends StatelessWidget {
     if (state is FoodGroupsError) {
       return ErrorPage(message: state.message);
     }
-    return ErrorPage();
+    return const ErrorPage();
   }
 }

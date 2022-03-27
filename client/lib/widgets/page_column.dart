@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 class ConstrainedScrollView extends StatelessWidget {
   final Widget Function(BuildContext context, BoxConstraints constraints) builder;
 
-  ConstrainedScrollView({Key? key, required this.builder}) : super(key: key);
+  const ConstrainedScrollView({Key? key, required this.builder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

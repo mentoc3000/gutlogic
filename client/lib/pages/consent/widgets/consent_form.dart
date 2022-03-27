@@ -38,7 +38,7 @@ class ConsentFormMinimumAgeCheckbox extends StatelessWidget {
   final bool value;
   final void Function(bool)? onChanged;
 
-  ConsentFormMinimumAgeCheckbox({required this.value, this.onChanged});
+  const ConsentFormMinimumAgeCheckbox({required this.value, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class ConsentFormPrivacyCheckbox extends StatelessWidget {
   final bool value;
   final void Function(bool)? onChanged;
 
-  ConsentFormPrivacyCheckbox({required this.value, this.onChanged});
+  const ConsentFormPrivacyCheckbox({required this.value, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class ConsentFormPrivacyCheckbox extends StatelessWidget {
 class ConsentFormSubmitButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
-  ConsentFormSubmitButton({required this.onPressed});
+  const ConsentFormSubmitButton({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

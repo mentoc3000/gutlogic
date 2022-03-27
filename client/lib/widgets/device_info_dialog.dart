@@ -10,7 +10,7 @@ import '../util/app_config.dart';
 class DeviceInfoDialog extends StatelessWidget {
   final Color color;
 
-  DeviceInfoDialog({required this.color});
+  const DeviceInfoDialog({required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class IosDeviceInfoContent extends StatelessWidget {
   final AppConfig config;
   final IosDeviceInfo device;
 
-  IosDeviceInfoContent({required this.config, required this.device});
+  const IosDeviceInfoContent({required this.config, required this.device});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class AndroidDeviceInfoContent extends StatelessWidget {
   final AppConfig config;
   final AndroidDeviceInfo device;
 
-  AndroidDeviceInfoContent({required this.config, required this.device});
+  const AndroidDeviceInfoContent({required this.config, required this.device});
 
   @override
   Widget build(BuildContext context) {

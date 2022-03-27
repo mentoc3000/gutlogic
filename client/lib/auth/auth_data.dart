@@ -53,7 +53,7 @@ class Authentication extends Equatable {
   /// The email associated with the auth provider. This could be null for platforms that don't provide one.
   final String? email;
 
-  Authentication({required this.method, required this.provider, required this.credential, this.email});
+  const Authentication({required this.method, required this.provider, required this.credential, this.email});
 
   @override
   List<Object?> get props => [method, credential, email];

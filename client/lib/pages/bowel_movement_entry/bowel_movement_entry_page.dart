@@ -63,7 +63,7 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
   }
 
   bool listenWhen(BowelMovementEntryState previousState, BowelMovementEntryState currentState) {
-    return currentState is BowelMovementEntryLoaded && !(previousState is BowelMovementEntryLoaded);
+    return currentState is BowelMovementEntryLoaded && previousState is! BowelMovementEntryLoaded;
   }
 
   Widget builder(BuildContext context, BowelMovementEntryState state) {
@@ -115,7 +115,7 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
         return ErrorPage(message: state.message);
       }
 
-      return ErrorPage();
+      return const ErrorPage();
     }
 
     return GLScaffold(

@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pedantic/pedantic.dart';
 
 import 'untyped_data.dart';
 

@@ -4,22 +4,22 @@ import '../bloc_helpers.dart';
 class ProfileState extends BaseState {
   final Profile profile;
 
-  ProfileState(this.profile);
+  const ProfileState(this.profile);
 
   @override
   List<Object?> get props => [profile];
 }
 
 class ProfileInitial extends ProfileState {
-  ProfileInitial(Profile profile) : super(profile);
+  const ProfileInitial(Profile profile) : super(profile);
 }
 
 class ProfileSaving extends ProfileState {
-  ProfileSaving(Profile profile) : super(profile);
+  const ProfileSaving(Profile profile) : super(profile);
 }
 
 class ProfileSuccess extends ProfileState {
-  ProfileSuccess(Profile profile) : super(profile);
+  const ProfileSuccess(Profile profile) : super(profile);
 }
 
 class ProfileFailure extends ProfileState with ErrorState {
