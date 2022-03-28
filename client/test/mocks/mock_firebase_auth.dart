@@ -78,7 +78,10 @@ class FakeUser extends Fake implements User {
 }
 
 class FakeAuthCredential extends Fake implements AuthCredential {
-  FakeAuthCredential();
+  @override
+  final String providerId;
+
+  FakeAuthCredential({required this.providerId});
 }
 
 class FakeUserCredential extends Fake implements UserCredential {

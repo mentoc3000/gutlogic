@@ -44,16 +44,13 @@ class Authentication extends Equatable {
   /// The authentication method.
   final AuthMethod method;
 
-  /// The authentication provider.
-  final AuthProvider provider;
-
   /// The Firebase AuthCredential to use when logging in.
   final firebase_auth.AuthCredential credential;
 
   /// The email associated with the auth provider. This could be null for platforms that don't provide one.
   final String? email;
 
-  const Authentication({required this.method, required this.provider, required this.credential, this.email});
+  const Authentication({required this.method, required this.credential, this.email});
 
   @override
   List<Object?> get props => [method, credential, email];

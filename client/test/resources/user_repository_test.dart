@@ -11,8 +11,7 @@ void main() {
 
     final auth = Authentication(
       method: AuthMethod.email,
-      provider: AuthProvider.firebase,
-      credential: FakeAuthCredential(),
+      credential: FakeAuthCredential(providerId: 'password'),
     );
 
     setUp(() {

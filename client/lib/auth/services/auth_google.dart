@@ -20,7 +20,6 @@ class GoogleAuthService implements AuthProviderService {
 
       return Result.value(Authentication(
         method: AuthMethod.google,
-        provider: AuthProvider.google,
         email: googleSignInUser.email,
         credential: cred,
       ));

@@ -51,7 +51,6 @@ class EmailAuthService {
       final cred = EmailAuthProvider.credentialWithLink(email: email, emailLink: link);
       return Authentication(
         method: AuthMethod.email,
-        provider: AuthProvider.firebase,
         credential: cred,
         email: email,
       );

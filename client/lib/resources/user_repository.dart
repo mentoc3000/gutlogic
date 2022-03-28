@@ -137,21 +137,26 @@ class UserRepository {
   Future<void> linkAuthProvider({required Authentication authentication}) async {
     if (authenticated == false) throw RequiresAuthenticatedError();
 
+    final credential = authentication.credential;
+    final providerID = AuthProviderUtil.fromFirebaseProviderID(credential.providerId);
+
     try {
-      await _firebaseAuth.currentUser!.linkWithCredential(authentication.credential);
+      await _firebaseAuth.currentUser!.linkWithCredential(credential);
     } on FirebaseAuthException catch (ex) {
       throw AuthException.from(ex);
     }
 
-    await _firstUserWhere((user) => user?.providers.contains(authentication.provider) == true);
+    await _firstUserWhere((user) => user?.providers.contains(providerID) == true);
   }
 
   /// Unlink the current user from the auth [provider]. This requires a recent reauthentication.
   Future<void> unlinkAuthProvider({required AuthProvider provider}) async {
     if (authenticated == false) throw RequiresAuthenticatedError();
 
+    final providerID = AuthProviderUtil.toFirebaseProviderID(provider);
+
     try {
-      await _firebaseAuth.currentUser!.unlink(AuthProviderUtil.toFirebaseProviderID(provider));
+      await _firebaseAuth.currentUser!.unlink(providerID);
     } on FirebaseAuthException catch (ex) {
       throw AuthException.from(ex);
     }

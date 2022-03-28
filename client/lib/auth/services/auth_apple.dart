@@ -44,7 +44,6 @@ class AppleAuthService implements AuthProviderService {
 
       return Result.value(Authentication(
         method: AuthMethod.apple,
-        provider: AuthProvider.apple,
         email: result['email'],
         credential: cred,
       ));
