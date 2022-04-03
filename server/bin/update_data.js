@@ -2,7 +2,6 @@
 
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
-const tools = require('firebase-tools');
 const admin = require('firebase-admin');
 
 const foodIrritantDbPath = path.resolve(__dirname, '../data', 'irritants.sqlite3');
@@ -11,9 +10,9 @@ const maxBatchSize = 500;
 
 admin.initializeApp();
 
-const db = admin.firestore();
-const foodIrritantsCollection = db.collection('food_irritants');
-const foodGroupsCollection = db.collection('food_groups');
+const firestore = admin.firestore();
+const foodIrritantsCollection = firestore.collection('food_irritants');
+const foodGroupsCollection = firestore.collection('food_groups');
 
 async function selectEdamamIdMap(db) {
   return new Promise((resolve, reject) => {
@@ -161,7 +160,7 @@ async function deleteCollection(collectionRef, batchSize) {
   });
 }
 
-async function deleteQueryBatch(db, query, resolve) {
+async function deleteQueryBatch(firestore, query, resolve) {
   const snapshot = await query.get();
 
   const batchSize = snapshot.size;
@@ -172,7 +171,7 @@ async function deleteQueryBatch(db, query, resolve) {
   }
 
   // Delete documents in a batch
-  const batch = db.batch();
+  const batch = firestore.batch();
   snapshot.docs.forEach((doc) => {
     batch.delete(doc.ref);
   });
@@ -181,7 +180,7 @@ async function deleteQueryBatch(db, query, resolve) {
   // Recurse on the next process tick, to avoid
   // exploding the stack.
   process.nextTick(() => {
-    deleteQueryBatch(db, query, resolve);
+    deleteQueryBatch(firestore, query, resolve);
   });
 }
 
