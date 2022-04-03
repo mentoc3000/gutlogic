@@ -2,7 +2,7 @@
   "hosting": {
     "appAssociation": "AUTO",
     "rewrites": [
-      { "source": "/links/**", "dynamicLinks": true }
+      { "source": "/link/**", "dynamicLinks": true }
     ]
   },
   "firestore": {
