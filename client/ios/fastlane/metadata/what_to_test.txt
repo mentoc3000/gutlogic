@@ -4,6 +4,8 @@ Thank you for volunteering to beta test Gut Logic, an app to help people identif
 
 2. Be a maverick. Do things that we would never expect a normal user to do. Try unlikely sequences of operations to see if the app breaks. Suddenly put your phone into airplane mode to see if it can handle an internet outage, or, even better, use the app in a place of very slow or spotty connectivity. We want to be able to handle all of those edge cases.
 
-Spend a couple of days or weeks with the app and then fill out the feedback form at the link below. We will accept feedback on this beta version until Jan 12. Thanks in advance for your time and candid feedback!
+We have made some significant changes to the app. In particular, we have a new registration and sign up flow and would love to get your feedback on it. If you're willing to log out or delete your current account and create a new one, evaluating the app from the standpoint of a new user, we would love to hear what you think of it.
 
-https://forms.gle/xKekWxMTCjHS74xs6
+Spend a few days with the app and then fill out the feedback form at the link below. We will accept feedback on this beta version until Apr 15. Thanks in advance for your time and candid feedback!
+
+https://forms.gle/ARZo27JPJPpLdp3Z8
