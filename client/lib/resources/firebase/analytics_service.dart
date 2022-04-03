@@ -1,5 +1,4 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../auth/auth.dart';
@@ -11,7 +10,7 @@ class AnalyticsService {
 
   AnalyticsService({bool enabled = true}) {
     if (enabled) {
-      _analytics = FirebaseAnalytics();
+      _analytics = FirebaseAnalytics.instance;
       _observer = FirebaseAnalyticsObserver(analytics: _analytics!);
     } else {
       _analytics = null;
@@ -34,30 +33,13 @@ class AnalyticsService {
 
   // AUTHENTICATION and USER
 
-  void setUser(ApplicationUser user) => _analytics?.setUserId(user.id);
+  void setUser(ApplicationUser user) => _analytics?.setUserId(id: user.id);
 
   void logEvent(String name) => _analytics?.logEvent(name: name);
 
-  void logLogin(AuthMethod method) => _analytics?.logLogin(loginMethod: method.toString());
+  void logLogin(AuthMethod method) => _analytics?.logLogin(loginMethod: method.name);
 
-  void logRegistration(AuthMethod method) {
-    switch (method) {
-      case AuthMethod.anonymous:
-        _analytics?.logEvent(name: 'register_with_anonymous');
-        break;
-      case AuthMethod.apple:
-        _analytics?.logEvent(name: 'register_with_apple');
-        break;
-      case AuthMethod.email:
-        _analytics?.logEvent(name: 'register_with_email');
-        break;
-      case AuthMethod.google:
-        _analytics?.logEvent(name: 'register_with_google');
-        break;
-    }
-    // TODO replace above case statement with enum extension in Flutter 2.15
-    // _analytics?.logEvent(name: 'register_with_${method.name}');
-  }
+  void logRegistration(AuthMethod method) => _analytics?.logEvent(name: 'register_with_${method.name}');
 
   void logUpdateEvent(String name, [String? field]) {
     _analytics?.logEvent(name: name, parameters: field == null ? null : {field: field});

@@ -13,7 +13,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../flutter_test_config.dart';
 import 'symptom_entry_bloc_test.mocks.dart';
 
 @GenerateMocks([SymptomEntryRepository])
@@ -124,7 +123,7 @@ void main() {
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.delete(diaryEntry)).called(1);
-        verify(analyticsService.logEvent('delete_symptom_entry')).called(1);
+        // verify(analyticsService.logEvent('delete_symptom_entry')).called(1);
       },
     );
 
@@ -157,7 +156,7 @@ void main() {
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateEntry(diaryEntry)).called(1);
-        verify(analyticsService.logUpdateEvent('update_symptom_entry')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_symptom_entry')).called(1);
       },
     );
 
@@ -192,7 +191,7 @@ void main() {
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateDateTime(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_symptom_entry', 'dateTime')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_symptom_entry', 'dateTime')).called(1);
       },
     );
 
@@ -227,7 +226,7 @@ void main() {
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateNotes(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_symptom_entry', 'notes')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_symptom_entry', 'notes')).called(1);
       },
     );
 
@@ -263,7 +262,7 @@ void main() {
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateSymptom(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_symptom_entry', 'symptom')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_symptom_entry', 'symptom')).called(1);
       },
     );
 
@@ -306,7 +305,7 @@ void main() {
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateSymptomType(diaryEntry, SymptomType(id: 'symptomType1', name: 'Tall'))).called(1);
-        verify(analyticsService.logUpdateEvent('update_symptom_entry', 'type')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_symptom_entry', 'type')).called(1);
       },
     );
 
@@ -343,7 +342,7 @@ void main() {
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateSymptomName(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_symptom_entry', 'symptom_name')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_symptom_entry', 'symptom_name')).called(1);
       },
     );
 
@@ -377,7 +376,7 @@ void main() {
       expect: () => [SymptomEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateSeverity(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_symptom_entry', 'severity')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_symptom_entry', 'severity')).called(1);
       },
     );
 

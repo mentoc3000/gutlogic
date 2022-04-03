@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gutlogic/blocs/bowel_movement_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
 import 'package:gutlogic/blocs/food_search/food_search.dart';
-import 'package:gutlogic/blocs/gut_logic_bloc_observer.dart';
 import 'package:gutlogic/blocs/meal_element/meal_element.dart';
 import 'package:gutlogic/blocs/meal_entry/meal_entry.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
@@ -16,10 +14,8 @@ import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
-import 'package:gutlogic/models/food/food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
-import 'package:gutlogic/models/food_reference/food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
 import 'package:gutlogic/models/pantry/pantry_filter.dart';
@@ -70,10 +66,6 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   // Stub out analytics
   analyticsService = MockAnalyticsService();
   crashlyticsService = MockCrashlyticsService();
-  Bloc.observer = GutLogicBlocObserver(
-    analytics: analyticsService,
-    crashlytics: crashlyticsService,
-  );
 
   setUpAll(() {
     // Register fallback values for using mocktail in page tests
@@ -83,54 +75,52 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     final symptom = Symptom(symptomType: symptomType, severity: Severity.mild);
     final sensitivity = Sensitivity(level: sensitivityLevel, source: SensitivitySource.user);
 
-    registerFallbackValue<BowelMovementEntryEvent>(BowelMovementEntryEventFake());
-    registerFallbackValue<BowelMovementEntryState>(BowelMovementEntryLoading());
+    registerFallbackValue(BowelMovementEntryEventFake());
+    registerFallbackValue(BowelMovementEntryLoading());
 
-    registerFallbackValue<DiaryEvent>(DiaryEventFake());
-    registerFallbackValue<DiaryState>(DiaryLoading());
+    registerFallbackValue(DiaryEventFake());
+    registerFallbackValue(DiaryLoading());
 
-    registerFallbackValue<FoodSearchEvent>(FoodEventFake());
-    registerFallbackValue<FoodSearchState>(FoodSearchLoading());
+    registerFallbackValue(FoodEventFake());
+    registerFallbackValue(FoodSearchLoading());
 
-    registerFallbackValue<Food>(EdamamFood(id: 'id', name: 'name'));
-    registerFallbackValue<EdamamFood>(EdamamFood(id: 'id', name: 'name'));
-    registerFallbackValue<CustomFood>(CustomFood(id: 'id', name: 'name'));
+    registerFallbackValue(EdamamFood(id: 'id', name: 'name'));
+    registerFallbackValue(CustomFood(id: 'id', name: 'name'));
 
-    registerFallbackValue<FoodReference>(EdamamFoodReference(id: 'id', name: 'name'));
-    registerFallbackValue<EdamamFoodReference>(EdamamFoodReference(id: 'id', name: 'name'));
-    registerFallbackValue<CustomFoodReference>(CustomFoodReference(id: 'id', name: 'name'));
+    registerFallbackValue(EdamamFoodReference(id: 'id', name: 'name'));
+    registerFallbackValue(EdamamFoodReference(id: 'id', name: 'name'));
+    registerFallbackValue(CustomFoodReference(id: 'id', name: 'name'));
 
-    registerFallbackValue<MealElement>(MealElement(id: '', foodReference: foodReference));
+    registerFallbackValue(MealElement(id: '', foodReference: foodReference));
 
-    registerFallbackValue<MealElementEvent>(MealElementEventFake());
-    registerFallbackValue<MealElementState>(MealElementLoading());
+    registerFallbackValue(MealElementEventFake());
+    registerFallbackValue(MealElementLoading());
 
-    registerFallbackValue<MealEntryEvent>(MealEntryEventFake());
-    registerFallbackValue<MealEntryState>(MealEntryLoading());
+    registerFallbackValue(MealEntryEventFake());
+    registerFallbackValue(MealEntryLoading());
 
-    registerFallbackValue<PantryEntry>(
+    registerFallbackValue(
         PantryEntry(userFoodDetailsId: '', foodReference: foodReference, sensitivity: sensitivity, notes: null));
 
-    registerFallbackValue<PantryEvent>(PantryEventFake());
-    registerFallbackValue<PantryState>(PantryLoading());
+    registerFallbackValue(PantryEventFake());
+    registerFallbackValue(PantryLoading());
 
-    registerFallbackValue<PantryEntryEvent>(PantryEntryEventFake());
-    registerFallbackValue<PantryEntryState>(PantryEntryLoading());
+    registerFallbackValue(PantryEntryEventFake());
+    registerFallbackValue(PantryEntryLoading());
 
-    registerFallbackValue<PantrySortState>(PantrySortLoading(sort: PantrySort.alphabeticalAscending));
+    registerFallbackValue(PantrySortLoading(sort: PantrySort.alphabeticalAscending));
 
-    registerFallbackValue<PantryFilterState>(PantryFilterLoading(filter: PantryFilter.all()));
+    registerFallbackValue(PantryFilterLoading(filter: PantryFilter.all()));
 
-    registerFallbackValue<SymptomEntryEvent>(SymptomEntryEventFake());
-    registerFallbackValue<SymptomEntryState>(SymptomEntryLoading());
+    registerFallbackValue(SymptomEntryEventFake());
+    registerFallbackValue(SymptomEntryLoading());
 
-    registerFallbackValue<SymptomTypeEvent>(SymptomTypeEventFake());
-    registerFallbackValue<SymptomTypeState>(SymptomTypesLoading());
+    registerFallbackValue(SymptomTypeEventFake());
+    registerFallbackValue(SymptomTypesLoading());
 
-    registerFallbackValue<SymptomEntry>(SymptomEntry(id: '', datetime: DateTime.now(), symptom: symptom));
+    registerFallbackValue(SymptomEntry(id: '', datetime: DateTime.now(), symptom: symptom));
 
-    registerFallbackValue<UserFoodDetailsApi>(
-        UserFoodDetailsApi(id: '', foodReference: foodReference, sensitivityLevel: sensitivityLevel));
+    registerFallbackValue(UserFoodDetailsApi(id: '', foodReference: foodReference, sensitivityLevel: sensitivityLevel));
   });
 
   setUp(() {

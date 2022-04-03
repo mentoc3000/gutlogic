@@ -5,14 +5,14 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import '../../util/logger.dart';
 
 class RemoteConfigService {
-  final RemoteConfig? _remoteConfig;
+  final FirebaseRemoteConfig? _remoteConfig;
 
-  RemoteConfigService._(RemoteConfig? remoteConfig) : _remoteConfig = remoteConfig;
+  RemoteConfigService._(FirebaseRemoteConfig? remoteConfig) : _remoteConfig = remoteConfig;
 
   static Future<RemoteConfigService> initialize({bool enabled = true}) async {
     if (enabled == false) return RemoteConfigService._(null);
 
-    final remoteConfig = RemoteConfig.instance;
+    final remoteConfig = FirebaseRemoteConfig.instance;
 
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
       fetchTimeout: const Duration(seconds: 5),

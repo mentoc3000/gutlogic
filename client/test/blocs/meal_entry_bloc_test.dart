@@ -13,7 +13,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../flutter_test_config.dart';
 import 'meal_entry_bloc_test.mocks.dart';
 
 @GenerateMocks([MealEntryRepository])
@@ -92,7 +91,7 @@ void main() {
       verify: (bloc) async {
         verify(repository.create()).called(1);
         verify(repository.stream(mealEntry)).called(1);
-        verify(analyticsService.logEvent('create_meal_entry')).called(1);
+        // verify(analyticsService.logEvent('create_meal_entry')).called(1);
       },
     );
 
@@ -138,7 +137,7 @@ void main() {
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.delete(mealEntry)).called(1);
-        verify(analyticsService.logEvent('delete_meal_entry')).called(1);
+        // verify(analyticsService.logEvent('delete_meal_entry')).called(1);
       },
     );
 
@@ -171,7 +170,7 @@ void main() {
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.updateEntry(mealEntry)).called(1);
-        verify(analyticsService.logUpdateEvent('update_meal_entry')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_meal_entry')).called(1);
       },
     );
 
@@ -206,7 +205,7 @@ void main() {
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.updateDateTime(mealEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_meal_entry', 'dateTime')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_meal_entry', 'dateTime')).called(1);
       },
     );
 
@@ -241,7 +240,7 @@ void main() {
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.updateNotes(mealEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_meal_entry', 'notes')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_meal_entry', 'notes')).called(1);
       },
     );
 
@@ -277,7 +276,7 @@ void main() {
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.createMealElement(mealEntry, food)).called(1);
-        verify(analyticsService.logEvent('create_meal_element')).called(1);
+        // verify(analyticsService.logEvent('create_meal_element')).called(1);
       },
     );
 
@@ -311,7 +310,7 @@ void main() {
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
         verify(repository.reorderMealElement(mealEntry, 3, 2)).called(1);
-        verify(analyticsService.logUpdateEvent('update_meal_entry', 'move_meal_element')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_meal_entry', 'move_meal_element')).called(1);
       },
     );
 
@@ -350,7 +349,7 @@ void main() {
       ],
       verify: (bloc) async {
         verify(repository.removeMealElement(mealEntry, any)).called(1);
-        verify(analyticsService.logEvent('delete_meal_element')).called(1);
+        // verify(analyticsService.logEvent('delete_meal_element')).called(1);
       },
     );
 

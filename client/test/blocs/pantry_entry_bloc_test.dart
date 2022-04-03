@@ -12,7 +12,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../flutter_test_config.dart';
 import 'pantry_entry_bloc_test.mocks.dart';
 
 @GenerateMocks([PantryService, FoodService])
@@ -86,7 +85,7 @@ void main() {
       verify: (bloc) {
         verify(repository.addFood(foodReference)).called(1);
         verify(repository.stream(pantryEntry)).called(1);
-        verify(analyticsService.logEvent('create_pantry_entry')).called(1);
+        // verify(analyticsService.logEvent('create_pantry_entry')).called(1);
       },
     );
 
@@ -130,7 +129,7 @@ void main() {
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
         verify(repository.delete(pantryEntry)).called(1);
-        verify(analyticsService.logEvent('delete_pantry_entry')).called(1);
+        // verify(analyticsService.logEvent('delete_pantry_entry')).called(1);
       },
     );
 
@@ -163,7 +162,7 @@ void main() {
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
         verify(repository.updateNotes(pantryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_pantry_entry', 'notes')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_pantry_entry', 'notes')).called(1);
       },
     );
 
@@ -199,7 +198,7 @@ void main() {
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry)],
       verify: (bloc) {
         verify(repository.updateSensitivityLevel(pantryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_pantry_entry', 'sensitivity_level')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_pantry_entry', 'sensitivity_level')).called(1);
       },
     );
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -62,11 +63,11 @@ void main() async {
     FlutterError.presentError(details);
   };
 
-  // Handle all bloc events sequentially to retain bloc 7.1 behavior. TODO migrate to parallel events by default?
-  Bloc.transformer = sequential<dynamic>();
+  // Handle all bloc events sequentially to retain bloc 7.1 behavior.
+  final blocEventTransformer = sequential<dynamic>();
 
   // Observe bloc transitions, report some things automatically to analytics/crashlytics.
-  Bloc.observer = GutLogicBlocObserver(analytics: analytics, crashlytics: crashlytics);
+  final blocObserver = GutLogicBlocObserver(analytics: analytics, crashlytics: crashlytics);
 
   final users = UserRepository();
 
@@ -80,6 +81,12 @@ void main() async {
     Provider(create: (_) => Routes()),
   ], child: GutLogicApp());
 
-  // Forward zone errors to Crashlytics.
-  runZonedGuarded(() => runApp(app), (error, trace) => unawaited(crashlytics.record(error, trace)));
+  // Since flutter_bloc 8 we need to specify the default bloc observer and event transformer using their custom zone
+  // function, which we then run inside runZoneGuarded so we can forward uncaught errors to Crashlytics. This creates
+  // two zone forks when one should be sufficient...but currently there's no way to specify the bloc overrides
+  // except via their custom runZoned implementation.
+
+  runZonedGuarded(() {
+    BlocOverrides.runZoned(() => runApp(app), blocObserver: blocObserver, eventTransformer: blocEventTransformer);
+  }, (error, trace) => unawaited(crashlytics.record(error, trace)));
 }

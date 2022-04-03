@@ -15,7 +15,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../flutter_test_config.dart';
 import 'meal_element_bloc_test.mocks.dart';
 
 @GenerateMocks([MealElementRepository, FoodService])
@@ -203,7 +202,7 @@ void main() {
       expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.delete(edamamFoodMealElement)).called(1);
-        verify(analyticsService.logEvent('delete_meal_element')).called(1);
+        // verify(analyticsService.logEvent('delete_meal_element')).called(1);
       },
     );
 
@@ -242,7 +241,7 @@ void main() {
       expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.update(edamamFoodMealElement)).called(1);
-        verify(analyticsService.logUpdateEvent('update_meal_element')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_meal_element')).called(1);
       },
     );
 
@@ -283,7 +282,7 @@ void main() {
       expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.updateNotes(edamamFoodMealElement, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_meal_element', 'notes')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_meal_element', 'notes')).called(1);
       },
     );
 
@@ -325,7 +324,7 @@ void main() {
       expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement)],
       verify: (bloc) async {
         verify(mealElementRepository.updateQuantity(edamamFoodMealElement, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_meal_element', 'quantity')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_meal_element', 'quantity')).called(1);
       },
     );
 

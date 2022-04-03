@@ -11,7 +11,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../flutter_test_config.dart';
 import 'bowel_movement_entry_bloc_test.mocks.dart';
 
 @GenerateMocks([BowelMovementEntryRepository])
@@ -82,7 +81,7 @@ void main() {
       verify: (bloc) async {
         verify(repository.create()).called(1);
         verify(repository.stream(diaryEntry)).called(1);
-        verify(analyticsService.logEvent('create_bowel_movement_entry')).called(1);
+        // verify(analyticsService.logEvent('create_bowel_movement_entry')).called(1);
       },
     );
 
@@ -122,7 +121,7 @@ void main() {
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.delete(diaryEntry)).called(1);
-        verify(analyticsService.logEvent('delete_bowel_movement_entry')).called(1);
+        // verify(analyticsService.logEvent('delete_bowel_movement_entry')).called(1);
       },
     );
 
@@ -155,7 +154,7 @@ void main() {
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateEntry(diaryEntry)).called(1);
-        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_bowel_movement_entry')).called(1);
       },
     );
 
@@ -190,7 +189,7 @@ void main() {
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateDateTime(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'dateTime')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'dateTime')).called(1);
       },
     );
 
@@ -227,7 +226,7 @@ void main() {
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateNotes(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'notes')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'notes')).called(1);
       },
     );
 
@@ -263,7 +262,7 @@ void main() {
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateType(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'type')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'type')).called(1);
       },
     );
 
@@ -300,7 +299,7 @@ void main() {
       expect: () => [BowelMovementEntryLoaded(diaryEntry)],
       verify: (bloc) async {
         verify(repository.updateVolume(diaryEntry, any)).called(1);
-        verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'volume')).called(1);
+        // verify(analyticsService.logUpdateEvent('update_bowel_movement_entry', 'volume')).called(1);
       },
     );
 
