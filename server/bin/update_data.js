@@ -37,6 +37,7 @@ async function selectEdamamIdMap(db) {
     });
   });
 }
+
 async function selectFoodNameMap(db) {
   return new Promise((resolve, reject) => {
     const sql = `SELECT food_id, food_name FROM food_names`;
@@ -97,6 +98,97 @@ GROUP BY irritant_content.food_id, irritant`;
   });
 }
 
+/// Return the irritant with the maximum concentration with name matching [name].
+/// If no elements match [name], return null.
+function maxConIrritant(irritants, name) {
+  return irritants.reduce(
+    (acc, el) => {
+      if (el.name === name) {
+        if (acc === null) {
+          return el;
+        } else {
+          return el.concentration > acc.concentration ? el : acc;
+        }
+      } else {
+        return acc;
+      }
+    },
+    null
+  );
+}
+
+function processIrritants(irritants) {
+  const processedIrritants = [];
+
+  // Excess fructose
+  const fructose = maxConIrritant(irritants, 'Fructose');
+  const glucose = maxConIrritant(irritants, 'Glucose');
+  if (fructose !== null && glucose !== null) {
+    const excessFructose = {
+      name: 'Fructose',
+      concentration: Math.max(fructose.concentration - glucose.concentration, 0),
+      dosePerServing: Math.max(fructose.dosePerServing - glucose.dosePerServing, 0),
+    };
+    processedIrritants.push(excessFructose);
+  }
+
+  // Disaccharides
+  const sorbitol = maxConIrritant(irritants, 'Sorbitol');
+  if (sorbitol !== null) {
+    processedIrritants.push(sorbitol);
+  }
+
+  const mannitol = maxConIrritant(irritants, 'Mannitol');
+  if (mannitol !== null) {
+    processedIrritants.push(mannitol);
+  }
+
+  const lactose = maxConIrritant(irritants, 'Lactose');
+  if (lactose !== null) {
+    processedIrritants.push(lactose);
+  }
+
+  // Galacto-oligosaccharides (GOS)
+  // Raffinose and stachyose are the two GOS irritants for which we have data. GOS is the
+  // sum of these two, if at least one has data.
+  const raffinose = maxConIrritant(irritants, 'Raffinose');
+  const stachyose = maxConIrritant(irritants, 'Stachyose');
+  if (raffinose !== null || stachyose !== null) {
+    const gos = {
+      name: 'GOS',
+      concentration: raffinose.concentration + stachyose.concentration,
+      dosePerServing: raffinose.dosePerServing + stachyose.dosePerServing,
+    };
+    processedIrritants.push(gos);  
+  }
+
+  // Fructo-oligosaccharides (fructan)
+  // Kestose and nystose are two fructans for which we have data, but we also have
+  // total fructan. Use fructan if it is larger than the sum of the two individuals.
+  const nystose = maxConIrritant(irritants, 'Nystose');
+  const kestose = maxConIrritant(irritants, 'Kestose');
+  const totalFructan = maxConIrritant(irritants, 'Fructan')
+  
+  const concentrationNystose = nystose !== null ? nystose.concentration : null;
+  const concentrationKestose = kestose !== null ? kestose.concentration : null;
+  const concentrationTotalFructan = totalFructan !== null ? totalFructan.concentration : null;
+
+  if (totalFructan === null && nystose === null && kestose === null) {
+    // pass
+  } else if (totalFructan === null || concentrationTotalFructan < concentrationNystose + concentrationKestose) {
+    const fructan = {
+      name: 'Fructan',
+      concentration: nystose.concentration + kestose.concentration,
+      dosePerServing: nystose.dosePerServing + kestose.dosePerServing,
+    };
+    processedIrritants.push(fructan);
+  } else {
+    processedIrritants.push(totalFructan);
+  }  
+
+  return processedIrritants;
+}
+
 async function getIrritants(db) {
   const edamamIdMap = await selectEdamamIdMap(db);
   const irritantMap = await selectIrritantMap(db);
@@ -113,6 +205,7 @@ async function getIrritants(db) {
     if (irritants === undefined) {
       irritants = [];
     }
+    irritants = processIrritants(irritants);
 
     let names = foodNameMap.get(foodId);
     if (names === undefined) {
