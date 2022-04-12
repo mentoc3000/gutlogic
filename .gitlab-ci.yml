@@ -17,23 +17,6 @@ workflow:
     - if: $CI_COMMIT_BRANCH == "develop"
     - if: $CI_COMMIT_BRANCH =~ /^release/
 
-# Create a job that only runs if neither of the subdirectories have changed. This is so MRs that don't change any of
-# those files will still generate a pipeline and comply with "prevent merge unless a pipeline succeeded" rule.
-
-compliance:
-  stage: prep
-  tags:
-    - docker
-  script:
-    - echo "Running compliance job to enable merge requests."
-  rules:
-    - changes:
-        - client/**/*
-        - server/**/*
-      when: never
-    - if: $CI_MERGE_REQUEST_ID
-      when: always
-
 ### Server Jobs
 
 .server-merge-request-rules:
