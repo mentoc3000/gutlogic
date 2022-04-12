@@ -158,7 +158,6 @@ server:deploy:develop:
     - !reference [.server-develop-commit-rules, rules]
   dependencies:
     - server:prep
-    - server:test
   environment: develop
 
 server:deploy:staging:
@@ -171,7 +170,6 @@ server:deploy:staging:
     - !reference [.server-staging-commit-rules, rules]
   dependencies:
     - server:prep
-    - server:test
   environment: staging
 
 server:deploy:release:
@@ -184,7 +182,6 @@ server:deploy:release:
     - !reference [.server-release-commit-rules, rules]
   dependencies:
     - server:prep
-    - server:test
   environment: release
 
 ### Client Jobs
@@ -442,7 +439,6 @@ client:deploy:ios:develop:
     - !reference [.client-develop-commit-rules, rules]
   dependencies:
     - client:prep
-    - client:test
   environment: develop
 
 client:deploy:ios:staging:
@@ -453,7 +449,6 @@ client:deploy:ios:staging:
     - !reference [.client-staging-commit-rules, rules]
   dependencies:
     - client:prep
-    - client:test
   environment: staging
 
 client:deploy:ios:release:
@@ -464,6 +459,5 @@ client:deploy:ios:release:
     - !reference [.client-release-commit-rules, rules]
   dependencies:
     - client:prep
-    - client:test
     - client:screenshots
   environment: release
