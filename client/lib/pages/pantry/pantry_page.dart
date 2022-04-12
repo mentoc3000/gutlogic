@@ -5,6 +5,7 @@ import '../../blocs/food_search/food_search_bloc.dart';
 import '../../blocs/pantry/pantry.dart';
 import '../../blocs/pantry_filter/pantry_filter.dart';
 import '../../blocs/pantry_sort/pantry_sort.dart';
+import '../../blocs/recent_foods/recent_foods.dart';
 import '../../pages/search_delegate/food_search_delegate.dart';
 import '../../pages/search_delegate/pantry_search_delegate.dart';
 import '../../resources/pantry_service.dart';
@@ -40,13 +41,14 @@ class PantryPage extends StatelessWidget {
 
   void showFoodSearch(BuildContext context) {
     final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
+    final recentFoodsCubit = BlocProvider.of<RecentFoodsCubit>(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
-        onSelect: (food) =>
-            Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food.toFoodReference())),
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (food) => Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food)),
       ),
     );
   }

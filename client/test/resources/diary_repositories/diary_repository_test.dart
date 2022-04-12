@@ -1,6 +1,10 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:gutlogic/models/diary_entry/diary_entry.dart';
+import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
+import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
+import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/serializers.dart';
 import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
@@ -17,37 +21,55 @@ import 'diary_repository_test.mocks.dart';
 @GenerateMocks([FirestoreService, CrashlyticsService])
 void main() {
   group('DiaryRepository', () {
-    late String diaryEntryId;
-    late SymptomEntry diaryEntry;
+    late BuiltList<DiaryEntry> diaryEntries;
     late FakeFirebaseFirestore instance;
     late FirestoreService firestoreService;
     late DiaryRepository repository;
+    final mayo = EdamamFoodReference(id: 'mayo', name: 'Mayo');
+    final mustard = EdamamFoodReference(id: 'mustard', name: 'Mustard');
+    final ketchup = EdamamFoodReference(id: 'ketchup', name: 'Ketchup');
 
     setUp(() async {
-      diaryEntryId = 'entry1Id';
       const name = 'Gas';
       const severity = Severity.mild;
-      final dateTime = DateTime.now().toUtc();
-      const notes = 'easy';
-      diaryEntry = SymptomEntry(
-        id: diaryEntryId,
-        datetime: dateTime,
-        symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: name), severity: severity),
-        notes: notes,
+      final datetime = DateTime.now().toUtc();
+      final mealEntry1 = MealEntry(
+        id: 'id1',
+        datetime: datetime.subtract(const Duration(days: 1)),
+        mealElements: [
+          MealElement(id: 'meid0', foodReference: mayo),
+          MealElement(id: 'meid1', foodReference: mustard),
+        ].toBuiltList(),
       );
+      final symptomEntry = SymptomEntry(
+        id: 'id2',
+        datetime: datetime,
+        symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: name), severity: severity),
+      );
+      final mealEntry2 = MealEntry(
+        id: 'id3',
+        datetime: datetime.add(const Duration(days: 1)),
+        mealElements: [
+          MealElement(id: 'meid2', foodReference: mayo),
+          MealElement(id: 'meid3', foodReference: ketchup),
+        ].toBuiltList(),
+      );
+      diaryEntries = [symptomEntry, mealEntry1, mealEntry2].toBuiltList();
+
       instance = FakeFirebaseFirestore();
-      await instance.collection('diary').doc(diaryEntryId).set({
-        '\$': 'SymptomEntry',
-        'symptom': {
-          'symptomType': {
-            'id': 'symptomType1',
-            'name': name,
-          },
-          'severity': serializers.serializeWith(Severity.serializer, severity),
-        },
-        'datetime': Timestamp.fromDate(dateTime),
-        'notes': notes,
-      });
+      await instance
+          .collection('diary')
+          .doc(symptomEntry.id)
+          .set(serializers.serialize(symptomEntry) as Map<String, dynamic>);
+      await instance
+          .collection('diary')
+          .doc(mealEntry1.id)
+          .set(serializers.serialize(mealEntry1) as Map<String, dynamic>);
+      await instance
+          .collection('diary')
+          .doc(mealEntry2.id)
+          .set(serializers.serialize(mealEntry2) as Map<String, dynamic>);
+
       firestoreService = MockFirestoreService();
       when(firestoreService.instance).thenReturn(instance);
       when(firestoreService.userDiaryCollection).thenReturn(instance.collection('diary'));
@@ -55,14 +77,8 @@ void main() {
     });
 
     test('streams all entries', () async {
-      await expectLater(repository.streamAll(), emits([diaryEntry].build()));
+      await expectLater(repository.streamAll(), emits(diaryEntries));
     });
-
-    test('streams range', () async {
-      final start = diaryEntry.datetime.subtract(const Duration(days: 3));
-      final end = diaryEntry.datetime.add(const Duration(days: 1));
-      await expectLater(repository.streamRange(start, end), emits(diaryEntry));
-    }, skip: 'unimplemented');
 
     test('removes corrupt entry', () async {
       // Add corrupt diary entry
@@ -78,8 +94,13 @@ void main() {
         'datetime': Timestamp.fromDate(DateTime.now().toUtc()),
       });
 
-      // returns one good diary entry
-      await expectLater(repository.streamAll(), emits([diaryEntry].build()));
+      // returns good diary entries
+      await expectLater(repository.streamAll(), emits(diaryEntries));
+    });
+
+    test('gets recent foods', () async {
+      final recentFoods = await repository.recentFoods();
+      expect(recentFoods, [ketchup, mayo, mustard].toBuiltList());
     });
   });
 }

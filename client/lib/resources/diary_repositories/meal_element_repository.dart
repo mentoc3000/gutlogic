@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import '../../models/diary_entry/meal_entry.dart';
-import '../../models/food/food.dart';
+import '../../models/food_reference/food_reference.dart';
 import '../../models/meal_element.dart';
 import '../../models/quantity.dart';
 import '../../models/serializers.dart';
@@ -69,9 +69,8 @@ class MealElementRepository with FirestoreRepository {
   Future<void> updateNotes(MealElement mealElement, String notes) =>
       update(mealElement.rebuild((b) => b..notes = notes));
 
-  Future<MealElement?> addNewMealElementTo(MealEntry mealEntry, {required Food food}) async {
+  Future<MealElement?> addNewMealElementTo(MealEntry mealEntry, {required FoodReference foodReference}) async {
     final mealElementId = newMealElementId(mealEntry);
-    final foodReference = food.toFoodReference();
     final mealElement = MealElement(id: mealElementId, foodReference: foodReference);
     return addMealElementTo(mealEntry, mealElement: mealElement);
   }

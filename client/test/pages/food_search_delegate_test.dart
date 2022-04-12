@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/food_search/food_search.dart';
+import 'package:gutlogic/blocs/recent_foods/recent_foods.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
-import 'package:gutlogic/models/food/food.dart';
+import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
+import 'package:gutlogic/models/food_reference/food_reference.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/pages/loading_page.dart';
 import 'package:gutlogic/pages/search_delegate/food_search_delegate.dart';
@@ -18,12 +20,16 @@ import 'package:provider/provider.dart';
 
 class MockFoodBloc extends MockBloc<FoodSearchEvent, FoodSearchState> implements FoodSearchBloc {}
 
+class MockRecentFoodsCubit extends MockCubit<RecentFoodsState> implements RecentFoodsCubit {}
+
 class MockSensitivityService extends Mock implements SensitivityService {}
 
 void main() {
   late FoodSearchBloc foodBloc;
   late SensitivityService sensitivityService;
+  late RecentFoodsCubit recentFoodsCubit;
   late CustomFood food;
+  late CustomFoodReference recentFoodReference;
 
   setUp(() {
     foodBloc = MockFoodBloc();
@@ -32,22 +38,41 @@ void main() {
 
     sensitivityService = MockSensitivityService();
     when(() => sensitivityService.of(any())).thenAnswer((_) => Future.value(Sensitivity.unknown));
+
+    recentFoodReference = CustomFoodReference(id: '2', name: 'Figgy Pudding');
+    recentFoodsCubit = MockRecentFoodsCubit();
+    whenListen(
+      recentFoodsCubit,
+      Stream.value(RecentFoodsLoaded([recentFoodReference].toBuiltList())),
+      initialState: const RecentFoodsLoading(),
+    );
   });
 
   tearDown(() {
     foodBloc.close();
+    recentFoodsCubit.close();
   });
 
   group('FoodSearchDelegate', () {
     testWidgets('opens and closes search', (WidgetTester tester) async {
-      final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
-      final selectedResults = <Food>[];
+      final delegate = FoodSearchDelegate(
+        foodBloc: foodBloc,
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (_) {},
+      );
+      final selectedResults = <FoodReference>[];
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
-        child: TestHomePage(
-          delegate: delegate,
-          results: selectedResults,
+        providers: [
+          BlocProvider<FoodSearchBloc>.value(value: foodBloc),
+          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+        ],
+        child: ChangeNotifierProvider(
+          create: (context) => sensitivityService,
+          child: TestHomePage(
+            delegate: delegate,
+            results: selectedResults,
+          ),
         ),
       );
 
@@ -76,11 +101,21 @@ void main() {
 
     testWidgets('displays message when no results are found', (WidgetTester tester) async {
       whenListen(foodBloc, Stream.value(NoFoodsFound(query: '')), initialState: FoodSearchLoading());
-      final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
+      final delegate = FoodSearchDelegate(
+        foodBloc: foodBloc,
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (_) {},
+      );
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
-        child: TestHomePage(delegate: delegate),
+        providers: [
+          BlocProvider<FoodSearchBloc>.value(value: foodBloc),
+          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+        ],
+        child: ChangeNotifierProvider(
+          create: (context) => sensitivityService,
+          child: TestHomePage(delegate: delegate),
+        ),
       );
 
       await tester.pumpWidget(homepage);
@@ -98,6 +133,42 @@ void main() {
       expect(find.text(delegate.noResultsMessage), findsOneWidget);
     });
 
+    testWidgets('shows suggestions', (WidgetTester tester) async {
+      whenListen(
+        foodBloc,
+        Stream.value(FoodSearchLoaded(query: '', items: [food].build())),
+        initialState: FoodSearchLoading(),
+      );
+
+      final delegate = FoodSearchDelegate(
+        foodBloc: foodBloc,
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (_) {},
+      );
+
+      final homepage = MultiBlocProvider(
+        providers: [
+          BlocProvider<FoodSearchBloc>.value(value: foodBloc),
+          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+        ],
+        child: ChangeNotifierProvider(
+          create: (context) => sensitivityService,
+          child: TestHomePage(delegate: delegate),
+        ),
+      );
+
+      await tester.pumpWidget(homepage);
+      await tester.pumpAndSettle();
+
+      // Open search
+      await tester.tap(find.byIcon(GLIcons.search));
+      await tester.pumpAndSettle();
+
+      // Shows recent foods
+      expect(find.text(food.name), findsNothing);
+      expect(find.text(recentFoodReference.name), findsOneWidget);
+    });
+
     testWidgets('shows search results', (WidgetTester tester) async {
       whenListen(
         foodBloc,
@@ -105,10 +176,17 @@ void main() {
         initialState: FoodSearchLoading(),
       );
 
-      final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
+      final delegate = FoodSearchDelegate(
+        foodBloc: foodBloc,
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (_) {},
+      );
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
+        providers: [
+          BlocProvider<FoodSearchBloc>.value(value: foodBloc),
+          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+        ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
           child: TestHomePage(delegate: delegate),
@@ -126,6 +204,10 @@ void main() {
       await tester.tap(find.byIcon(GLIcons.search));
       await tester.pumpAndSettle();
 
+      // Shows recent foods
+      expect(find.text(food.name), findsNothing);
+      expect(find.text(recentFoodReference.name), findsOneWidget);
+
       // Shows search results
       await tester.enterText(find.byType(TextField), 'Fruit');
       await tester.pumpAndSettle();
@@ -142,10 +224,17 @@ void main() {
         Stream.value(FoodSearchLoaded(query: '', items: [food].build())),
         initialState: FoodSearchLoading(),
       );
-      final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
+      final delegate = FoodSearchDelegate(
+        foodBloc: foodBloc,
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (_) {},
+      );
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
+        providers: [
+          BlocProvider<FoodSearchBloc>.value(value: foodBloc),
+          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+        ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
           child: TestHomePage(delegate: delegate),
@@ -175,11 +264,21 @@ void main() {
 
     testWidgets('shows loading', (WidgetTester tester) async {
       whenListen(foodBloc, Stream.fromIterable([FoodSearchLoading()]));
-      final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
+      final delegate = FoodSearchDelegate(
+        foodBloc: foodBloc,
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (_) {},
+      );
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
-        child: TestHomePage(delegate: delegate),
+        providers: [
+          BlocProvider<FoodSearchBloc>.value(value: foodBloc),
+          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+        ],
+        child: ChangeNotifierProvider(
+          create: (context) => sensitivityService,
+          child: TestHomePage(delegate: delegate),
+        ),
       );
 
       await tester.pumpWidget(homepage);
@@ -199,11 +298,21 @@ void main() {
     testWidgets('shows error', (WidgetTester tester) async {
       const message = 'Oh no! Something TERRIBLE happened!';
       whenListen(foodBloc, Stream.value(FoodSearchError(message: message)), initialState: FoodSearchLoading());
-      final delegate = FoodSearchDelegate(foodBloc: foodBloc, onSelect: (_) {});
+      final delegate = FoodSearchDelegate(
+        foodBloc: foodBloc,
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (_) {},
+      );
 
       final homepage = MultiBlocProvider(
-        providers: [BlocProvider<FoodSearchBloc>.value(value: foodBloc)],
-        child: TestHomePage(delegate: delegate),
+        providers: [
+          BlocProvider<FoodSearchBloc>.value(value: foodBloc),
+          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+        ],
+        child: ChangeNotifierProvider(
+          create: (context) => sensitivityService,
+          child: TestHomePage(delegate: delegate),
+        ),
       );
 
       await tester.pumpWidget(homepage);
@@ -230,7 +339,7 @@ class TestHomePage extends StatelessWidget {
     this.initialQuery,
   }) : super(key: key);
 
-  final List<Food>? results;
+  final List<FoodReference>? results;
   final FoodSearchDelegate delegate;
   final bool passInInitialQuery;
   final String? initialQuery;
@@ -247,15 +356,15 @@ class TestHomePage extends StatelessWidget {
                 tooltip: 'Search',
                 icon: const Icon(GLIcons.search),
                 onPressed: () async {
-                  Food? selectedResult;
+                  FoodReference? selectedResult;
                   if (passInInitialQuery) {
-                    selectedResult = await showSearch<Food?>(
+                    selectedResult = await showSearch<FoodReference?>(
                       context: context,
                       delegate: delegate,
                       query: initialQuery,
                     );
                   } else {
-                    selectedResult = await showSearch<Food?>(
+                    selectedResult = await showSearch<FoodReference?>(
                       context: context,
                       delegate: delegate,
                     );

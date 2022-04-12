@@ -4,6 +4,8 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
 
 import '../../models/diary_entry/diary_entry.dart';
+import '../../models/diary_entry/meal_entry.dart';
+import '../../models/food_reference/food_reference.dart';
 import '../../util/logger.dart';
 import '../firebase/crashlytics_service.dart';
 import '../firebase/firestore_repository.dart';
@@ -27,8 +29,22 @@ class DiaryRepository with FirestoreRepository, TimelineRepository {
     return BuiltList<DiaryEntry>(snapshot.docs.map(documentToDiaryEntry).where((entry) => entry != null));
   }
 
-  Stream<BuiltList<DiaryEntry>> streamRange(DateTime start, DateTime end) {
-    throw UnimplementedError();
+  /// Recent unique foods listed from most to least recent
+  Future<BuiltList<FoodReference>> recentFoods() async {
+    final diaryEntries = await getAll();
+    final mealEntries = diaryEntries.whereType<MealEntry>().toList()..sort((a, b) => a.datetime.compareTo(b.datetime));
+    final recentMealElements =
+        mealEntries.reversed.expand((element) => element.mealElements.reversed).toList().toBuiltList();
+    final recentFoods = <FoodReference>[];
+
+    // Remove duplicates
+    for (final food in recentMealElements.map((me) => me.foodReference)) {
+      if (!recentFoods.contains(food)) {
+        recentFoods.add(food);
+      }
+    }
+
+    return recentFoods.toBuiltList();
   }
 
   DiaryEntry? documentToDiaryEntry(DocumentSnapshot<UntypedData> document) {

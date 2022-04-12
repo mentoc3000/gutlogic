@@ -88,7 +88,8 @@ void main() {
     test('creates mealElement with food', () async {
       final food = CustomFood(id: 'food1', name: 'Brownie');
       final foodReference = food.toFoodReference();
-      final mealElement = await mealElementRepository.addNewMealElementTo(diaryEntry, food: food);
+      final mealElement =
+          await mealElementRepository.addNewMealElementTo(diaryEntry, foodReference: food.toFoodReference());
       expect(mealElement!.id.startsWith('$diaryEntryId#'), true);
       expect(mealElement.foodReference, foodReference);
       expect(mealElement.quantity, isNull);

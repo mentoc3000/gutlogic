@@ -1,28 +1,89 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/food_search/food_search.dart';
+import '../../blocs/recent_foods/recent_foods.dart';
 import '../../models/food/food.dart';
+import '../../models/food_reference/food_reference.dart';
 import '../../pages/error_page.dart';
 import '../../pages/loading_page.dart';
 import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_scaffold.dart';
+import '../../widgets/powered_by_edamam.dart';
 import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
-import 'widgets/food_search_results_list_view.dart';
+import 'widgets/food_reference_suggestion_tile.dart';
+import 'widgets/food_search_result_tile.dart';
 
-class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
+class FoodSearchDelegate extends SearchableSearchDelegate<FoodReference> {
   final FoodSearchBloc foodBloc;
+  final RecentFoodsCubit recentFoodsCubit;
   final String noResultsMessage = 'No matches found.\nNeed something special?\nCreate a custom food!';
 
-  FoodSearchDelegate({required this.foodBloc, required void Function(Food) onSelect})
-      : super(onSelect: onSelect, searchFieldLabel: 'Search for food');
+  FoodSearchDelegate({
+    required this.foodBloc,
+    required this.recentFoodsCubit,
+    required void Function(FoodReference) onSelect,
+  }) : super(onSelect: onSelect, searchFieldLabel: 'Search for food') {
+    recentFoodsCubit.update();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return BlocBuilder<RecentFoodsCubit, RecentFoodsState>(
+      builder: (BuildContext context, RecentFoodsState state) {
+        if (state is RecentFoodsLoaded) {
+          return buildSuggestionList(context, state.recentFoods);
+        }
+        if (state is RecentFoodsLoading) {
+          return buildLoadingPage(context);
+        }
+        if (state is RecentFoodsError) {
+          return ErrorPage(message: state.message);
+        }
+        return const ErrorPage();
+      },
+    );
+  }
 
   @override
   Widget buildResults(BuildContext context) {
     foodBloc.add(StreamFoodQuery(query));
-    return buildList(context, foodBloc);
+
+    return BlocBuilder<FoodSearchBloc, FoodSearchState>(
+      bloc: foodBloc,
+      builder: (BuildContext context, FoodSearchState state) {
+        if (query.isEmpty) {
+          return Column(children: const []);
+        }
+        if (state is FoodSearchLoaded) {
+          final items = state.items;
+          return buildResultList(context, items);
+        }
+        if (state is NoFoodsFound) {
+          return buildNoResults(context);
+        }
+        if (state is FoodSearchLoading) {
+          return GLScaffold(
+            floatingActionButton: buildAddFab(context),
+            body: LoadingPage(),
+          );
+        }
+        if (state is FoodSearchError) {
+          return ErrorPage(message: state.message);
+        }
+        return const ErrorPage();
+      },
+    );
+  }
+
+  GLScaffold buildNoResults(BuildContext context) {
+    return GLScaffold(
+      floatingActionButton: buildAddFab(context),
+      body: FabGuide(message: noResultsMessage),
+    );
   }
 
   Widget buildAddFab(BuildContext context) {
@@ -41,42 +102,62 @@ class FoodSearchDelegate extends SearchableSearchDelegate<Food> {
     });
   }
 
-  Widget buildList(BuildContext context, FoodSearchBloc foodBloc) {
-    return BlocBuilder<FoodSearchBloc, FoodSearchState>(
-      bloc: foodBloc,
-      builder: (BuildContext context, FoodSearchState state) {
-        if (query.isEmpty) {
-          return Column(children: const []);
-        }
-        if (state is FoodSearchLoaded) {
-          final items = state.items;
-          return GLScaffold(
-            floatingActionButton: buildAddFab(context),
-            body: FoodSearchResultsListView(
-              foods: items,
-              onTap: (result) {
-                closeSearch(context);
-                onSelect(result);
-              },
-            ),
-          );
-        }
-        if (state is NoFoodsFound) {
-          return GLScaffold(
-            floatingActionButton: buildAddFab(context),
-            body: FabGuide(message: noResultsMessage),
-          );
-        }
-        if (state is FoodSearchLoading) {
-          return GLScaffold(
-            floatingActionButton: buildAddFab(context),
-            body: LoadingPage(),
-          );
-        }
-        if (state is FoodSearchError) {
-          return ErrorPage(message: state.message);
-        }
-        return const ErrorPage();
+  GLScaffold buildLoadingPage(BuildContext context) {
+    return GLScaffold(
+      floatingActionButton: buildAddFab(context),
+      body: LoadingPage(),
+    );
+  }
+
+  Widget buildList({
+    required BuildContext context,
+    required int itemCount,
+    required Widget Function(BuildContext, int) itemBuilder,
+  }) {
+    return GLScaffold(
+      floatingActionButton: buildAddFab(context),
+      body: SafeArea(
+        child: PoweredByEdamam(
+          child: ListView.builder(
+            itemCount: itemCount,
+            shrinkWrap: true,
+            itemBuilder: itemBuilder,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildResultList(BuildContext context, BuiltList<Food> foods) {
+    return buildList(
+      context: context,
+      itemCount: foods.length,
+      itemBuilder: (BuildContext context, int index) {
+        final result = foods[index];
+        return FoodSearchResultTile(
+          food: result,
+          onTap: () {
+            closeSearch(context);
+            onSelect(result.toFoodReference());
+          },
+        );
+      },
+    );
+  }
+
+  Widget buildSuggestionList(BuildContext context, BuiltList<FoodReference> foodReferences) {
+    return buildList(
+      context: context,
+      itemCount: foodReferences.length,
+      itemBuilder: (BuildContext context, int index) {
+        final result = foodReferences[index];
+        return FoodReferenceSuggestionTile(
+          foodReference: result,
+          onTap: () {
+            closeSearch(context);
+            onSelect(result);
+          },
+        );
       },
     );
   }

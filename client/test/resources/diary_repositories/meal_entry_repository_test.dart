@@ -62,7 +62,7 @@ void main() {
       });
 
       mealElementRepository = MockMealElementRepository();
-      when(mealElementRepository.addNewMealElementTo(any, food: anyNamed('food')))
+      when(mealElementRepository.addNewMealElementTo(any, foodReference: anyNamed('foodReference')))
           .thenAnswer((_) async => mealElement1);
 
       firestoreService = MockFirestoreService();
@@ -131,8 +131,8 @@ void main() {
 
     test('add mealElement', () async {
       final newFood = CustomFood(id: 'newfood', name: 'Pepper');
-      await repository.createMealElement(diaryEntry, newFood);
-      verify(mealElementRepository.addNewMealElementTo(any, food: anyNamed('food'))).called(1);
+      await repository.createMealElement(diaryEntry, newFood.toFoodReference());
+      verify(mealElementRepository.addNewMealElementTo(any, foodReference: anyNamed('foodReference'))).called(1);
     });
 
     test('removes mealElement', () async {

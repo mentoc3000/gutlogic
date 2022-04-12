@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/food_search/food_search.dart';
 import '../../../blocs/meal_entry/meal_entry.dart';
+import '../../../blocs/recent_foods/recent_foods.dart';
 import '../../../models/diary_entry/meal_entry.dart';
 import '../../../widgets/cards/datetime_card.dart';
 import '../../../widgets/cards/notes_card.dart';
@@ -18,11 +19,13 @@ class MealEntryListView extends StatelessWidget {
   void addMealElement(BuildContext context) {
     final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
     final mealEntryBloc = context.read<MealEntryBloc>();
+    final recentFoodsCubit = BlocProvider.of<RecentFoodsCubit>(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
+        recentFoodsCubit: recentFoodsCubit,
         onSelect: (food) => mealEntryBloc.add(AddMealElement(food)),
       ),
     );

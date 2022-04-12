@@ -5,9 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/food_search/food_search.dart';
 import 'package:gutlogic/blocs/meal_entry/meal_entry.dart';
+import 'package:gutlogic/blocs/recent_foods/recent_foods.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
+import 'package:gutlogic/models/food_reference/food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
@@ -25,6 +27,8 @@ class MockMealEntryBloc extends MockBloc<MealEntryEvent, MealEntryState> impleme
 
 class MockFoodBloc extends MockBloc<FoodSearchEvent, FoodSearchState> implements FoodSearchBloc {}
 
+class MockRecentFoodsCubit extends MockCubit<RecentFoodsState> implements RecentFoodsCubit {}
+
 class MockSensitivityService extends Mock implements SensitivityService {}
 
 class MealEntryPageWrapper extends StatelessWidget {
@@ -35,6 +39,7 @@ class MealEntryPageWrapper extends StatelessWidget {
 void main() {
   late MealEntryBloc mealEntryBloc;
   late FoodSearchBloc foodBloc;
+  late RecentFoodsCubit recentFoodsCubit;
   late SensitivityService sensitivityService;
   late Routes routes;
   late Widget mealEntryPage;
@@ -58,6 +63,13 @@ void main() {
       notes: 'notes',
     );
 
+    recentFoodsCubit = MockRecentFoodsCubit();
+    whenListen(
+      recentFoodsCubit,
+      Stream.value(RecentFoodsLoaded(<FoodReference>[].toBuiltList())),
+      initialState: const RecentFoodsLoading(),
+    );
+
     sensitivityService = MockSensitivityService();
     when(() => sensitivityService.of(any())).thenAnswer((_) async => Sensitivity.unknown);
 
@@ -67,6 +79,7 @@ void main() {
         providers: [
           BlocProvider.value(value: mealEntryBloc),
           BlocProvider.value(value: foodBloc),
+          BlocProvider.value(value: recentFoodsCubit),
         ],
         child: ChangeNotifierProvider.value(
           value: sensitivityService,
@@ -79,6 +92,7 @@ void main() {
   tearDown(() {
     mealEntryBloc.close();
     foodBloc.close();
+    recentFoodsCubit.close();
   });
 
   group('MealEntryPage', () {

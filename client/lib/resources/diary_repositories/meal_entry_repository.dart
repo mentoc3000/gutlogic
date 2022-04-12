@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 
 import '../../models/diary_entry/meal_entry.dart';
-import '../../models/food/food.dart';
+import '../../models/food_reference/food_reference.dart';
 import '../../models/meal_element.dart';
 import '../../models/serializers.dart';
 import '../firebase/firestore_repository.dart';
@@ -30,8 +30,8 @@ class MealEntryRepository with FirestoreRepository, TimelineRepository {
     return add(mealEntry);
   }
 
-  Future<MealElement?> createMealElement(MealEntry mealEntry, Food food) =>
-      mealElementRepository.addNewMealElementTo(mealEntry, food: food);
+  Future<MealElement?> createMealElement(MealEntry mealEntry, FoodReference food) =>
+      mealElementRepository.addNewMealElementTo(mealEntry, foodReference: food);
 
   Future<MealElement?> addMealElement(MealEntry mealEntry, MealElement mealElement) async {
     final mealEntryLatest = await getLatest(mealEntry) as MealEntry;

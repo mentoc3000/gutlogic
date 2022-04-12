@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../auth/auth_service.dart';
 import '../blocs/food_search/food_search_bloc.dart';
+import '../blocs/recent_foods/recent_foods.dart';
 import '../blocs/symptom_type/symptom_type_bloc.dart';
 import '../blocs/user_cubit.dart';
 import '../models/application_user.dart';
@@ -137,6 +138,7 @@ class AuthenticatedResources extends StatelessWidget {
             // TODO move these into their most tightly nested widget trees
             BlocProvider(create: FoodSearchBloc.fromContext),
             BlocProvider(create: SymptomTypeBloc.fromContext),
+            BlocProvider(create: RecentFoodsCubit.fromContext),
           ],
           child: ChangeNotifierProvider(
             create: (context) {

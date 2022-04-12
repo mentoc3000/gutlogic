@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/food_search/food_search.dart';
+import '../../blocs/recent_foods/recent_foods.dart';
 import '../../routes/routes.dart';
 import '../../widgets/floating_action_buttons/search_floating_action_button.dart';
 import '../../widgets/gl_app_bar.dart';
@@ -15,12 +16,14 @@ class BrowsePage extends StatelessWidget {
 
   void showFoodSearch(BuildContext context) {
     final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
+    final recentFoodsCubit = BlocProvider.of<RecentFoodsCubit>(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
-        onSelect: (food) => Navigator.push(context, Routes.of(context).createFoodPageRoute(food.toFoodReference())),
+        recentFoodsCubit: recentFoodsCubit,
+        onSelect: (food) => Navigator.push(context, Routes.of(context).createFoodPageRoute(food)),
       ),
     );
   }

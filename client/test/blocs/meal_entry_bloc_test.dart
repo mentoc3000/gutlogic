@@ -270,12 +270,12 @@ void main() {
       act: (bloc) async {
         bloc
           ..add(LoadMealEntry(mealEntry))
-          ..add(AddMealElement(food));
+          ..add(AddMealElement(food.toFoodReference()));
       },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],
       verify: (bloc) async {
-        verify(repository.createMealElement(mealEntry, food)).called(1);
+        verify(repository.createMealElement(mealEntry, food.toFoodReference())).called(1);
         // verify(analyticsService.logEvent('create_meal_element')).called(1);
       },
     );
@@ -286,8 +286,8 @@ void main() {
       act: (bloc) async {
         bloc
           ..add(LoadMealEntry(mealEntry))
-          ..add(AddMealElement(food))
-          ..add(AddMealElement(food));
+          ..add(AddMealElement(food.toFoodReference()))
+          ..add(AddMealElement(food.toFoodReference()));
       },
       wait: debounceWaitDuration,
       expect: () => [MealEntryLoaded(mealEntry)],

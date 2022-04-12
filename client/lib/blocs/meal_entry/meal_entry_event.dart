@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../models/diary_entry/meal_entry.dart';
-import '../../models/food/food.dart';
+import '../../models/food_reference/food_reference.dart';
 import '../../models/meal_element.dart';
 import '../../resources/firebase/analytics_service.dart';
 import '../../util/error_report.dart';
@@ -77,12 +77,12 @@ class UpdateMealEntryNotes extends MealEntryEvent with UpdateDiaryEntryNotes imp
 }
 
 class AddMealElement extends MealEntryEvent implements Tracked {
-  final Food food;
+  final FoodReference foodReference;
 
-  const AddMealElement(this.food);
+  const AddMealElement(this.foodReference);
 
   @override
-  List<Object?> get props => [food];
+  List<Object?> get props => [foodReference];
 
   @override
   void track(AnalyticsService analytics) => analytics.logEvent('create_meal_element');

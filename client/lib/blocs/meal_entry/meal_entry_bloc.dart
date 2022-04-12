@@ -62,7 +62,7 @@ class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubs
   void _onAdd(AddMealElement event, Emitter<MealEntryState> emit) {
     try {
       final mealEntry = (state as DiaryEntryLoaded).diaryEntry as MealEntry;
-      unawaited(repository.createMealElement(mealEntry, event.food));
+      unawaited(repository.createMealElement(mealEntry, event.foodReference));
     } catch (error, trace) {
       emit(MealEntryError.fromError(error: error, trace: trace));
     }
