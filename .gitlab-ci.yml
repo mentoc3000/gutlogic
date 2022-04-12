@@ -295,8 +295,11 @@ client:build:ios:
     - pod repo update
     - flutter build ios --flavor $FLUTTER_FLAVOR --release --no-codesign
   rules:
-    - !reference [.client-develop-commit-rules, rules]
-    - !reference [.client-release-commit-rules, rules]
+    # TODO we only run the build job on merge requests because the deploy jobs aren't able to reuse the artifacts
+    # from this job for some reason. If we can figure out how to reuse the build artifacts during deployment, this
+    # job should be the only one performing builds and run with the commented rules below.
+    # - !reference [.client-develop-commit-rules, rules]
+    # - !reference [.client-release-commit-rules, rules]
     - !reference [.client-merge-request-rules,  rules]
   dependencies:
     - client:prep
