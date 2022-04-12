@@ -41,23 +41,39 @@ compliance:
   elif [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master"  ] || [ "$CI_COMMIT_BRANCH" == "master"  ]; then PIPELINE_CHANNEL="staging";
   else PIPELINE_CHANNEL="develop"; fi
 
-# Rule for manual jobs on any critical commit.
-.manual-commit-rule: &manual-commit-rule
-  if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-  when: manual
-  allow_failure: true
-
 ### Server Jobs
 
-# Rule for automatic pipelines on merge requests with server changes.
-.server-merge-request-rule: &server-merge-request-rule
-  if: $CI_MERGE_REQUEST_ID
-  changes: [server/**/*]
+.server-merge-request-rules:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      changes: [server/**/*]
+    - if: $CI_MERGE_REQUEST_ID
+      allow_failure: true
+      when: manual
 
-# Rule for automatic pipelines on critical commits with server changes.
-.server-commit-rule: &server-commit-rule
-  if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-  changes: [server/**/*]
+.server-develop-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes: [server/**/*]
+    - if: $CI_COMMIT_BRANCH == "develop"
+      allow_failure: true
+      when: manual
+
+.server-staging-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      changes: [server/**/*]
+    - if: $CI_COMMIT_BRANCH == "master"
+      allow_failure: true
+      when: manual
+
+.server-release-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "release"
+      changes: [server/**/*]
+    - if: $CI_COMMIT_BRANCH == "release"
+      allow_failure: true
+      when: manual
 
 .server-cache: &server-cache
   key:
@@ -91,13 +107,14 @@ server:prep:
   stage: prep
   extends:
     - .server
-  rules:
-    - *server-merge-request-rule
-    - *server-commit-rule
-    - *manual-commit-rule
   script:
     # before_script will automatically update npm cache
     - echo "Updating server cache."
+  rules:
+    - !reference [.server-develop-commit-rules, rules]
+    - !reference [.server-staging-commit-rules, rules]
+    - !reference [.server-release-commit-rules, rules]
+    - !reference [.server-merge-request-rules,  rules]
   cache:
     <<: *server-cache
     policy: pull-push
@@ -109,9 +126,10 @@ server:lint:
   script:
     - npm run lint
   rules:
-    - *server-merge-request-rule
-    - *server-commit-rule
-    - *manual-commit-rule
+    - !reference [.server-develop-commit-rules, rules]
+    - !reference [.server-staging-commit-rules, rules]
+    - !reference [.server-release-commit-rules, rules]
+    - !reference [.server-merge-request-rules,  rules]
   dependencies:
     - server:prep
   allow_failure: true
@@ -123,47 +141,85 @@ server:test:
   script:
     - npm run test
   rules:
-    - *server-merge-request-rule
-    - *server-commit-rule
-    - *manual-commit-rule
+    - !reference [.server-develop-commit-rules, rules]
+    - !reference [.server-staging-commit-rules, rules]
+    - !reference [.server-release-commit-rules, rules]
+    - !reference [.server-merge-request-rules,  rules]
   dependencies:
     - server:prep
 
-server:deploy:
+server:deploy:develop:
   stage: deploy
   extends:
     - .server
   script:
     - npm run deploy
   rules:
-    - *server-commit-rule
-    - *manual-commit-rule
+    - !reference [.server-develop-commit-rules, rules]
   dependencies:
     - server:prep
+    - server:test
+  environment: develop
+
+server:deploy:staging:
+  stage: deploy
+  extends:
+    - .server
+  script:
+    - npm run deploy
+  rules:
+    - !reference [.server-staging-commit-rules, rules]
+  dependencies:
+    - server:prep
+    - server:test
+  environment: staging
+
+server:deploy:release:
+  stage: deploy
+  extends:
+    - .server
+  script:
+    - npm run deploy
+  rules:
+    - !reference [.server-release-commit-rules, rules]
+  dependencies:
+    - server:prep
+    - server:test
+  environment: release
 
 ### Client Jobs
 
-# Rule for client jobs that run on any merge request with client changes.
-.client-merge-request-rule: &client-merge-request-rule
-  if: $CI_MERGE_REQUEST_ID
-  changes: [client/**/*]
+.client-merge-request-rules:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      changes: [client/**/*]
+    - if: $CI_MERGE_REQUEST_ID
+      allow_failure: true
+      when: manual
 
-# Optional, manual job for any merge request with client changes.
-.client-optional-job-rule: &client-optional-job-rule
-  if: $CI_MERGE_REQUEST_ID
-  changes: [client/**/*]
-  when: manual
-  allow_failure: true
+.client-develop-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes: [client/**/*]
+    - if: $CI_COMMIT_BRANCH == "develop"
+      allow_failure: true
+      when: manual
 
-# Rule for client jobs that run on critical commits with client changes.
-.client-commit-rule: &client-commit-rule
-  if: ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-  changes: [client/**/*]
+.client-staging-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      changes: [client/**/*]
+    - if: $CI_COMMIT_BRANCH == "master"
+      allow_failure: true
+      when: manual
 
-# Rule for client jobs that run on critical commits with client changes (except develop).
-.client-deploy-rule: &client-deploy-rule
-  if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "release")
-  changes: [client/**/*]
+.client-release-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "release"
+      changes: [client/**/*]
+    - if: $CI_COMMIT_BRANCH == "release"
+      allow_failure: true
+      when: manual
 
 # Aliases flutter to use fvm if fvm is installed. This is so fvm is used on the mac runner, but not on docker, where it is redundant.
 # TODO use a custom docker image with fvm already installed so we can use fvm on both the macos and docker runners
@@ -221,9 +277,10 @@ client:prep:
     # build autogenerated dart files (models, etc) for artifacts export
     - flutter pub run build_runner build --delete-conflicting-outputs
   rules:
-    - *client-merge-request-rule
-    - *client-commit-rule
-    - *manual-commit-rule
+    - !reference [.client-develop-commit-rules, rules]
+    - !reference [.client-staging-commit-rules, rules]
+    - !reference [.client-release-commit-rules, rules]
+    - !reference [.client-merge-request-rules,  rules]
   artifacts:
     reports:
       dotenv: client/version.env
@@ -249,9 +306,10 @@ client:lint:
     - find lib test bin -name "*.mocks.dart" -type f -delete
     - flutter format --line-length 120 --dry-run --set-exit-if-changed lib test
   rules:
-    - *client-merge-request-rule
-    - *client-commit-rule
-    - *manual-commit-rule
+    - !reference [.client-develop-commit-rules, rules]
+    - !reference [.client-staging-commit-rules, rules]
+    - !reference [.client-release-commit-rules, rules]
+    - !reference [.client-merge-request-rules,  rules]
   dependencies:
     - client:prep
   allow_failure: true
@@ -270,9 +328,10 @@ client:test:
       - client/coverage
     expire_in: 5 days
   rules:
-    - *client-merge-request-rule
-    - *client-commit-rule
-    - *manual-commit-rule
+    - !reference [.client-develop-commit-rules, rules]
+    - !reference [.client-staging-commit-rules, rules]
+    - !reference [.client-release-commit-rules, rules]
+    - !reference [.client-merge-request-rules,  rules]
   dependencies:
     - client:prep
 
@@ -296,8 +355,10 @@ client:build:ios:
     - pod repo update
     - flutter build ios --flavor $FLUTTER_FLAVOR --release --no-codesign
   rules:
-    - *client-merge-request-rule
-    - *manual-commit-rule
+    - !reference [.client-develop-commit-rules, rules]
+    - !reference [.client-staging-commit-rules, rules]
+    - !reference [.client-release-commit-rules, rules]
+    - !reference [.client-merge-request-rules,  rules]
   dependencies:
     - client:prep
 
@@ -326,9 +387,10 @@ client:screenshots:
       - client/ios/fastlane
     expire_in: 1 day
   rules:
-    - *client-deploy-rule
-    - *client-optional-job-rule
-    - *manual-commit-rule
+    - !reference [.client-release-commit-rules, rules]
+    - if: $CI_MERGE_REQUEST_ID
+      allow_failure: true
+      when: manual
   dependencies:
     - client:prep
 
@@ -345,15 +407,13 @@ client:tag:
     tag_name: "$RELEASE_TAG"
     description: "Release $RELEASE_TAG"
   rules:
-    - *client-deploy-rule
-    - *manual-commit-rule
+    - !reference [.client-staging-commit-rules, rules]
+    - !reference [.client-release-commit-rules, rules]
   dependencies:
     - client:prep
 
-client:deploy:ios:
+.client:deploy:ios:
   stage: deploy
-  extends:
-    - .client
   tags:
     - macos
   script:
@@ -374,9 +434,36 @@ client:deploy:ios:
     - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
     # execute fastlane (archives and uploads app)
     - bundle exec fastlane $FASTLANE_CHANNEL
+
+client:deploy:ios:develop:
+  extends:
+    - .client:deploy:ios
   rules:
-    - *client-commit-rule
-    - *manual-commit-rule
+    - !reference [.client-develop-commit-rules, rules]
   dependencies:
     - client:prep
+    - client:test
+  environment: develop
+
+client:deploy:ios:staging:
+  stage: deploy
+  extends:
+    - .client:deploy:ios
+  rules:
+    - !reference [.client-staging-commit-rules, rules]
+  dependencies:
+    - client:prep
+    - client:test
+  environment: staging
+
+client:deploy:ios:release:
+  stage: deploy
+  extends:
+    - .client:deploy:ios
+  rules:
+    - !reference [.client-release-commit-rules, rules]
+  dependencies:
+    - client:prep
+    - client:test
     - client:screenshots
+  environment: release
