@@ -9,6 +9,11 @@ stages:
   - predeploy
   - deploy
 
+variables:
+  FLUTTER_FLAVOR: development
+  FIREBASE_PROJECT: develop
+  FASTLANE_CHANNEL: develop
+
 workflow:
   rules:
     - if: ($CI_MERGE_REQUEST_TITLE =~ /^WIP:/) || ($CI_MERGE_REQUEST_TITLE =~ /^Draft:/)
@@ -16,6 +21,8 @@ workflow:
     - if: $CI_MERGE_REQUEST_ID
     - if: $CI_COMMIT_BRANCH == "develop"
     - if: $CI_COMMIT_BRANCH =~ /^release/
+      variables:
+        FIREBASE_PROJECT: release
 
 ### Server Jobs
 
@@ -63,6 +70,8 @@ workflow:
     - npm ci --cache .npm-cache --prefer-offline --log-level error
     # add locally installed bins to the path so we can run firebase-tools
     - PATH="$(npm bin):$PATH"
+    # set the firebase project for the job
+    - firebase use $FIREBASE_PROJECT
   cache:
     <<: *server-cache
     policy: pull
@@ -114,7 +123,6 @@ server:deploy:develop:
   extends:
     - .server
   script:
-    - firebase use develop
     - npm run deploy
   rules:
     - !reference [.server-develop-commit-rules, rules]
@@ -127,7 +135,6 @@ server:deploy:release:
   extends:
     - .server
   script:
-    - firebase use release
     - npm run deploy
   rules:
     - !reference [.server-release-commit-rules, rules]
@@ -341,9 +348,6 @@ client:screenshots:
 client:deploy:ios:develop:
   extends:
     - .client:deploy:ios
-  variables:
-    FLUTTER_FLAVOR: development
-    FASTLANE_CHANNEL: develop
   rules:
     - !reference [.client-develop-commit-rules, rules]
   dependencies:
