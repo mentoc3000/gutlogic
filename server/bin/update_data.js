@@ -13,7 +13,7 @@ function multimap(collection, keyfunc, valfunc) {
   for (const el of collection) {
     const key = keyfunc(el);
     const val = valfunc(el);
-    map.set(key, [...map.get(key) ?? [], val]);
+    map.set(key, [...(map.get(key) ?? []), val]);
   }
 
   return map;
