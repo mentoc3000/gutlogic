@@ -11,12 +11,11 @@ stages:
 
 workflow:
   rules:
-    - if: ($CI_MERGE_REQUEST_TITLE =~ /WIP:/) || ($CI_MERGE_REQUEST_TITLE =~ /Draft:/)
+    - if: ($CI_MERGE_REQUEST_TITLE =~ /^WIP:/) || ($CI_MERGE_REQUEST_TITLE =~ /^Draft:/)
       when: never
     - if: $CI_MERGE_REQUEST_ID
     - if: $CI_COMMIT_BRANCH == "develop"
-    - if: $CI_COMMIT_BRANCH == "master"
-    - if: $CI_COMMIT_BRANCH == "release"
+    - if: $CI_COMMIT_BRANCH =~ /^release/
 
 # Create a job that only runs if neither of the subdirectories have changed. This is so MRs that don't change any of
 # those files will still generate a pipeline and comply with "prevent merge unless a pipeline succeeded" rule.
@@ -34,12 +33,6 @@ compliance:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: always
-
-# Choose the pipeline channel (develop/staging/release) by commit branch and store it in PIPELINE_CHANNEL
-.pipeline-channel-variable: &pipeline-channel-variable >
-  if   [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "release" ] || [ "$CI_COMMIT_BRANCH" == "release" ]; then PIPELINE_CHANNEL="release";
-  elif [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master"  ] || [ "$CI_COMMIT_BRANCH" == "master"  ]; then PIPELINE_CHANNEL="staging";
-  else PIPELINE_CHANNEL="develop"; fi
 
 ### Server Jobs
 
@@ -59,19 +52,11 @@ compliance:
       allow_failure: true
       when: manual
 
-.server-staging-commit-rules:
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
-      changes: [server/**/*]
-    - if: $CI_COMMIT_BRANCH == "master"
-      allow_failure: true
-      when: manual
-
 .server-release-commit-rules:
   rules:
-    - if: $CI_COMMIT_BRANCH == "release"
+    - if: $CI_COMMIT_BRANCH =~ /^release/
       changes: [server/**/*]
-    - if: $CI_COMMIT_BRANCH == "release"
+    - if: $CI_COMMIT_BRANCH =~ /^release/
       allow_failure: true
       when: manual
 
@@ -87,8 +72,6 @@ compliance:
   tags:
     - docker
   before_script:
-    # server pipeline variables
-    - *pipeline-channel-variable
     # move into the server directory
     - cd server
     # install alpine deps (ideally this would happen in a custom dockerfile)
@@ -97,8 +80,6 @@ compliance:
     - npm ci --cache .npm-cache --prefer-offline --log-level error
     # add locally installed bins to the path so we can run firebase-tools
     - PATH="$(npm bin):$PATH"
-    # configure the firebase environment
-    - firebase use $PIPELINE_CHANNEL
   cache:
     <<: *server-cache
     policy: pull
@@ -112,7 +93,6 @@ server:prep:
     - echo "Updating server cache."
   rules:
     - !reference [.server-develop-commit-rules, rules]
-    - !reference [.server-staging-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]
     - !reference [.server-merge-request-rules,  rules]
   cache:
@@ -127,7 +107,6 @@ server:lint:
     - npm run lint
   rules:
     - !reference [.server-develop-commit-rules, rules]
-    - !reference [.server-staging-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]
     - !reference [.server-merge-request-rules,  rules]
   dependencies:
@@ -142,7 +121,6 @@ server:test:
     - npm run test
   rules:
     - !reference [.server-develop-commit-rules, rules]
-    - !reference [.server-staging-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]
     - !reference [.server-merge-request-rules,  rules]
   dependencies:
@@ -153,6 +131,7 @@ server:deploy:develop:
   extends:
     - .server
   script:
+    - firebase use develop
     - npm run deploy
   rules:
     - !reference [.server-develop-commit-rules, rules]
@@ -160,23 +139,12 @@ server:deploy:develop:
     - server:prep
   environment: develop
 
-server:deploy:staging:
-  stage: deploy
-  extends:
-    - .server
-  script:
-    - npm run deploy
-  rules:
-    - !reference [.server-staging-commit-rules, rules]
-  dependencies:
-    - server:prep
-  environment: staging
-
 server:deploy:release:
   stage: deploy
   extends:
     - .server
   script:
+    - firebase use release
     - npm run deploy
   rules:
     - !reference [.server-release-commit-rules, rules]
@@ -202,30 +170,13 @@ server:deploy:release:
       allow_failure: true
       when: manual
 
-.client-staging-commit-rules:
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
-      changes: [client/**/*]
-    - if: $CI_COMMIT_BRANCH == "master"
-      allow_failure: true
-      when: manual
-
 .client-release-commit-rules:
   rules:
-    - if: $CI_COMMIT_BRANCH == "release"
+    - if: $CI_COMMIT_BRANCH =~ /^release/
       changes: [client/**/*]
-    - if: $CI_COMMIT_BRANCH == "release"
+    - if: $CI_COMMIT_BRANCH =~ /^release/
       allow_failure: true
       when: manual
-
-# Aliases flutter to use fvm if fvm is installed. This is so fvm is used on the mac runner, but not on docker, where it is redundant.
-# TODO use a custom docker image with fvm already installed so we can use fvm on both the macos and docker runners
-.flutter-fvm: &flutter-fvm >
-  if [ -x "$(command -v fvm)" ]; then
-    echo "Using FVM";
-    fvm install;
-    alias flutter="fvm flutter";
-  fi;
 
 .client-cache: &client-cache
   key:
@@ -241,20 +192,18 @@ server:deploy:release:
     - docker
   before_script:
     - shopt -s expand_aliases
-    # client pipeline variables
-    - *pipeline-channel-variable
     # move into the client directory
     - cd client
     # configure pub to use a local cache directory
     - export PUB_CACHE=./.pub-cache
     # alias flutter to use fvm
-    - *flutter-fvm
+    - if [ -x "$(command -v fvm)" ]; then
+        echo "Using FVM";
+        fvm install;
+        alias flutter="fvm flutter";
+      fi;
     # print the flutter version for logs
     - flutter --version
-    # set FLUTTER_FLAVOR based on the pipeline channel
-    - if   [ "$PIPELINE_CHANNEL" == "release" ]; then FLUTTER_FLAVOR="production";
-      elif [ "$PIPELINE_CHANNEL" == "staging" ]; then FLUTTER_FLAVOR="production";
-      else FLUTTER_FLAVOR="development"; fi
     # install dependencies
     - flutter pub get
   cache:
@@ -266,16 +215,12 @@ client:prep:
   extends:
     - .client
   script:
-    - RELEASE_TAG=$(flutter pub run bin/version)
-    # on staging channel append build number so staging tag doesn't conflict with release tag
-    - if [ "$PIPELINE_CHANNEL" == "staging" ]; then RELEASE_TAG="v$RELEASE_TAG-b$CI_PIPELINE_ID"; fi
-    # write the release tag into the pipeline dotenv file (https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6400)
-    - echo "RELEASE_TAG=$RELEASE_TAG" > version.env
+    # write the app version into the pipeline dotenv file (https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6400)
+    - echo "FLUTTER_APP_VERSION=$(flutter pub run bin/version)" > version.env
     # build autogenerated dart files (models, etc) for artifacts export
     - flutter pub run build_runner build --delete-conflicting-outputs
   rules:
     - !reference [.client-develop-commit-rules, rules]
-    - !reference [.client-staging-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
     - !reference [.client-merge-request-rules,  rules]
   artifacts:
@@ -304,7 +249,6 @@ client:lint:
     - flutter format --line-length 120 --dry-run --set-exit-if-changed lib test
   rules:
     - !reference [.client-develop-commit-rules, rules]
-    - !reference [.client-staging-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
     - !reference [.client-merge-request-rules,  rules]
   dependencies:
@@ -326,7 +270,6 @@ client:test:
     expire_in: 5 days
   rules:
     - !reference [.client-develop-commit-rules, rules]
-    - !reference [.client-staging-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
     - !reference [.client-merge-request-rules,  rules]
   dependencies:
@@ -353,7 +296,6 @@ client:build:ios:
     - flutter build ios --flavor $FLUTTER_FLAVOR --release --no-codesign
   rules:
     - !reference [.client-develop-commit-rules, rules]
-    - !reference [.client-staging-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
     - !reference [.client-merge-request-rules,  rules]
   dependencies:
@@ -400,11 +342,8 @@ client:tag:
   script:
     # RELEASE_TAG is exported from client:prep
     - echo "Tagging release $RELEASE_TAG ($COMMIT_SHA)"
-  release:
-    tag_name: "$RELEASE_TAG"
-    description: "Release $RELEASE_TAG"
+
   rules:
-    - !reference [.client-staging-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
   dependencies:
     - client:prep
@@ -414,10 +353,6 @@ client:tag:
   tags:
     - macos
   script:
-    # set FASTLANE_CHANNEL to the pipeline channel
-    - export FASTLANE_CHANNEL=$PIPELINE_CHANNEL
-    # set FLUTTER_APP_VERSION to the pubspec version
-    - export FLUTTER_APP_VERSION=$(flutter pub run bin/version)
     # move into ios
     - cd ios
     # copy GOOGLE_APPLICATION_CREDENTIALS from environment into fastlane target
@@ -435,6 +370,9 @@ client:tag:
 client:deploy:ios:develop:
   extends:
     - .client:deploy:ios
+  variables:
+    FLUTTER_FLAVOR: development
+    FASTLANE_CHANNEL: develop
   rules:
     - !reference [.client-develop-commit-rules, rules]
   dependencies:
@@ -445,8 +383,14 @@ client:deploy:ios:staging:
   stage: deploy
   extends:
     - .client:deploy:ios
+  variables:
+    FLUTTER_FLAVOR: production
+    FASTLANE_CHANNEL: staging
+  release:
+    tag_name: "v$FLUTTER_APP_VERSION-b$CI_PIPELINE_ID"
+    description: "Release v$FLUTTER_APP_VERSION-b$CI_PIPELINE_ID"
   rules:
-    - !reference [.client-staging-commit-rules, rules]
+    - !reference [.client-release-commit-rules, rules]
   dependencies:
     - client:prep
   environment: staging
@@ -455,8 +399,12 @@ client:deploy:ios:release:
   stage: deploy
   extends:
     - .client:deploy:ios
+  variables:
+    FLUTTER_FLAVOR: production
+    FASTLANE_CHANNEL: release
   rules:
-    - !reference [.client-release-commit-rules, rules]
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      when: manual
   dependencies:
     - client:prep
     - client:screenshots
