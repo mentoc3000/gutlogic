@@ -47,15 +47,22 @@ The app is distributed on several channels using Fastlane.
    package identifier so it can be installed adjacent to a staging or release build.
 
 2. `staging` - The earliest publicly distributed releases are on the staging channel, which are
-   built from the `master` branch and linked against the `gutlogic` project. Data from the staging
+   built from a `release/*` branch and linked against the `gutlogic` project. Data from the staging
    channel is shared with the release channel. The staging channel should be feature complete. The
    staging channel is distributed to **Google Play Store Open Tests** and **Apple TestFlight** and
    shares a package identifier with the release build.
 
-3. `release` - The release channel is built from the `release` branch after user testing on the
+3. `release` - The release channel is built from a `release/*` branch after user testing on the
    staging builds. Hotfixes to the release channel might be branched from these tagged commits while
    the staging channel is experiencing user testing on a new feature. The release channel is
    distributed to the **Google Play Store** and the **Apple App Store**.
+
+### Deployment
+
+Deployment is managed via the GitLab pipeline. Commits to `develop` automatically trigger a
+deployment to the `develop` environment. Commits to a branch starting with `release` will
+automatically trigger a deployment to the staging environment, and create a manual job to
+promote the staging build to a released store build.
 
 ### Configuring Certificates
 
