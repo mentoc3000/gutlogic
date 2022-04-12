@@ -333,21 +333,6 @@ client:screenshots:
   dependencies:
     - client:prep
 
-client:tag:
-  stage: predeploy
-  extends:
-    - .client
-  tags:
-    - macos # required for release tagging
-  script:
-    # RELEASE_TAG is exported from client:prep
-    - echo "Tagging release $RELEASE_TAG ($COMMIT_SHA)"
-
-  rules:
-    - !reference [.client-release-commit-rules, rules]
-  dependencies:
-    - client:prep
-
 .client:deploy:ios:
   stage: deploy
   tags:
