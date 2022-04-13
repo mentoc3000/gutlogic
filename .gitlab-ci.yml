@@ -347,7 +347,7 @@ client:screenshots:
     # execute fastlane (archives and uploads app)
     - bundle exec fastlane $FASTLANE_CHANNEL
 
-client:deploy:ios:develop:
+client:deploy:develop:ios:
   extends:
     - .client:deploy:ios
   rules:
@@ -356,7 +356,7 @@ client:deploy:ios:develop:
     - client:prep
   environment: develop
 
-client:deploy:ios:staging:
+client:deploy:staging:ios:
   stage: deploy
   extends:
     - .client:deploy:ios
@@ -372,7 +372,7 @@ client:deploy:ios:staging:
     - client:prep
   environment: staging
 
-client:deploy:ios:release:
+client:deploy:release:ios:
   stage: deploy
   extends:
     - .client:deploy:ios
