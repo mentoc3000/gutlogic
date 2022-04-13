@@ -328,6 +328,8 @@ client:screenshots:
 
 .client:deploy:ios:
   stage: deploy
+  extends:
+    - .client
   tags:
     - macos
   script:
