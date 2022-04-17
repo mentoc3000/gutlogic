@@ -4,5 +4,14 @@
     "develop": "gutlogic-dev",
     "release": "gutlogic",
     "staging": "gutlogic"
+  },
+  "targets": {
+    "gutlogic": {
+      "hosting": {
+        "app": [
+          "gutlogic-app"
+        ]
+      }
+    }
   }
 }

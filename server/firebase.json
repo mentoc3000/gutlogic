@@ -2,5 +2,10 @@
   "firestore": {
     "rules": "firestore/firestore.rules",
     "indexes": "firestore/firestore.indexes.json"
+  },
+  "hosting": {
+    "target": "app",
+    "appAssociation": "AUTO",
+    "rewrites": [ { "source": "/**", "dynamicLinks": true } ]
   }
 }
