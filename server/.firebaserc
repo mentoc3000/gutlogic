@@ -12,6 +12,13 @@
           "gutlogic-app"
         ]
       }
+    },
+    "gutlogic-dev": {
+      "hosting": {
+        "app": [
+          "gutlogic-dev"
+        ]
+      }
     }
   }
 }
