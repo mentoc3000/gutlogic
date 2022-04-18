@@ -56,7 +56,8 @@ firebase functions:config:set path.of.key=value
 
 Below is a list of config values and how to set them.
 
-- `auth.token` is a token returned by `firebase login:ci`. This should match the token provided to the CI/CD pipeline for the associated project.
+- `auth.token` is a token returned by `firebase login:ci`. This should match the token provided to the CI/CD pipeline
+for the associated project.
 
 ### GitLab CI/CD
 
@@ -65,6 +66,18 @@ Set the following variables in the GitLab CI/CD settings
 | Type     | Key                              | Value                                                                                                                                        |
 | -------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | Variable | `FASTLANE_PASSWORD`              | App Store Connect password                                                                                                                   |
-| Variable | `FIREBASE_PROJECT`               | `default` or `production`, depending on environment                                                                                          |
 | Variable | `FIREBASE_TOKEN`                 | Token obtained from `firebase login:ci`                                                                                                      |
 | File     | `GOOGLE_APPLICATION_CREDENTIALS` | Key generated for GCP account to access storage bucket for certificates. Obtain by running `fastlane match init` and following instructions. |
+
+### Dynamics Links
+
+The client app uses Firebase Dynamic Links to send sign in links via email.
+
+In the `gutlogic` project, these links are generated on the subdomain `app.gutlogic.co`. In order to avoid conflicts
+with the website hosted on `gutlogic.co` (which is also managed by Firebase) the `app.gutlogic.co` subdomain is
+managed by a different "site" in the `gutlogic` project on Firebase (https://console.firebase.google.com/project/gutlogic/hosting/sites)
+named `gutlogic-app`. This is reflected in the `.firebaserc` config file, which declares a "target" named `app` and the
+`firebase.json` config file, which specifies that the hosting config is only for the `app` target.
+
+In the `develop-dev` project, these links are generated on a domain provided by Google that does not require a hosting
+config. The `app` target is pointed to the default `gutlogic-dev` site just to avoid deployment errors and is unused.
