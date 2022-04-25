@@ -23,6 +23,14 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLName</key>
+			<string>Dynamic Link Domain</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.gutlogic.app</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
@@ -45,6 +53,10 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>30</string>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://app.gutlogic.co</string>
+	</array>
 	<key>Flavor</key>
 	<string>$(APP_FLAVOR)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
