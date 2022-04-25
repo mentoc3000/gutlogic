@@ -25,7 +25,7 @@ dependencies:
   firebase_auth: ^3.3.11
   firebase_core: ^1.6.0
   firebase_crashlytics: ^2.2.1
-  firebase_dynamic_links: ^4.0.4
+  firebase_dynamic_links: ^4.2.0
   firebase_remote_config: ^2.0.2
   flutter: { sdk: flutter }
   flutter_bloc: ^8.0.1
