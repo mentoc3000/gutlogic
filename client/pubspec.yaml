@@ -13,10 +13,10 @@ environment:
 dependencies:
   bloc_concurrency: ^0.2.0
   built_collection: ^5.1.0
-  built_value: ^8.0.6
+  built_value: ^8.2.3
   cloud_firestore: ^3.1.10
   cloud_functions: ^3.2.4
-  crypto: ^3.0.0
+  crypto: ^3.0.1
   datetime_picker_formfield: ^2.0.0
   device_info_plus: ^3.2.2
   email_validator: ^2.0.1
@@ -31,7 +31,7 @@ dependencies:
   flutter_bloc: ^8.0.1
   flutter_password_strength: ^0.1.6
   flutter_sfsymbols: ^2.0.0
-  flutter_speed_dial: ^5.0.0+1
+  flutter_speed_dial: ^6.0.0
   flutter_svg: ^1.0.3
   gap: ^2.0.0
   google_fonts: ^2.0.0
@@ -43,13 +43,13 @@ dependencies:
   provider: ^6.0.0
   quiver: ^3.0.1
   rxdart: ^0.27.0
-  scrollable_positioned_list: ^0.2.0-nullsafety.0
+  scrollable_positioned_list: ^0.3.1
   url_launcher: ^6.0.2
 
 dev_dependencies:
   bloc_test: ^9.0.3
-  build_runner: ^2.0.2
-  built_value_generator: ^8.0.6
+  build_runner: ^2.1.10
+  built_value_generator: ^8.2.3
   fake_cloud_firestore: ^1.1.0
   flutter_driver: { sdk: flutter }
   flutter_launcher_icons: ^0.9.0
