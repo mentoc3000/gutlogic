@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 
 import '../../auth/widgets/auth_widgets.dart';
 import '../../blocs/reauthenticate/reauthenticate.dart';
@@ -34,6 +35,8 @@ class ReauthenticatePageBody extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
+          const Text("Please log in again so we know it's you."),
+          const Gap(20),
           AuthSection(onAuthentication: (auth) => context.read<ReauthenticateCubit>().reauthenticate(auth)),
         ],
       ),

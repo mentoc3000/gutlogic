@@ -28,9 +28,13 @@ class DiaryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GLScaffold(
       appBar: GLAppBar(title: 'Timeline', leading: const SettingsIconButton()),
-      body: BlocConsumer<DiaryBloc, DiaryState>(builder: builder, listener: listener),
+      body: BlocConsumer<DiaryBloc, DiaryState>(builder: builder, listener: listener, buildWhen: buildWhen),
       floatingActionButton: const DiaryFloatingActionButton(key: Keys.diaryFab),
     );
+  }
+
+  bool buildWhen(DiaryState previous, DiaryState current) {
+    return current is DiaryLoading || current is DiaryLoaded || current is DiaryError;
   }
 
   Widget builder(BuildContext context, DiaryState state) {
