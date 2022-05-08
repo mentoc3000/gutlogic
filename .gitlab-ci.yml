@@ -177,7 +177,7 @@ server:deploy:release:
     - client/.dart_tool/package_config.json
 
 .client:
-  image: cirrusci/flutter:2.10.3
+  image: cirrusci/flutter:2.10.5
   tags:
     - docker
   before_script:
