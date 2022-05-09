@@ -38,7 +38,7 @@ class ConsentHeader extends StatelessWidget {
   }
 
   static void _navigate() async {
-    const url = 'http://gutlogic.co/gut_logic_privacy_policy.pdf';
-    if (await url_launcher.canLaunch(url)) await url_launcher.launch(url);
+    final dest = Uri.parse('http://gutlogic.co/gut_logic_privacy_policy.pdf');
+    if (await url_launcher.canLaunchUrl(dest)) await url_launcher.launchUrl(dest);
   }
 }

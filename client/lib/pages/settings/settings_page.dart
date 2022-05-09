@@ -67,8 +67,8 @@ class SettingsPrivacyTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void open() async {
-      const dest = 'http://gutlogic.co/gut_logic_privacy_policy.pdf';
-      if (await url.canLaunch(dest)) await url.launch(dest);
+      final dest = Uri.parse('http://gutlogic.co/gut_logic_privacy_policy.pdf');
+      if (await url.canLaunchUrl(dest)) await url.launchUrl(dest);
     }
 
     return PushListTile(heading: 'Privacy Policy', leading: const Icon(GLIcons.privacy), onTap: open);
