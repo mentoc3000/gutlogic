@@ -72,7 +72,7 @@ class __CustomFoodGuideState extends State<_CustomFoodGuide> {
     widget.controller.addListener(_updateOpacity);
 
     // Update opacity once controller is attached to list view
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _updateOpacity();
     });
 

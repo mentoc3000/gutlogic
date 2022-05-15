@@ -33,9 +33,9 @@ class AccountPageDeleteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GLFlatButton(
-      child: const StretchedButtonContent(label: 'Delete Account'),
       textColor: GLColors.red,
       onPressed: () => Navigator.of(context).push(Routes.of(context).deleteAccount),
+      child: const StretchedButtonContent(label: 'Delete Account'),
     );
   }
 }

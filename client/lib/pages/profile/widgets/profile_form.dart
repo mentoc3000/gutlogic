@@ -90,9 +90,9 @@ class ProfileFormSaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GLPrimaryButton(
-      child: const StretchedButtonContent(label: 'Save'),
       enabled: context.select((ProfileCubit cubit) => cubit.state is! ProfileSaving),
       onPressed: onPressed,
+      child: const StretchedButtonContent(label: 'Save'),
     );
   }
 }

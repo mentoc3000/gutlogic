@@ -10,8 +10,8 @@ class SearchFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      child: const Icon(GLIcons.search),
       onPressed: onPressed,
+      child: const Icon(GLIcons.search),
     );
   }
 }

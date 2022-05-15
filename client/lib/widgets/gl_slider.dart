@@ -17,7 +17,7 @@ class GLSlider extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _GLSliderState createState() => _GLSliderState();
+  State<GLSlider> createState() => _GLSliderState();
 }
 
 class _GLSliderState extends State<GLSlider> {

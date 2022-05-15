@@ -12,7 +12,7 @@ class BMTypeCard extends StatefulWidget {
   const BMTypeCard({required this.type, this.onChanged});
 
   @override
-  _BMTypeCardState createState() => _BMTypeCardState();
+  State<BMTypeCard> createState() => _BMTypeCardState();
 }
 
 class _BMTypeCardState extends State<BMTypeCard> {

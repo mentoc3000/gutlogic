@@ -20,8 +20,9 @@ class AuthProviderGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void onPressed<T extends AuthProviderService>() async {
-      await context.read<T>().deauthenticate(); // force a fresh login every time
-      maybe(await context.read<T>().authenticate(), onAuthentication);
+      final service = context.read<T>();
+      await service.deauthenticate(); // force a fresh login every time
+      maybe(await service.authenticate(), onAuthentication);
     }
 
     final buttons = [
@@ -43,13 +44,13 @@ class AuthProviderGoogleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GLFlatButton(
+      color: const Color.fromRGBO(66, 133, 244, 1),
+      textColor: Colors.white,
+      onPressed: () => onPressed?.call(),
       child: StretchedButtonContent(
         label: 'Continue with Google',
         leader: AuthProviderButtonLeader(child: _icon),
-      ),
-      color: const Color.fromRGBO(66, 133, 244, 1),
-      textColor: Colors.white,
-      onPressed: () => onPressed?.call(), // never disabled
+      ), // never disabled
     );
   }
 }
@@ -64,13 +65,13 @@ class AuthProviderAppleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GLFlatButton(
+      color: Colors.black,
+      textColor: Colors.white,
+      onPressed: () => onPressed?.call(),
       child: StretchedButtonContent(
         label: 'Continue with Apple',
         leader: AuthProviderButtonLeader(child: _icon),
-      ),
-      color: Colors.black,
-      textColor: Colors.white,
-      onPressed: () => onPressed?.call(), // never disabled
+      ), // never disabled
     );
   }
 }

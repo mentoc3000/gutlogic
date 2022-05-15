@@ -1,0 +1,6 @@
+linter:
+  rules:
+    # Reasoning: files in bin are considered "public" so this lint requires all bin dependencies be
+    # resolved from dependencies instead of dev_dependencies, but we use packages like mockito in
+    # the bin folder for generating screenshots.
+    depend_on_referenced_packages: false

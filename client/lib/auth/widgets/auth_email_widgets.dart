@@ -90,8 +90,8 @@ class AuthEmailSubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GLPrimaryButton(
-      child: const StretchedButtonContent(label: 'Continue with email'),
       onPressed: onPressed,
+      child: const StretchedButtonContent(label: 'Continue with email'),
     );
   }
 }
@@ -106,8 +106,8 @@ class AuthEmailCancelButton extends StatelessWidget {
     return GLRaisedButton(
       color: GLColors.cancel,
       textColor: GLColors.white,
-      child: const StretchedButtonContent(label: 'Use different email'),
       onPressed: onPressed,
+      child: const StretchedButtonContent(label: 'Use different email'),
     );
   }
 }

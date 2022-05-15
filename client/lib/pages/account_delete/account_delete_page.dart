@@ -27,8 +27,9 @@ class AccountDeletePage extends StatelessWidget {
 
   void listener(BuildContext context, AccountDeleteState state) async {
     if (state == const AccountDeleteFailure.reauthenticate()) {
+      final cubit = context.read<AccountDeleteCubit>();
       final result = await Navigator.of(context).push(Routes.of(context).reauthenticate);
-      if (result is ReauthenticateSuccess) await context.read<AccountDeleteCubit>().delete();
+      if (result is ReauthenticateSuccess) await cubit.delete();
     }
   }
 }
@@ -65,10 +66,10 @@ class AccountDeleteButton extends StatelessWidget {
     });
 
     return GLButton(
-      child: const StretchedButtonContent(label: 'Permanently Delete Account'),
       textColor: Colors.white,
       color: Colors.redAccent,
       onPressed: submittable ? () => context.read<AccountDeleteCubit>().delete() : null,
+      child: const StretchedButtonContent(label: 'Permanently Delete Account'),
     );
   }
 }

@@ -10,8 +10,8 @@ class AddFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      child: const Icon(GLIcons.add),
       onPressed: onPressed,
+      child: const Icon(GLIcons.add),
     );
   }
 }

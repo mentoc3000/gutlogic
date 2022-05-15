@@ -74,8 +74,8 @@ class ConsentFormSubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GLPrimaryButton(
-      child: const StretchedButtonContent(label: 'Agree'),
       onPressed: onPressed,
+      child: const StretchedButtonContent(label: 'Agree'),
     );
   }
 }

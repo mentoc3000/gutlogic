@@ -26,7 +26,7 @@ class AccountPageBody extends StatelessWidget {
   Widget builder(BuildContext context, ApplicationUser user) {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         if (user.anonymous) AccountPageCreateButton(),
         if (user.anonymous) const Gap(10),
         if (user.anonymous == false) AccountDetailsCard(user: user),
@@ -34,7 +34,7 @@ class AccountPageBody extends StatelessWidget {
         if (user.anonymous == false) AccountPageLogoutButton(),
         if (user.anonymous == false) const Gap(10),
         AccountPageDeleteButton(),
-      ], crossAxisAlignment: CrossAxisAlignment.stretch),
+      ]),
     );
   }
 }

@@ -16,8 +16,8 @@ class GLPopupMenuButton<T> extends StatelessWidget {
     return PopupMenuButton<T>(
       onSelected: onSelected,
       itemBuilder: (BuildContext context) => items,
-      child: child,
       icon: icon,
+      child: child,
     );
   }
 }

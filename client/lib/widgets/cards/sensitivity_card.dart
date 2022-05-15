@@ -20,30 +20,30 @@ class SensitivityCard extends StatelessWidget {
       future: sensitivity,
       builder: (context, snapshot) {
         final sensitivity = snapshot.data;
-        late final String _label;
+        late final String label;
         if (sensitivity?.level == SensitivityLevel.none) {
-          _label = 'No sensitivity';
+          label = 'No sensitivity';
         } else if (sensitivity?.level == SensitivityLevel.mild) {
-          _label = 'Mild sensitivity';
+          label = 'Mild sensitivity';
         } else if (sensitivity?.level == SensitivityLevel.moderate) {
-          _label = 'Moderate sensitivity';
+          label = 'Moderate sensitivity';
         } else if (sensitivity?.level == SensitivityLevel.severe) {
-          _label = 'Severe sensitivity';
+          label = 'Severe sensitivity';
         } else if (sensitivity == Sensitivity(level: SensitivityLevel.unknown, source: SensitivitySource.user)) {
-          _label = 'Unknown sensitivity';
+          label = 'Unknown sensitivity';
         } else {
-          _label = 'Add to Pantry';
+          label = 'Add to Pantry';
         }
 
         return PushCard(
+          onTap: onTap,
           child: Row(
             children: [
               SensitivityIndicator(this.sensitivity),
               const SizedBox(width: 8),
-              Text(_label, style: style),
+              Text(label, style: style),
             ],
           ),
-          onTap: onTap,
         );
       },
     );

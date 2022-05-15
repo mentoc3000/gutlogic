@@ -11,7 +11,7 @@ class SeverityCard extends StatefulWidget {
   const SeverityCard({required this.severity, this.onChanged});
 
   @override
-  _SeverityCardState createState() => _SeverityCardState();
+  State<SeverityCard> createState() => _SeverityCardState();
 }
 
 class _SeverityCardState extends State<SeverityCard> {

@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/bloc_helpers.dart';
 import '../resources/firebase/analytics_service.dart';

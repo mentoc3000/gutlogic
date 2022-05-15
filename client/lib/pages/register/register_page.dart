@@ -50,8 +50,8 @@ class RegisterPageSkipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GLSecondaryButton(
-      child: const StretchedButtonContent(label: 'Continue without an account'),
       onPressed: onPressed,
+      child: const StretchedButtonContent(label: 'Continue without an account'),
     );
   }
 }

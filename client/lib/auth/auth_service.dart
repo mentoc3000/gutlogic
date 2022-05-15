@@ -24,8 +24,13 @@ abstract class AuthService {
 
   /// Deauthenticate all of the auth services in the context.
   static Future<void> deauthenticate(BuildContext context) async {
-    await context.read<AppleAuthService?>()?.deauthenticate();
-    await context.read<GoogleAuthService?>()?.deauthenticate();
+    final appleAuthService = context.read<AppleAuthService?>();
+    final googleAuthService = context.read<GoogleAuthService?>();
+
+    await Future.wait([
+      if (appleAuthService != null) appleAuthService.deauthenticate(),
+      if (googleAuthService != null) googleAuthService.deauthenticate(),
+    ]);
   }
 }
 

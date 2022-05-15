@@ -37,7 +37,7 @@ class GutLogicApp extends StatelessWidget {
             child: Stack(
               children: [
                 Container(color: GLColors.lightestGray),
-                AuthenticatedResources(child: child ?? Container(), navigatorKey: _navigatorKey),
+                AuthenticatedResources(navigatorKey: _navigatorKey, child: child ?? Container()),
                 //if (context.read<AppConfig>().isDebug) FlavorBanner(),
               ],
             ),

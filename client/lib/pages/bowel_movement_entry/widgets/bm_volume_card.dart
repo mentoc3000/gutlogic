@@ -12,7 +12,7 @@ class BMVolumeCard extends StatefulWidget {
   const BMVolumeCard({required this.volume, this.onChanged});
 
   @override
-  _BMVolumeCardState createState() => _BMVolumeCardState();
+  State<BMVolumeCard> createState() => _BMVolumeCardState();
 }
 
 class _BMVolumeCardState extends State<BMVolumeCard> {

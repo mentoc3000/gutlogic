@@ -14,6 +14,7 @@ class FabGuide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        alignment: const Alignment(1.0, 1.0),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 16, 8),
           child: Column(
@@ -31,7 +32,6 @@ class FabGuide extends StatelessWidget {
             ],
           ),
         ),
-        alignment: const Alignment(1.0, 1.0),
       ),
     );
   }

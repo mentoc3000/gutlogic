@@ -30,7 +30,7 @@ class BowelMovementEntryPage extends StatefulWidget {
   }
 
   @override
-  _BowelMovementEntryPageState createState() => _BowelMovementEntryPageState();
+  State<BowelMovementEntryPage> createState() => _BowelMovementEntryPageState();
 }
 
 class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {

@@ -11,7 +11,7 @@ class SensitivitySlider extends StatefulWidget {
   const SensitivitySlider({required this.sensitivityLevel, this.onChanged});
 
   @override
-  _SensitivitySliderState createState() => _SensitivitySliderState();
+  State<SensitivitySlider> createState() => _SensitivitySliderState();
 }
 
 class _SensitivitySliderState extends State<SensitivitySlider> {

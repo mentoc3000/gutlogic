@@ -23,9 +23,9 @@
 // SOFTWARE.
 
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math.dart' as v_math;
 
 import '../../../models/severity.dart';
+import '../../../util/math.dart' as math;
 
 typedef OnChange = void Function(Severity severity);
 
@@ -89,7 +89,7 @@ class SeveritySlider extends StatefulWidget {
   final double? width;
   final double circleDiameter;
   @override
-  _SeveritySliderState createState() => _SeveritySliderState();
+  State<SeveritySlider> createState() => _SeveritySliderState();
 }
 
 class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProviderStateMixin {
@@ -127,7 +127,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
         });
       });
     _animationValue = initValue;
-    WidgetsBinding.instance?.addPostFrameCallback(_afterLayout);
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
   }
 
   void _afterLayout(_) {
@@ -380,8 +380,8 @@ class MyPainter extends CustomPainter {
         center: Offset(x1, y),
         radius: eyeRadius,
       ),
-      v_math.radians(degree1),
-      v_math.radians(360 - wide),
+      math.radians(degree1),
+      math.radians(360 - wide),
       false,
       paint,
     );
@@ -390,8 +390,8 @@ class MyPainter extends CustomPainter {
         center: Offset(x2, y),
         radius: eyeRadius,
       ),
-      v_math.radians(degree2),
-      v_math.radians(360 - wide),
+      math.radians(degree2),
+      math.radians(360 - wide),
       false,
       paint,
     );

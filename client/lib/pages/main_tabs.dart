@@ -19,7 +19,7 @@ class MainTabs extends StatefulWidget {
   }
 
   @override
-  _MainTabsState createState() => _MainTabsState();
+  State<MainTabs> createState() => _MainTabsState();
 }
 
 class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin, RouteAware {

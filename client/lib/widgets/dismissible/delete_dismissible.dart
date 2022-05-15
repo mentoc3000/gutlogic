@@ -21,7 +21,6 @@ class DeleteDismissible extends StatelessWidget {
 
     return Dismissible(
       key: UniqueKey(),
-      child: child,
       confirmDismiss: confirmDismiss,
       direction: DismissDirection.endToStart,
       dismissThresholds: dismissThresholds,
@@ -35,6 +34,7 @@ class DeleteDismissible extends StatelessWidget {
           color: Theme.of(context).colorScheme.onError,
         ),
       ),
+      child: child,
     );
   }
 }

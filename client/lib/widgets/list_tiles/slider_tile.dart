@@ -8,7 +8,7 @@ class SliderTile extends StatefulWidget {
   const SliderTile({this.minimum = 0, this.maximum = 10, this.initial = 5});
 
   @override
-  _SliderTileState createState() => _SliderTileState();
+  State<SliderTile> createState() => _SliderTileState();
 }
 
 class _SliderTileState extends State<SliderTile> {

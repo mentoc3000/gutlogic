@@ -21,5 +21,5 @@ typedef FutureResult<T> = Future<Result<T>>;
 
 /// Execute [func] with the value of [result] if the result is not an error result.
 void maybe<T>(Result<T> result, void Function(T) func) {
-  if (result.isValue) func(result.value!);
+  if (result.isValue) func(result.value as T);
 }

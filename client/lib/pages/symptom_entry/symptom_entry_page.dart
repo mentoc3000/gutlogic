@@ -34,7 +34,7 @@ class SymptomEntryPage extends StatefulWidget {
   }
 
   @override
-  _SymptomEntryPageState createState() => _SymptomEntryPageState();
+  State<SymptomEntryPage> createState() => _SymptomEntryPageState();
 }
 
 class _SymptomEntryPageState extends State<SymptomEntryPage> {
