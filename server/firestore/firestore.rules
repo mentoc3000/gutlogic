@@ -14,5 +14,8 @@ service cloud.firestore {
     match /food_groups/{document=**} {
       allow read: if request.auth.uid != null;
     }
+    match /irritant_data/{document=**} {
+      allow read: if request.auth.uid != null;
+    }
   }
 }

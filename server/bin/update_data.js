@@ -114,7 +114,7 @@ function processIrritants(irritants) {
   // total fructan. Use fructan if it is larger than the sum of the two individuals.
   const nystose = maxConIrritant(irritants, 'Nystose');
   const kestose = maxConIrritant(irritants, 'Kestose');
-  const totalFructan = maxConIrritant(irritants, 'Fructan')
+  const totalFructan = maxConIrritant(irritants, 'Fructan');
 
   const concentrationNystose = nystose !== null ? nystose.concentration : null;
   const concentrationKestose = kestose !== null ? kestose.concentration : null;
@@ -170,8 +170,26 @@ async function replaceFirestoreCollection(writer, collection, data) {
   }
 
   for (const entry of data) {
-    writer.create(collection.doc(), entry)
+    writer.create(collection.doc(), entry);
   }
+}
+
+async function getIrritantData(db) {
+  const sql = `SELECT irritant_name,
+                      moderate_dose,
+                      high_dose
+                 FROM irritants
+                WHERE moderate_dose IS NOT NULL AND 
+                      high_dose IS NOT NULL;
+                  `;
+  const rows = await db.all(sql);
+  const data = [];
+  for (const row of rows) {
+    const name = row.irritant_name.toLowerCase();
+    const intensitySteps = [row.moderate_dose, row.high_dose];
+    data.push({ name, intensitySteps });
+  }
+  return data;
 }
 
 (async () => {
@@ -198,8 +216,7 @@ async function replaceFirestoreCollection(writer, collection, data) {
 
   await replaceFirestoreCollection(writer, firestore.collection('food_irritants'), await getIrritants(db));
   await replaceFirestoreCollection(writer, firestore.collection('food_groups'), await getFoodGroups(db));
+  await replaceFirestoreCollection(writer, firestore.collection('irritant_data'), await getIrritantData(db));
   await writer.close();
   await db.close();
-
-  console.log('Data update complete')
 })();

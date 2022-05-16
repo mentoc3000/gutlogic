@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../models/food/food.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
-import '../../../widgets/cards/food_details_card.dart';
+import '../../../widgets/cards/irritants_card.dart';
 import '../../../widgets/cards/sensitivity_card.dart';
 
 class FoodListView extends StatelessWidget {
@@ -25,7 +25,7 @@ class FoodListView extends StatelessWidget {
         sensitivity: sensitivity,
         onTap: () => addFoodToPantry(context),
       ),
-      FoodDetailsCard(food: food),
+      IrritantsCard(foodReference: food.toFoodReference()),
     ];
 
     return ListView.builder(

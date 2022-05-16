@@ -1,6 +1,7 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
+import 'package:gutlogic/models/irritant/irritant.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
 import 'package:gutlogic/resources/irritant_repository.dart';
 
@@ -13,36 +14,81 @@ const apple = {
   ],
   'names': ['apple'],
 };
+const mannitol = {
+  'name': 'mannitol',
+  'intensitySteps': [0.4, 0.5, 1.0],
+};
 
 void main() {
   group('IrritantRepository', () {
-    const collectionPath = 'food_irritants';
     late FakeFirebaseFirestore firestore;
     late IrritantRepository repository;
 
-    setUp(() async {
-      firestore = FakeFirebaseFirestore();
-      repository = IrritantRepository(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
-      await firestore.doc('$collectionPath/1234').set(apple);
+    group('get irritant', () {
+      const collectionPath = 'food_irritants';
+
+      setUp(() async {
+        firestore = FakeFirebaseFirestore();
+        repository = IrritantRepository(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
+        await firestore.doc('$collectionPath/1234').set(apple);
+      });
+
+      test('fetches irritants by food reference', () async {
+        final food = EdamamFoodReference(id: foodId, name: 'apple');
+        final irritants = await repository.ofRef(food);
+        expect(irritants!.length, 2);
+        expect(irritants.first.concentration, 0.012);
+      });
+
+      test('fetches irritants by name', () async {
+        final irritants = await repository.ofName('apple');
+        expect(irritants!.length, 2);
+        expect(irritants.first.concentration, 0.012);
+      });
+
+      test('handles food without irritant data', () async {
+        final food = EdamamFoodReference(id: 'no-info', name: 'banana');
+        final irritants = await repository.ofRef(food);
+        expect(irritants, null);
+      });
     });
 
-    test('fetches irritants by food reference', () async {
-      final food = EdamamFoodReference(id: foodId, name: 'apple');
-      final irritants = await repository.ofRef(food);
-      expect(irritants!.length, 2);
-      expect(irritants.first.concentration, 0.012);
-    });
+    group('get intensity', () {
+      setUp(() async {
+        firestore = FakeFirebaseFirestore();
+        repository = IrritantRepository(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
+        await firestore.doc('irritant_data/mannitol').set(mannitol);
+      });
 
-    test('fetches irritants by name', () async {
-      final irritants = await repository.ofName('apple');
-      expect(irritants!.length, 2);
-      expect(irritants.first.concentration, 0.012);
-    });
+      test('gets threshold', () async {
+        final irriant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
+        final intensity = await repository.intensityThresholds(irriant);
+        final thresholds = [0.0, 0.4, 0.5, 1.0];
+        expect(intensity, thresholds);
+      });
 
-    test('handles food without irritant data', () async {
-      final food = EdamamFoodReference(id: 'no-info', name: 'banana');
-      final irritants = await repository.ofRef(food);
-      expect(irritants, null);
+      test('no intensity from unknown irritant', () async {
+        final irriant = Irritant(name: 'Sorbitol', concentration: 0.003, dosePerServing: 0.9);
+        final intensity = await repository.intensityThresholds(irriant);
+        expect(intensity, null);
+      });
+
+      test('caches intensity thresholds', () async {
+        final irriant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
+        final intensity = await repository.intensityThresholds(irriant);
+        final thresholds = [0.0, 0.4, 0.5, 1.0];
+        expect(intensity, thresholds);
+
+        const mannitolModified = {
+          'name': 'mannitol',
+          'intensitySteps': [0.1, 0.2, 0.3],
+        };
+        await firestore.doc('food_irritant_data/mannitol').set(mannitolModified);
+
+        // IrritantRepository should use cached steps instead of new ones
+        final intensity2 = await repository.intensityThresholds(irriant);
+        expect(intensity2, thresholds);
+      });
     });
   });
 }
