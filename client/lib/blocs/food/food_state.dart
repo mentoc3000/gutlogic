@@ -1,6 +1,8 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/food/food.dart';
+import '../../models/irritant/irritant.dart';
 import '../../util/error_report.dart';
 import '../../util/exception_messages.dart';
 import '../bloc_helpers.dart';
@@ -19,11 +21,12 @@ class FoodLoading extends FoodState {}
 
 class FoodLoaded extends FoodState {
   final Food food;
+  final BuiltList<Irritant>? irritants;
 
-  const FoodLoaded({required this.food});
+  const FoodLoaded({required this.food, required this.irritants});
 
   @override
-  List<Object?> get props => [food];
+  List<Object?> get props => [food, irritants];
 }
 
 class FoodError extends FoodState with ErrorState, ErrorRecorder {

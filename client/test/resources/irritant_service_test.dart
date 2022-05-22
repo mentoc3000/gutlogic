@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
 import 'package:gutlogic/resources/firebase/firestore_service.dart';
-import 'package:gutlogic/resources/irritant_repository.dart';
+import 'package:gutlogic/resources/irritant_service.dart';
 
 const foodId = 'food_a1gb9ubb72c7snbuxr3weagwv0dd';
 const apple = {
@@ -20,16 +20,16 @@ const mannitol = {
 };
 
 void main() {
-  group('IrritantRepository', () {
+  group('IrritantService', () {
     late FakeFirebaseFirestore firestore;
-    late IrritantRepository repository;
+    late IrritantService repository;
 
     group('get irritant', () {
       const collectionPath = 'food_irritants';
 
       setUp(() async {
         firestore = FakeFirebaseFirestore();
-        repository = IrritantRepository(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
+        repository = IrritantService(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
         await firestore.doc('$collectionPath/1234').set(apple);
       });
 
@@ -56,7 +56,7 @@ void main() {
     group('get intensity', () {
       setUp(() async {
         firestore = FakeFirebaseFirestore();
-        repository = IrritantRepository(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
+        repository = IrritantService(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
         await firestore.doc('irritant_data/mannitol').set(mannitol);
       });
 
@@ -85,7 +85,7 @@ void main() {
         };
         await firestore.doc('food_irritant_data/mannitol').set(mannitolModified);
 
-        // IrritantRepository should use cached steps instead of new ones
+        // IrritantService should use cached steps instead of new ones
         final intensity2 = await repository.intensityThresholds(irriant);
         expect(intensity2, thresholds);
       });

@@ -63,7 +63,12 @@ class PantryEntryPage extends StatelessWidget {
       return LoadingPage();
     }
     if (state is PantryEntryLoaded) {
-      return PantryEntryListView(pantryEntry: state.pantryEntry, food: state.food, notesController: _notesController);
+      return PantryEntryListView(
+        pantryEntry: state.pantryEntry,
+        food: state.food,
+        irritants: state.irritants,
+        notesController: _notesController,
+      );
     }
     if (state is PantryEntryError) {
       return ErrorPage(message: state.message);

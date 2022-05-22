@@ -13,7 +13,7 @@ import 'package:gutlogic/resources/diary_repositories/meal_entry_repository.dart
 import 'package:gutlogic/resources/diary_repositories/symptom_entry_repository.dart';
 import 'package:gutlogic/resources/firebase/analytics_service.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
-import 'package:gutlogic/resources/irritant_repository.dart';
+import 'package:gutlogic/resources/irritant_service.dart';
 import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_repository.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
@@ -41,7 +41,7 @@ class MainTabsPageWrapper extends StatelessWidget {
   BowelMovementEntryRepository,
   FoodService,
   DiaryRepository,
-  IrritantRepository,
+  IrritantService,
   MealElementRepository,
   MealEntryRepository,
   PantryService,
@@ -66,8 +66,8 @@ void main() {
   when(foodService.streamFood(any)).thenAnswer((_) => Stream.value(food));
 
   // Mock irritant repository
-  final irritantRepository = MockIrritantRepository();
-  when(irritantRepository.ofRef(any)).thenAnswer((_) => Future.value(irritants));
+  final irritantService = MockIrritantService();
+  when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(irritants));
 
   // Mock meal entry
   final mealEntryRepository = MockMealEntryRepository();
@@ -103,7 +103,7 @@ void main() {
       RepositoryProvider<BowelMovementEntryRepository>(create: (context) => bowelMovementEntryRepository),
       RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
       RepositoryProvider<FoodService>(create: (context) => foodService),
-      RepositoryProvider<IrritantRepository>(create: (context) => irritantRepository),
+      RepositoryProvider<IrritantService>(create: (context) => irritantService),
       RepositoryProvider<MealElementRepository>(create: (context) => mealElementRepository),
       RepositoryProvider<MealEntryRepository>(create: (context) => mealEntryRepository),
       RepositoryProvider<PantryService>(create: (context) => pantryRepository),

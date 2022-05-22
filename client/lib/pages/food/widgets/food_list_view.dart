@@ -1,7 +1,9 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/food/food.dart';
+import '../../../models/irritant/irritant.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/cards/irritants_card.dart';
@@ -9,8 +11,9 @@ import '../../../widgets/cards/sensitivity_card.dart';
 
 class FoodListView extends StatelessWidget {
   final Food food;
+  final BuiltList<Irritant>? irritants;
 
-  const FoodListView({Key? key, required this.food}) : super(key: key);
+  const FoodListView({Key? key, required this.food, required this.irritants}) : super(key: key);
 
   void addFoodToPantry(BuildContext context) {
     Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food.toFoodReference()));
@@ -21,11 +24,8 @@ class FoodListView extends StatelessWidget {
     final sensitivity = Future.value(context.read<SensitivityService>().of(food.toFoodReference()));
 
     final cards = [
-      SensitivityCard(
-        sensitivity: sensitivity,
-        onTap: () => addFoodToPantry(context),
-      ),
-      IrritantsCard(foodReference: food.toFoodReference()),
+      SensitivityCard(sensitivity: sensitivity, onTap: () => addFoodToPantry(context)),
+      if (irritants != null) IrritantsCard(irritants: irritants!),
     ];
 
     return ListView.builder(

@@ -15,7 +15,7 @@ class FoodPage extends StatelessWidget {
   /// Wrap an Food page with the necessary bloc providers, given the meal entry.
   static Widget forFood(FoodReference foodReference) {
     return BlocProvider(
-      create: (context) => FoodCubit.fromContext(context)..get(foodReference),
+      create: (context) => FoodCubit.fromContext(context, foodReference: foodReference),
       child: FoodPage(),
     );
   }
@@ -45,7 +45,7 @@ class FoodPage extends StatelessWidget {
       return LoadingPage();
     }
     if (state is FoodLoaded) {
-      return FoodListView(food: state.food);
+      return FoodListView(food: state.food, irritants: state.irritants);
     }
     if (state is FoodError) {
       return ErrorPage(message: state.message);

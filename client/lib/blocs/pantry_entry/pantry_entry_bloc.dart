@@ -7,6 +7,7 @@ import '../../models/food/food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../resources/food/food_service.dart';
+import '../../resources/irritant_service.dart';
 import '../../resources/pantry_service.dart';
 import '../bloc_helpers.dart';
 import 'pantry_entry.dart';
@@ -14,11 +15,17 @@ import 'pantry_entry.dart';
 class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with StreamSubscriber {
   final PantryService repository;
   final FoodService foodService;
+  final IrritantService irritantService;
 
-  PantryEntryBloc({required this.repository, required this.foodService}) : super(PantryEntryLoading()) {
+  PantryEntryBloc({
+    required this.repository,
+    required this.foodService,
+    required this.irritantService,
+  }) : super(PantryEntryLoading()) {
     on<CreateAndStreamEntry>(_onCreateAndStreamEntry);
     on<StreamEntry>(_onStreamEntry);
-    on<Load>((event, emit) => emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: event.food)));
+    on<Load>((event, emit) =>
+        emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: event.food, irritants: event.irritants)));
     on<Delete>(_onDelete);
     on<UpdateNotes>(_onUpdateNotes, transformer: debounceTransformer);
     on<UpdateSensitivityLevel>(_onUpdateSensitivityLevel, transformer: debounceTransformer);
@@ -26,7 +33,11 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
   }
 
   static PantryEntryBloc fromContext(BuildContext context) {
-    return PantryEntryBloc(repository: context.read<PantryService>(), foodService: context.read<FoodService>());
+    return PantryEntryBloc(
+      repository: context.read<PantryService>(),
+      foodService: context.read<FoodService>(),
+      irritantService: context.read<IrritantService>(),
+    );
   }
 
   Future<void> _onCreateAndStreamEntry(CreateAndStreamEntry event, Emitter<PantryEntryState> emit) async {
@@ -47,11 +58,12 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
       emit(PantryEntryLoading());
 
       final food = await _pantryEntryFood(event.pantryEntry);
+      final irritants = await irritantService.ofRef(event.pantryEntry.foodReference);
 
-      emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: food));
+      emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: food, irritants: irritants));
 
       streamSubscription = repository.stream(event.pantryEntry).listen(
-            (pantryEntry) => add(Load(pantryEntry: pantryEntry!, food: food)),
+            (pantryEntry) => add(Load(pantryEntry: pantryEntry!, food: food, irritants: irritants)),
             onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
           );
     } catch (error, trace) {

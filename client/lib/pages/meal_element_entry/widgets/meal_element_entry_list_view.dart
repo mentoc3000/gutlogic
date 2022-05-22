@@ -1,8 +1,10 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/meal_element/meal_element.dart';
 import '../../../models/food/food.dart';
+import '../../../models/irritant/irritant.dart';
 import '../../../models/meal_element.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
@@ -14,6 +16,7 @@ import 'quantity_card.dart';
 class MealElementEntryListView extends StatelessWidget {
   final MealElement mealElement;
   final Food? food;
+  final BuiltList<Irritant>? irritants;
   final TextEditingController notesController;
   final TextEditingController amountController;
   final TextEditingController unitController;
@@ -22,6 +25,7 @@ class MealElementEntryListView extends StatelessWidget {
     Key? key,
     required this.mealElement,
     required this.food,
+    required this.irritants,
     required this.notesController,
     required this.amountController,
     required this.unitController,
@@ -49,7 +53,7 @@ class MealElementEntryListView extends StatelessWidget {
         sensitivity: mealElementSensitivity,
         onTap: () => addFoodToPantry(context),
       ),
-      if (food != null) IrritantsCard(foodReference: food!.toFoodReference()),
+      if (irritants != null) IrritantsCard(irritants: irritants!),
       NotesCard(
         controller: notesController,
         onChanged: (notes) => context.read<MealElementBloc>().add(UpdateNotes(notes)),

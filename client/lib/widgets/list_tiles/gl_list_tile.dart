@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class GLListTile extends StatelessWidget {
   final String heading;
-  final String? subheading;
+  final Widget? subtitle;
   final Widget? leading;
   final VoidCallback? onTap;
   final bool dense;
@@ -10,7 +10,7 @@ class GLListTile extends StatelessWidget {
 
   const GLListTile({
     required this.heading,
-    this.subheading,
+    this.subtitle,
     this.leading,
     this.trailing,
     this.onTap,
@@ -20,7 +20,6 @@ class GLListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = Text(heading);
-    final subtitle = subheading?.isNotEmpty == true ? Text(subheading!) : null;
 
     return ListTile(
       title: title,

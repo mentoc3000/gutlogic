@@ -1,6 +1,6 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../models/food_group.dart';
 import '../../util/error_report.dart';
 import '../../util/exception_messages.dart';
 import '../bloc_helpers.dart';
@@ -20,12 +20,12 @@ class FoodGroupsLoading extends FoodGroupsState {
 }
 
 class FoodGroupsLoaded extends FoodGroupsState {
-  final Iterable<FoodGroup> foodGroups;
+  final BuiltSet<String> groups;
 
-  const FoodGroupsLoaded({required this.foodGroups});
+  const FoodGroupsLoaded({required this.groups});
 
   @override
-  List<Object?> get props => [foodGroups];
+  List<Object?> get props => [groups];
 }
 
 class FoodGroupsError extends FoodGroupsState with ErrorState, ErrorRecorder {

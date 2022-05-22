@@ -9,7 +9,7 @@ import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_entry.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
-import 'package:gutlogic/resources/irritant_repository.dart';
+import 'package:gutlogic/resources/irritant_service.dart';
 import 'package:gutlogic/resources/sensitivity/heuristic_sensitivity_prediction_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -29,11 +29,11 @@ final mildU = Sensitivity(level: SensitivityLevel.mild, source: SensitivitySourc
 final modU = Sensitivity(level: SensitivityLevel.moderate, source: SensitivitySource.user);
 final sevU = Sensitivity(level: SensitivityLevel.severe, source: SensitivitySource.user);
 
-@GenerateMocks([IrritantRepository])
+@GenerateMocks([IrritantService])
 void main() {
   group('HeuristicSensitivityPredictionService', () {
     late HeuristicSensitivityPredictionService predictor;
-    late MockIrritantRepository irritantRepository;
+    late MockIrritantService irritantService;
     const predictionDelay = Duration(milliseconds: 100);
 
     /// Perform setup prior to each test
@@ -43,19 +43,19 @@ void main() {
       required List<Sensitivity?> sensitivities,
       required List<List<double?>> concentrations,
     }) async {
-      irritantRepository = MockIrritantRepository();
-      when(irritantRepository.ofRef(any)).thenAnswer((_) => Future.value(null));
+      irritantService = MockIrritantService();
+      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(null));
 
       final sensitivityLevels = sensitivities.map((s) => s?.level);
       final mockData = MockData.from(sensitivityLevels: sensitivityLevels, concentrations: concentrations);
       for (final foodAndIrritants in mockData.foodsAndIrritants.entries) {
-        when(irritantRepository.ofRef(foodAndIrritants.key.toFoodReference()))
+        when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       final sensitivityMapStream = Stream.value(mockData.sensitivityMap);
 
       predictor = HeuristicSensitivityPredictionService(
-        irritantRepository: irritantRepository,
+        irritantService: irritantService,
         sensitivityMapStream: sensitivityMapStream,
       );
     }
@@ -67,7 +67,7 @@ void main() {
           Irritant(name: irritantName(i), concentration: concentrations[i], dosePerServing: concentrations[i])
       ].build();
       final edamamFood = EdamamFood(id: uniqueStr, name: uniqueStr);
-      when(irritantRepository.ofRef(edamamFood.toFoodReference())).thenAnswer((_) => Future.value(irritants));
+      when(irritantService.ofRef(edamamFood.toFoodReference())).thenAnswer((_) => Future.value(irritants));
       return edamamFood.toFoodReference();
     }
 
@@ -152,13 +152,13 @@ void main() {
     });
 
     test('added sensitivities update prediction', () async {
-      irritantRepository = MockIrritantRepository();
-      when(irritantRepository.ofRef(any)).thenAnswer((_) => Future.value(null));
+      irritantService = MockIrritantService();
+      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(null));
 
       final streamController = StreamController<BuiltMap<FoodReference, Sensitivity>>();
 
       predictor = HeuristicSensitivityPredictionService(
-        irritantRepository: irritantRepository,
+        irritantService: irritantService,
         sensitivityMapStream: streamController.stream,
       );
 
@@ -169,7 +169,7 @@ void main() {
       final sensitivityLevels = sensitivities.map((s) => s.level);
       final mockData = MockData.from(sensitivityLevels: sensitivityLevels, concentrations: concentrations);
       for (final foodAndIrritants in mockData.foodsAndIrritants.entries) {
-        when(irritantRepository.ofRef(foodAndIrritants.key.toFoodReference()))
+        when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);
@@ -184,7 +184,7 @@ void main() {
       final updatedMockData =
           MockData.from(sensitivityLevels: updatedSensitivityLevels, concentrations: updatedConcentrations);
       for (final foodAndIrritants in updatedMockData.foodsAndIrritants.entries) {
-        when(irritantRepository.ofRef(foodAndIrritants.key.toFoodReference()))
+        when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       streamController.add(updatedMockData.sensitivityMap);
@@ -193,13 +193,13 @@ void main() {
     });
 
     test('removed sensitivities update prediction', () async {
-      irritantRepository = MockIrritantRepository();
-      when(irritantRepository.ofRef(any)).thenAnswer((_) => Future.value(null));
+      irritantService = MockIrritantService();
+      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(null));
 
       final streamController = StreamController<BuiltMap<FoodReference, Sensitivity>>();
 
       predictor = HeuristicSensitivityPredictionService(
-        irritantRepository: irritantRepository,
+        irritantService: irritantService,
         sensitivityMapStream: streamController.stream,
       );
 
@@ -210,7 +210,7 @@ void main() {
       final sensitivityLevels = sensitivities.map((s) => s.level);
       final mockData = MockData.from(sensitivityLevels: sensitivityLevels, concentrations: concentrations);
       for (final foodAndIrritants in mockData.foodsAndIrritants.entries) {
-        when(irritantRepository.ofRef(foodAndIrritants.key.toFoodReference()))
+        when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);
@@ -230,13 +230,13 @@ void main() {
     });
 
     test('updated sensitivities update prediction', () async {
-      irritantRepository = MockIrritantRepository();
-      when(irritantRepository.ofRef(any)).thenAnswer((_) => Future.value(null));
+      irritantService = MockIrritantService();
+      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(null));
 
       final streamController = StreamController<BuiltMap<FoodReference, Sensitivity>>();
 
       predictor = HeuristicSensitivityPredictionService(
-        irritantRepository: irritantRepository,
+        irritantService: irritantService,
         sensitivityMapStream: streamController.stream,
       );
 
@@ -247,7 +247,7 @@ void main() {
       final sensitivityLevels = sensitivities.map((s) => s.level);
       final mockData = MockData.from(sensitivityLevels: sensitivityLevels, concentrations: concentrations);
       for (final foodAndIrritants in mockData.foodsAndIrritants.entries) {
-        when(irritantRepository.ofRef(foodAndIrritants.key.toFoodReference()))
+        when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);

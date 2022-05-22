@@ -8,12 +8,12 @@ import '../../models/irritant/irritant.dart';
 import '../../models/sensitivity/sensitivity.dart';
 import '../../models/sensitivity/sensitivity_level.dart';
 import '../../models/sensitivity/sensitivity_source.dart';
-import '../irritant_repository.dart';
+import '../irritant_service.dart';
 import 'models/reaction.dart';
 import 'models/sensitivity_profile.dart';
 
 class HeuristicSensitivityPredictionService {
-  final IrritantRepository irritantRepository;
+  final IrritantService irritantService;
   late final BehaviorSubject<SensitivityProfile> _behaviorSubject;
   SensitivityProfile get sensitivityProfile => _behaviorSubject.valueOrNull ?? SensitivityProfile.unknown();
 
@@ -21,7 +21,7 @@ class HeuristicSensitivityPredictionService {
   final Map<FoodReference, Map<String, Reaction>> _reactionCache = <FoodReference, Map<String, Reaction>>{};
 
   HeuristicSensitivityPredictionService({
-    required this.irritantRepository,
+    required this.irritantService,
     required Stream<BuiltMap<FoodReference, Sensitivity>> sensitivityMapStream,
   }) {
     _behaviorSubject = BehaviorSubject();
@@ -43,7 +43,7 @@ class HeuristicSensitivityPredictionService {
     // Add new or updated food references
     final upsertedFoodRefs =
         latestSensitivityEntries.entries.where((e) => _sensitivityEntries[e.key] != e.value).map((e) => e.key);
-    final irritants = await Future.wait(upsertedFoodRefs.map(irritantRepository.ofRef));
+    final irritants = await Future.wait(upsertedFoodRefs.map(irritantService.ofRef));
     final irritantsMap = Map.fromIterables(upsertedFoodRefs, irritants);
     final reactionMaps = irritantsMap.entries.map(
         (entry) => getReactions(irritants: entry.value, sensitivityLevel: latestSensitivityEntries[entry.key]!.level));
@@ -65,7 +65,7 @@ class HeuristicSensitivityPredictionService {
   }
 
   Future<Sensitivity> predict(FoodReference foodReference) async {
-    final irritants = await irritantRepository.ofRef(foodReference);
+    final irritants = await irritantService.ofRef(foodReference);
     final sensitivityLevel =
         irritants == null ? SensitivityLevel.unknown : sensitivityProfile.evaluateIrritants(irritants);
     return Sensitivity(level: sensitivityLevel, source: SensitivitySource.prediction);

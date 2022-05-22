@@ -1,20 +1,30 @@
-import '../models/food_group.dart';
+import 'package:built_collection/built_collection.dart';
+
+import '../models/food_group_entry.dart';
 import '../models/serializers.dart';
 import 'firebase/firestore_repository.dart';
 import 'firebase/firestore_service.dart';
+
+typedef FoodGroups = BuiltMap<String, BuiltList<FoodGroupEntry>>;
 
 class FoodGroupsRepository with FirestoreRepository {
   FoodGroupsRepository({required FirestoreService firestoreService}) {
     this.firestoreService = firestoreService;
   }
 
-  // TODO: change Iterable to List
-  Future<Iterable<FoodGroup>> all() async {
-    return firestoreService.foodGroupsCollection.get().then(deserialize);
+  Future<BuiltSet<String>> groups() async {
+    final foodGroupEntries = await firestoreService.foodGroupsCollection.get().then(deserialize);
+    return foodGroupEntries.map((e) => e.group).toBuiltSet();
   }
 
-  static Iterable<FoodGroup> deserialize(UntypedQuerySnapshot snapshot) {
-    if (snapshot.docs.isEmpty) return <FoodGroup>[];
-    return snapshot.docs.map((s) => serializers.deserializeWith(FoodGroup.serializer, s.data()) as FoodGroup);
+  Future<BuiltSet<FoodGroupEntry>> foods({required String group}) async {
+    final foodGroupEntries =
+        await firestoreService.foodGroupsCollection.where('group', isEqualTo: group).get().then(deserialize);
+    return foodGroupEntries.toBuiltSet();
+  }
+
+  static Iterable<FoodGroupEntry> deserialize(UntypedQuerySnapshot snapshot) {
+    if (snapshot.docs.isEmpty) return <FoodGroupEntry>[];
+    return snapshot.docs.map((s) => serializers.deserializeWith(FoodGroupEntry.serializer, s.data()) as FoodGroupEntry);
   }
 }

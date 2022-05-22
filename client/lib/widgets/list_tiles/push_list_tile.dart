@@ -4,7 +4,7 @@ import 'gl_list_tile.dart';
 
 class PushListTile extends StatelessWidget {
   final String heading;
-  final String? subheading;
+  final Widget? subtitle;
   final Widget? leading;
   final Widget? trailing;
   final VoidCallback? onTap;
@@ -12,7 +12,7 @@ class PushListTile extends StatelessWidget {
   const PushListTile({
     Key? key,
     required this.heading,
-    this.subheading,
+    this.subtitle,
     this.leading,
     this.trailing,
     this.onTap,
@@ -22,7 +22,7 @@ class PushListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GLListTile(
       heading: heading,
-      subheading: subheading,
+      subtitle: subtitle,
       leading: leading,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

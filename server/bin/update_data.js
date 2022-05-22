@@ -39,7 +39,7 @@ async function selectFoodNameMap(db) {
   return multimap(await db.all(sql), keyfunc, valfunc);
 }
 
-// Returns a new multi-map of { name, concentration, dosePerServing } values keyed by food ID.
+/// Returns a new multi-map of { name, concentration, dosePerServing } values keyed by food ID.
 async function selectIrritantMap(db) {
   const sql = `
 SELECT
@@ -151,6 +151,7 @@ async function getIrritants(db) {
   return Array.from(irritantMap.keys()).map(createIrritantEntry);
 }
 
+/// Food Groups data, version 1
 async function getFoodGroups(db) {
   const sql = 'SELECT * FROM food_groups';
 
@@ -161,6 +162,83 @@ async function getFoodGroups(db) {
 
   // flatten the food reference multi-map into a list of { name, foodRefs } objects
   return Array.from(groups.entries()).map(entry => ({ name: entry[0], foodRefs: entry[1] }));
+}
+
+/// Create an object with irritant name properties and dose per serving values
+function processIrritantDoses(irritants) {
+  const processedIrritants = {};
+
+  const simpleIrritantNames = ['Fructose', 'Sorbitol', 'Mannitol', 'Lactose'];
+  simpleIrritantNames.forEach((i) => {
+    if (i in irritants && irritants[i] !== null) {
+      processedIrritants[i] = irritants[i];
+    }
+  });
+
+  // Galacto-oligosaccharides (GOS)
+  // Raffinose and stachyose are the two GOS irritants for which we have data. GOS is the
+  // sum of these two, if at least one has data.
+  if ('Raffinose' in irritants || 'Stachyose' in irritants) {
+    const gos = irritants.Raffinose + irritants.Stachyose;
+    if (gos !== null) {
+      processedIrritants['GOS'] = gos;
+    }
+  }
+
+  // Fructo-oligosaccharides (fructan)
+  // Kestose and nystose are two fructans for which we have data, but we also have
+  // total fructan. Use fructan if it is larger than the sum of the two individuals.
+  var totalFructan = null;
+  if ('Fructan' in irritants) {
+    totalFructan = irritants.Fructan;
+  }
+
+  var sumFructan = null;
+  if ('Kestose' in irritants) {
+    sumFructan += irritants.Kestose;
+  }
+  if ('Nystose' in irritants) {
+    sumFructan += irritants.Nystose;
+  }
+
+  const fructan = totalFructan > sumFructan ? totalFructan : sumFructan;
+  if (fructan !== null) {
+    processedIrritants['Fructan'] = fructan;
+  }
+
+  return processedIrritants;
+}
+
+/// Food Groups data, version 2
+async function getFoodGroups2(db) {
+  const sql = `
+SELECT food_group_name,
+       e.edamam_id as edamam_id,
+       food_name,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Excess Fructose' THEN ic.concentration ELSE NULL END) AS Fructose,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Mannitol' THEN ic.concentration ELSE NULL END) AS Mannitol,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Sorbitol' THEN ic.concentration ELSE NULL END) AS Sorbitol,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Lactose' THEN ic.concentration ELSE NULL END) AS Lactose,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Raffinose' THEN ic.concentration ELSE NULL END) AS Raffinose,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Stachyose' THEN ic.concentration ELSE NULL END) AS Stachyose,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Nystose' THEN ic.concentration ELSE NULL END) AS Nystose,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Kestose' THEN ic.concentration ELSE NULL END) AS Kestose,
+       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Fructan' THEN ic.concentration ELSE NULL END) AS Fructan
+  FROM food_groups AS fg
+       LEFT OUTER JOIN
+       edamam AS e ON fg.edamam_id = e.edamam_id
+       LEFT OUTER JOIN
+       irritant_content AS ic ON e.food_id = ic.food_id
+       JOIN
+       foods AS f ON f.food_id = ic.food_id
+ GROUP BY ic.food_id;
+`;
+
+  const toFoodRef = (row) => ({ '$': 'EdamamFoodReference', 'id': row.edamam_id, 'name': row.food_name });
+
+  const rows = await db.all(sql);
+
+  return rows.map(row => ({ group: row.food_group_name, foodRef: toFoodRef(row), doses: processIrritantDoses(row) }));
 }
 
 // Replace all of the documents in the Firestore [collection] with the entries in the [data] array using the provided BulkWriter [writer].
@@ -175,7 +253,7 @@ async function replaceFirestoreCollection(writer, collection, data) {
 }
 
 async function getIrritantData(db) {
-  const sql = `SELECT irritant_name,
+  const sql = `SELECT display_name,
                       moderate_dose,
                       high_dose
                  FROM irritants
@@ -185,7 +263,7 @@ async function getIrritantData(db) {
   const rows = await db.all(sql);
   const data = [];
   for (const row of rows) {
-    const name = row.irritant_name.toLowerCase();
+    const name = row.display_name.toLowerCase();
     const intensitySteps = [row.moderate_dose, row.high_dose];
     data.push({ name, intensitySteps });
   }
@@ -216,6 +294,7 @@ async function getIrritantData(db) {
 
   await replaceFirestoreCollection(writer, firestore.collection('food_irritants'), await getIrritants(db));
   await replaceFirestoreCollection(writer, firestore.collection('food_groups'), await getFoodGroups(db));
+  await replaceFirestoreCollection(writer, firestore.collection('food_groups2'), await getFoodGroups2(db));
   await replaceFirestoreCollection(writer, firestore.collection('irritant_data'), await getIrritantData(db));
   await writer.close();
   await db.close();

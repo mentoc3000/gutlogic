@@ -5,25 +5,43 @@ import 'package:gutlogic/resources/food_group_repository.dart';
 
 void main() {
   group('FoodGroupsRepository', () {
-    const collectionName = 'food_groups';
-    final foodGroup = {
-      'name': 'Vegetables',
-      'foodRefs': [
-        {'\$': 'EdamamFoodReference', 'name': 'Green Beans', 'id': 'food1'},
-        {'\$': 'EdamamFoodReference', 'name': 'Lettuce', 'id': 'food2'},
-      ]
-    };
+    const collectionName = 'food_groups2';
+    late FoodGroupsRepository repository;
+    final foodGroupEntries = [
+      {
+        'foodRef': {'\$': 'EdamamFoodReference', 'name': 'Green Beans', 'id': 'food1'},
+        'group': 'Vegetables',
+        'doses': <String, double>{}
+      },
+      {
+        'foodRef': {'\$': 'EdamamFoodReference', 'name': 'Cherry', 'id': 'food2'},
+        'group': 'Fruits',
+        'doses': <String, double>{},
+      }
+    ];
 
-    test('description', () async {
+    setUp(() async {
       final firestore = FakeFirebaseFirestore();
-      final repository =
-          FoodGroupsRepository(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
+      repository = FoodGroupsRepository(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
 
-      await firestore.doc('$collectionName/123').set(foodGroup);
+      var idx = 0;
+      for (Map<String, dynamic> foodGroupEntry in foodGroupEntries) {
+        await firestore.doc('$collectionName/$idx').set(foodGroupEntry);
+        idx++;
+      }
       await Future.delayed(Duration.zero);
+    });
 
-      final groups = await repository.all();
-      await expectLater(groups.first.name, 'Vegetables');
+    test('groups', () async {
+      final groups = await repository.groups();
+      expect(groups.first, 'Vegetables');
+      expect(groups.length, 2);
+    });
+
+    test('foods', () async {
+      final foods = await repository.foods(group: 'Fruits');
+      expect(foods.length, 1);
+      expect(foods.first.foodRef.name, 'Cherry');
     });
   });
 }

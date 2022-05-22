@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
 
@@ -10,10 +11,10 @@ import '../models/serializers.dart';
 import 'firebase/firestore_repository.dart';
 import 'firebase/firestore_service.dart';
 
-class IrritantRepository with FirestoreRepository {
+class IrritantService with FirestoreRepository {
   final Map<String, BuiltList<double>?> _intensityThresholdCache = {};
 
-  IrritantRepository({required FirestoreService firestoreService}) {
+  IrritantService({required FirestoreService firestoreService}) {
     this.firestoreService = firestoreService;
   }
 
@@ -32,7 +33,7 @@ class IrritantRepository with FirestoreRepository {
     return foodIrritants.irritants;
   }
 
-  /// Does thresholds at which the intensity increases
+  /// Dose thresholds at which the intensity increases
   Future<BuiltList<double>?> intensityThresholds(Irritant irritant) async {
     // Get steps from cache, if available
     late final BuiltList<double>? thresholds;
@@ -55,5 +56,20 @@ class IrritantRepository with FirestoreRepository {
     }
 
     return thresholds;
+  }
+
+  Future<int?> maxIntensity(Iterable<Irritant>? irritants) async {
+    if (irritants == null) return null;
+
+    var maxIntensity = 0;
+    for (var irritant in irritants) {
+      final thresholds = await intensityThresholds(irritant);
+      if (thresholds == null) continue;
+      final intensity = thresholds.map((t) => irritant.dosePerServing > t).fold<int>(0, (acc, tf) => acc += tf ? 1 : 0);
+      if (intensity > maxIntensity) {
+        maxIntensity = max(maxIntensity, intensity);
+      }
+    }
+    return maxIntensity;
   }
 }

@@ -1,16 +1,22 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../models/food_group.dart';
-import 'food_group_list_tile.dart';
+import '../../../routes/routes.dart';
+import '../../../widgets/list_tiles/push_list_tile.dart';
 
 class FoodGroupsList extends StatelessWidget {
-  final Iterable<FoodGroup> foodGroups;
-  const FoodGroupsList({Key? key, required this.foodGroups}) : super(key: key);
+  final BuiltSet<String> groups;
+  const FoodGroupsList({Key? key, required this.groups}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final sortedGroups = foodGroups.toList()..sort((a, b) => a.name.compareTo(b.name));
-    final tiles = sortedGroups.map((e) => FoodGroupListTile(foodGroup: e)).toList();
+    final sortedGroups = groups.toList()..sort();
+    final tiles = sortedGroups.map((name) {
+      return PushListTile(
+        heading: name,
+        onTap: () => Navigator.of(context).push(Routes.of(context).createFoodGroupRoute(name: name)),
+      );
+    }).toList();
     return ListView(children: tiles);
   }
 }

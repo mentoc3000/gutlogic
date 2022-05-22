@@ -56,8 +56,11 @@ void main() {
 
   group('MealElementPage', () {
     testWidgets('loads entry', (WidgetTester tester) async {
-      whenListen(mealElementBloc, Stream.value(MealElementLoaded(mealElement: mealElement)),
-          initialState: MealElementLoading());
+      whenListen(
+        mealElementBloc,
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, irritants: null)),
+        initialState: MealElementLoading(),
+      );
 
       await tester.pumpWidget(mealElementPage);
       await tester.pumpAndSettle();
@@ -79,7 +82,11 @@ void main() {
 
     testWidgets('shows error', (WidgetTester tester) async {
       const message = 'Oh no! Something TERRIBLE happened!';
-      whenListen(mealElementBloc, Stream.value(MealElementError(message: message)), initialState: MealElementLoading());
+      whenListen(
+        mealElementBloc,
+        Stream.value(MealElementError(message: message)),
+        initialState: MealElementLoading(),
+      );
 
       await tester.pumpWidget(mealElementPage);
       await tester.pumpAndSettle();
@@ -89,8 +96,11 @@ void main() {
     });
 
     testWidgets('updates quantity', (WidgetTester tester) async {
-      whenListen(mealElementBloc, Stream.value(MealElementLoaded(mealElement: mealElement)),
-          initialState: MealElementLoading());
+      whenListen(
+        mealElementBloc,
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, irritants: null)),
+        initialState: MealElementLoading(),
+      );
 
       await tester.pumpWidget(mealElementPage);
       await tester.pumpAndSettle();
@@ -104,8 +114,11 @@ void main() {
     });
 
     testWidgets('updates notes', (WidgetTester tester) async {
-      whenListen(mealElementBloc, Stream.value(MealElementLoaded(mealElement: mealElement)),
-          initialState: MealElementLoading());
+      whenListen(
+        mealElementBloc,
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, irritants: null)),
+        initialState: MealElementLoading(),
+      );
 
       await tester.pumpWidget(mealElementPage);
       await tester.pumpAndSettle();

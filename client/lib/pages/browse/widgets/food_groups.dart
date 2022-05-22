@@ -22,7 +22,7 @@ class FoodGroups extends StatelessWidget {
       return LoadingPage();
     }
     if (state is FoodGroupsLoaded) {
-      return FoodGroupsList(foodGroups: state.foodGroups);
+      return FoodGroupsList(groups: state.groups);
     }
     if (state is FoodGroupsError) {
       return ErrorPage(message: state.message);

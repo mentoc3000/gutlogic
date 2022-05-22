@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/diary_entry/bowel_movement_entry.dart';
 import '../models/diary_entry/meal_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
-import '../models/food_group.dart';
 import '../models/food_reference/food_reference.dart';
 import '../models/meal_element.dart';
 import '../models/pantry/pantry_entry.dart';
@@ -169,7 +168,7 @@ class Routes {
     return MaterialPageRoute(builder: (context) => FoodPage.forFood(foodReference));
   }
 
-  Route createFoodGroupRoute(FoodGroup foodGroup) {
-    return MaterialPageRoute(builder: (context) => FoodGroupPage(foodGroup: foodGroup));
+  Route createFoodGroupRoute({required String name}) {
+    return MaterialPageRoute(builder: (context) => FoodGroupPage(group: name));
   }
 }
