@@ -3,10 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../resources/food_group_repository.dart';
-import '../bloc_helpers.dart';
 import 'food_groups_state.dart';
 
-class FoodGroupsCubit extends Cubit<FoodGroupsState> with StreamSubscriber {
+class FoodGroupsCubit extends Cubit<FoodGroupsState> {
   FoodGroupsCubit({required FoodGroupsRepository repository}) : super(const FoodGroupsLoading()) {
     repository.groups().then(_onData, onError: _onError);
   }

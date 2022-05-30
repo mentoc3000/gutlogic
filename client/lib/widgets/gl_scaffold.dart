@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import '../style/gl_theme.dart';
 
 class GLScaffold extends StatelessWidget {
   final AppBar? appBar;
@@ -19,24 +16,8 @@ class GLScaffold extends StatelessWidget {
     this.backgroundColor,
   }) : super(key: key);
 
-  /// Correct the status bar brightness when there is no app bar.
-  /// Otherwise status bar is incorrectly colored when on login screen on physical iOS devices
-  void setStatusBarBrightness() {
-    Brightness brightness;
-    if (appBar == null) {
-      brightness = brightnessOnBackground;
-    } else {
-      brightness = brightnessOnPrimary;
-    }
-
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarBrightness: brightness));
-  }
-
   @override
   Widget build(BuildContext context) {
-    // TODO: improve status bar timing
-    setStatusBarBrightness();
-
     return Scaffold(
       appBar: appBar,
       body: SafeArea(child: body),

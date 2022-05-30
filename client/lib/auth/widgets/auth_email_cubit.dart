@@ -11,14 +11,14 @@ export 'auth_email_state.dart';
 
 /// Handles authentication via email links.
 class AuthEmailCubit extends Cubit<AuthEmailState> {
-  final Function(Authentication) onAuthentication;
+  final void Function(Authentication) onAuthentication;
 
-  StreamSubscription? _pendingAuthenticationSubscription;
+  StreamSubscription<Authentication>? _pendingAuthenticationSubscription;
 
   AuthEmailCubit({required this.onAuthentication}) : super(const AuthEmailInitial());
 
   static BlocProvider<AuthEmailCubit> provider({
-    required Function(Authentication) onAuthentication,
+    required void Function(Authentication) onAuthentication,
     required Widget child,
   }) {
     return BlocProvider<AuthEmailCubit>(
@@ -46,11 +46,8 @@ class AuthEmailCubit extends Cubit<AuthEmailState> {
   void cancel() {
     if (state is! AuthEmailAwaitingLink) return;
 
-    if (_pendingAuthenticationSubscription != null) {
-      // TODO use unawaited(_pendingAuthenticationSubscription?.cancel()) in Flutter 2.10
-      unawaited(_pendingAuthenticationSubscription!.cancel());
-      _pendingAuthenticationSubscription = null;
-    }
+    unawaited(_pendingAuthenticationSubscription?.cancel());
+    _pendingAuthenticationSubscription = null;
 
     emit(const AuthEmailInitial());
   }

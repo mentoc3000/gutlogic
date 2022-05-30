@@ -35,8 +35,9 @@ class PantrySortError extends PantrySortState with ErrorState {
 
   PantrySortError({required this.message, required PantrySort sort}) : super(sort: sort);
 
-  factory PantrySortError.from({required ErrorState errorState, required PantrySort sort}) =>
-      PantrySortError(message: errorState.message, sort: sort);
+  factory PantrySortError.from({required ErrorState errorState, required PantrySort sort}) {
+    return PantrySortError(message: errorState.message, sort: sort);
+  }
 
   @override
   List<Object?> get props => [message, sort];

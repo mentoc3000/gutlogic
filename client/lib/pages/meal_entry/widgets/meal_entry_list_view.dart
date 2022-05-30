@@ -58,8 +58,9 @@ class MealEntryListView extends StatelessWidget {
     final cards = buildCards(context, mealEntry);
     return ListView.builder(
       itemCount: cards.length,
-      itemBuilder: (BuildContext context, int index) =>
-          Padding(padding: const EdgeInsets.all(1.0), child: cards[index]),
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(padding: const EdgeInsets.all(1.0), child: cards[index]);
+      },
       padding: const EdgeInsets.all(0.0),
     );
   }

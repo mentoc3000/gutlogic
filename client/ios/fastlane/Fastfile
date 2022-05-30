@@ -5,6 +5,10 @@ ENV["GOOGLE_AUTH_SUPPRESS_CREDENTIALS_WARNINGS"] = "true"
 
 setup_ci()
 
+before_all do |lane|
+  update_fastlane
+end
+
 lane :get_app_store_connect_api_key do
   
   ensure_env_vars(

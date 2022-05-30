@@ -11,7 +11,9 @@ import 'bowel_movement_entry_event.dart';
 import 'bowel_movement_entry_state.dart';
 
 class BowelMovementEntryBloc extends Bloc<BowelMovementEntryEvent, BowelMovementEntryState>
-    with StreamSubscriber, DiaryEntryMapper {
+    with
+        StreamSubscriber<BowelMovementEntry?, BowelMovementEntryState>,
+        DiaryEntryMapper<BowelMovementEntry?, BowelMovementEntryState> {
   final BowelMovementEntryRepository repository;
 
   BowelMovementEntryBloc({required this.repository}) : super(BowelMovementEntryLoading()) {
@@ -37,11 +39,11 @@ class BowelMovementEntryBloc extends Bloc<BowelMovementEntryEvent, BowelMovement
     try {
       emit(BowelMovementEntryLoaded(event.diaryEntry));
 
-      streamSubscription = timelineRepository.stream(event.diaryEntry).listen(
+      streamSubscription = timelineRepository.stream(event.diaryEntry).cast<BowelMovementEntry>().listen(
         (d) {
-          add(LoadBowelMovementEntry(d as BowelMovementEntry));
+          add(LoadBowelMovementEntry(d));
         },
-        onError: (e, StackTrace t) {
+        onError: (dynamic e, StackTrace t) {
           add(ThrowBowelMovementEntryError.fromError(error: e, trace: t));
         },
       );

@@ -8,8 +8,9 @@ class ShrinkWrappedButtonContent extends StatelessWidget {
 
   const ShrinkWrappedButtonContent({Key? key, required this.label, this.leader}) : super(key: key);
 
-  factory ShrinkWrappedButtonContent.icon({Key? key, required String label, required IconData iconData}) =>
-      ShrinkWrappedButtonContent(key: key, label: label, leader: Icon(iconData));
+  factory ShrinkWrappedButtonContent.icon({Key? key, required String label, required IconData iconData}) {
+    return ShrinkWrappedButtonContent(key: key, label: label, leader: Icon(iconData));
+  }
 
   @override
   Widget build(BuildContext context) {

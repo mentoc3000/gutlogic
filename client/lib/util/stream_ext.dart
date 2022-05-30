@@ -5,12 +5,12 @@ extension StreamExtensions<T> on Stream<T> {
   Future<T> next() {
     final completer = Completer<T>();
 
-    late final StreamSubscription subscription;
+    late final StreamSubscription<T> subscription;
 
     subscription = listen((data) {
       completer.complete(data);
       subscription.cancel();
-    }, onError: (dynamic error, StackTrace trace) {
+    }, onError: (Object error, StackTrace trace) {
       completer.completeError(error, trace);
       subscription.cancel();
     }, onDone: () {

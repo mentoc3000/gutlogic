@@ -60,14 +60,15 @@ class PantryPage extends StatelessWidget {
       context: context,
       delegate: PantrySearchDelegate(
         pantryBloc: pantryBloc,
-        onSelect: (pantryEntry) =>
-            Navigator.push(context, Routes.of(context).createPantryEntryPageRoute(pantryEntry: pantryEntry)),
+        onSelect: (pantryEntry) {
+          Navigator.push(context, Routes.of(context).createPantryEntryPageRoute(pantryEntry: pantryEntry));
+        },
       ),
     );
   }
 
   void showPantryFilter(BuildContext context) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (_) {
         return PantryFilterWidget(pantryFilterCubit: context.read<PantryFilterCubit>());

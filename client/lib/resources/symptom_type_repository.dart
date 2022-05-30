@@ -30,8 +30,9 @@ class SymptomTypeRepository implements SearchableRepository<SymptomType> {
     if (query.isEmpty) {
       return fetchAll();
     }
-    return items.rebuild((ListBuilder<SymptomType> b) =>
-        b..where((SymptomType f) => f.queryText().toLowerCase().contains(query.toLowerCase())));
+    return items.rebuild((ListBuilder<SymptomType> b) {
+      return b..where((SymptomType f) => f.queryText().toLowerCase().contains(query.toLowerCase()));
+    });
   }
 
   Future<SymptomType> fetchItem(String id) async {

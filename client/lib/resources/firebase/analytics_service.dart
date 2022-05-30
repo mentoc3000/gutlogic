@@ -25,7 +25,7 @@ class AnalyticsService {
 
   // NAVIGATION
 
-  void subscribeToRoute(RouteAware routeAware, PageRoute route) => _observer?.subscribe(routeAware, route);
+  void subscribeToRoute(RouteAware routeAware, PageRoute<Widget> route) => _observer?.subscribe(routeAware, route);
 
   void unsubscribeFromRoute(RouteAware routeAware) => _observer?.unsubscribe(routeAware);
 

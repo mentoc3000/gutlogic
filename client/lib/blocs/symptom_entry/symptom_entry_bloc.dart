@@ -10,7 +10,8 @@ import '../diary_entry/diary_entry.dart';
 import 'symptom_entry_event.dart';
 import 'symptom_entry_state.dart';
 
-class SymptomEntryBloc extends Bloc<SymptomEntryEvent, SymptomEntryState> with StreamSubscriber, DiaryEntryMapper {
+class SymptomEntryBloc extends Bloc<SymptomEntryEvent, SymptomEntryState>
+    with StreamSubscriber<SymptomEntry?, SymptomEntryState>, DiaryEntryMapper<SymptomEntry?, SymptomEntryState> {
   final SymptomEntryRepository repository;
 
   SymptomEntryBloc({required this.repository}) : super(SymptomEntryLoading()) {
@@ -37,10 +38,14 @@ class SymptomEntryBloc extends Bloc<SymptomEntryEvent, SymptomEntryState> with S
   void _onStream(StreamSymptomEntry event, Emitter<SymptomEntryState> emit) {
     try {
       emit(SymptomEntryLoaded(event.diaryEntry));
-      streamSubscription = timelineRepository.stream(event.diaryEntry).listen(
-            (d) => add(LoadSymptomEntry(d as SymptomEntry)),
-            onError: (error, StackTrace trace) => add(ThrowSymptomEntryError.fromError(error: error, trace: trace)),
-          );
+      streamSubscription = timelineRepository.stream(event.diaryEntry).cast<SymptomEntry>().listen(
+        (d) {
+          add(LoadSymptomEntry(d));
+        },
+        onError: (dynamic error, StackTrace trace) {
+          add(ThrowSymptomEntryError.fromError(error: error, trace: trace));
+        },
+      );
     } catch (error, trace) {
       emit(SymptomEntryError.fromError(error: error, trace: trace));
     }

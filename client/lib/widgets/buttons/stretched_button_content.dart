@@ -6,8 +6,9 @@ class StretchedButtonContent extends StatelessWidget {
 
   const StretchedButtonContent({Key? key, required this.label, this.leader}) : super(key: key);
 
-  factory StretchedButtonContent.icon({Key? key, required String label, required IconData iconData}) =>
-      StretchedButtonContent(key: key, label: label, leader: Icon(iconData));
+  factory StretchedButtonContent.icon({Key? key, required String label, required IconData iconData}) {
+    return StretchedButtonContent(key: key, label: label, leader: Icon(iconData));
+  }
 
   @override
   Widget build(BuildContext context) {

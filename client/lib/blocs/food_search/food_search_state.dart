@@ -56,6 +56,7 @@ class FoodSearchError extends FoodSearchState with ErrorState, ErrorRecorder {
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory FoodSearchError.fromReport(ErrorReport report) =>
-      FoodSearchError.fromError(error: report.error, trace: report.trace);
+  factory FoodSearchError.fromReport(ErrorReport report) {
+    return FoodSearchError.fromError(error: report.error, trace: report.trace);
+  }
 }

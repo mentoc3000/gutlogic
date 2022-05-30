@@ -33,6 +33,7 @@ class SymptomEntryError extends SymptomEntryState with DiaryEntryError, ErrorRec
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory SymptomEntryError.fromReport(ErrorReport report) =>
-      SymptomEntryError.fromError(error: report.error, trace: report.trace);
+  factory SymptomEntryError.fromReport(ErrorReport report) {
+    return SymptomEntryError.fromError(error: report.error, trace: report.trace);
+  }
 }

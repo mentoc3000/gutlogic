@@ -67,11 +67,10 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
 
     final doc = await firestoreService.userFoodDetailsCollection.add(serializedNewEntry);
 
-    // TODO: Clean up this race condition hack
     // Delay for 1 ms to allow added food to propagate to [[_behaviorSubject]]
     // The app works fine without it, but test 'adds a food' reveals a race where the userFoodDetails entry is searched
     // before the change is propagated to the stream, so the latest addition cannot be found.
-    await Future.delayed(const Duration(milliseconds: 1));
+    await Future<void>.delayed(const Duration());
 
     yield* _streamdId(doc.id);
   }
@@ -101,8 +100,9 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
     });
   }
 
-  Future<void> updateNotes(UserFoodDetails userFoodDetails, String newNotes) =>
-      updateEntry(userFoodDetails.rebuild((b) => b..notes = newNotes));
+  Future<void> updateNotes(UserFoodDetails userFoodDetails, String newNotes) {
+    return updateEntry(userFoodDetails.rebuild((b) => b..notes = newNotes));
+  }
 
   UserFoodDetails? _documentToUserFoodDetails(UntypedDocumentSnapshot snapshot) {
     try {
@@ -117,6 +117,7 @@ class UserFoodDetailsRepository with FirestoreRepository implements SearchableRe
     return null;
   }
 
-  static UserFoodDetails deserialize(Map<String, dynamic> object) =>
-      serializers.deserializeWith(UserFoodDetails.serializer, object) as UserFoodDetails;
+  static UserFoodDetails deserialize(Map<String, dynamic> object) {
+    return serializers.deserializeWith(UserFoodDetails.serializer, object) as UserFoodDetails;
+  }
 }

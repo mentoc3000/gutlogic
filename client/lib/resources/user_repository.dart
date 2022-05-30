@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../auth/auth.dart';
 import '../models/application_user.dart';
+import '../util/null_utils.dart';
 import 'firebase/firestore_service.dart';
 
 class UserRepository {
@@ -60,7 +61,7 @@ class UserRepository {
         id: user.uid,
         email: user.email,
         verified: user.emailVerified,
-        consented: data['consented'] ?? false,
+        consented: data['consented'] as bool? ?? false,
         anonymous: user.isAnonymous,
         providers: BuiltList.from(user.providerData.map((p) => AuthProviderUtil.fromFirebaseProviderID(p.providerId))),
       );
@@ -114,7 +115,7 @@ class UserRepository {
       throw MissingUserException();
     }
 
-    await _firstUserWhere((user) => user != null);
+    await _firstUserWhere(isNotNull);
   }
 
   /// Mark the [user] as having consented to the privacy policy.

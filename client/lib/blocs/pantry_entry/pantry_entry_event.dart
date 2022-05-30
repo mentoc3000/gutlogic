@@ -86,6 +86,7 @@ class ThrowPantryEntryError extends PantryEntryEvent with ErrorEvent {
 
   const ThrowPantryEntryError({required this.report});
 
-  factory ThrowPantryEntryError.fromError({required dynamic error, required StackTrace trace}) =>
-      ThrowPantryEntryError(report: ErrorReport(error: error, trace: trace));
+  factory ThrowPantryEntryError.fromError({required dynamic error, required StackTrace trace}) {
+    return ThrowPantryEntryError(report: ErrorReport(error: error, trace: trace));
+  }
 }

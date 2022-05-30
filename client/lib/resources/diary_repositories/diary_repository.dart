@@ -7,6 +7,7 @@ import '../../models/diary_entry/diary_entry.dart';
 import '../../models/diary_entry/meal_entry.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../util/logger.dart';
+import '../../util/null_utils.dart';
 import '../firebase/crashlytics_service.dart';
 import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
@@ -20,13 +21,13 @@ class DiaryRepository with FirestoreRepository, TimelineRepository {
 
   Stream<BuiltList<DiaryEntry>> streamAll() {
     final stream = firestoreService.userDiaryCollection.snapshots();
-    return stream.map((querySnapshot) =>
-        BuiltList<DiaryEntry>(querySnapshot.docs.map(documentToDiaryEntry).where((entry) => entry != null)));
+    return stream
+        .map((querySnapshot) => BuiltList<DiaryEntry>(querySnapshot.docs.map(documentToDiaryEntry).where(isNotNull)));
   }
 
   Future<BuiltList<DiaryEntry>> getAll() async {
     final snapshot = await firestoreService.userDiaryCollection.get();
-    return BuiltList<DiaryEntry>(snapshot.docs.map(documentToDiaryEntry).where((entry) => entry != null));
+    return BuiltList<DiaryEntry>(snapshot.docs.map(documentToDiaryEntry).where(isNotNull));
   }
 
   /// Recent unique foods listed from most to least recent

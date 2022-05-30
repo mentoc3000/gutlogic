@@ -17,8 +17,9 @@ abstract class Quantity implements Built<Quantity, QuantityBuilder> {
 
   factory Quantity.fromBuilder([QuantityBuilder Function(QuantityBuilder) updates]) = _$Quantity;
 
-  factory Quantity.unweighed({required double amount, required String unit}) =>
-      Quantity(amount: amount, measure: Measure(unit: unit));
+  factory Quantity.unweighed({required double amount, required String unit}) {
+    return Quantity(amount: amount, measure: Measure(unit: unit));
+  }
 
   @override
   String toString() => '$amount ${measure?.unit}';

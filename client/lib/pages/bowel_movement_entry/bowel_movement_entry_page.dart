@@ -72,8 +72,9 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
         DateTimeCard(
           dateTime: entry.datetime,
           onChanged: (value) {
-            if (value == null) return; // TODO is this correct?
-            context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryDateTime(value));
+            if (value != null) {
+              context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryDateTime(value));
+            }
           },
         ),
         BMVolumeCard(

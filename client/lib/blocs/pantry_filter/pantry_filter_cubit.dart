@@ -11,7 +11,7 @@ import 'pantry_filter_state.dart';
 
 final _defaultFilter = PantryFilter.all();
 
-class PantryFilterCubit extends Cubit<PantryFilterState> with StreamSubscriber {
+class PantryFilterCubit extends Cubit<PantryFilterState> with StreamSubscriber<PantryState, PantryFilterState> {
   final PantryBloc pantryBloc;
   PantryFilter get _filter => state is Filter ? (state as Filter).filter : _defaultFilter;
 

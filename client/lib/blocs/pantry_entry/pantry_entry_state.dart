@@ -39,6 +39,7 @@ class PantryEntryError extends PantryEntryState with ErrorState, ErrorRecorder {
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory PantryEntryError.fromReport(ErrorReport report) =>
-      PantryEntryError.fromError(error: report.error, trace: report.trace);
+  factory PantryEntryError.fromReport(ErrorReport report) {
+    return PantryEntryError.fromError(error: report.error, trace: report.trace);
+  }
 }

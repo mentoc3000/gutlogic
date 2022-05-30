@@ -23,7 +23,7 @@ class MealElementRepository with FirestoreRepository {
     return stream.map((document) {
       final data = FirestoreService.getDocumentData(document);
       if (data == null) return null;
-      final List serializedMealElements = data['mealElements'];
+      final serializedMealElements = data['mealElements'] as List;
       final serializedMealElement =
           serializedMealElements.firstWhere((i) => (i as Map<String, dynamic>)['id'] == mealElement.id);
       return serializers.deserializeWith(MealElement.serializer, serializedMealElement);
@@ -63,11 +63,13 @@ class MealElementRepository with FirestoreRepository {
         },
       );
 
-  Future<void> updateQuantity(MealElement mealElement, Quantity quantity) =>
-      update(mealElement.rebuild((b) => b..quantity = quantity.toBuilder()));
+  Future<void> updateQuantity(MealElement mealElement, Quantity quantity) {
+    return update(mealElement.rebuild((b) => b..quantity = quantity.toBuilder()));
+  }
 
-  Future<void> updateNotes(MealElement mealElement, String notes) =>
-      update(mealElement.rebuild((b) => b..notes = notes));
+  Future<void> updateNotes(MealElement mealElement, String notes) {
+    return update(mealElement.rebuild((b) => b..notes = notes));
+  }
 
   Future<MealElement?> addNewMealElementTo(MealEntry mealEntry, {required FoodReference foodReference}) async {
     final mealElementId = newMealElementId(mealEntry);

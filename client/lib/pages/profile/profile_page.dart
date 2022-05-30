@@ -31,7 +31,7 @@ class ProfilePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void navigate(context, state) {
+    void navigate(BuildContext context, ProfileState state) {
       if (state is ProfileSuccess) Navigator.of(context).pop();
       if (state is ProfileFailure) ErrorSnackBar.show(context, state);
     }

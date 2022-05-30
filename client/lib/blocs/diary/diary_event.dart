@@ -76,6 +76,7 @@ class ThrowDiaryError extends DiaryEvent with ErrorEvent {
 
   const ThrowDiaryError({required this.report});
 
-  factory ThrowDiaryError.fromError({required dynamic error, required StackTrace trace}) =>
-      ThrowDiaryError(report: ErrorReport(error: error, trace: trace));
+  factory ThrowDiaryError.fromError({required dynamic error, required StackTrace trace}) {
+    return ThrowDiaryError(report: ErrorReport(error: error, trace: trace));
+  }
 }

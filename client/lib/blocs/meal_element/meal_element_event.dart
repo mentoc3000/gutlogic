@@ -100,6 +100,7 @@ class ThrowMealElementError extends MealElementEvent with ErrorEvent {
 
   const ThrowMealElementError({required this.report});
 
-  factory ThrowMealElementError.fromError({required dynamic error, required StackTrace trace}) =>
-      ThrowMealElementError(report: ErrorReport(error: error, trace: trace));
+  factory ThrowMealElementError.fromError({required dynamic error, required StackTrace trace}) {
+    return ThrowMealElementError(report: ErrorReport(error: error, trace: trace));
+  }
 }

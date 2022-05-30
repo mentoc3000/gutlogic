@@ -173,7 +173,7 @@ void main() {
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);
-      await Future.delayed(predictionDelay);
+      await Future<void>.delayed(predictionDelay);
       await expectLater(predictor.predict(getTestFood(concentrations: [3E-5])), completion(modP));
 
       final updatedSensitivities = [noneU, modU, mildU];
@@ -188,7 +188,7 @@ void main() {
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       streamController.add(updatedMockData.sensitivityMap);
-      await Future.delayed(predictionDelay);
+      await Future<void>.delayed(predictionDelay);
       await expectLater(predictor.predict(getTestFood(concentrations: [3E-5])), completion(mildP));
     });
 
@@ -214,7 +214,7 @@ void main() {
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);
-      await Future.delayed(predictionDelay);
+      await Future<void>.delayed(predictionDelay);
       await expectLater(predictor.predict(getTestFood(concentrations: [3E-5])), completion(mildP));
 
       final updatedSensitivities = [noneU, modU];
@@ -225,7 +225,7 @@ void main() {
       final updatedMockData =
           MockData.from(sensitivityLevels: updatedSensitivityLevels, concentrations: updatedConcentrations);
       streamController.add(updatedMockData.sensitivityMap);
-      await Future.delayed(predictionDelay);
+      await Future<void>.delayed(predictionDelay);
       await expectLater(predictor.predict(getTestFood(concentrations: [3E-5])), completion(modP));
     });
 
@@ -251,7 +251,7 @@ void main() {
             .thenAnswer((_) => Future.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);
-      await Future.delayed(predictionDelay);
+      await Future<void>.delayed(predictionDelay);
       await expectLater(predictor.predict(getTestFood(concentrations: [1.5E-5])), completion(modP));
 
       final updatedSensitivities = [sevU, sevU, sevU, sevU];
@@ -259,7 +259,7 @@ void main() {
       final updatedMockData =
           MockData.from(sensitivityLevels: updatedSensitivityLevels, concentrations: concentrations);
       streamController.add(updatedMockData.sensitivityMap);
-      await Future.delayed(predictionDelay);
+      await Future<void>.delayed(predictionDelay);
       await expectLater(predictor.predict(getTestFood(concentrations: [1.5E-5])), completion(sevP));
     });
   });

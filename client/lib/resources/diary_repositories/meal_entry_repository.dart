@@ -30,8 +30,9 @@ class MealEntryRepository with FirestoreRepository, TimelineRepository {
     return add(mealEntry);
   }
 
-  Future<MealElement?> createMealElement(MealEntry mealEntry, FoodReference food) =>
-      mealElementRepository.addNewMealElementTo(mealEntry, foodReference: food);
+  Future<MealElement?> createMealElement(MealEntry mealEntry, FoodReference food) {
+    return mealElementRepository.addNewMealElementTo(mealEntry, foodReference: food);
+  }
 
   Future<MealElement?> addMealElement(MealEntry mealEntry, MealElement mealElement) async {
     final mealEntryLatest = await getLatest(mealEntry) as MealEntry;

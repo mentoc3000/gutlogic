@@ -8,7 +8,7 @@ import '../../resources/irritant_service.dart';
 import '../bloc_helpers.dart';
 import 'food_state.dart';
 
-class FoodCubit extends Cubit<FoodState> with StreamSubscriber {
+class FoodCubit extends Cubit<FoodState> with StreamSubscriber<Food?, FoodState> {
   final IrritantService irritantService;
 
   FoodCubit({

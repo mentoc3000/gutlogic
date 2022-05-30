@@ -23,8 +23,10 @@ class FoodGroupsRepository with FirestoreRepository {
     return foodGroupEntries.toBuiltSet();
   }
 
-  static Iterable<FoodGroupEntry> deserialize(UntypedQuerySnapshot snapshot) {
-    if (snapshot.docs.isEmpty) return <FoodGroupEntry>[];
-    return snapshot.docs.map((s) => serializers.deserializeWith(FoodGroupEntry.serializer, s.data()) as FoodGroupEntry);
+  static BuiltList<FoodGroupEntry> deserialize(UntypedQuerySnapshot snapshot) {
+    if (snapshot.docs.isEmpty) return BuiltList<FoodGroupEntry>();
+    return snapshot.docs
+        .map((s) => serializers.deserializeWith(FoodGroupEntry.serializer, s.data()) as FoodGroupEntry)
+        .toBuiltList();
   }
 }

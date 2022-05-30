@@ -6,7 +6,7 @@ class TestInputGroup extends InputGroup {
   final Input<bool> b = Input<bool>(true, (value) => value ? null : 'Field must be true.');
 
   @override
-  List<Input> get inputs => [a, b];
+  List<Input<bool>> get inputs => [a, b];
 }
 
 void main() {

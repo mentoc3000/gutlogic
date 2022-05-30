@@ -1,12 +1,15 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../models/symptom_type.dart';
 import '../../resources/symptom_type_repository.dart';
 import '../bloc_helpers.dart';
 import 'symptom_type_event.dart';
 import 'symptom_type_state.dart';
 
-class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with StreamSubscriber {
+class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState>
+    with StreamSubscriber<BuiltList<SymptomType>, SymptomTypeState> {
   final SymptomTypeRepository repository;
 
   SymptomTypeBloc({required this.repository}) : super(SymptomTypesLoading()) {
@@ -35,9 +38,13 @@ class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with Stre
       emit(SymptomTypesLoading());
       await streamSubscription?.cancel();
       streamSubscription = repository.streamQuery(event.query).listen(
-            (symptomTypes) => add(LoadSymptomTypes(symptomTypes)),
-            onError: (error, StackTrace trace) => add(ThrowSymptomTypeError.fromError(error: error, trace: trace)),
-          );
+        (symptomTypes) {
+          add(LoadSymptomTypes(symptomTypes));
+        },
+        onError: (dynamic error, StackTrace trace) {
+          add(ThrowSymptomTypeError.fromError(error: error, trace: trace));
+        },
+      );
     } catch (error, trace) {
       emit(SymptomTypeError.fromError(error: error, trace: trace));
     }
@@ -45,8 +52,6 @@ class SymptomTypeBloc extends Bloc<SymptomTypeEvent, SymptomTypeState> with Stre
 
   Future<void> _onFetchAll(FetchAllSymptomTypes event, Emitter<SymptomTypeState> emit) async {
     try {
-      // TODO: remove these loading pages? Or maybe only show them if the fetch takes a long time.
-      // https://stackoverflow.com/questions/64885470/can-dart-streams-emit-a-value-if-the-stream-is-not-done-within-a-duration/64978139
       emit(SymptomTypesLoading());
       final items = await repository.fetchQuery('');
       emit(SymptomTypesLoaded(items));

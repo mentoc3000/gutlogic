@@ -159,7 +159,7 @@ void main() {
       ),
       act: (bloc) async {
         bloc.add(StreamMealElement(edamamFoodMealElement));
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
         bloc.add(StreamMealElement(edamamFoodMealElement));
       },
       expect: () => [

@@ -10,7 +10,7 @@ import 'pantry_sort_state.dart';
 
 const _defaultSort = PantrySort.alphabeticalAscending;
 
-class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber {
+class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber<PantryFilterState, PantrySortState> {
   final PantryFilterCubit pantryFilterCubit;
   PantrySort get _sort => state.sort;
 
@@ -49,8 +49,9 @@ class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber {
   }
 }
 
-int _compareAlphabetically(PantryEntry a, PantryEntry b) =>
-    a.foodReference.name.toLowerCase().compareTo(b.foodReference.name.toLowerCase());
+int _compareAlphabetically(PantryEntry a, PantryEntry b) {
+  return a.foodReference.name.toLowerCase().compareTo(b.foodReference.name.toLowerCase());
+}
 
 int _compareSensitivity(PantryEntry a, PantryEntry b) => a.sensitivity.level.compareTo(b.sensitivity.level);
 

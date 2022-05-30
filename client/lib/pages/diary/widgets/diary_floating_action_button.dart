@@ -19,8 +19,9 @@ class DiaryFloatingActionButton extends StatelessWidget {
       context: context,
       delegate: SymptomTypeSearchDelegate(
         symptomTypeBloc: symptomTypeBloc,
-        onSelect: (symptomType) =>
-            Navigator.push(context, Routes.of(context).createSymptomEntryRouteFrom(symptomType: symptomType)),
+        onSelect: (symptomType) {
+          Navigator.push(context, Routes.of(context).createSymptomEntryRouteFrom(symptomType: symptomType));
+        },
       ),
     );
   }

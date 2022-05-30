@@ -29,7 +29,7 @@ void main() {
         await firestore.doc('$collectionName/$idx').set(foodGroupEntry);
         idx++;
       }
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
     });
 
     test('groups', () async {

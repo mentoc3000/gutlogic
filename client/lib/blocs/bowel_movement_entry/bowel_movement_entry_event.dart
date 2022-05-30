@@ -108,6 +108,7 @@ class ThrowBowelMovementEntryError extends BowelMovementEntryEvent with ErrorEve
 
   const ThrowBowelMovementEntryError({required this.report});
 
-  factory ThrowBowelMovementEntryError.fromError({required dynamic error, required StackTrace trace}) =>
-      ThrowBowelMovementEntryError(report: ErrorReport(error: error, trace: trace));
+  factory ThrowBowelMovementEntryError.fromError({required dynamic error, required StackTrace trace}) {
+    return ThrowBowelMovementEntryError(report: ErrorReport(error: error, trace: trace));
+  }
 }

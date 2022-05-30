@@ -21,7 +21,7 @@ class FoodListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sensitivity = Future.value(context.read<SensitivityService>().of(food.toFoodReference()));
+    final sensitivity = context.watch<SensitivityService>().of(food.toFoodReference());
 
     final cards = [
       SensitivityCard(sensitivity: sensitivity, onTap: () => addFoodToPantry(context)),
@@ -30,8 +30,9 @@ class FoodListView extends StatelessWidget {
 
     return ListView.builder(
       itemCount: cards.length,
-      itemBuilder: (BuildContext context, int index) =>
-          Padding(padding: const EdgeInsets.all(1.0), child: cards[index]),
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(padding: const EdgeInsets.all(1.0), child: cards[index]);
+      },
     );
   }
 }

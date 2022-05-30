@@ -1,10 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-import '../../../style/gl_colors.dart';
+import '../../../style/gl_text_style.dart';
 
 class ConsentHeader extends StatelessWidget {
   static final _asset = SvgPicture.asset('assets/consent/consent_image.svg');
@@ -23,22 +21,13 @@ class ConsentHeader extends StatelessWidget {
                   'are committed to handling your data responsibly and will never sell your personal information.\n\nYou can '
                   'delete your data at any time. Please review our ',
             ),
-            TextSpan(
-              text: 'privacy policy',
-              style: const TextStyle(color: GLColors.blue, fontWeight: FontWeight.bold),
-              recognizer: TapGestureRecognizer()..onTap = _navigate,
-            ),
+            hyperlink(text: 'privacy policy', url: 'http://gutlogic.co/gut_logic_privacy_policy.pdf'),
             const TextSpan(text: ' and email us at '),
-            const TextSpan(text: 'privacy@gutlogic.co', style: TextStyle(fontWeight: FontWeight.bold)),
+            hyperlink(text: 'privacy@gutlogic.co', url: 'mailto:privacy@gutlogic.co'),
             const TextSpan(text: ' with any questions.'),
           ],
         ),
       ),
     ]);
-  }
-
-  static void _navigate() async {
-    final dest = Uri.parse('http://gutlogic.co/gut_logic_privacy_policy.pdf');
-    if (await url_launcher.canLaunchUrl(dest)) await url_launcher.launchUrl(dest);
   }
 }

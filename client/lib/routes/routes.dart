@@ -33,84 +33,84 @@ class Routes {
     return RepositoryProvider.of<Routes>(context);
   }
 
-  Route get root {
+  Route<Widget> get root {
     return MaterialPageRoute(
       builder: (context) => LandingPage.provisioned(),
       settings: const RouteSettings(name: 'Landing Page'),
     );
   }
 
-  Route get login {
+  Route<Widget> get login {
     return MaterialPageRoute(
       builder: (context) => LoginPage.provisioned(),
       settings: const RouteSettings(name: 'Login Page'),
     );
   }
 
-  Route get register {
+  Route<Widget> get register {
     return MaterialPageRoute(
       builder: (context) => RegisterPage.provisioned(),
       settings: const RouteSettings(name: 'Register Page'),
     );
   }
 
-  Route get consent {
+  Route<Widget> get consent {
     return MaterialPageRoute(
       builder: (context) => ConsentPage.provisioned(),
       settings: const RouteSettings(name: 'Verify Age Page'),
     );
   }
 
-  Route get main {
+  Route<Widget> get main {
     return MaterialPageRoute(
       builder: MainTabs.provisioned,
       settings: const RouteSettings(name: 'Main Page'),
     );
   }
 
-  Route get settings {
+  Route<Widget> get settings {
     return MaterialPageRoute(
       builder: (context) => SettingsPage(),
       settings: const RouteSettings(name: 'Settings Page'),
     );
   }
 
-  Route get account {
+  Route<Widget> get account {
     return MaterialPageRoute(
       builder: (context) => AccountPage(),
       settings: const RouteSettings(name: 'Account Page'),
     );
   }
 
-  Route get createAccount {
+  Route<Widget> get createAccount {
     return MaterialPageRoute(
       builder: (context) => AccountCreatePage.provisioned(),
       settings: const RouteSettings(name: 'Create Account Page'),
     );
   }
 
-  Route get deleteAccount {
+  Route<Widget> get deleteAccount {
     return MaterialPageRoute(
       builder: (context) => AccountDeletePage.provisioned(),
       settings: const RouteSettings(name: 'Delete Account Page'),
     );
   }
 
-  Route get reauthenticate {
+  Route<Widget> get reauthenticate {
     return MaterialPageRoute(
       builder: (context) => ReauthenticatePage.provisioned(),
       settings: const RouteSettings(name: 'Reauthenticate Page'),
     );
   }
 
-  Route get profile {
+  Route<Widget> get profile {
     return MaterialPageRoute(
       builder: (context) => ProfilePage(),
       settings: const RouteSettings(name: 'Profile Page'),
     );
   }
 
-  Route createMealEntryRoute({MealEntry? entry}) {
+  Route<Widget> createMealEntryRoute({MealEntry? entry}) {
     if (entry == null) {
       return MaterialPageRoute(
         builder: (context) => MealEntryPage.forNewEntry(),
@@ -124,18 +124,18 @@ class Routes {
     }
   }
 
-  Route createSymptomEntryRoute({required SymptomEntry entry}) {
+  Route<Widget> createSymptomEntryRoute({required SymptomEntry entry}) {
     return MaterialPageRoute(
       builder: (context) => SymptomEntryPage.forExistingEntry(entry),
       settings: const RouteSettings(name: 'Symptom Entry Page'),
     );
   }
 
-  Route createSymptomEntryRouteFrom({required SymptomType symptomType}) {
+  Route<Widget> createSymptomEntryRouteFrom({required SymptomType symptomType}) {
     return MaterialPageRoute(builder: (context) => SymptomEntryPage.forNewEntryFrom(symptomType));
   }
 
-  Route createBowelMovementEntryRoute({BowelMovementEntry? entry}) {
+  Route<Widget> createBowelMovementEntryRoute({BowelMovementEntry? entry}) {
     if (entry == null) {
       return MaterialPageRoute(
         builder: (context) => BowelMovementEntryPage.forNewEntry(),
@@ -149,26 +149,26 @@ class Routes {
     }
   }
 
-  Route createMealElementPageRoute({required MealElement mealElement}) {
+  Route<Widget> createMealElementPageRoute({required MealElement mealElement}) {
     return MaterialPageRoute(
       builder: (context) => MealElementEntryPage.forMealElement(mealElement),
       settings: const RouteSettings(name: 'MealElement Entry Page'),
     );
   }
 
-  Route createPantryEntryPageRoute({required PantryEntry pantryEntry}) {
+  Route<Widget> createPantryEntryPageRoute({required PantryEntry pantryEntry}) {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forPantryEntry(pantryEntry));
   }
 
-  Route createPantryEntryPageRouteForFood(FoodReference foodReference) {
+  Route<Widget> createPantryEntryPageRouteForFood(FoodReference foodReference) {
     return MaterialPageRoute(builder: (context) => PantryEntryPage.forFood(foodReference));
   }
 
-  Route createFoodPageRoute(FoodReference foodReference) {
+  Route<Widget> createFoodPageRoute(FoodReference foodReference) {
     return MaterialPageRoute(builder: (context) => FoodPage.forFood(foodReference));
   }
 
-  Route createFoodGroupRoute({required String name}) {
+  Route<Widget> createFoodGroupRoute({required String name}) {
     return MaterialPageRoute(builder: (context) => FoodGroupPage(group: name));
   }
 }

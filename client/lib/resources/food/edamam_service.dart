@@ -20,7 +20,7 @@ class EdamamService {
     switch (response['status']) {
       case 200:
         try {
-          final List<dynamic> entries = response['data']['hints'];
+          final entries = response['data']['hints'] as List;
           return entries.map((e) => serializers.deserializeWith(EdamamApiEntry.serializer, e)).whereNotNull().toList();
         } catch (e) {
           throw EdamamException(message: 'Parsing error');

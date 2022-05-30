@@ -1,14 +1,16 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../models/diary_entry/diary_entry.dart';
 import '../../resources/diary_repositories/diary_repository.dart';
 import '../bloc_helpers.dart';
 import 'diary_event.dart';
 import 'diary_state.dart';
 
-class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
+class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber<BuiltList<DiaryEntry>, DiaryState> {
   final DiaryRepository repository;
 
   DiaryBloc({required this.repository}) : super(DiaryLoading()) {
@@ -29,7 +31,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> with StreamSubscriber {
       await streamSubscription?.cancel();
       streamSubscription = repository.streamAll().listen(
             (diaryEntries) => add(Load(diaryEntries: diaryEntries)),
-            onError: (error, StackTrace trace) => add(ThrowDiaryError.fromError(error: error, trace: trace)),
+            onError: (dynamic error, StackTrace trace) => add(ThrowDiaryError.fromError(error: error, trace: trace)),
           );
     } catch (error, trace) {
       emit(DiaryError.fromError(error: error, trace: trace));

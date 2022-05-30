@@ -14,7 +14,7 @@ abstract class SymptomTypeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchAllSymptomTypes extends SymptomTypeEvent with FetchAll implements Tracked {
+class FetchAllSymptomTypes extends SymptomTypeEvent implements Tracked {
   const FetchAllSymptomTypes();
 
   @override
@@ -61,6 +61,7 @@ class ThrowSymptomTypeError extends SymptomTypeEvent with ErrorEvent {
 
   const ThrowSymptomTypeError({required this.report});
 
-  factory ThrowSymptomTypeError.fromError({required dynamic error, required StackTrace trace}) =>
-      ThrowSymptomTypeError(report: ErrorReport(error: error, trace: trace));
+  factory ThrowSymptomTypeError.fromError({required dynamic error, required StackTrace trace}) {
+    return ThrowSymptomTypeError(report: ErrorReport(error: error, trace: trace));
+  }
 }

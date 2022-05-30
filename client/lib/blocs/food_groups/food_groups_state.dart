@@ -41,6 +41,7 @@ class FoodGroupsError extends FoodGroupsState with ErrorState, ErrorRecorder {
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory FoodGroupsError.fromReport(ErrorReport report) =>
-      FoodGroupsError.fromError(error: report.error, trace: report.trace);
+  factory FoodGroupsError.fromReport(ErrorReport report) {
+    return FoodGroupsError.fromError(error: report.error, trace: report.trace);
+  }
 }

@@ -122,7 +122,7 @@ class AuthEmailSuccessWidget extends StatelessWidget {
 class AuthEmailInput extends StatelessWidget {
   final bool valid;
   final bool enabled;
-  final Function(String?) onChanged;
+  final void Function(String?) onChanged;
 
   const AuthEmailInput({required this.enabled, required this.valid, required this.onChanged});
 

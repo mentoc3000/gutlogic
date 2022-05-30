@@ -127,11 +127,13 @@ class SeveritySerializer implements PrimitiveSerializer<SensitivityLevel> {
 
   @override
   Object serialize(Serializers serializers, SensitivityLevel sensitivity,
-          {FullType specifiedType = FullType.unspecified}) =>
-      sensitivity.toInt();
+      {FullType specifiedType = FullType.unspecified}) {
+    return sensitivity.toInt();
+  }
 
   @override
   SensitivityLevel deserialize(Serializers serializers, Object serialized,
-          {FullType specifiedType = FullType.unspecified}) =>
-      SensitivityLevel.fromNum(serialized as num);
+      {FullType specifiedType = FullType.unspecified}) {
+    return SensitivityLevel.fromNum(serialized as num);
+  }
 }

@@ -25,17 +25,21 @@ class PantryService implements SearchableRepository<PantryEntry> {
   Stream<BuiltList<PantryEntry>> streamAll() => userFoodDetailsRepository.streamAll().switchMap(_streamPantryEntries);
 
   @override
-  Stream<BuiltList<PantryEntry>> streamQuery(String query) =>
-      userFoodDetailsRepository.streamQuery(query).switchMap(_streamPantryEntries);
+  Stream<BuiltList<PantryEntry>> streamQuery(String query) {
+    return userFoodDetailsRepository.streamQuery(query).switchMap(_streamPantryEntries);
+  }
 
-  Stream<PantryEntry?> stream(PantryEntry? pantryEntry) =>
-      userFoodDetailsRepository.stream(pantryEntry?.foodReference).switchMap(_streamPantryEntry);
+  Stream<PantryEntry?> stream(PantryEntry? pantryEntry) {
+    return userFoodDetailsRepository.stream(pantryEntry?.foodReference).switchMap(_streamPantryEntry);
+  }
 
-  Stream<PantryEntry?> streamByFood(FoodReference? foodReference) =>
-      userFoodDetailsRepository.stream(foodReference).switchMap(_streamPantryEntry);
+  Stream<PantryEntry?> streamByFood(FoodReference? foodReference) {
+    return userFoodDetailsRepository.stream(foodReference).switchMap(_streamPantryEntry);
+  }
 
-  Future<void> delete(PantryEntry pantryEntry) =>
-      userFoodDetailsRepository.deleteByFoodReference(pantryEntry.foodReference);
+  Future<void> delete(PantryEntry pantryEntry) {
+    return userFoodDetailsRepository.deleteByFoodReference(pantryEntry.foodReference);
+  }
 
   Future<void> add(PantryEntry pantryEntry) async {
     final userFoodDetails = UserFoodDetails(

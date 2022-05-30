@@ -11,6 +11,7 @@ import 'pantry/pantry_page.dart';
 
 class MainTabs extends StatefulWidget {
   final AnalyticsService analytics;
+  static const initialTab = 1;
 
   const MainTabs({required this.analytics});
 
@@ -24,7 +25,7 @@ class MainTabs extends StatefulWidget {
 
 class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin, RouteAware {
   late final TabController controller;
-  int selectedIndex = 0;
+  int selectedIndex = MainTabs.initialTab;
 
   final tabs = [
     const Tab(
@@ -55,7 +56,7 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
     super.didChangeDependencies();
 
     final route = ModalRoute.of(context);
-    if (route is PageRoute) widget.analytics.subscribeToRoute(this, route);
+    if (route is PageRoute<Widget>) widget.analytics.subscribeToRoute(this, route);
   }
 
   @override

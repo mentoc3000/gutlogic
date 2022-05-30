@@ -41,7 +41,6 @@ import 'user_food_details_api.dart';
 
 part 'serializers.g.dart';
 
-// TODO: remove classes that don't need to be serialized
 @SerializersFor([
   BowelMovement,
   BowelMovementEntry,

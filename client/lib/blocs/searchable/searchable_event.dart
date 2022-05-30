@@ -3,9 +3,6 @@ import 'package:equatable/equatable.dart';
 
 import '../../models/model_interfaces.dart';
 
-// TODO: remove this mixin?
-mixin FetchAll on Equatable {}
-
 mixin FetchQuery on Equatable {
   String get query;
 

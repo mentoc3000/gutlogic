@@ -33,6 +33,7 @@ class BowelMovementEntryError extends BowelMovementEntryState with DiaryEntryErr
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory BowelMovementEntryError.fromReport(ErrorReport report) =>
-      BowelMovementEntryError.fromError(error: report.error, trace: report.trace);
+  factory BowelMovementEntryError.fromReport(ErrorReport report) {
+    return BowelMovementEntryError.fromError(error: report.error, trace: report.trace);
+  }
 }

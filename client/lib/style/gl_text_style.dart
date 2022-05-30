@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import 'gl_colors.dart';
 
@@ -24,3 +26,16 @@ void addFontLicenseToRegistry(AssetBundle rootBundle) {
 const tileHeadingStyle = TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
 const tileSubheadingStyle = TextStyle(fontSize: 16.0);
 final TextStyle guideTextStyle = TextStyle(fontSize: 16.0, color: GLColors.darkGray);
+
+TextSpan hyperlink({required String text, required String url}) {
+  void navigate() async {
+    final dest = Uri.parse(url);
+    if (await url_launcher.canLaunchUrl(dest)) await url_launcher.launchUrl(dest);
+  }
+
+  return TextSpan(
+    text: text,
+    style: const TextStyle(color: GLColors.blue, fontWeight: FontWeight.bold),
+    recognizer: TapGestureRecognizer()..onTap = navigate,
+  );
+}

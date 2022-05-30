@@ -14,12 +14,12 @@ void main() {
       expect(repository.stream.hasValue, false);
 
       await firestore.doc(path).set({'firstname': 'f', 'lastname': 'l'});
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       expect(repository.stream.value, Profile(firstname: 'f', lastname: 'l'));
 
       await firestore.doc(path).set({});
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       expect(repository.stream.value, Profile(firstname: null, lastname: null));
     });
@@ -38,7 +38,7 @@ void main() {
       expect((await firestore.doc(path).get()).data(), {'lastname': 'l'});
 
       await repository.update(profile: Profile());
-      expect((await firestore.doc(path).get()).data(), {});
+      expect((await firestore.doc(path).get()).data(), <String, dynamic>{});
     });
   });
 }

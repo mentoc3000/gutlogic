@@ -165,7 +165,7 @@ class AuthenticatedResources extends StatelessWidget {
   }
 
   void listener(BuildContext context, ApplicationUser? user) {
-    Route dest;
+    Route<Widget> dest;
 
     if (user is ApplicationUser) {
       dest = user.consented ? Routes.of(context).main : Routes.of(context).consent;

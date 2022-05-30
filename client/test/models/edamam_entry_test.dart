@@ -42,7 +42,7 @@ void main() {
                 ],
                 'weight': 12.0
               },
-              {'qualifiers': [], 'weight': 16.0},
+              {'qualifiers': <dynamic>[], 'weight': 16.0},
               {
                 'qualifiers': [
                   {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Qualifier_extra_large', 'label': 'extra large'}

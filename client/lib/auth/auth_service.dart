@@ -9,7 +9,7 @@ import 'services/auth_email.dart';
 import 'services/auth_google.dart';
 
 abstract class AuthService {
-  static Future<List<Provider>> providers({required AppConfig config}) async {
+  static Future<List<Provider<dynamic>>> providers({required AppConfig config}) async {
     // TODO these might be better stored in some build config?
     const prodEmailAuthUrl = 'https://app.gutlogic.co/email_auth';
     const devEmailAuthUrl = 'https://gutlogicdev.page.link/email_auth';

@@ -127,8 +127,9 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
           body: Form(
             child: ListView.builder(
               itemCount: items.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  Padding(padding: const EdgeInsets.all(1.0), child: items[index]),
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(padding: const EdgeInsets.all(1.0), child: items[index]);
+              },
               padding: const EdgeInsets.all(0.0),
             ),
           ),

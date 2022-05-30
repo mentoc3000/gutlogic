@@ -1,14 +1,16 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../models/pantry/pantry_entry.dart';
 import '../../resources/pantry_service.dart';
 import '../bloc_helpers.dart';
 import 'pantry_event.dart';
 import 'pantry_state.dart';
 
-class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
+class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber<BuiltList<PantryEntry>, PantryState> {
   final PantryService pantryService;
 
   PantryBloc({required this.pantryService}) : super(PantryLoading()) {
@@ -30,7 +32,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
       await streamSubscription?.cancel();
       streamSubscription = pantryService.streamAll().listen(
             (pantryEntries) => add(LoadPantry(items: pantryEntries)),
-            onError: (error, StackTrace trace) => add(ThrowPantryError.fromError(error: error, trace: trace)),
+            onError: (dynamic error, StackTrace trace) => add(ThrowPantryError.fromError(error: error, trace: trace)),
           );
     } catch (error, trace) {
       emit(PantryError.fromError(error: error, trace: trace));
@@ -43,7 +45,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> with StreamSubscriber {
       await streamSubscription?.cancel();
       streamSubscription = pantryService.streamQuery(event.query).listen(
             (pantryEntries) => add(LoadPantry(items: pantryEntries)),
-            onError: (error, StackTrace trace) => add(ThrowPantryError.fromError(error: error, trace: trace)),
+            onError: (dynamic error, StackTrace trace) => add(ThrowPantryError.fromError(error: error, trace: trace)),
           );
     } catch (error, trace) {
       emit(PantryError.fromError(error: error, trace: trace));

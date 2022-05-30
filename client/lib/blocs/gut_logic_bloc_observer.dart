@@ -12,7 +12,7 @@ class GutLogicBlocObserver extends BlocObserver {
   GutLogicBlocObserver({required this.analytics, required this.crashlytics});
 
   @override
-  void onEvent(Bloc bloc, Object? event) {
+  void onEvent(Bloc<dynamic, dynamic> bloc, Object? event) {
     super.onEvent(bloc, event);
 
     if (event is Tracked) {
@@ -23,14 +23,14 @@ class GutLogicBlocObserver extends BlocObserver {
   }
 
   @override
-  void onTransition(Bloc bloc, Transition transition) {
+  void onTransition(Bloc<dynamic, dynamic> bloc, Transition<dynamic, dynamic> transition) {
     super.onTransition(bloc, transition);
 
     logger.d(transition);
   }
 
   @override
-  void onChange(BlocBase bloc, Change change) {
+  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     super.onChange(bloc, change);
 
     final nextState = change.nextState;
@@ -52,7 +52,7 @@ class GutLogicBlocObserver extends BlocObserver {
   }
 
   @override
-  void onError(BlocBase bloc, Object error, StackTrace trace) {
+  void onError(BlocBase<dynamic> bloc, Object error, StackTrace trace) {
     super.onError(bloc, error, trace);
     logger.e(error);
     logger.e(trace);

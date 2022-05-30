@@ -45,6 +45,7 @@ class MealEntryError extends MealEntryState with DiaryEntryError, ErrorRecorder 
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory MealEntryError.fromReport(ErrorReport report) =>
-      MealEntryError.fromError(error: report.error, trace: report.trace);
+  factory MealEntryError.fromReport(ErrorReport report) {
+    return MealEntryError.fromError(error: report.error, trace: report.trace);
+  }
 }

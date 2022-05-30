@@ -36,6 +36,7 @@ class SymptomTypeError extends SymptomTypeState with ErrorState, ErrorRecorder {
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory SymptomTypeError.fromReport(ErrorReport report) =>
-      SymptomTypeError.fromError(error: report.error, trace: report.trace);
+  factory SymptomTypeError.fromReport(ErrorReport report) {
+    return SymptomTypeError.fromError(error: report.error, trace: report.trace);
+  }
 }

@@ -71,31 +71,37 @@ class DiaryListView extends StatelessWidget {
     }
 
     // Add space at bottom so today can be at the top of the ListView
-    // TODO: make last tile buffer height more robust
-    tiles.add(Container(height: MediaQuery.of(context).size.height - 200));
+    // TODO: assign tile height dynamically based on actual widget size
+    const heightDateTile = 200;
+    tiles.add(Container(height: MediaQuery.of(context).size.height - heightDateTile, color: Colors.red));
 
     return tiles;
   }
 
-  int _initialPosition(List<Widget> tiles) {
+  /// Index of the date tile closest to now
+  int _latestDateTileIndex(List<Widget> tiles) {
     final now = DateTime.now().toUtc();
     var lastDay = 0;
-    // TODO revisit this loop
     for (var i = 0; i < tiles.length; i++) {
-      DateTime datetime;
       final tile = tiles[i];
-      if (tile is DateTile) {
-        datetime = tile.datetime;
-      } else {
-        continue;
-      }
-      final diffDays = datetime.difference(now).inDays;
+
+      // Ignore non-DateTiles
+      if (tile is! DateTile) continue;
+
+      // Relative date of DateTile to now
+      final diffDays = tile.datetime.difference(now).inDays;
+
       if (diffDays >= 0) {
+        // If date is in the future, return that index immediately to use the first future date.
         return i;
       } else {
+        // If the date is in the past, store it's index as the latest known DateTile index and continue to search
+        // for a more recent one.
         lastDay = i;
       }
     }
+
+    // Return the index of the DateTile of the latest day in the past
     return lastDay;
   }
 
@@ -107,7 +113,7 @@ class DiaryListView extends StatelessWidget {
       itemCount: tiles.length,
       itemBuilder: (BuildContext context, int index) => tiles[index],
       padding: const EdgeInsets.all(0.0),
-      initialScrollIndex: _initialPosition(tiles),
+      initialScrollIndex: _latestDateTileIndex(tiles),
       physics: const AlwaysScrollableScrollPhysics(),
     );
   }

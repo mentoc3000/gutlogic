@@ -5,10 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/food_group_entry.dart';
 import '../../resources/food_group_repository.dart';
 import '../../resources/irritant_service.dart';
-import '../bloc_helpers.dart';
 import 'food_group_state.dart';
 
-class FoodGroupCubit extends Cubit<FoodGroupState> with StreamSubscriber {
+class FoodGroupCubit extends Cubit<FoodGroupState> {
   final String group;
   final IrritantService irritantService;
 

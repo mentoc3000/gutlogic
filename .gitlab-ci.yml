@@ -64,17 +64,20 @@ workflow:
   before_script:
     # move into the server directory
     - cd server
-    # install alpine deps (ideally this would happen in a custom dockerfile)
-    - apk add --quiet --no-cache openjdk8
     # install the server dependencies
     - npm ci --cache .npm-cache --prefer-offline --log-level error
+  cache:
+    <<: *server-cache
+    policy: pull
+
+.firebase:
+  before_script:
+    # install alpine deps (ideally this would happen in a custom dockerfile)
+    - apk add --quiet --no-cache openjdk8
     # add locally installed bins to the path so we can run firebase-tools
     - PATH="$(npm bin):$PATH"
     # set the firebase project for the job
     - firebase use $FIREBASE_PROJECT
-  cache:
-    <<: *server-cache
-    policy: pull
 
 server:prep:
   stage: prep
@@ -86,7 +89,7 @@ server:prep:
   rules:
     - !reference [.server-develop-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]
-    - !reference [.server-merge-request-rules,  rules]
+    - !reference [.server-merge-request-rules, rules]
   cache:
     <<: *server-cache
     policy: pull-push
@@ -100,7 +103,7 @@ server:lint:
   rules:
     - !reference [.server-develop-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]
-    - !reference [.server-merge-request-rules,  rules]
+    - !reference [.server-merge-request-rules, rules]
   dependencies:
     - server:prep
   allow_failure: true
@@ -109,12 +112,15 @@ server:test:
   stage: test
   extends:
     - .server
+  before_script:
+    - !reference [.server, before_script]
+    - !reference [.firebase, before_script]
   script:
     - npm run test
   rules:
     - !reference [.server-develop-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]
-    - !reference [.server-merge-request-rules,  rules]
+    - !reference [.server-merge-request-rules, rules]
   dependencies:
     - server:prep
 
@@ -122,6 +128,9 @@ server:deploy:develop:
   stage: deploy
   extends:
     - .server
+  before_script:
+    - !reference [.server, before_script]
+    - !reference [.firebase, before_script]
   script:
     - npm run deploy
   rules:
@@ -134,6 +143,9 @@ server:deploy:release:
   stage: deploy
   extends:
     - .server
+  before_script:
+    - !reference [.server, before_script]
+    - !reference [.firebase, before_script]
   script:
     - npm run deploy
   rules:
@@ -188,9 +200,9 @@ server:deploy:release:
     - export PUB_CACHE=./.pub-cache
     # alias flutter to use fvm
     - if [ -x "$(command -v fvm)" ]; then
-        echo "Using FVM";
-        fvm install;
-        alias flutter="fvm flutter";
+      echo "Using FVM";
+      fvm install;
+      alias flutter="fvm flutter";
       fi;
     # print the flutter version for logs
     - flutter --version
@@ -212,7 +224,7 @@ client:prep:
   rules:
     - !reference [.client-develop-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
-    - !reference [.client-merge-request-rules,  rules]
+    - !reference [.client-merge-request-rules, rules]
   artifacts:
     reports:
       dotenv: client/version.env
@@ -240,7 +252,7 @@ client:lint:
   rules:
     - !reference [.client-develop-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
-    - !reference [.client-merge-request-rules,  rules]
+    - !reference [.client-merge-request-rules, rules]
   dependencies:
     - client:prep
   allow_failure: true
@@ -261,7 +273,7 @@ client:test:
   rules:
     - !reference [.client-develop-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
-    - !reference [.client-merge-request-rules,  rules]
+    - !reference [.client-merge-request-rules, rules]
   dependencies:
     - client:prep
 
@@ -290,7 +302,7 @@ client:build:ios:
     # job should be the only one performing builds and run with the commented rules below.
     # - !reference [.client-develop-commit-rules, rules]
     # - !reference [.client-release-commit-rules, rules]
-    - !reference [.client-merge-request-rules,  rules]
+    - !reference [.client-merge-request-rules, rules]
   dependencies:
     - client:prep
 

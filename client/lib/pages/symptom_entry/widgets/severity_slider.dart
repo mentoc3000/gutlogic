@@ -144,7 +144,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
     widget.onChange(_valueToSeverity(state + 1));
   }
 
-  void _onDrag(double dx, innerWidth) {
+  void _onDrag(double dx, double innerWidth) {
     final newAnimatedValue = _calcAnimatedValueFormDragX(dx, innerWidth);
 
     if (newAnimatedValue > 0 && newAnimatedValue < SeveritySlider.options.length - 1) {
@@ -166,7 +166,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
     widget.onChange(_valueToSeverity(_animationValue.round()));
   }
 
-  void _onDragStart(x, width) {
+  void _onDragStart(double x, double width) {
     final oneStepWidth = (width - widget.circleDiameter) / (SeveritySlider.options.length - 1);
     _xOffset = x - (oneStepWidth * _animationValue);
   }
@@ -198,10 +198,10 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
                 circleDiameter: widget.circleDiameter,
                 animationValue: _animationValue,
                 width: width,
-                onDragStart: (details) {
+                onDragStart: (DragStartDetails details) {
                   _onDragStart(details.globalPosition.dx, width);
                 },
-                onDrag: (details) {
+                onDrag: (DragUpdateDetails details) {
                   _onDrag(details.globalPosition.dx, width);
                 },
                 onDragEnd: _onDragEnd,
@@ -333,7 +333,7 @@ class Face extends StatelessWidget {
 
 class MyPainter extends CustomPainter {
   MyPainter(
-    animationValue, {
+    double animationValue, {
     this.color = const Color(0xFF615f56),
   })  : activeIndex = animationValue.floor(),
         unitAnimatingValue = (animationValue * 10 % 10 / 10);
@@ -353,7 +353,7 @@ class MyPainter extends CustomPainter {
     return unitAnimatingValue != oldDelegate.unitAnimatingValue || activeIndex != oldDelegate.activeIndex;
   }
 
-  void _drawEye(canvas, size) {
+  void _drawEye(Canvas canvas, Size size) {
     var angle = 0.0;
     var wide = 0.0;
 
@@ -397,7 +397,7 @@ class MyPainter extends CustomPainter {
     );
   }
 
-  void _drawMouth(Canvas canvas, size) {
+  void _drawMouth(Canvas canvas, Size size) {
     final upperY = size.height * 0.70;
     final lowerY = size.height * 0.77;
     final middleY = (lowerY - upperY) / 2 + upperY;

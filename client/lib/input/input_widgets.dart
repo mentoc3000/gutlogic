@@ -49,7 +49,7 @@ class InputErrorBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<Input, InputState>(
+    return BlocBuilder<Input<T>, InputState<T>>(
       bloc: input,
       buildWhen: (prev, next) => prev.error != next.error, // ignore values
       builder: (context, state) => builder(context, state.error),

@@ -33,7 +33,7 @@ void main() {
 
   setUp(() {
     foodBloc = MockFoodBloc();
-    whenListen(foodBloc, const Stream.empty(), initialState: FoodSearchLoading());
+    whenListen(foodBloc, const Stream<FoodSearchState>.empty(), initialState: FoodSearchLoading());
     food = CustomFood(id: '1', name: 'Fruit Cake');
 
     sensitivityService = MockSensitivityService();

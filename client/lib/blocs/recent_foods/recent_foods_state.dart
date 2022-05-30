@@ -39,6 +39,7 @@ class RecentFoodsError extends RecentFoodsState with ErrorState, ErrorRecorder {
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory RecentFoodsError.fromReport(ErrorReport report) =>
-      RecentFoodsError.fromError(error: report.error, trace: report.trace);
+  factory RecentFoodsError.fromReport(ErrorReport report) {
+    return RecentFoodsError.fromError(error: report.error, trace: report.trace);
+  }
 }

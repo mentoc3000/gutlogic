@@ -24,6 +24,5 @@ mixin Dated {
 }
 
 mixin Noted {
-  // TODO: remove nullability in noted
   String? get notes;
 }

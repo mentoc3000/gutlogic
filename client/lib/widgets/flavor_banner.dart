@@ -22,7 +22,7 @@ class FlavorBanner extends StatelessWidget {
     }
 
     void onLongPress() {
-      showDialog(context: context, builder: (context) => DeviceInfoDialog(color: color));
+      showDialog<void>(context: context, builder: (context) => DeviceInfoDialog(color: color));
     }
 
     return GestureDetector(

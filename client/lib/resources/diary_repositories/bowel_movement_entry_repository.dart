@@ -27,9 +27,11 @@ class BowelMovementEntryRepository with FirestoreRepository, TimelineRepository 
     return add(bowelMovementEntry);
   }
 
-  Future<void> updateType(BowelMovementEntry bowelMovementEntry, int newType) =>
-      updateEntry(bowelMovementEntry.rebuild((b) => b..bowelMovement.type = newType));
+  Future<void> updateType(BowelMovementEntry bowelMovementEntry, int newType) {
+    return updateEntry(bowelMovementEntry.rebuild((b) => b..bowelMovement.type = newType));
+  }
 
-  Future<void> updateVolume(BowelMovementEntry bowelMovementEntry, int newVolume) =>
-      updateEntry(bowelMovementEntry.rebuild((b) => b..bowelMovement.volume = newVolume));
+  Future<void> updateVolume(BowelMovementEntry bowelMovementEntry, int newVolume) {
+    return updateEntry(bowelMovementEntry.rebuild((b) => b..bowelMovement.volume = newVolume));
+  }
 }

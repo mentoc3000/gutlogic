@@ -2,9 +2,9 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   language:
-    # strict-casts: true     # TODO resolve issues
-    # strict-inference: true # TODO resolve issues
-    # strict-raw-types: true # TODO resolve issues
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
 
   exclude:
     - "bin/cache/**"

@@ -34,8 +34,9 @@ class MealElementListTile extends StatelessWidget {
         onTap: onTap,
         trailing: SensitivityIndicator(mealElementSensitivity),
       ),
-      onDelete: () =>
-          context.read<MealEntryBloc>().add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement)),
+      onDelete: () {
+        context.read<MealEntryBloc>().add(DeleteMealElement(mealEntry: mealEntry, mealElement: mealElement));
+      },
       confirmDismiss: (_) => showDialog(
         context: context,
         builder: (_) => ConfirmDeleteDialog(itemName: mealElement.foodReference.name),

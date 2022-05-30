@@ -29,7 +29,7 @@ void main() {
         ..name = 'Bread');
       expect(serializers.serialize(food), {
         '\$': 'CustomFood',
-        'measures': [],
+        'measures': <dynamic>[],
         'id': '1234',
         'name': food.name,
       });

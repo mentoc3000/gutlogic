@@ -11,6 +11,7 @@ import '../../models/sensitivity/sensitivity_level.dart';
 import '../../models/serializers.dart';
 import '../../models/user_food_details_api.dart';
 import '../../util/logger.dart';
+import '../../util/null_utils.dart';
 import '../firebase/crashlytics_service.dart';
 import '../firebase/firestore_repository.dart';
 import '../firebase/firestore_service.dart';
@@ -26,8 +27,7 @@ class SensitivityRepository with FirestoreRepository {
   SensitivityRepository({required FirestoreService firestoreService, required this.crashlytics}) {
     this.firestoreService = firestoreService;
     final sensitivityEntryStream = firestoreService.userFoodDetailsCollection.snapshots().map((querySnapshot) =>
-        BuiltList<SensitivityEntry>(
-            querySnapshot.docs.map(_documentTosensitivityEntry).where((entry) => entry != null)));
+        BuiltList<SensitivityEntry>(querySnapshot.docs.map(_documentTosensitivityEntry).where(isNotNull)));
     _behaviorSubject.addStream(sensitivityEntryStream);
   }
 
@@ -76,8 +76,9 @@ class SensitivityRepository with FirestoreRepository {
     return null;
   }
 
-  static Sensitivity deserialize(Map<String, dynamic> object) =>
-      serializers.deserializeWith(Sensitivity.serializer, object) as Sensitivity;
+  static Sensitivity deserialize(Map<String, dynamic> object) {
+    return serializers.deserializeWith(Sensitivity.serializer, object) as Sensitivity;
+  }
 }
 
 SensitivityEntry? findSensitivityEntry(Iterable<SensitivityEntry> sensitivityEntries, FoodReference foodReference) {

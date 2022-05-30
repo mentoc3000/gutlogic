@@ -63,9 +63,11 @@ mixin TimelineRepository on FirestoreRepository {
     });
   }
 
-  Future<void> updateDateTime(DiaryEntry diaryEntry, DateTime newDateTime) =>
-      updateEntry(diaryEntry.rebuild((b) => b..datetime = newDateTime.toUtc()));
+  Future<void> updateDateTime(DiaryEntry diaryEntry, DateTime newDateTime) {
+    return updateEntry(diaryEntry.rebuild((b) => b..datetime = newDateTime.toUtc()));
+  }
 
-  Future<void> updateNotes(DiaryEntry diaryEntry, String newNotes) =>
-      updateEntry(diaryEntry.rebuild((b) => b..notes = newNotes));
+  Future<void> updateNotes(DiaryEntry diaryEntry, String newNotes) {
+    return updateEntry(diaryEntry.rebuild((b) => b..notes = newNotes));
+  }
 }

@@ -29,15 +29,19 @@ class SymptomEntryRepository with FirestoreRepository, TimelineRepository {
     return add(symptomEntry);
   }
 
-  Future<void> updateSeverity(SymptomEntry symptomEntry, Severity newSeverity) =>
-      updateEntry(symptomEntry.rebuild((b) => b..symptom.severity = newSeverity));
+  Future<void> updateSeverity(SymptomEntry symptomEntry, Severity newSeverity) {
+    return updateEntry(symptomEntry.rebuild((b) => b..symptom.severity = newSeverity));
+  }
 
-  Future<void> updateSymptomName(SymptomEntry symptomEntry, String newSymptomName) =>
-      updateEntry(symptomEntry.rebuild((b) => b..symptom.symptomType.name = newSymptomName));
+  Future<void> updateSymptomName(SymptomEntry symptomEntry, String newSymptomName) {
+    return updateEntry(symptomEntry.rebuild((b) => b..symptom.symptomType.name = newSymptomName));
+  }
 
-  Future<void> updateSymptomType(SymptomEntry symptomEntry, SymptomType newSymptomType) =>
-      updateEntry(symptomEntry.rebuild((b) => b..symptom.symptomType = newSymptomType.toBuilder()));
+  Future<void> updateSymptomType(SymptomEntry symptomEntry, SymptomType newSymptomType) {
+    return updateEntry(symptomEntry.rebuild((b) => b..symptom.symptomType = newSymptomType.toBuilder()));
+  }
 
-  Future<void> updateSymptom(SymptomEntry symptomEntry, Symptom newSymptom) =>
-      updateEntry(symptomEntry.rebuild((b) => b..symptom = newSymptom.toBuilder()));
+  Future<void> updateSymptom(SymptomEntry symptomEntry, Symptom newSymptom) {
+    return updateEntry(symptomEntry.rebuild((b) => b..symptom = newSymptom.toBuilder()));
+  }
 }

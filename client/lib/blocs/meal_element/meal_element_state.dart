@@ -39,9 +39,11 @@ class MealElementError extends MealElementState with ErrorState, ErrorRecorder {
       : message = connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString,
         report = ErrorReport(error: error, trace: trace);
 
-  factory MealElementError.fromReport(ErrorReport report) =>
-      MealElementError.fromError(error: report.error, trace: report.trace);
+  factory MealElementError.fromReport(ErrorReport report) {
+    return MealElementError.fromError(error: report.error, trace: report.trace);
+  }
 
-  static String buildMessage(dynamic error) =>
-      connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString;
+  static String buildMessage(dynamic error) {
+    return connectionExceptionMessage(error) ?? firestoreExceptionString(error) ?? defaultExceptionString;
+  }
 }

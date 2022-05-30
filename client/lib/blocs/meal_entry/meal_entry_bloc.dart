@@ -10,7 +10,8 @@ import '../diary_entry/diary_entry.dart';
 import 'meal_entry_event.dart';
 import 'meal_entry_state.dart';
 
-class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubscriber, DiaryEntryMapper {
+class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState>
+    with StreamSubscriber<MealEntry?, MealEntryState>, DiaryEntryMapper<MealEntry?, MealEntryState> {
   final MealEntryRepository repository;
 
   MealEntryBloc({required this.repository}) : super(MealEntryLoading()) {
@@ -37,10 +38,14 @@ class MealEntryBloc extends Bloc<MealEntryEvent, MealEntryState> with StreamSubs
   void _onStream(StreamMealEntry event, Emitter<MealEntryState> emit) {
     try {
       emit(MealEntryLoaded(event.diaryEntry));
-      streamSubscription = timelineRepository.stream(event.diaryEntry).listen(
-            (d) => add(LoadMealEntry(d as MealEntry)),
-            onError: (error, StackTrace trace) => add(ThrowMealEntryError.fromError(error: error, trace: trace)),
-          );
+      streamSubscription = timelineRepository.stream(event.diaryEntry).cast<MealEntry>().listen(
+        (d) {
+          add(LoadMealEntry(d));
+        },
+        onError: (dynamic error, StackTrace trace) {
+          add(ThrowMealEntryError.fromError(error: error, trace: trace));
+        },
+      );
     } catch (error, trace) {
       emit(MealEntryError.fromError(error: error, trace: trace));
     }

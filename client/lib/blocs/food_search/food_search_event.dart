@@ -59,6 +59,7 @@ class ThrowFoodSearchError extends FoodSearchEvent with ErrorEvent {
 
   const ThrowFoodSearchError({required this.report});
 
-  factory ThrowFoodSearchError.fromError({required dynamic error, required StackTrace trace}) =>
-      ThrowFoodSearchError(report: ErrorReport(error: error, trace: trace));
+  factory ThrowFoodSearchError.fromError({required dynamic error, required StackTrace trace}) {
+    return ThrowFoodSearchError(report: ErrorReport(error: error, trace: trace));
+  }
 }

@@ -136,6 +136,7 @@ class ThrowSymptomEntryError extends SymptomEntryEvent with ErrorEvent {
 
   const ThrowSymptomEntryError({required this.report});
 
-  factory ThrowSymptomEntryError.fromError({required dynamic error, required StackTrace trace}) =>
-      ThrowSymptomEntryError(report: ErrorReport(error: error, trace: trace));
+  factory ThrowSymptomEntryError.fromError({required dynamic error, required StackTrace trace}) {
+    return ThrowSymptomEntryError(report: ErrorReport(error: error, trace: trace));
+  }
 }

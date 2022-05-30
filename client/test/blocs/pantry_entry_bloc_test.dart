@@ -85,7 +85,7 @@ void main() {
       ),
       act: (bloc) async {
         bloc.add(StreamEntry(pantryEntry));
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
         bloc.add(StreamEntry(pantryEntry));
       },
       expect: () => [

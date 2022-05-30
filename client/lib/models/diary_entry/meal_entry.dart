@@ -18,7 +18,7 @@ abstract class MealEntry implements DiaryEntry, Built<MealEntry, MealEntryBuilde
     required String id,
     required DateTime datetime,
     required BuiltList<MealElement> mealElements,
-    String notes,
+    String? notes,
   }) = _$MealEntry._;
 
   factory MealEntry.fromBuilder([MealEntryBuilder Function(MealEntryBuilder) updates]) = _$MealEntry;

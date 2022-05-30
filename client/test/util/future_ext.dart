@@ -23,7 +23,7 @@ void main() {
 
       Future<void> assertion(int index, int delay) async {
         expect(counter++, lessThanOrEqualTo(concurrency));
-        await Future.delayed(Duration(seconds: delay));
+        await Future<void>.delayed(Duration(seconds: delay));
         expect(counter--, lessThanOrEqualTo(concurrency));
       }
 

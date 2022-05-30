@@ -12,7 +12,8 @@ import '../../resources/pantry_service.dart';
 import '../bloc_helpers.dart';
 import 'pantry_entry.dart';
 
-class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with StreamSubscriber {
+class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState>
+    with StreamSubscriber<PantryEntry?, PantryEntryState> {
   final PantryService repository;
   final FoodService foodService;
   final IrritantService irritantService;
@@ -63,9 +64,13 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
       emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: food, irritants: irritants));
 
       streamSubscription = repository.stream(event.pantryEntry).listen(
-            (pantryEntry) => add(Load(pantryEntry: pantryEntry!, food: food, irritants: irritants)),
-            onError: (error, StackTrace trace) => add(ThrowPantryEntryError.fromError(error: error, trace: trace)),
-          );
+        (pantryEntry) {
+          add(Load(pantryEntry: pantryEntry!, food: food, irritants: irritants));
+        },
+        onError: (dynamic error, StackTrace trace) {
+          add(ThrowPantryEntryError.fromError(error: error, trace: trace));
+        },
+      );
     } catch (error, trace) {
       emit(PantryEntryError.fromError(error: error, trace: trace));
     }

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/food/food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
+import '../../models/meal_element.dart';
 import '../../resources/diary_repositories/meal_element_repository.dart';
 import '../../resources/food/food_service.dart';
 import '../../resources/irritant_service.dart';
@@ -12,7 +13,8 @@ import '../bloc_helpers.dart';
 import 'meal_element_event.dart';
 import 'meal_element_state.dart';
 
-class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with StreamSubscriber {
+class MealElementBloc extends Bloc<MealElementEvent, MealElementState>
+    with StreamSubscriber<MealElement?, MealElementState> {
   final MealElementRepository mealElementRepository;
   final FoodService foodService;
   final IrritantService irritantService;
@@ -63,9 +65,13 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState> with Stre
 
       // Subscribe to the stream, updating the mealElement but using the same food value, which cannot change.
       streamSubscription = mealElementRepository.stream(event.mealElement).listen(
-            (mealElement) => add(Load(mealElement: mealElement!, food: food, irritants: irritants)),
-            onError: (error, StackTrace trace) => add(ThrowMealElementError.fromError(error: error, trace: trace)),
-          );
+        (mealElement) {
+          add(Load(mealElement: mealElement!, food: food, irritants: irritants));
+        },
+        onError: (dynamic error, StackTrace trace) {
+          add(ThrowMealElementError.fromError(error: error, trace: trace));
+        },
+      );
     } catch (error, trace) {
       emit(MealElementError.fromError(error: error, trace: trace));
     }

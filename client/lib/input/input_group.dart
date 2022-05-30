@@ -40,7 +40,7 @@ abstract class InputGroup extends Cubit<InputGroupState> {
   bool get valid => state.valid;
 
   /// Overridden by form subclasses so this class can operate on them.
-  List<Input> get inputs;
+  List<Input<dynamic>> get inputs;
 
   /// Update the cubit state with the latest input values.
   void update() {
