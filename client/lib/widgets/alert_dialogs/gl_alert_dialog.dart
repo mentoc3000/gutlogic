@@ -10,6 +10,8 @@ class GLAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    const actionPadding = EdgeInsets.symmetric(vertical: 6.0);
+    final paddedActions = actions?.map((w) => Padding(padding: actionPadding, child: w)).toList();
 
     return AnimatedContainer(
       padding: mediaQuery.padding,
@@ -17,7 +19,7 @@ class GLAlertDialog extends StatelessWidget {
       child: AlertDialog(
         title: title == null ? null : Text(title!),
         content: content,
-        actions: actions,
+        actions: paddedActions,
       ),
     );
   }

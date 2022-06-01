@@ -73,7 +73,7 @@ class DiaryListView extends StatelessWidget {
     // Add space at bottom so today can be at the top of the ListView
     // TODO: assign tile height dynamically based on actual widget size
     const heightDateTile = 200;
-    tiles.add(Container(height: MediaQuery.of(context).size.height - heightDateTile, color: Colors.red));
+    tiles.add(Container(height: MediaQuery.of(context).size.height - heightDateTile));
 
     return tiles;
   }
