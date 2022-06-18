@@ -16,7 +16,7 @@ const apple = {
 };
 const mannitol = {
   'name': 'mannitol',
-  'intensitySteps': [0.4, 0.5, 1.0],
+  'intensitySteps': [0.0, 0.4, 0.5, 1.0],
 };
 
 void main() {
@@ -61,32 +61,32 @@ void main() {
       });
 
       test('gets threshold', () async {
-        final irriant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
-        final intensity = await repository.intensityThresholds(irriant);
+        final irritant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
+        final intensity = await repository.intensityThresholds(irritant.name);
         final thresholds = [0.0, 0.4, 0.5, 1.0];
         expect(intensity, thresholds);
       });
 
       test('no intensity from unknown irritant', () async {
         final irriant = Irritant(name: 'Sorbitol', concentration: 0.003, dosePerServing: 0.9);
-        final intensity = await repository.intensityThresholds(irriant);
+        final intensity = await repository.intensityThresholds(irriant.name);
         expect(intensity, null);
       });
 
       test('caches intensity thresholds', () async {
         final irriant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
-        final intensity = await repository.intensityThresholds(irriant);
+        final intensity = await repository.intensityThresholds(irriant.name);
         final thresholds = [0.0, 0.4, 0.5, 1.0];
         expect(intensity, thresholds);
 
         const mannitolModified = {
           'name': 'mannitol',
-          'intensitySteps': [0.1, 0.2, 0.3],
+          'intensitySteps': [0.0, 0.1, 0.2, 0.3],
         };
         await firestore.doc('food_irritant_data/mannitol').set(mannitolModified);
 
         // IrritantService should use cached steps instead of new ones
-        final intensity2 = await repository.intensityThresholds(irriant);
+        final intensity2 = await repository.intensityThresholds(irriant.name);
         expect(intensity2, thresholds);
       });
     });

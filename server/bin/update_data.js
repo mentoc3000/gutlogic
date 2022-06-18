@@ -42,15 +42,17 @@ async function selectFoodNameMap(db) {
 /// Returns a new multi-map of { name, concentration, dosePerServing } values keyed by food ID.
 async function selectIrritantMap(db) {
   const sql = `
-SELECT
-  foods.food_id as food_id,
-  irritant_name as irritant,
-  MAX(concentration) as concentration,
-  foods.weight_per_serving as weight_per_serving
-FROM
-  irritant_content
-INNER JOIN foods ON irritant_content.food_id = foods.food_id
-GROUP BY irritant_content.food_id, irritant`;
+SELECT foods.food_id AS food_id,
+       irritant_name AS irritant,
+       MAX(concentration) AS concentration,
+       foods.weight_per_serving AS weight_per_serving
+  FROM irritant_content
+       INNER JOIN
+       foods ON irritant_content.food_id = foods.food_id
+ WHERE foods.show_irritants
+ GROUP BY irritant_content.food_id,
+          irritant;
+`;
 
   const keyfunc = (row) => row.food_id;
   const valfunc = (row) => ({ name: row.irritant, concentration: row.concentration, dosePerServing: row.concentration * row.weight_per_serving });
@@ -211,7 +213,41 @@ function processIrritantDoses(irritants) {
 
 /// Food Groups data, version 2
 async function getFoodGroups2(db) {
-  const sql = `
+  const setupSql = `
+CREATE TABLE IF NOT EXISTS [#extended_irritant_content] (
+    food_id,
+    irritant_name,
+    concentration,
+    source_id
+);
+
+INSERT INTO [#extended_irritant_content] SELECT *
+                                        FROM irritant_content;
+
+INSERT INTO [#extended_irritant_content] SELECT f.food_id,
+                                             'Excess Fructose' AS irritant_name,
+                                             MAX(f_concentration - g_concentration, 0) AS concentration,
+                                             f.source_id
+                                        FROM (
+                                                 SELECT food_id,
+                                                        irritant_name,
+                                                        concentration AS f_concentration,
+                                                        source_id
+                                                   FROM irritant_content
+                                                  WHERE irritant_name = 'Fructose'
+                                             )
+                                             AS f
+                                             LEFT OUTER JOIN
+                                             (
+                                                 SELECT food_id,
+                                                        source_id,
+                                                        concentration AS g_concentration
+                                                   FROM irritant_content
+                                                  WHERE irritant_name = 'Glucose'
+                                             )
+                                             AS g ON f.food_id = g.food_id AND 
+                                                     f.source_id = g.source_id;`;
+  const selectSql = `
 SELECT food_group_name,
        e.edamam_id as edamam_id,
        food_name,
@@ -228,15 +264,20 @@ SELECT food_group_name,
        LEFT OUTER JOIN
        edamam AS e ON fg.edamam_id = e.edamam_id
        LEFT OUTER JOIN
-       irritant_content AS ic ON e.food_id = ic.food_id
+       [#extended_irritant_content] AS ic ON e.food_id = ic.food_id
        JOIN
        foods AS f ON f.food_id = ic.food_id
+ WHERE f.show_irritants
  GROUP BY ic.food_id;
 `;
 
+  const cleanupSql = 'DROP TABLE IF EXISTS [#extended_irritant_content];';
+
   const toFoodRef = (row) => ({ '$': 'EdamamFoodReference', 'id': row.edamam_id, 'name': row.food_name });
 
-  const rows = await db.all(sql);
+  await db.exec(setupSql);
+  const rows = await db.all(selectSql);
+  await db.exec(cleanupSql);
 
   return rows.map(row => ({ group: row.food_group_name, foodRef: toFoodRef(row), doses: processIrritantDoses(row) }));
 }
@@ -254,17 +295,19 @@ async function replaceFirestoreCollection(writer, collection, data) {
 
 async function getIrritantData(db) {
   const sql = `SELECT display_name,
+                      low_dose,
                       moderate_dose,
                       high_dose
                  FROM irritants
-                WHERE moderate_dose IS NOT NULL AND 
+                WHERE low_dose IS NOT NULL AND 
+                      moderate_dose IS NOT NULL AND 
                       high_dose IS NOT NULL;
                   `;
   const rows = await db.all(sql);
   const data = [];
   for (const row of rows) {
     const name = row.display_name.toLowerCase();
-    const intensitySteps = [row.moderate_dose, row.high_dose];
+    const intensitySteps = [row.low_dose, row.moderate_dose, row.high_dose];
     data.push({ name, intensitySteps });
   }
   return data;
@@ -277,8 +320,7 @@ async function getIrritantData(db) {
 
   const db = await sqlite.open({
     filename: dbPath,
-    driver: sqlite3.cached.Database,
-    mode: sqlite3.OPEN_READONLY
+    driver: sqlite3.cached.Database
   });
 
   const certPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;

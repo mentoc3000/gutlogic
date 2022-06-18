@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
 
+import '../models/food_group_entry.dart';
 import '../models/food_reference/food_reference.dart';
 import '../models/irritant/food_irritant_data_api.dart';
 import '../models/irritant/food_irritants_api.dart';
@@ -34,38 +35,39 @@ class IrritantService with FirestoreRepository {
   }
 
   /// Dose thresholds at which the intensity increases
-  Future<BuiltList<double>?> intensityThresholds(Irritant irritant) async {
+  Future<BuiltList<double>?> intensityThresholds(String irritant) async {
     // Get steps from cache, if available
     late final BuiltList<double>? thresholds;
-    if (_intensityThresholdCache.containsKey(irritant.name)) {
-      thresholds = _intensityThresholdCache[irritant.name];
+    if (_intensityThresholdCache.containsKey(irritant)) {
+      thresholds = _intensityThresholdCache[irritant];
     } else {
       final irritantDataDoc =
-          await firestoreService.irritantDataCollection.where('name', isEqualTo: irritant.name.toLowerCase()).get();
+          await firestoreService.irritantDataCollection.where('name', isEqualTo: irritant.toLowerCase()).get();
 
       // Return null if irritant can't be found
       if (irritantDataDoc.docs.isEmpty) {
         thresholds = null;
       } else {
-        final irritantData =
-            serializers.deserializeWith(FoodIrritantDataApi.serializer, irritantDataDoc.docs.first.data());
-        thresholds = [0.0, ...?irritantData?.intensitySteps].toBuiltList();
+        thresholds = serializers
+            .deserializeWith(FoodIrritantDataApi.serializer, irritantDataDoc.docs.first.data())
+            ?.intensitySteps
+            .toBuiltList();
       }
 
-      _intensityThresholdCache[irritant.name] = thresholds;
+      _intensityThresholdCache[irritant] = thresholds;
     }
 
     return thresholds;
   }
 
-  Future<int?> maxIntensity(Iterable<Irritant>? irritants) async {
-    if (irritants == null) return null;
-
+  Future<int> maxIntensity(FoodGroupEntry foodGroupEntry) async {
     var maxIntensity = 0;
-    for (var irritant in irritants) {
-      final thresholds = await intensityThresholds(irritant);
+    for (var doseEntry in foodGroupEntry.doses.entries) {
+      final irritantName = doseEntry.key;
+      final dose = doseEntry.value;
+      final thresholds = await intensityThresholds(irritantName);
       if (thresholds == null) continue;
-      final intensity = thresholds.map((t) => irritant.dosePerServing > t).fold<int>(0, (acc, tf) => acc += tf ? 1 : 0);
+      final intensity = thresholds.map((t) => dose > t).fold<int>(0, (acc, tf) => acc += tf ? 1 : 0);
       if (intensity > maxIntensity) {
         maxIntensity = max(maxIntensity, intensity);
       }

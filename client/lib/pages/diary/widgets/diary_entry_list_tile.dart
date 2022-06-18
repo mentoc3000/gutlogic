@@ -15,7 +15,7 @@ class DiaryEntryListTile extends StatelessWidget {
   final DiaryEntry diaryEntry;
   final Color barColor;
   final VoidCallback? onTap;
-  final Widget? trailing;
+  final Widget? leading;
 
   const DiaryEntryListTile({
     required this.heading,
@@ -23,7 +23,7 @@ class DiaryEntryListTile extends StatelessWidget {
     required this.diaryEntry,
     required this.barColor,
     this.onTap,
-    this.trailing,
+    this.leading,
   });
 
   Widget buildTime(BuildContext context) {
@@ -45,9 +45,13 @@ class DiaryEntryListTile extends StatelessWidget {
   }
 
   Widget buildHeading() {
-    return Text(
-      heading,
-      style: tileHeadingStyle,
+    final paddedLeading = leading != null ? Padding(padding: const EdgeInsets.only(right: 8), child: leading!) : null;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (paddedLeading != null) paddedLeading,
+        Text(heading, style: tileHeadingStyle),
+      ],
     );
   }
 
@@ -94,13 +98,7 @@ class DiaryEntryListTile extends StatelessWidget {
         dense: true,
         leading: buildTime(context),
         title: buildCenter(),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (trailing != null) trailing!,
-            const Icon(GLIcons.arrowRight),
-          ],
-        ),
+        trailing: const Icon(GLIcons.arrowRight),
         onTap: onTap,
       ),
       onDelete: () => diaryEntriesBloc.add(Delete(diaryEntry)),

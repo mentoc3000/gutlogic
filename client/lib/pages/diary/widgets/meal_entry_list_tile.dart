@@ -28,7 +28,7 @@ class MealEntryListTile extends StatelessWidget {
       diaryEntry: entry,
       barColor: GLColors.food,
       onTap: () => Navigator.push(context, Routes.of(context).createMealEntryRoute(entry: entry)),
-      trailing: SensitivityIndicator(entrySensitivity),
+      leading: SensitivityIndicator(entrySensitivity),
     );
   }
 }

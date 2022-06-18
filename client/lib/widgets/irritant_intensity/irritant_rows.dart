@@ -36,7 +36,7 @@ class _IrritantRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final intensityThresholds = context.read<IrritantService>().intensityThresholds(irritant);
+    final intensityThresholds = context.read<IrritantService>().intensityThresholds(irritant.name);
 
     return FutureBuilder<BuiltList<double>?>(
       future: intensityThresholds,

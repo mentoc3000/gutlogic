@@ -4,7 +4,7 @@ import 'screenshots_util.dart';
 
 /// Wrap Process.run with error throwing for non-zero exit codes.
 Future<ProcessResult> run(String command, List<String> arguments, {String? workingDirectory}) async {
-  final result = await Process.run(command, arguments, workingDirectory: workingDirectory);
+  final result = await Process.run(command, arguments, workingDirectory: workingDirectory, runInShell: true);
 
   if (result.exitCode == 0) return result;
 
@@ -14,6 +14,12 @@ Future<ProcessResult> run(String command, List<String> arguments, {String? worki
 /// Build the screenshots driver into a [package] (e.g ios/apk).
 Future<void> build(String package, String target) async {
   if (package == 'ios') {
+    // Tweak source files as workaround to bug
+    // BUG: https://github.com/flutter/flutter/issues/91668
+    await run('bash', ['flutter_mod.sh'], workingDirectory: 'bin');
+    await run('flutter', ['clean']);
+    await run('flutter', ['pub', 'get']);
+
     log.i('Installing pods');
     await run('pod', ['install'], workingDirectory: 'ios');
   }
