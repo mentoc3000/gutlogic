@@ -15,7 +15,7 @@ class FoodCubit extends Cubit<FoodState> with StreamSubscriber<Food?, FoodState>
     required FoodService foodService,
     required this.irritantService,
     required FoodReference foodReference,
-  }) : super(FoodLoading()) {
+  }) : super(FoodLoading(foodReference: foodReference)) {
     streamSubscription = foodService.streamFood(foodReference).listen(_onData, onError: _onError);
   }
 

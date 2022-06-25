@@ -33,11 +33,15 @@ class FoodPage extends StatelessWidget {
   }
 
   AppBar appBarBuilder(BuildContext context, FoodState state) {
+    late final String title;
     if (state is FoodLoaded) {
-      return GLAppBar(title: state.food.name);
+      title = state.food.name;
+    } else if (state is FoodLoading) {
+      title = state.foodReference.name;
     } else {
-      return GLAppBar(title: 'Food');
+      title = 'Food';
     }
+    return GLAppBar(title: title);
   }
 
   Widget bodyBuilder(BuildContext context, FoodState state) {

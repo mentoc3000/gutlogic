@@ -333,6 +333,14 @@ final vegetables = [
   FoodGroupEntry(
     group: 'Vegetables',
     foodRef: EdamamFoodReference(
+      id: 'food_a8g63g7ak6bnmvbu7agxibp4a0dy',
+      name: 'Bell Pepper, Red',
+    ),
+    doses: BuiltMap({'Sorbitol': 0.0, 'Mannitol': 0.0, 'GOS': 0.0, 'Fructan': 0.0, 'Fructose': 0.0}),
+  ),
+  FoodGroupEntry(
+    group: 'Vegetables',
+    foodRef: EdamamFoodReference(
       id: 'food_bq7w3usaxapk30b8utp6lasy79lv',
       name: 'Bok Choy',
     ),
@@ -353,7 +361,7 @@ final vegetables = [
     group: 'Vegetables',
     foodRef: EdamamFoodReference(
       id: 'food_bkr6xbxbvl7pgua0vy4ibblf93qq',
-      name: 'Brussel Sprouts',
+      name: 'Brussels Sprouts',
     ),
     doses: BuiltMap({
       'Sorbitol': 0.3116,
@@ -718,6 +726,7 @@ final vegetableMaxIntensities = Map.fromIterables(vegetableListSorted, [
   0, // Bean Sprout
   2, // Beet
   2, // Bell Pepper, Green
+  1, // Bell Pepper, Red
   1, // Bok Choy
   3, // Broccoli
   3, // Brussels Sprouts
