@@ -25,7 +25,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/severity.dart';
-import '../../../util/math.dart' as math;
+import '../../../widgets/severity_indicator.dart';
 
 typedef OnChange = void Function(Severity severity);
 
@@ -156,7 +156,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
     }
   }
 
-  void _onDragEnd(_) {
+  void _onDragEnd(DragEndDetails _) {
     _controller.duration = const Duration(milliseconds: 100);
     _tween.begin = _animationValue;
     _tween.end = _animationValue.round().toDouble();
@@ -178,6 +178,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+    final position = (_animationValue + 0.5) / 4;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: paddingSize),
       height: 100,
@@ -194,17 +195,16 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
                 optionStyle: widget.optionStyle,
                 circleDiameter: widget.circleDiameter,
               ),
-              MyIndicator(
-                circleDiameter: widget.circleDiameter,
-                animationValue: _animationValue,
-                width: width,
-                onDragStart: (DragStartDetails details) {
-                  _onDragStart(details.globalPosition.dx, width);
-                },
-                onDrag: (DragUpdateDetails details) {
-                  _onDrag(details.globalPosition.dx, width);
-                },
-                onDragEnd: _onDragEnd,
+              Positioned(
+                top: 0,
+                left: width * position - widget.circleDiameter / 2,
+                child: SeverityIndicator(
+                  value: _animationValue,
+                  circleDiameter: widget.circleDiameter,
+                  onDragStart: (DragStartDetails details) => _onDragStart(details.globalPosition.dx, width),
+                  onDrag: (DragUpdateDetails details) => _onDrag(details.globalPosition.dx, width),
+                  onDragEnd: _onDragEnd,
+                ),
               ),
             ],
           );
@@ -308,282 +308,6 @@ class MeasureLine extends StatelessWidget {
           children: _buildUnits(),
         ),
       ],
-    );
-  }
-}
-
-class Face extends StatelessWidget {
-  const Face({this.color = const Color(0xFF616154), required this.animationValue, required this.circleDiameter});
-
-  final double animationValue;
-  final Color color;
-  final double circleDiameter;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: circleDiameter,
-      width: circleDiameter,
-      child: CustomPaint(
-        size: const Size(300, 300),
-        painter: MyPainter(animationValue, color: color),
-      ),
-    );
-  }
-}
-
-class MyPainter extends CustomPainter {
-  MyPainter(
-    double animationValue, {
-    this.color = const Color(0xFF615f56),
-  })  : activeIndex = animationValue.floor(),
-        unitAnimatingValue = (animationValue * 10 % 10 / 10);
-
-  final int activeIndex;
-  Color color;
-  final double unitAnimatingValue;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    _drawEye(canvas, size);
-    _drawMouth(canvas, size);
-  }
-
-  @override
-  bool shouldRepaint(MyPainter oldDelegate) {
-    return unitAnimatingValue != oldDelegate.unitAnimatingValue || activeIndex != oldDelegate.activeIndex;
-  }
-
-  void _drawEye(Canvas canvas, Size size) {
-    var angle = 0.0;
-    var wide = 0.0;
-
-    switch (activeIndex) {
-      case 0:
-        angle = 55 - unitAnimatingValue * 50;
-        wide = 80.0;
-        break;
-      case 1:
-        wide = 80 - unitAnimatingValue * 80;
-        angle = 5;
-        break;
-    }
-    final degree1 = 90 * 3 + angle;
-    final degree2 = 90 * 3 - angle + wide;
-    final x1 = size.width / 2 * 0.65;
-    final x2 = size.width - x1;
-    final y = size.height * 0.41;
-    const eyeRadius = 5.0;
-
-    final paint = Paint()..color = color;
-    canvas.drawArc(
-      Rect.fromCircle(
-        center: Offset(x1, y),
-        radius: eyeRadius,
-      ),
-      math.radians(degree1),
-      math.radians(360 - wide),
-      false,
-      paint,
-    );
-    canvas.drawArc(
-      Rect.fromCircle(
-        center: Offset(x2, y),
-        radius: eyeRadius,
-      ),
-      math.radians(degree2),
-      math.radians(360 - wide),
-      false,
-      paint,
-    );
-  }
-
-  void _drawMouth(Canvas canvas, Size size) {
-    final upperY = size.height * 0.70;
-    final lowerY = size.height * 0.77;
-    final middleY = (lowerY - upperY) / 2 + upperY;
-
-    final leftX = size.width / 2 * 0.65;
-    final rightX = size.width - leftX;
-    final middleX = size.width / 2;
-
-    var y1 = 0.0, y3 = 0.0, x2 = 0.0, y2 = 0.0;
-    Path? path2;
-    switch (activeIndex) {
-      case 0:
-        y1 = lowerY;
-        x2 = middleX;
-        y2 = upperY;
-        y3 = lowerY;
-        break;
-      case 1:
-        y1 = lowerY;
-        x2 = middleX;
-        y2 = unitAnimatingValue * (middleY - upperY) + upperY;
-        y3 = lowerY - unitAnimatingValue * (lowerY - upperY);
-        break;
-      case 2:
-        y1 = unitAnimatingValue * (upperY - lowerY) + lowerY;
-        x2 = middleX;
-        y2 = unitAnimatingValue * (lowerY + 3 - middleY) + middleY;
-        y3 = upperY;
-        break;
-      case 3:
-        y1 = upperY;
-        x2 = middleX;
-        y2 = lowerY + 3;
-        y3 = upperY;
-        path2 = Path()
-          ..moveTo(leftX, y1)
-          ..quadraticBezierTo(
-            x2,
-            y2,
-            upperY - 2.5,
-            y3 - 2.5,
-          )
-          ..quadraticBezierTo(
-            x2,
-            y2 - unitAnimatingValue * (y2 - upperY + 2.5),
-            leftX,
-            upperY - 2.5,
-          )
-          ..close();
-        break;
-      case 4:
-        y1 = upperY;
-        x2 = middleX;
-        y2 = lowerY + 3;
-        y3 = upperY;
-        path2 = Path()
-          ..moveTo(leftX, y1)
-          ..quadraticBezierTo(
-            x2,
-            y2,
-            upperY - 2.5,
-            y3 - 2.5,
-          )
-          ..quadraticBezierTo(
-            x2,
-            upperY - 2.5,
-            leftX,
-            upperY - 2.5,
-          )
-          ..close();
-        break;
-    }
-    final path = Path()
-      ..moveTo(leftX, y1)
-      ..quadraticBezierTo(
-        x2,
-        y2,
-        rightX,
-        y3,
-      );
-
-    canvas.drawPath(
-        path,
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.round
-          ..strokeWidth = 5);
-
-    if (path2 != null) {
-      canvas.drawPath(
-        path2,
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.fill
-          ..strokeCap = StrokeCap.round,
-      );
-    }
-  }
-}
-
-class MyIndicator extends StatelessWidget {
-  const MyIndicator({
-    required this.animationValue,
-    required this.width,
-    required this.onDrag,
-    required this.onDragStart,
-    required this.onDragEnd,
-    required this.circleDiameter,
-  }) : position = (animationValue + .5) / 4;
-
-  final double animationValue;
-  final Function onDrag;
-  final Function onDragEnd;
-  final Function onDragStart;
-  final double position;
-  final double width;
-  final double circleDiameter;
-
-  Widget _buildIndicator() {
-    const redOnset = .3;
-    final opacityOfYellow = position < redOnset ? 1.0 : (1 - position) / (1 - redOnset);
-    final faceValue = SeveritySlider.options.length - animationValue - 1;
-    return GestureDetector(
-      onHorizontalDragStart: (_) => onDragStart,
-      onHorizontalDragUpdate: (_) => onDrag,
-      onHorizontalDragEnd: (_) => onDragEnd,
-      child: SizedBox(
-        width: circleDiameter,
-        height: circleDiameter,
-        child: Stack(
-          children: <Widget>[
-            const Head(
-              color: Color(0xFFE13D5E), // angry face color
-              hasShadow: true,
-            ),
-            Opacity(
-              opacity: opacityOfYellow,
-              child: const Head(
-                color: Color(0xFFfee385), // happy face color
-              ),
-            ),
-            Face(
-              animationValue: faceValue,
-              circleDiameter: circleDiameter,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: width * position - circleDiameter / 2,
-      child: _buildIndicator(),
-    );
-  }
-}
-
-class Head extends StatelessWidget {
-  const Head({this.color = const Color(0xFFc9ced2), this.hasShadow = false, this.circleDiameter});
-
-  final Color color;
-  final bool hasShadow;
-  final double? circleDiameter;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: circleDiameter,
-      width: circleDiameter,
-      decoration: BoxDecoration(
-        boxShadow: hasShadow
-            ? [
-                const BoxShadow(
-                  color: Colors.black26,
-                  offset: Offset(0, 2),
-                  blurRadius: 5.0,
-                )
-              ]
-            : null,
-        color: color,
-        shape: BoxShape.circle,
-      ),
     );
   }
 }
