@@ -316,7 +316,7 @@ exports.getIrritantData = async function getIrritantData(db) {
   const rows = await db.all(sql);
   const data = [];
   for (const row of rows) {
-    const name = row.display_name.toLowerCase();
+    const name = row.display_name;
     const intensitySteps = [row.low_dose, row.moderate_dose, row.high_dose];
     data.push({ name, intensitySteps });
   }
