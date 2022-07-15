@@ -41,8 +41,7 @@ class IrritantService with FirestoreRepository {
     if (_intensityThresholdCache.containsKey(irritant)) {
       thresholds = _intensityThresholdCache[irritant];
     } else {
-      final irritantDataDoc =
-          await firestoreService.irritantDataCollection.where('name', isEqualTo: irritant.toLowerCase()).get();
+      final irritantDataDoc = await firestoreService.irritantDataCollection.where('name', isEqualTo: irritant).get();
 
       // Return null if irritant can't be found
       if (irritantDataDoc.docs.isEmpty) {
