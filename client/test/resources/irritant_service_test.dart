@@ -15,7 +15,7 @@ const apple = {
   'names': ['apple'],
 };
 const mannitol = {
-  'name': 'mannitol',
+  'name': 'Mannitol',
   'intensitySteps': [0.0, 0.4, 0.5, 1.0],
 };
 
