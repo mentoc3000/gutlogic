@@ -26,11 +26,26 @@ import 'package:flutter/material.dart';
 
 import '../../../util/math.dart' as math;
 import '../models/severity.dart';
+import '../style/gl_colors.dart';
 
 class SeverityIndicator extends StatelessWidget {
-  const SeverityIndicator({
+  final double value;
+  final double circleDiameter;
+  final bool hasShadow;
+  final Color headColor;
+  final Color faceColor;
+  final void Function(DragUpdateDetails)? onDrag;
+  final void Function(DragEndDetails)? onDragEnd;
+  final void Function(DragStartDetails)? onDragStart;
+
+  static const defaultFaceColor = Color(0xFF616154);
+
+  const SeverityIndicator._({
     required this.value,
     required this.circleDiameter,
+    required this.hasShadow,
+    required this.headColor,
+    required this.faceColor,
     this.onDragStart,
     this.onDrag,
     this.onDragEnd,
@@ -43,39 +58,60 @@ class SeverityIndicator extends StatelessWidget {
     void Function(DragUpdateDetails)? onDrag,
     void Function(DragEndDetails)? onDragEnd,
   }) {
-    late final double value;
-    if (severity == Severity.mild) {
-      value = 0.0;
-    } else if (severity == Severity.moderate) {
-      value = 1.0;
-    } else if (severity == Severity.intense) {
-      value = 2.0;
-    } else if (severity == Severity.severe) {
-      value = 3.0;
-    } else {
-      throw ArgumentError(severity);
-    }
-    return SeverityIndicator(
-      value: value,
+    return SeverityIndicator._(
+      value: _severityToValue(severity),
       circleDiameter: circleDiameter,
+      hasShadow: true,
+      headColor: headColorFromSeverity(severity),
+      faceColor: defaultFaceColor,
       onDragStart: onDragStart,
       onDrag: onDrag,
       onDragEnd: onDragEnd,
     );
   }
 
-  final double value;
-  final double circleDiameter;
-  final void Function(DragUpdateDetails)? onDrag;
-  final void Function(DragEndDetails)? onDragEnd;
-  final void Function(DragStartDetails)? onDragStart;
+  factory SeverityIndicator.fromValue({
+    required double value,
+    required double circleDiameter,
+    void Function(DragStartDetails)? onDragStart,
+    void Function(DragUpdateDetails)? onDrag,
+    void Function(DragEndDetails)? onDragEnd,
+  }) {
+    return SeverityIndicator._(
+      value: value,
+      circleDiameter: circleDiameter,
+      hasShadow: true,
+      headColor: _headColorFromValue(value),
+      faceColor: defaultFaceColor,
+      onDragStart: onDragStart,
+      onDrag: onDrag,
+      onDragEnd: onDragEnd,
+    );
+  }
+
+  factory SeverityIndicator.grey({
+    required double value,
+    required double circleDiameter,
+    void Function(DragStartDetails)? onDragStart,
+    void Function(DragUpdateDetails)? onDrag,
+    void Function(DragEndDetails)? onDragEnd,
+  }) {
+    return SeverityIndicator._(
+      value: value,
+      circleDiameter: circleDiameter,
+      hasShadow: false,
+      headColor: const Color(0xFFC9CED2),
+      faceColor: Colors.white,
+      onDragStart: onDragStart,
+      onDrag: onDrag,
+      onDragEnd: onDragEnd,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    const redOnset = .7;
-    final severityCount = Severity.values.length;
-    final opacityOfYellow = value < redOnset ? 1.0 : (severityCount - value) / (severityCount - redOnset);
     final faceValue = Severity.values.length - value - 1;
+
     return GestureDetector(
       onHorizontalDragStart: onDragStart,
       onHorizontalDragUpdate: onDrag,
@@ -85,33 +121,60 @@ class SeverityIndicator extends StatelessWidget {
         height: circleDiameter,
         child: Stack(
           children: <Widget>[
-            const Head(
-              color: Color(0xFFE13D5E), // angry face color
-              hasShadow: true,
-            ),
-            Opacity(
-              opacity: opacityOfYellow,
-              child: const Head(
-                color: Color(0xFFfee385), // happy face color
-              ),
-            ),
-            Face(
-              animationValue: faceValue,
-              circleDiameter: circleDiameter,
-            )
+            _SeverityHead(color: headColor, hasShadow: hasShadow, circleDiameter: circleDiameter),
+            _SeverityFace(color: faceColor, animationValue: faceValue, circleDiameter: circleDiameter)
           ],
         ),
       ),
     );
   }
+
+  static double _severityToValue(Severity severity) {
+    if (severity == Severity.mild) {
+      return 0.0;
+    } else if (severity == Severity.moderate) {
+      return 1.0;
+    } else if (severity == Severity.intense) {
+      return 2.0;
+    } else if (severity == Severity.severe) {
+      return 3.0;
+    } else {
+      throw ArgumentError(severity);
+    }
+  }
+
+  static Color headColorFromSeverity(Severity severity) {
+    return _headColorFromValue(_severityToValue(severity));
+  }
+
+  static Color _headColorFromValue(double value) {
+    final yellowOpacity = _yellowOpacity(value);
+    const severe = GLColors.severeSeverity;
+    const mild = GLColors.mildSeverity;
+    final r = (mild.red * yellowOpacity + severe.red * (1 - yellowOpacity)).ceil();
+    final g = (mild.green * yellowOpacity + severe.green * (1 - yellowOpacity)).ceil();
+    final b = (mild.blue * yellowOpacity + severe.blue * (1 - yellowOpacity)).ceil();
+    return Color.fromRGBO(r, g, b, 1.0);
+  }
+
+  static double _yellowOpacity(double value) {
+    const redOnset = .7;
+    final severityCount = Severity.values.length;
+    return value < redOnset ? 1.0 : (severityCount - value) / (severityCount - redOnset);
+  }
 }
 
-class Face extends StatelessWidget {
-  const Face({this.color = const Color(0xFF616154), required this.animationValue, required this.circleDiameter});
-
+class _SeverityFace extends StatelessWidget {
   final double animationValue;
   final Color color;
   final double circleDiameter;
+
+  const _SeverityFace({
+    required this.color,
+    required this.animationValue,
+    required this.circleDiameter,
+  });
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -119,14 +182,14 @@ class Face extends StatelessWidget {
       width: circleDiameter,
       child: CustomPaint(
         size: const Size(300, 300),
-        painter: MyPainter(animationValue, color: color),
+        painter: _FacePainter(animationValue, color: color),
       ),
     );
   }
 }
 
-class MyPainter extends CustomPainter {
-  MyPainter(
+class _FacePainter extends CustomPainter {
+  _FacePainter(
     double animationValue, {
     this.color = const Color(0xFF615f56),
   })  : activeIndex = animationValue.floor(),
@@ -143,7 +206,7 @@ class MyPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(MyPainter oldDelegate) {
+  bool shouldRepaint(_FacePainter oldDelegate) {
     return unitAnimatingValue != oldDelegate.unitAnimatingValue || activeIndex != oldDelegate.activeIndex;
   }
 
@@ -293,12 +356,13 @@ class MyPainter extends CustomPainter {
   }
 }
 
-class Head extends StatelessWidget {
-  const Head({this.color = const Color(0xFFc9ced2), this.hasShadow = false, this.circleDiameter});
-
+class _SeverityHead extends StatelessWidget {
   final Color color;
   final bool hasShadow;
   final double? circleDiameter;
+
+  const _SeverityHead({required this.color, this.hasShadow = false, this.circleDiameter});
+
   @override
   Widget build(BuildContext context) {
     return Container(

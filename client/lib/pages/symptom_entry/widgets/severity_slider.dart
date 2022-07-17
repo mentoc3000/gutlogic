@@ -187,7 +187,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
           final width = widget.width != null && widget.width! < size.maxWidth ? widget.width! : size.maxWidth;
           return Stack(
             children: <Widget>[
-              MeasureLine(
+              _MeasureLine(
                 states: SeveritySlider.options,
                 handleTap: handleTap,
                 animationValue: _animationValue,
@@ -198,7 +198,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
               Positioned(
                 top: 0,
                 left: width * position - widget.circleDiameter / 2,
-                child: SeverityIndicator(
+                child: SeverityIndicator.fromValue(
                   value: _animationValue,
                   circleDiameter: widget.circleDiameter,
                   onDragStart: (DragStartDetails details) => _onDragStart(details.globalPosition.dx, width),
@@ -217,8 +217,8 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
 //const double circleDiameter = 30;
 const double paddingSize = 10;
 
-class MeasureLine extends StatelessWidget {
-  const MeasureLine({
+class _MeasureLine extends StatelessWidget {
+  const _MeasureLine({
     required this.handleTap,
     required this.animationValue,
     required this.states,
@@ -233,6 +233,7 @@ class MeasureLine extends StatelessWidget {
   final double width;
   final TextStyle? optionStyle;
   final double circleDiameter;
+
   List<Widget> _buildUnits() {
     final res = <Widget>[];
     final animatingUnitIndex = animationValue.round();
@@ -258,19 +259,9 @@ class MeasureLine extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Transform.scale(
-                  scale: scale,
-                  child: Stack(
-                    children: [
-                      Head(
-                        circleDiameter: circleDiameter,
-                      ),
-                      Face(
-                        circleDiameter: circleDiameter,
-                        color: Colors.white,
-                        animationValue: faceValue,
-                      )
-                    ],
-                  )),
+                scale: scale,
+                child: SeverityIndicator.grey(value: faceValue, circleDiameter: circleDiameter),
+              ),
               Padding(
                 padding: EdgeInsets.only(top: paddingTop),
                 child: Opacity(

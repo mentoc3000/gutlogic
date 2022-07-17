@@ -38,6 +38,9 @@ class GLColors {
   static const black = Colors.black;
   static const white = Colors.white;
 
+  static const mildSeverity = Color(0xFFfee385); // happy face color
+  static const severeSeverity = Color(0xFFE13D5E);
+
   static Color fromSensitivityLevel(SensitivityLevel sensitivityLevel) {
     switch (sensitivityLevel) {
       case SensitivityLevel.none:
