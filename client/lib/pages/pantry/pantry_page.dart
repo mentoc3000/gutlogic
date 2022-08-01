@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/food_search/food_search_bloc.dart';
 import '../../blocs/pantry/pantry.dart';
-import '../../blocs/pantry_filter/pantry_filter.dart';
 import '../../blocs/pantry_sort/pantry_sort.dart';
-import '../../blocs/recent_foods/recent_foods.dart';
+import '../../blocs/foods_suggestion/foods_suggestion.dart';
 import '../../pages/search_delegate/food_search_delegate.dart';
 import '../../pages/search_delegate/pantry_search_delegate.dart';
 import '../../resources/pantry_service.dart';
@@ -14,13 +13,11 @@ import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
-import '../../widgets/icon_buttons/filter_icon_button.dart';
 import '../../widgets/icon_buttons/search_icon_button.dart';
 import '../../widgets/icon_buttons/settings_icon_button.dart';
 import '../../widgets/snack_bars/undo_delete_snack_bar.dart';
 import '../error_page.dart';
 import '../loading_page.dart';
-import 'widgets/pantry_filter_widget.dart';
 import 'widgets/pantry_list_view.dart';
 import 'widgets/pantry_sort_popup_menu_botton.dart';
 
@@ -32,22 +29,21 @@ class PantryPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (c) => PantryBloc.fromContext(c)..add(const StreamAllPantry())),
-        const BlocProvider(create: PantryFilterCubit.fromContext),
         const BlocProvider(create: PantrySortCubit.fromContext),
       ],
       child: PantryPage(),
     );
   }
 
-  void showFoodSearch(BuildContext context) {
+  void showAddFoodSearch(BuildContext context) {
     final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
-    final recentFoodsCubit = BlocProvider.of<RecentFoodsCubit>(context);
+    final recentFoodsCubit = RecentFoodsCubit.fromContext(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (food) => Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food)),
       ),
     );
@@ -67,16 +63,6 @@ class PantryPage extends StatelessWidget {
     );
   }
 
-  void showPantryFilter(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (_) {
-        return PantryFilterWidget(pantryFilterCubit: context.read<PantryFilterCubit>());
-      },
-      elevation: 5.0,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GLScaffold(
@@ -84,7 +70,6 @@ class PantryPage extends StatelessWidget {
         leading: const SettingsIconButton(),
         title: 'Pantry',
         actions: [
-          Builder(builder: (context) => FilterIconButton(onPressed: () => showPantryFilter(context))),
           PantrySortPopupMenuButton(onSelected: (sort) => context.read<PantrySortCubit>().sortBy(sort)),
           SearchIconButton(onPressed: () => showPantrySearch(context)),
         ],
@@ -96,7 +81,7 @@ class PantryPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: AddFloatingActionButton(
-        onPressed: () => showFoodSearch(context),
+        onPressed: () => showAddFoodSearch(context),
       ),
     );
   }

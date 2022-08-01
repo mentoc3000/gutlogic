@@ -24,7 +24,7 @@ class FoodReferenceSuggestionTile extends StatelessWidget {
 
     return SearchResultTile(
       searchable: foodReference,
-      trailing: SensitivityIndicator(foodSensitivity),
+      leading: SensitivityIndicator(foodSensitivity),
       onTap: onTap,
       isCustom: foodReference is CustomFood,
     );

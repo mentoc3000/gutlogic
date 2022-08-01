@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/food_search/food_search_bloc.dart';
-import '../../blocs/recent_foods/recent_foods_cubit.dart';
+import '../../blocs/foods_suggestion/foods_suggestion.dart';
 import '../../routes/routes.dart';
 import '../../widgets/floating_action_buttons/search_floating_action_button.dart';
 import '../../widgets/gl_app_bar.dart';
@@ -17,13 +17,13 @@ class FoodGroupPage extends StatelessWidget {
 
   void showFoodSearch(BuildContext context) {
     final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
-    final recentFoodsCubit = BlocProvider.of<RecentFoodsCubit>(context);
+    final recentFoodsCubit = RecentFoodsCubit.fromContext(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (food) => Navigator.push(context, Routes.of(context).createFoodPageRoute(food)),
       ),
     );

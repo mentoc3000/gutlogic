@@ -7,9 +7,8 @@ import 'package:gutlogic/blocs/meal_element/meal_element.dart';
 import 'package:gutlogic/blocs/meal_entry/meal_entry.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
 import 'package:gutlogic/blocs/pantry_entry/pantry_entry.dart';
-import 'package:gutlogic/blocs/pantry_filter/pantry_filter.dart';
 import 'package:gutlogic/blocs/pantry_sort/pantry_sort.dart';
-import 'package:gutlogic/blocs/recent_foods/recent_foods.dart';
+import 'package:gutlogic/blocs/foods_suggestion/foods_suggestion.dart';
 import 'package:gutlogic/blocs/symptom_entry/symptom_entry.dart';
 import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
@@ -19,7 +18,6 @@ import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/pantry/pantry_entry.dart';
-import 'package:gutlogic/models/pantry/pantry_filter.dart';
 import 'package:gutlogic/models/pantry/pantry_sort.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
@@ -111,12 +109,10 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 
     registerFallbackValue(PantrySortLoading(sort: PantrySort.alphabeticalAscending));
 
-    registerFallbackValue(PantryFilterLoading(filter: PantryFilter.all()));
-
     registerFallbackValue(SymptomEntryEventFake());
     registerFallbackValue(SymptomEntryLoading());
 
-    registerFallbackValue(const RecentFoodsLoading());
+    registerFallbackValue(const FoodsSuggestionLoading());
 
     registerFallbackValue(SymptomTypeEventFake());
     registerFallbackValue(SymptomTypesLoading());

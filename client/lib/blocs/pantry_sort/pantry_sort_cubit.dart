@@ -5,37 +5,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../models/pantry/pantry_sort.dart';
 import '../bloc_helpers.dart';
-import '../pantry_filter/pantry_filter.dart';
+import '../pantry/pantry.dart';
 import 'pantry_sort_state.dart';
 
 const _defaultSort = PantrySort.alphabeticalAscending;
 
-class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber<PantryFilterState, PantrySortState> {
-  final PantryFilterCubit pantryFilterCubit;
+class PantrySortCubit extends Cubit<PantrySortState> with StreamSubscriber<PantryState, PantrySortState> {
+  final PantryBloc pantryBloc;
   PantrySort get _sort => state.sort;
 
-  PantrySortCubit({required this.pantryFilterCubit})
-      : super(
-          pantryFilterCubit.state is PantryFilterLoaded
-              ? PantrySortLoaded(
-                  items: _sortPantry((pantryFilterCubit.state as PantryFilterLoaded).items, _defaultSort),
-                  sort: _defaultSort)
-              : PantrySortLoading(sort: _defaultSort),
-        ) {
-    streamSubscription = pantryFilterCubit.stream.listen((state) {
-      if (state is PantryFilterLoading) {
-        emit(PantrySortLoading(sort: _sort));
-      } else if (state is PantryFilterLoaded) {
-        final sortedItems = _sortPantry(state.items, _sort);
-        emit(PantrySortLoaded(items: sortedItems, sort: _sort));
-      } else if (state is PantryFilterError) {
-        emit(PantrySortError.from(errorState: state, sort: _sort));
-      }
-    });
+  PantrySortCubit({required this.pantryBloc})
+      : super(pantryBloc.state is PantryLoaded
+            ? PantrySortLoaded(
+                items: _sortPantry((pantryBloc.state as PantryLoaded).items, _defaultSort),
+                sort: _defaultSort,
+              )
+            : PantrySortLoading(sort: _defaultSort)) {
+    streamSubscription = pantryBloc.stream.listen(_updateSort);
   }
 
   static PantrySortCubit fromContext(BuildContext context) {
-    return PantrySortCubit(pantryFilterCubit: context.read<PantryFilterCubit>());
+    return PantrySortCubit(pantryBloc: context.read<PantryBloc>());
+  }
+
+  void _updateSort(PantryState state) {
+    if (state is PantryLoading) {
+      emit(PantrySortLoading(sort: _sort));
+    } else if (state is PantryLoaded) {
+      final sortedItems = _sortPantry(state.items, _sort);
+      emit(PantrySortLoaded(items: sortedItems, sort: _sort));
+    } else if (state is PantryError) {
+      emit(PantrySortError.from(errorState: state, sort: _sort));
+    }
   }
 
   void sortBy(PantrySort pantrySort) {

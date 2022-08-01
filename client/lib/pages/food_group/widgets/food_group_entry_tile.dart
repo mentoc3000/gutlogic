@@ -11,8 +11,9 @@ import '../../../widgets/sensitivity_indicator.dart';
 class FoodGroupEntryTile extends StatelessWidget {
   final FoodGroupEntry entry;
   final int? maxIntensity;
+  final void Function()? onTap;
 
-  const FoodGroupEntryTile({Key? key, required this.entry, required this.maxIntensity}) : super(key: key);
+  const FoodGroupEntryTile({Key? key, required this.entry, required this.maxIntensity, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

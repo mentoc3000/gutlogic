@@ -34,13 +34,21 @@ class PantryEntryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PantryEntryBloc, PantryEntryState>(builder: builder, listener: listener);
+    return BlocConsumer<PantryEntryBloc, PantryEntryState>(
+      builder: builder,
+      listener: listener,
+      listenWhen: listenWhen,
+    );
   }
 
   void listener(BuildContext context, PantryEntryState state) {
     if (state is PantryEntryLoaded) {
       _notesController.text = state.pantryEntry.notes ?? '';
     }
+  }
+
+  bool listenWhen(PantryEntryState previousState, PantryEntryState currentState) {
+    return currentState is PantryEntryLoaded && previousState is! PantryEntryLoaded;
   }
 
   Widget builder(BuildContext context, PantryEntryState state) {

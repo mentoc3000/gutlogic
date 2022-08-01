@@ -25,7 +25,7 @@ class FoodSearchResultTile extends StatelessWidget {
 
     return SearchResultTile(
       searchable: food,
-      trailing: SensitivityIndicator(foodSensitivity),
+      leading: SensitivityIndicator(foodSensitivity),
       onTap: onTap,
       onDelete: (food) {
         if (food is CustomFood) context.read<FoodSearchBloc>().add(DeleteCustomFood(food));

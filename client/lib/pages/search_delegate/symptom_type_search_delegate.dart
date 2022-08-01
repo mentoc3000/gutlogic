@@ -16,7 +16,9 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
   SymptomTypeSearchDelegate({
     required this.symptomTypeBloc,
     required void Function(SymptomType) onSelect,
-  }) : super(onSelect: onSelect, searchFieldLabel: 'Search for symptom');
+  }) : super(onSelect: onSelect, searchFieldLabel: 'Search for symptom') {
+    symptomTypeBloc.add(FetchSymptomTypeQuery(query));
+  }
 
   @override
   Widget buildResults(BuildContext context) {

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/food_search/food_search.dart';
+import '../../../blocs/foods_suggestion/recent_foods_cubit.dart';
 import '../../../blocs/meal_entry/meal_entry.dart';
-import '../../../blocs/recent_foods/recent_foods.dart';
+import '../../../blocs/foods_suggestion/foods_suggestion.dart';
 import '../../../models/diary_entry/meal_entry.dart';
 import '../../../widgets/cards/datetime_card.dart';
 import '../../../widgets/cards/notes_card.dart';
@@ -19,13 +20,13 @@ class MealEntryListView extends StatelessWidget {
   void addMealElement(BuildContext context) {
     final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
     final mealEntryBloc = context.read<MealEntryBloc>();
-    final recentFoodsCubit = BlocProvider.of<RecentFoodsCubit>(context);
+    final recentFoodsCubit = RecentFoodsCubit.fromContext(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (food) => mealEntryBloc.add(AddMealElement(food)),
       ),
     );
@@ -46,9 +47,7 @@ class MealEntryListView extends StatelessWidget {
       ),
       NotesCard(
         controller: notesController,
-        onChanged: (String notes) {
-          context.read<MealEntryBloc>().add(UpdateMealEntryNotes(notes));
-        },
+        onChanged: (notes) => context.read<MealEntryBloc>().add(UpdateMealEntryNotes(notes)),
       )
     ];
   }

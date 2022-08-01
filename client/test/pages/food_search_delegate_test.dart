@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/food_search/food_search.dart';
-import 'package:gutlogic/blocs/recent_foods/recent_foods.dart';
+import 'package:gutlogic/blocs/foods_suggestion/foods_suggestion.dart';
 import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food_reference/food_reference.dart';
@@ -20,14 +20,14 @@ import 'package:provider/provider.dart';
 
 class MockFoodBloc extends MockBloc<FoodSearchEvent, FoodSearchState> implements FoodSearchBloc {}
 
-class MockRecentFoodsCubit extends MockCubit<RecentFoodsState> implements RecentFoodsCubit {}
+class MockRecentFoodsCubit extends MockCubit<FoodsSuggestionState> implements FoodGroupCubit {}
 
 class MockSensitivityService extends Mock implements SensitivityService {}
 
 void main() {
   late FoodSearchBloc foodBloc;
   late SensitivityService sensitivityService;
-  late RecentFoodsCubit recentFoodsCubit;
+  late FoodGroupCubit recentFoodsCubit;
   late CustomFood food;
   late CustomFoodReference recentFoodReference;
 
@@ -43,8 +43,8 @@ void main() {
     recentFoodsCubit = MockRecentFoodsCubit();
     whenListen(
       recentFoodsCubit,
-      Stream.value(RecentFoodsLoaded([recentFoodReference].toBuiltList())),
-      initialState: const RecentFoodsLoading(),
+      Stream.value(FoodsSuggestionLoaded([recentFoodReference].toBuiltList())),
+      initialState: const FoodsSuggestionLoading(),
     );
   });
 
@@ -57,7 +57,7 @@ void main() {
     testWidgets('opens and closes search', (WidgetTester tester) async {
       final delegate = FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (_) {},
       );
       final selectedResults = <FoodReference>[];
@@ -65,7 +65,7 @@ void main() {
       final homepage = MultiBlocProvider(
         providers: [
           BlocProvider<FoodSearchBloc>.value(value: foodBloc),
-          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+          BlocProvider<FoodGroupCubit>.value(value: recentFoodsCubit),
         ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
@@ -103,14 +103,14 @@ void main() {
       whenListen(foodBloc, Stream.value(NoFoodsFound(query: '')), initialState: FoodSearchLoading());
       final delegate = FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (_) {},
       );
 
       final homepage = MultiBlocProvider(
         providers: [
           BlocProvider<FoodSearchBloc>.value(value: foodBloc),
-          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+          BlocProvider<FoodGroupCubit>.value(value: recentFoodsCubit),
         ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
@@ -142,14 +142,14 @@ void main() {
 
       final delegate = FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (_) {},
       );
 
       final homepage = MultiBlocProvider(
         providers: [
           BlocProvider<FoodSearchBloc>.value(value: foodBloc),
-          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+          BlocProvider<FoodGroupCubit>.value(value: recentFoodsCubit),
         ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
@@ -178,14 +178,14 @@ void main() {
 
       final delegate = FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (_) {},
       );
 
       final homepage = MultiBlocProvider(
         providers: [
           BlocProvider<FoodSearchBloc>.value(value: foodBloc),
-          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+          BlocProvider<FoodGroupCubit>.value(value: recentFoodsCubit),
         ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
@@ -226,14 +226,14 @@ void main() {
       );
       final delegate = FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (_) {},
       );
 
       final homepage = MultiBlocProvider(
         providers: [
           BlocProvider<FoodSearchBloc>.value(value: foodBloc),
-          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+          BlocProvider<FoodGroupCubit>.value(value: recentFoodsCubit),
         ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
@@ -266,14 +266,14 @@ void main() {
       whenListen(foodBloc, Stream.fromIterable([FoodSearchLoading()]));
       final delegate = FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (_) {},
       );
 
       final homepage = MultiBlocProvider(
         providers: [
           BlocProvider<FoodSearchBloc>.value(value: foodBloc),
-          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+          BlocProvider<FoodGroupCubit>.value(value: recentFoodsCubit),
         ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
@@ -300,14 +300,14 @@ void main() {
       whenListen(foodBloc, Stream.value(FoodSearchError(message: message)), initialState: FoodSearchLoading());
       final delegate = FoodSearchDelegate(
         foodBloc: foodBloc,
-        recentFoodsCubit: recentFoodsCubit,
+        foodSuggestionCubit: recentFoodsCubit,
         onSelect: (_) {},
       );
 
       final homepage = MultiBlocProvider(
         providers: [
           BlocProvider<FoodSearchBloc>.value(value: foodBloc),
-          BlocProvider<RecentFoodsCubit>.value(value: recentFoodsCubit),
+          BlocProvider<FoodGroupCubit>.value(value: recentFoodsCubit),
         ],
         child: ChangeNotifierProvider(
           create: (context) => sensitivityService,
