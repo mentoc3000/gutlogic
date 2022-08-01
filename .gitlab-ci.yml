@@ -379,7 +379,8 @@ client:deploy:staging:ios:
     tag_name: "v$FLUTTER_APP_VERSION-b$CI_PIPELINE_ID"
     description: "Release v$FLUTTER_APP_VERSION-b$CI_PIPELINE_ID"
   rules:
-    - !reference [.client-release-commit-rules, rules]
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      when: manual
   dependencies:
     - client:prep
   environment: staging

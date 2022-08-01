@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import 'button_helpers.dart';
+
 class StretchedButtonContent extends StatelessWidget {
   final String label;
   final Widget? leader;
@@ -12,17 +14,22 @@ class StretchedButtonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      AspectRatio(aspectRatio: 1, child: leader ?? const SizedBox.shrink()),
-      Expanded(
-        child: Text(
-          label,
-          softWrap: false,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.fade,
+    final height = buttonHeight(context);
+
+    return SizedBox.fromSize(
+      size: Size(double.infinity, height),
+      child: Row(children: [
+        AspectRatio(aspectRatio: 1, child: leader ?? const SizedBox.shrink()),
+        Expanded(
+          child: Text(
+            label,
+            softWrap: false,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.fade,
+          ),
         ),
-      ),
-      const AspectRatio(aspectRatio: 1, child: SizedBox.shrink()),
-    ]);
+        const AspectRatio(aspectRatio: 1, child: SizedBox.shrink()),
+      ]),
+    );
   }
 }

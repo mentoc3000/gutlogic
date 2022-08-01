@@ -38,10 +38,15 @@ void main() {
       expect(groups.length, 2);
     });
 
-    test('foods', () async {
+    test('foods in group', () async {
       final foods = await repository.foods(group: 'Fruits');
       expect(foods.length, 1);
       expect(foods.first.foodRef.name, 'Cherry');
+    });
+
+    test('all foods', () async {
+      final foods = await repository.foods();
+      expect(foods.length, 2);
     });
   });
 }

@@ -12,7 +12,9 @@ class PantrySearchDelegate extends SearchableSearchDelegate<PantryEntry> {
   final PantryBloc pantryBloc;
 
   PantrySearchDelegate({required this.pantryBloc, required void Function(PantryEntry) onSelect})
-      : super(onSelect: onSelect, searchFieldLabel: 'Search for food');
+      : super(onSelect: onSelect, searchFieldLabel: 'Search for food') {
+    pantryBloc.add(StreamPantryQuery(query));
+  }
 
   @override
   Widget buildResults(BuildContext context) {

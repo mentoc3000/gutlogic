@@ -2,6 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/food_group_entry.dart';
+import '../../../routes/routes.dart';
 import '../../../util/widget_utils.dart';
 import 'food_group_entry_tile.dart';
 
@@ -14,8 +15,13 @@ class FoodGroupList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sortedFoods = foods.toList()..sort((a, b) => a.foodRef.name.compareTo(b.foodRef.name));
-    final tiles = sortedFoods.map((e) => FoodGroupEntryTile(entry: e, maxIntensity: maxIntensities[e]));
+    final tiles = sortedFoods.map((e) => FoodGroupEntryTile(
+          entry: e,
+          maxIntensity: maxIntensities[e],
+          onTap: () => Navigator.push(context, Routes.of(context).createFoodPageRoute(e.foodRef)),
+        ));
     final separatedTiles = WidgetUtils.separate(tiles, separator: const Divider(color: Colors.grey));
+    separatedTiles.add(const SizedBox(height: 72));
     return ListView(children: separatedTiles);
   }
 }

@@ -163,7 +163,8 @@ platform :ios do
     appstore(
       api_key: get_app_store_connect_api_key,
       force: true,
-      precheck_include_in_app_purchases: false # cannot yet be performed with API key
+      precheck_include_in_app_purchases: false, # cannot yet be performed with API key
+      overwrite_screenshots: true
     )
 
   end

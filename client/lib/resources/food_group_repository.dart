@@ -17,9 +17,14 @@ class FoodGroupsRepository with FirestoreRepository {
     return foodGroupEntries.map((e) => e.group).toBuiltSet();
   }
 
-  Future<BuiltSet<FoodGroupEntry>> foods({required String group}) async {
-    final foodGroupEntries =
-        await firestoreService.foodGroupsCollection.where('group', isEqualTo: group).get().then(deserialize);
+  Future<BuiltSet<FoodGroupEntry>> foods({String? group}) async {
+    late final BuiltList<FoodGroupEntry> foodGroupEntries;
+    if (group != null) {
+      foodGroupEntries =
+          await firestoreService.foodGroupsCollection.where('group', isEqualTo: group).get().then(deserialize);
+    } else {
+      foodGroupEntries = await firestoreService.foodGroupsCollection.get().then(deserialize);
+    }
     return foodGroupEntries.toBuiltSet();
   }
 

@@ -2,53 +2,54 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/food_group_search/food_group_search.dart';
 import '../../blocs/food_search/food_search.dart';
-import '../../blocs/foods_suggestion/foods_suggestion.dart';
 import '../../models/food/food.dart';
+import '../../models/food_group_entry.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../pages/error_page.dart';
 import '../../pages/loading_page.dart';
+import '../../style/gl_text_style.dart';
 import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/powered_by_edamam.dart';
+import '../food_group/widgets/food_group_entry_tile.dart';
 import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
-import 'widgets/food_reference_suggestion_tile.dart';
 import 'widgets/food_search_result_tile.dart';
 
-class FoodSearchDelegate extends SearchableSearchDelegate<FoodReference> {
+class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
   final FoodSearchBloc foodBloc;
-  final FoodGroupCubit foodSuggestionCubit;
+  final FoodGroupSearchCubit foodGroupSearchCubit;
   final String noResultsMessage = 'No matches found.\nNeed something special?\nCreate a custom food!';
 
-  FoodSearchDelegate({
+  FoodGroupSearchDelegate({
     required this.foodBloc,
-    required this.foodSuggestionCubit,
+    required this.foodGroupSearchCubit,
     required void Function(FoodReference) onSelect,
   }) : super(onSelect: onSelect, searchFieldLabel: 'Search for food') {
-    foodSuggestionCubit.update();
-    foodBloc.add(StreamFoodQuery(query));
+    foodGroupSearchCubit.query(query);
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return BlocProvider.value(
-      value: foodSuggestionCubit,
-      child: BlocBuilder<FoodGroupCubit, FoodsSuggestionState>(
-        builder: (BuildContext context, FoodsSuggestionState state) {
-          if (state is FoodsSuggestionLoaded) {
-            return buildSuggestionList(context, state.suggestedFoods);
-          }
-          if (state is FoodsSuggestionLoading) {
-            return buildLoadingPage(context);
-          }
-          if (state is FoodsSuggestionError) {
-            return ErrorPage(message: state.message);
-          }
-          return const ErrorPage();
-        },
-      ),
+    foodGroupSearchCubit.query(query);
+
+    return BlocBuilder<FoodGroupSearchCubit, FoodGroupSearchState>(
+      bloc: foodGroupSearchCubit,
+      builder: (BuildContext context, FoodGroupSearchState state) {
+        if (state is FoodGroupSearchLoaded) {
+          return buildSuggestionList(context, state.foods, state.maxIntensities);
+        }
+        if (state is FoodGroupSearchLoading) {
+          return buildLoadingPage(context);
+        }
+        if (state is FoodGroupSearchError) {
+          return ErrorPage(message: state.message);
+        }
+        return const ErrorPage();
+      },
     );
   }
 
@@ -113,56 +114,68 @@ class FoodSearchDelegate extends SearchableSearchDelegate<FoodReference> {
     );
   }
 
-  Widget buildList({
-    required BuildContext context,
-    required int itemCount,
-    required Widget Function(BuildContext, int) itemBuilder,
-  }) {
+  Widget buildResultList(BuildContext context, BuiltList<Food> foods) {
     return GLScaffold(
       floatingActionButton: buildAddFab(context),
       body: SafeArea(
         child: PoweredByEdamam(
           child: ListView.builder(
-            itemCount: itemCount,
+            itemCount: foods.length,
             shrinkWrap: true,
-            itemBuilder: itemBuilder,
+            itemBuilder: (BuildContext context, int index) {
+              final result = foods[index];
+              return FoodSearchResultTile(
+                food: result,
+                onTap: () {
+                  closeSearch(context);
+                  onSelect(result.toFoodReference());
+                },
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget buildResultList(BuildContext context, BuiltList<Food> foods) {
-    return buildList(
-      context: context,
-      itemCount: foods.length,
-      itemBuilder: (BuildContext context, int index) {
-        final result = foods[index];
-        return FoodSearchResultTile(
-          food: result,
-          onTap: () {
-            closeSearch(context);
-            onSelect(result.toFoodReference());
+  Widget buildSuggestionList(
+    BuildContext context,
+    BuiltList<FoodGroupEntry> foodGroupEntries,
+    BuiltMap<FoodGroupEntry, int?> maxIntensities,
+  ) {
+    return GLScaffold(
+      floatingActionButton: buildAddFab(context),
+      body: SafeArea(
+        child: ListView.builder(
+          itemCount: foodGroupEntries.length + 1,
+          shrinkWrap: true,
+          itemBuilder: (BuildContext context, int index) {
+            if (index < foodGroupEntries.length) {
+              final result = foodGroupEntries[index];
+              final maxIntensity = maxIntensities[result];
+              return FoodGroupEntryTile(
+                entry: result,
+                maxIntensity: maxIntensity,
+                onTap: () {
+                  closeSearch(context);
+                  onSelect(result.foodRef);
+                },
+              );
+            } else if (query.isNotEmpty) {
+              // Show helper tile at bottom of suggestions, if a query has been entered
+              return const ListTile(
+                title: Text(
+                  'Tap Search to find more foods',
+                  style: tileSubheadingStyle,
+                  textAlign: TextAlign.center,
+                ),
+              );
+            } else {
+              return Container();
+            }
           },
-        );
-      },
-    );
-  }
-
-  Widget buildSuggestionList(BuildContext context, BuiltList<FoodReference> foodReferences) {
-    return buildList(
-      context: context,
-      itemCount: foodReferences.length,
-      itemBuilder: (BuildContext context, int index) {
-        final result = foodReferences[index];
-        return FoodReferenceSuggestionTile(
-          foodReference: result,
-          onTap: () {
-            closeSearch(context);
-            onSelect(result);
-          },
-        );
-      },
+        ),
+      ),
     );
   }
 }

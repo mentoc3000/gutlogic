@@ -37,7 +37,7 @@ Future<void> build(String package, String target) async {
   log.i('Finished building screenshots driver { package: $package }');
 }
 
-/// Run the screenshots driver for a given [group] and [deviceID].
+/// Run the screenshots driver for a given [query] and [deviceID].
 Future<void> drive(String target, String driver, String deviceID) async {
   log.i('Running screenshots driver on $deviceID');
 
