@@ -781,10 +781,10 @@ final vegetableMaxIntensities = Map.fromIterables(vegetableListSorted, [
   2, // Zucchini
 ]);
 final intensityThresholds = {
-  'mannitol': [0.0, 0.2, 0.35].build(),
-  'gos': [0.0, 0.15, 0.4].build(),
-  'lactose': [0.0, 1.20, 5.0].build(),
-  'fructan': [0.0, 0.1, 0.3].build(),
-  'sorbitol': [0.0, 0.2, 0.35].build(),
-  'fructose': [0.0, 0.03, 0.2].build(),
+  'Mannitol': [0.0, 0.2, 0.35].build(),
+  'GOS': [0.0, 0.15, 0.4].build(),
+  'Lactose': [0.0, 1.20, 5.0].build(),
+  'Fructan': [0.0, 0.1, 0.3].build(),
+  'Sorbitol': [0.0, 0.2, 0.35].build(),
+  'Fructose': [0.0, 0.03, 0.2].build(),
 };
