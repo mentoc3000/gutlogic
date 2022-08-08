@@ -144,6 +144,7 @@ server:deploy:develop:
   script:
     - npm run deploy
     - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/api/src/config.json"
+    - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
     - gcloud run deploy api --source=./api/ --region=us-cental1
   rules:
     - !reference [.server-develop-commit-rules, rules]
