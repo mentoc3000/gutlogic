@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../blocs/user_cubit.dart';
-import '../../models/application_user.dart';
+import '../../models/user/application_user.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import 'widgets/account_page_widgets.dart';

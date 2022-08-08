@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:built_collection/built_collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../auth/auth.dart';
-import '../models/application_user.dart';
+import '../models/user/application_user.dart';
 import '../util/null_utils.dart';
 import 'firebase/firestore_service.dart';
 
@@ -58,12 +57,8 @@ class UserRepository {
       final data = snap.data() ?? {};
 
       return ApplicationUser(
-        id: user.uid,
-        email: user.email,
-        verified: user.emailVerified,
+        firebaseUser: user,
         consented: data['consented'] as bool? ?? false,
-        anonymous: user.isAnonymous,
-        providers: BuiltList.from(user.providerData.map((p) => AuthProviderUtil.fromFirebaseProviderID(p.providerId))),
       );
     });
 

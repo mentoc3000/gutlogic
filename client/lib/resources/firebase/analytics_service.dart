@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../auth/auth.dart';
-import '../../models/application_user.dart';
+import '../../models/user/application_user.dart';
 
 class AnalyticsService {
   FirebaseAnalytics? _analytics;

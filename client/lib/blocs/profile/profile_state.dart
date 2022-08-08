@@ -1,4 +1,4 @@
-import '../../models/profile.dart';
+import '../../models/user/profile.dart';
 import '../bloc_helpers.dart';
 
 class ProfileState extends BaseState {

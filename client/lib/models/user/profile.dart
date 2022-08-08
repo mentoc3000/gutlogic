@@ -1,8 +1,8 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-import '../resources/firebase/untyped_data.dart';
-import 'serializers.dart';
+import '../../resources/firebase/untyped_data.dart';
+import '../serializers.dart';
 
 part 'profile.g.dart';
 

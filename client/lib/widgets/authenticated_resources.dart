@@ -7,7 +7,8 @@ import '../blocs/food_group_search/food_group_search.dart';
 import '../blocs/food_search/food_search_bloc.dart';
 import '../blocs/symptom_type/symptom_type_bloc.dart';
 import '../blocs/user_cubit.dart';
-import '../models/application_user.dart';
+import '../models/user/application_user.dart';
+import '../resources/api_service.dart';
 import '../resources/diary_repositories/bowel_movement_entry_repository.dart';
 import '../resources/diary_repositories/diary_repository.dart';
 import '../resources/diary_repositories/meal_element_repository.dart';
@@ -65,6 +66,7 @@ class AuthenticatedResources extends StatelessWidget {
             return ProfileRepository(firestore: context.read<FirestoreService>());
           }),
           RepositoryProvider(create: (context) => CloudFunctionService()),
+          RepositoryProvider(create: ApiService.fromContext),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
             return SensitivityRepository(
@@ -127,7 +129,7 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
-            final edamamService = EdamamService(cloudFunctionService: context.read<CloudFunctionService>());
+            final edamamService = EdamamService(apiService: context.read<ApiService>());
             final edamamFoodRepository = EdamamFoodRepository(edamamService: edamamService);
             final customFoodRepository = CustomFoodRepository(firestoreService: context.read<FirestoreService>());
             return FoodService(edamamFoodRepository: edamamFoodRepository, customFoodRepository: customFoodRepository);

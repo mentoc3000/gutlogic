@@ -58,10 +58,15 @@ workflow:
     - server/.npm-cache
 
 .server:
-  image: node:16-alpine
+  image: google/cloud-sdk:latest
   tags:
     - docker
   before_script:
+    # install node
+    - apt update
+    - curl -sL https://deb.nodesource.com/setup_16.x | bash -
+    - apt -y install nodejs
+    - node --version
     # move into the server directory
     - cd server
     # install the server dependencies
@@ -72,12 +77,14 @@ workflow:
 
 .firebase:
   before_script:
-    # install alpine deps (ideally this would happen in a custom dockerfile)
-    - apk add --quiet --no-cache openjdk8
     # add locally installed bins to the path so we can run firebase-tools
     - PATH="$(npm bin):$PATH"
     # set the firebase project for the job
     - firebase use $FIREBASE_PROJECT
+
+.gcloud:
+  before_script:
+    - gcloud config set project $GCLOUD_PROJECT
 
 server:prep:
   stage: prep
@@ -128,11 +135,16 @@ server:deploy:develop:
   stage: deploy
   extends:
     - .server
+  variables:
+    GCLOUD_PROJECT: gutlogic-dev
   before_script:
     - !reference [.server, before_script]
+    - !reference [.gcloud, before_script]
     - !reference [.firebase, before_script]
   script:
     - npm run deploy
+    - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/api/src/config.json"
+    - gcloud run deploy api --source=./api/ --region=us-cental1
   rules:
     - !reference [.server-develop-commit-rules, rules]
   dependencies:
@@ -143,11 +155,16 @@ server:deploy:release:
   stage: deploy
   extends:
     - .server
+  variables:
+    GCLOUD_PROJECT: gutlogic
   before_script:
     - !reference [.server, before_script]
+    - !reference [.gcloud, before_script]
     - !reference [.firebase, before_script]
   script:
     - npm run deploy
+    - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/api/src/config.json"
+    - gcloud run deploy api --source=./api/ --region=us-cental1
   rules:
     - !reference [.server-release-commit-rules, rules]
   dependencies:

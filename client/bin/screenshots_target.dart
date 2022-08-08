@@ -1,4 +1,5 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:integration_test/integration_test.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
 import 'package:gutlogic/blocs/pantry/pantry.dart';
 import 'package:gutlogic/blocs/user_cubit.dart';
+import 'package:gutlogic/models/user/application_user.dart';
 import 'package:gutlogic/pages/main_tabs.dart';
 import 'package:gutlogic/resources/diary_repositories/bowel_movement_entry_repository.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
@@ -50,6 +52,7 @@ class MainTabsPageWrapper extends StatelessWidget {
   PantryService,
   SensitivityRepository,
   SymptomEntryRepository,
+  User,
   UserRepository,
 ])
 void main() {
@@ -59,6 +62,7 @@ void main() {
 
   setUpAll(() async {
     // Mock user repository
+    final user = ApplicationUser(firebaseUser: MockUser(), consented: true);
     final userRepository = MockUserRepository();
     when(userRepository.user).thenReturn(user);
 
