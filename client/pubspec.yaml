@@ -38,6 +38,7 @@ dependencies:
   gap: ^2.0.0
   google_fonts: ^2.0.0
   google_sign_in: ^5.3.1
+  http: ^0.13.4
   intl: 0.17.0
   logger: ^1.0.0
   material_design_icons_flutter: 5.0.6595

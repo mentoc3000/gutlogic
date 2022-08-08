@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url;
 
 import '../../blocs/user_cubit.dart';
-import '../../models/application_user.dart';
+import '../../models/user/application_user.dart';
 import '../../routes/routes.dart';
 import '../../util/widget_utils.dart';
 import '../../widgets/gl_app_bar.dart';

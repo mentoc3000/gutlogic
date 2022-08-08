@@ -1,0 +1,6 @@
+{
+  "tasks": {
+    "start": "deno run --allow-env --allow-net --importmap=imports.json main.ts",
+    "test": "hurl --test --glob \"./dev/*.hurl\""
+  }
+}

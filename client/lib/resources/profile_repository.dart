@@ -1,9 +1,9 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../models/profile.dart';
+import '../models/user/profile.dart';
 import 'firebase/firestore_service.dart';
 
-export 'package:gutlogic/models/profile.dart';
+export 'package:gutlogic/models/user/profile.dart';
 
 class ProfileRepository {
   late final UntypedDocumentReference _document;

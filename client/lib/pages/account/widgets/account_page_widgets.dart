@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../models/application_user.dart';
+import '../../../models/user/application_user.dart';
 import '../../../resources/user_repository.dart';
 import '../../../routes/routes.dart';
 import '../../../style/gl_colors.dart';

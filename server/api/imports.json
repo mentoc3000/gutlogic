@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "/": "./src/",
+    "./": "./src/",
+    "x/oak/": "https://deno.land/x/oak@v10.5.1/",
+    "x/urlcat/": "https://deno.land/x/urlcat@v2.0.4/",
+    "x/std/": "https://deno.land/std@0.142.0/",
+    "x/jose/": "https://deno.land/x/jose@v4.8.3/",
+    "x/": "https://deno.land/x/"
+  }
+}

@@ -1,5 +1,4 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:gutlogic/models/edamam_api/edamam_api_entry.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/resources/food/edamam_food_repository.dart';
@@ -10,36 +9,32 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'edamam_food_repository_test.mocks.dart';
-import 'edamam_sample_data.dart';
 
 @GenerateMocks([EdamamService, PantryService])
 void main() {
   group('EdamamFoodRepository', () {
     late EdamamFoodRepository foodRepository;
     late MockEdamamService edamamService;
-    late EdamamFood food;
+    final rice = EdamamFood(id: 'id1', name: 'rice');
+    final apples = [
+      EdamamFood(id: 'id2', name: 'apple2'),
+      EdamamFood(id: 'id3', name: 'apple3'),
+      EdamamFood(id: 'id3', name: 'apple3'),
+    ];
 
     setUp(() async {
-      food = brownRiceCakeEntry.toEdamamFood()!;
-
       edamamService = MockEdamamService();
       when(edamamService.getById(any)).thenAnswer((_) => Future.value(null));
-      when(edamamService.getById(brownRiceCakeEntry.food.foodId)).thenAnswer((_) => Future.value(brownRiceCakeEntry));
-      when(edamamService.searchFood(any)).thenAnswer((_) => Future.value(<EdamamApiEntry>[]));
-      when(edamamService.searchFood('apple')).thenAnswer((_) => Future.value(appleQueryEntries));
-      when(edamamService.searchFood('avocado')).thenAnswer((_) => Future.value(avocadoQueryEntries));
+      when(edamamService.getById(rice.id)).thenAnswer((_) => Future.value(rice));
+      when(edamamService.searchFood(any)).thenAnswer((_) => Future.value(<EdamamFood>[]));
+      when(edamamService.searchFood('apple')).thenAnswer((_) => Future.value(apples));
 
       foodRepository = EdamamFoodRepository(edamamService: edamamService);
     });
 
     test('streames query', () async {
       final streamedFoods = foodRepository.streamQuery('apple');
-      await expectLater(streamedFoods, emits(appleQueryEntries.map((e) => e.toEdamamFood())));
-    });
-
-    test('streames query with incomplete measures', () async {
-      final streamedFoods = foodRepository.streamQuery('avocado');
-      await expectLater(streamedFoods, emits(avocadoQueryEntries.map((e) => e.toEdamamFood())));
+      await expectLater(streamedFoods, emits(apples));
     });
 
     test('streames no foods for empty query', () async {
@@ -53,8 +48,8 @@ void main() {
     });
 
     test('streames single food', () async {
-      final streamedFood = foodRepository.streamFood(food.toFoodReference());
-      await expectLater(streamedFood, emits(food));
+      final streamedFood = foodRepository.streamFood(rice.toFoodReference());
+      await expectLater(streamedFood, emits(rice));
     });
 
     test('reuses reference data for missing food', () async {

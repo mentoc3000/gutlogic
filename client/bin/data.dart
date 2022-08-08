@@ -1,6 +1,4 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:gutlogic/auth/auth.dart';
-import 'package:gutlogic/models/application_user.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
@@ -31,15 +29,6 @@ TZDateTime todayAt(int hour, int minute) {
   final now = TZDateTime.now(location);
   return TZDateTime(location, now.year, now.month, now.day, hour, minute);
 }
-
-final user = ApplicationUser(
-  id: 'id',
-  email: 'email',
-  verified: true,
-  consented: true,
-  anonymous: false,
-  providers: BuiltList<AuthProvider>([AuthProvider.firebase]),
-);
 
 final food = EdamamFood(
   id: 'broccoli',

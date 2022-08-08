@@ -1,7 +1,6 @@
-import 'package:built_collection/built_collection.dart';
-import 'package:gutlogic/auth/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gutlogic/blocs/user_cubit.dart';
-import 'package:gutlogic/models/application_user.dart';
+import 'package:gutlogic/models/user/application_user.dart';
 import 'package:gutlogic/resources/user_repository.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -10,15 +9,12 @@ import 'package:test/test.dart';
 
 import 'user_cubit_test.mocks.dart';
 
-@GenerateMocks([UserRepository])
+@GenerateMocks([UserRepository, User])
 void main() {
+  final firebaseUser = MockUser();
   final user = ApplicationUser(
-    id: '123',
-    email: 'jim@aol.com',
-    verified: true,
+    firebaseUser: firebaseUser,
     consented: true,
-    anonymous: false,
-    providers: <AuthProvider>[].build(),
   );
 
   group('User Cubit', () {
