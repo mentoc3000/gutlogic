@@ -65,12 +65,14 @@ workflow:
     # install node
     - apt update
     - curl -sL https://deb.nodesource.com/setup_16.x | bash -
-    - apt -y install nodejs
+    - apt -y install nodejs unzip
     - node --version
     # move into the server directory
     - cd server
     # install the server dependencies
     - npm ci --cache .npm-cache --prefer-offline --log-level error
+    - curl -fsSL https://deno.land/x/install/install.sh | sh
+    - cp /root/.deno/bin/deno /usr/local/bin && rm -rf /root/.deno
   cache:
     <<: *server-cache
     policy: pull
@@ -124,6 +126,8 @@ server:test:
     - !reference [.firebase, before_script]
   script:
     - npm run test
+    - cd api
+    - deno test
   rules:
     - !reference [.server-develop-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]

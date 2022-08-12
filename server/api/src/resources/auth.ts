@@ -1,18 +1,8 @@
 import { Context } from "x/oak/mod.ts";
-import {
-  FlattenedJWSInput,
-  importX509,
-  JWSHeaderParameters,
-  jwtVerify,
-  KeyLike,
-} from "x/jose/index.ts";
+import { FlattenedJWSInput, importX509, JWSHeaderParameters, jwtVerify, KeyLike } from "x/jose/index.ts";
 import { GetKeyFunction } from "x/jose/types.d.ts";
-import {
-  JOSEError,
-  JWKSNoMatchingKey,
-  JWKSTimeout,
-} from "x/jose/util/errors.ts";
-import config from "/config.json" assert { type: "json" };
+import { JOSEError, JWKSNoMatchingKey, JWKSTimeout } from "x/jose/util/errors.ts";
+import config from "../config.json" assert { type: "json" };
 
 /*
 The code below was drawn in part from the deno package jose
@@ -77,15 +67,11 @@ class RemoteKeySet {
   }
 
   coolingDown() {
-    return typeof this._keysTimestamp === "number"
-      ? Date.now() < this._keysTimestamp + this._cooldownDuration
-      : false;
+    return typeof this._keysTimestamp === "number" ? Date.now() < this._keysTimestamp + this._cooldownDuration : false;
   }
 
   fresh() {
-    return typeof this._keysTimestamp === "number"
-      ? Date.now() < this._keysTimestamp + this._cacheMaxAge
-      : false;
+    return typeof this._keysTimestamp === "number" ? Date.now() < this._keysTimestamp + this._cacheMaxAge : false;
   }
 
   async getKey(

@@ -1,6 +1,12 @@
 {
   "tasks": {
-    "start": "deno run --allow-env --allow-net --importmap=imports.json main.ts",
-    "test": "hurl --test --glob \"./dev/*.hurl\""
+    "start": "deno run --allow-env --allow-net src/main.ts"
+  },
+  "importMap": "imports.json",
+  "fmt": {
+    "options": {
+      "lineWidth": 120,
+      "indentWidth": 2
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "x/oak/mod.ts";
-import edamam, { EdamamFoodMeasures, EdamamMeasure } from "/edamam/edamam.ts";
+import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam.ts";
 
 export type Measure = {
   unit: string;
@@ -62,11 +62,10 @@ function genericizeEdamamFoodMeasures(
   if (!(edamamFoodMeasures?.food?.foodId)) return null;
   if (!(edamamFoodMeasures?.food?.label)) return null;
 
-  const measures =
-    edamamFoodMeasures?.measures?.map(genericizeEdamamMeasure).reduce(
-      (acc, el) => acc.concat(el),
-      [],
-    ) ?? [];
+  const measures = edamamFoodMeasures?.measures?.map(genericizeEdamamMeasure).reduce(
+    (acc, el) => acc.concat(el),
+    [],
+  ) ?? [];
 
   return {
     id: edamamFoodMeasures.food.foodId,

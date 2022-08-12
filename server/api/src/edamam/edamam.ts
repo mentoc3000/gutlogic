@@ -1,5 +1,5 @@
 import urlcat from "x/urlcat/src/index.ts";
-import { err, ok, Result } from "/result.ts";
+import { err, ok, Result } from "../result.ts";
 
 export type EdamamQualifier = { uri: string | null; label: string | null };
 
