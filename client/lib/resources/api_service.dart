@@ -5,10 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../util/app_config.dart';
+import 'firebase/remote_config_service.dart';
 import 'user_repository.dart';
 
-const _baseUrlDev = 'api-a4m6ayydzq-uc.a.run.app';
-const _baseUrlProd = 'api-rvtjkoqg7q-uc.a.run.app';
+final _apiUrlProd = RemoteConfiguration(key: 'api_url_prod', defaultValue: 'api-rvtjkoqg7q-uc.a.run.app');
+final _apiUrlDev = RemoteConfiguration(key: 'api_url_dev', defaultValue: 'api-a4m6ayydzq-uc.a.run.app');
 
 class ApiService {
   final String baseUrl;
@@ -19,7 +20,9 @@ class ApiService {
 
   static ApiService fromContext(BuildContext context) {
     final config = context.read<AppConfig>();
-    final baseUrl = config.isProduction ? _baseUrlProd : _baseUrlDev;
+    final remoteConfigService = context.read<RemoteConfigService>();
+    final urlConfig = config.isProduction ? _apiUrlProd : _apiUrlDev;
+    final baseUrl = remoteConfigService.get(urlConfig);
     return ApiService(baseUrl: baseUrl, userRepository: context.read<UserRepository>());
   }
 
