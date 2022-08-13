@@ -7,10 +7,8 @@ import 'package:provider/provider.dart';
 import '../util/app_config.dart';
 import 'user_repository.dart';
 
-// TODO: is there any risk that these urls will change?
 const _baseUrlDev = 'api-a4m6ayydzq-uc.a.run.app';
-// TODO: get production URL
-const _baseUrlProd = '';
+const _baseUrlProd = 'api-rvtjkoqg7q-uc.a.run.app';
 
 class ApiService {
   final String baseUrl;
