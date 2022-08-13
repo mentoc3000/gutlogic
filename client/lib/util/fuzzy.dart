@@ -23,3 +23,22 @@ List<T> stringSimilaritySort<T>({required List<T> list, required String match, r
     ..removeWhere(
         (e) => _similarityEngine.normalizedDistance(keyOf(e).toLowerCase(), match.toLowerCase()) > _threshold);
 }
+
+int _containsCompare(String a, String b, String match) {
+  a = a.toLowerCase();
+  b = b.toLowerCase();
+  final lowerMatch = match.toLowerCase();
+  final indexCompare = a.toLowerCase().indexOf(lowerMatch).compareTo(b.toLowerCase().indexOf(lowerMatch));
+  if (indexCompare != 0) return indexCompare;
+  return a.length.compareTo(b.length);
+}
+
+/// List [keyOf]ed elements that contain case insensitive [match], sorted by earliers occurence in string
+List<T> stringMatchSort<T>({required List<T> list, required String match, required String Function(T) keyOf}) {
+  if (match.isEmpty) return [];
+  final lowerMatch = match.toLowerCase();
+  return list.where((element) => keyOf(element).toLowerCase().contains(lowerMatch)).sortedByCompare(
+        keyOf,
+        (String a, String b) => _containsCompare(a, b, match),
+      );
+}

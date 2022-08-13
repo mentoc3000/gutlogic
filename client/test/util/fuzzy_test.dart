@@ -48,5 +48,33 @@ void main() {
         expect(stringSimilaritySort(list: list, match: 'f', keyOf: (Foo p0) => p0.s), const <Foo>[Foo('f'), Foo('F5')]);
       });
     });
+
+    group('matches by string', () {
+      test('of empty list', () {
+        const list = <Foo>[];
+        expect(stringMatchSort(list: list, match: 's', keyOf: (Foo p0) => p0.s), list);
+      });
+      test('of dissimilar words', () {
+        const list = [Foo('tab'), Foo('F7')];
+        expect(stringMatchSort(list: list, match: 's', keyOf: (Foo p0) => p0.s), <Foo>[]);
+      });
+      test('to empty string', () {
+        const list = [Foo('tab'), Foo('F7')];
+        expect(stringMatchSort(list: list, match: '', keyOf: (Foo p0) => p0.s), <Foo>[]);
+      });
+      test('sorts by similarity', () {
+        const list = [Foo('spacebar'), Foo('putty'), Foo('science')];
+        expect(stringMatchSort(list: list, match: 'p', keyOf: (Foo p0) => p0.s),
+            const <Foo>[Foo('putty'), Foo('spacebar')]);
+      });
+      test('ignores case', () {
+        const list = [Foo('F5'), Foo('Space'), Foo('f7')];
+        expect(stringMatchSort(list: list, match: 'f', keyOf: (Foo p0) => p0.s), const <Foo>[Foo('F5'), Foo('f7')]);
+      });
+      test('shorter matches first', () {
+        const list = [Foo('F5'), Foo('Space'), Foo('f')];
+        expect(stringMatchSort(list: list, match: 'f', keyOf: (Foo p0) => p0.s), const <Foo>[Foo('f'), Foo('F5')]);
+      });
+    });
   });
 }

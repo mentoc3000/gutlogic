@@ -39,7 +39,7 @@ class FoodGroupSearchCubit extends Cubit<FoodGroupSearchState> {
       }
 
       if (query.isNotEmpty) {
-        final entries = stringSimilaritySort(
+        final entries = stringMatchSort(
           list: _maxIntensitiesMapCache!.keys.toList(),
           match: query,
           keyOf: (FoodGroupEntry e) => e.foodRef.name,
