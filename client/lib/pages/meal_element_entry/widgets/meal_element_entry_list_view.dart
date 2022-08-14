@@ -11,6 +11,7 @@ import '../../../routes/routes.dart';
 import '../../../widgets/cards/irritants_card.dart';
 import '../../../widgets/cards/notes_card.dart';
 import '../../../widgets/cards/sensitivity_card.dart';
+import '../../../widgets/cards/similar_foods_card.dart';
 import 'quantity_card.dart';
 
 class MealElementEntryListView extends StatelessWidget {
@@ -54,6 +55,7 @@ class MealElementEntryListView extends StatelessWidget {
         onTap: () => addFoodToPantry(context),
       ),
       if (irritants != null) IrritantsCard(irritants: irritants!),
+      if (irritants != null && irritants!.isNotEmpty && food != null) SimilarFoodsCard(food: food!.toFoodReference()),
       NotesCard(
         controller: notesController,
         onChanged: (notes) => context.read<MealElementBloc>().add(UpdateNotes(notes)),

@@ -83,7 +83,6 @@ SELECT COUNT(*) as count
 `;
   const row = await db.get(sql);
   const foodCount = row.count;
-  `S`;
   const foodGroups = await irritant_db.getFoodGroups2(db);
 
   t.is(foodGroups.length, foodCount);
@@ -92,4 +91,20 @@ SELECT COUNT(*) as count
   const row2 = await db.get(sql);
   const foodCount2 = row2.count;
   t.is(foodCount, foodCount2);
+});
+
+test('selectCanonicalMap', async t => {
+  const sql = 'SELECT COUNT(*) AS count FROM foods WHERE canonical_name IS NOT NULL AND canonical_edamam_id IS NOT NULL';
+  const row = await db.get(sql);
+  const foodCount = row.count;
+
+  const canonicals = await irritant_db.selectCanonicalMap(db);
+
+  t.is(canonicals.size, foodCount);
+
+  for (const canonical in canonicals) {
+    t.true(canonical !== null);
+    t.true(canonical.name !== null);
+    t.true(canonical.id !== null);
+  }
 });

@@ -29,7 +29,7 @@ class FoodGroupCubit extends Cubit<FoodGroupState> {
 
   void _onData(BuiltSet<FoodGroupEntry> entries) async {
     final entriesList = entries.toList();
-    final maxIntensitiesList = await Future.wait(entries.map((e) => irritantService.maxIntensity(e)));
+    final maxIntensitiesList = await Future.wait(entries.map((e) => irritantService.maxIntensity(e.doses)));
     final maxIntensitiesMap = BuiltMap<FoodGroupEntry, int>.from(Map.fromIterables(entriesList, maxIntensitiesList));
     emit(FoodGroupLoaded(foods: entries, maxIntensities: maxIntensitiesMap));
   }

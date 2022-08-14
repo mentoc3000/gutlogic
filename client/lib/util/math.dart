@@ -19,3 +19,6 @@ double clamp(double t, double a, double b) => math.max(math.min(t, b), a);
 
 /// Returns the clamped value of t within the range [0, 1].
 double saturate(double t) => clamp(t, 0.0, 1.0);
+
+/// Returns the absolute value
+double abs(double x) => x > 0 ? x : -x;

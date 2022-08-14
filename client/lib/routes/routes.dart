@@ -26,6 +26,7 @@ import '../pages/profile/profile_page.dart';
 import '../pages/reauthenticate/reauthenticate_page.dart';
 import '../pages/register/register_page.dart';
 import '../pages/settings/settings_page.dart';
+import '../pages/similar_foods/similar_foods_page.dart';
 import '../pages/symptom_entry/symptom_entry_page.dart';
 
 class Routes {
@@ -175,5 +176,9 @@ class Routes {
 
   Route<Widget> createPriorFoodsPageRoute({required DateTime dateTime}) {
     return MaterialPageRoute(builder: (conext) => PriorFoodsPage.provisioned(dateTime: dateTime));
+  }
+
+  Route<Widget> createSimilarFoodsRoute({required FoodReference food}) {
+    return MaterialPageRoute(builder: (context) => SimilarFoodsPage(food: food));
   }
 }
