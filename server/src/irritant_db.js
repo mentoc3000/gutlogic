@@ -12,7 +12,9 @@ function multimap(collection, keyfunc, valfunc) {
   for (const el of collection) {
     const key = keyfunc(el);
     const val = valfunc(el);
-    map.set(key, [...(map.get(key) ?? []), val]);
+    if (val) {
+      map.set(key, [...(map.get(key) ?? []), val]);
+    }
   }
 
   return map;
@@ -30,7 +32,12 @@ async function selectEdamamIdMap(db) {
 
 // Returns a new multi-map of food name values keyed by food ID.
 async function selectFoodNameMap(db) {
-  const sql = `SELECT food_id, canonical_name FROM foods`;
+  const sql = `
+SELECT food_id,
+       canonical_name
+  FROM foods
+ WHERE canonical_name IS NOT NULL;
+`;
 
   const keyfunc = (row) => row.food_id;
   const valfunc = (row) => row.canonical_name;
@@ -38,7 +45,24 @@ async function selectFoodNameMap(db) {
   return multimap(await db.all(sql), keyfunc, valfunc);
 }
 
-/// Returns a new multi-map of { name, concentration, dosePerServing } values keyed by food ID.
+// Returns a new multi-map of canonical edamam food references keyed by food ID.
+async function selectCanonicalMap(db) {
+  const sql = `SELECT food_id, canonical_name, canonical_edamam_id FROM foods
+               WHERE canonical_name IS NOT NULL AND canonical_edamam_id IS NOT NULL`;
+
+  const rows = await db.all(sql);
+  const map = new Map();
+
+  for (const row of rows) {
+    const canonical = { $: 'EdamamFoodReference', id: row.canonical_edamam_id, name: row.canonical_name };
+    map.set(row.food_id, canonical);
+  }
+
+  return map;
+}
+exports.selectCanonicalMap = selectCanonicalMap;
+
+// Returns a new multi-map of { name, concentration, dosePerServing } values keyed by food ID.
 async function selectIrritantMap(db) {
   const sql = `
 SELECT foods.food_id AS food_id,
@@ -140,12 +164,14 @@ exports.getIrritants = async function getIrritants(db) {
   const edamamIdMap = await selectEdamamIdMap(db);
   const irritantMap = await selectIrritantMap(db);
   const foodNameMap = await selectFoodNameMap(db);
+  const canonicalMap = await selectCanonicalMap(db);
 
   function createIrritantEntry(id) {
     const names = foodNameMap.get(id) ?? [];
     const foodIds = edamamIdMap.get(id) ?? [];
     const irritants = irritantMap.get(id) ?? [];
-    return { foodIds, names, irritants: processIrritants(irritants) };
+    const canonical = canonicalMap.get(id) ?? null;
+    return { foodIds, names, irritants: processIrritants(irritants), canonical };
   }
 
   // combine the edamam/irritant/name multi-maps into a list of { foodIds, names, irritants } objects

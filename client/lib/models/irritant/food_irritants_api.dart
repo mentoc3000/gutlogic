@@ -2,6 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
+import '../food_reference/edamam_food_reference.dart';
 import 'irritant.dart';
 
 part 'food_irritants_api.g.dart';
@@ -17,7 +18,18 @@ abstract class FoodIrritantsApi implements Built<FoodIrritantsApi, FoodIrritants
 
   BuiltList<Irritant> get irritants;
 
+  /// Cannonical Edamam food
+  EdamamFoodReference? get canonical;
+
   FoodIrritantsApi._();
+
+  factory FoodIrritantsApi({
+    required BuiltList<String> names,
+    required BuiltList<String> foodIds,
+    required BuiltList<Irritant> irritants,
+    required EdamamFoodReference? canonical,
+  }) =>
+      _$FoodIrritantsApi._(names: names, foodIds: foodIds, irritants: irritants, canonical: canonical);
 
   factory FoodIrritantsApi.fromBuilder([FoodIrritantsApiBuilder Function(FoodIrritantsApiBuilder) updates]) =
       _$FoodIrritantsApi;

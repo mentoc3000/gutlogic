@@ -8,6 +8,7 @@ import '../../../models/irritant/irritant.dart';
 import '../../../models/pantry/pantry_entry.dart';
 import '../../../widgets/cards/irritants_card.dart';
 import '../../../widgets/cards/notes_card.dart';
+import '../../../widgets/cards/similar_foods_card.dart';
 import 'sensitivity_slider_card.dart';
 
 class PantryEntryListView extends StatelessWidget {
@@ -34,6 +35,7 @@ class PantryEntryListView extends StatelessWidget {
         onChanged: (sensitivityLevel) => pantryBloc.add(UpdateSensitivityLevel(sensitivityLevel)),
       ),
       if (irritants != null) IrritantsCard(irritants: irritants!),
+      if (irritants != null && irritants!.isNotEmpty && food != null) SimilarFoodsCard(food: food!.toFoodReference()),
       NotesCard(
         controller: notesController,
         onChanged: (notes) => context.read<PantryEntryBloc>().add(UpdateNotes(notes)),

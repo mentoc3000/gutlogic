@@ -8,6 +8,7 @@ import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/cards/irritants_card.dart';
 import '../../../widgets/cards/sensitivity_card.dart';
+import '../../../widgets/cards/similar_foods_card.dart';
 
 class FoodListView extends StatelessWidget {
   final Food food;
@@ -26,6 +27,7 @@ class FoodListView extends StatelessWidget {
     final cards = [
       SensitivityCard(sensitivity: sensitivity, onTap: () => addFoodToPantry(context)),
       if (irritants != null) IrritantsCard(irritants: irritants!),
+      if (irritants != null && irritants!.isNotEmpty) SimilarFoodsCard(food: food.toFoodReference()),
     ];
 
     return ListView.builder(
