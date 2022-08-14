@@ -23,6 +23,7 @@ class GLIcons {
   static const pantry = MdiIcons.chartBoxOutline;
   static const password = Icons.lock;
   static const predictedSensitivity = Icons.circle;
+  static const priorFoods = Icons.history;
   static const privacy = Icons.security;
   static const search = Icons.search;
   static const selected = Icons.check;

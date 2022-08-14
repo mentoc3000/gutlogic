@@ -13,11 +13,11 @@ import '../../style/gl_text_style.dart';
 import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_scaffold.dart';
+import '../../widgets/list_tiles/food_tile.dart';
 import '../../widgets/powered_by_edamam.dart';
 import '../food_group/widgets/food_group_entry_tile.dart';
 import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
-import 'widgets/food_search_result_tile.dart';
 
 class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
   final FoodSearchBloc foodBloc;
@@ -124,7 +124,7 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               final result = foods[index];
-              return FoodSearchResultTile(
+              return FoodTile(
                 food: result,
                 onTap: () {
                   closeSearch(context);

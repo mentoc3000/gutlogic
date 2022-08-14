@@ -5,7 +5,7 @@ import '../../../models/food/food.dart';
 import '../../../style/gl_color_scheme.dart';
 import '../../../widgets/fab_guide.dart';
 import '../../../widgets/powered_by_edamam.dart';
-import 'food_search_result_tile.dart';
+import '../../../widgets/list_tiles/food_tile.dart';
 
 class FoodSearchResultsListView extends StatelessWidget {
   final void Function(Food) onTap;
@@ -27,10 +27,7 @@ class FoodSearchResultsListView extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 if (index < foods.length) {
                   final result = foods[index];
-                  return FoodSearchResultTile(
-                    food: result,
-                    onTap: () => onTap(result),
-                  );
+                  return FoodTile(food: result, onTap: () => onTap(result));
                 } else {
                   return const SizedBox(height: _CustomFoodGuide.height);
                 }

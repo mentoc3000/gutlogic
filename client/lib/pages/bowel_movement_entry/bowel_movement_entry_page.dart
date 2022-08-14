@@ -7,6 +7,7 @@ import '../../widgets/cards/datetime_card.dart';
 import '../../widgets/cards/notes_card.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
+import '../../widgets/cards/prior_foods_card.dart';
 import '../error_page.dart';
 import '../loading_page.dart';
 import 'widgets/bm_type_card.dart';
@@ -95,6 +96,7 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
             context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryNotes(value));
           },
         ),
+        PriorFoodsCard(dateTime: entry.datetime),
       ];
     }
 

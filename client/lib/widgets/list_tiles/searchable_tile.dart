@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../models/model_interfaces.dart';
-import '../../../widgets/alert_dialogs/confirm_delete_dialog.dart';
-import '../../../widgets/dismissible/delete_dismissible.dart';
-import '../../../widgets/gl_icons.dart';
-import '../../../widgets/list_tiles/gl_list_tile.dart';
+import '../../models/model_interfaces.dart';
+import '../alert_dialogs/confirm_delete_dialog.dart';
+import '../dismissible/delete_dismissible.dart';
+import '../gl_icons.dart';
+import 'gl_list_tile.dart';
 
-class SearchResultTile extends StatelessWidget {
+class SearchableTile extends StatelessWidget {
   final Searchable searchable;
   final Widget? leading;
   final VoidCallback onTap;
@@ -16,7 +16,7 @@ class SearchResultTile extends StatelessWidget {
   final bool isCustom;
   bool get isDismissible => onDelete != null;
 
-  const SearchResultTile({
+  const SearchableTile({
     required this.searchable,
     this.leading,
     required this.onTap,

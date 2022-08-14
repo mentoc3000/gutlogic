@@ -7,7 +7,7 @@ import '../../pages/error_page.dart';
 import '../../pages/loading_page.dart';
 import '../../widgets/list_tiles/gl_list_tile.dart';
 import 'searchable_search_delegate.dart';
-import 'widgets/search_result_tile.dart';
+import '../../widgets/list_tiles/searchable_tile.dart';
 
 class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
   final SymptomTypeBloc symptomTypeBloc;
@@ -53,7 +53,7 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
                 final result = items[index];
-                return SearchResultTile(
+                return SearchableTile(
                   searchable: result,
                   onTap: () {
                     closeSearch(context);

@@ -5,7 +5,7 @@ import '../../../models/food/custom_food.dart';
 import '../../../models/food_reference/food_reference.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../widgets/sensitivity_indicator.dart';
-import 'search_result_tile.dart';
+import '../../../widgets/list_tiles/searchable_tile.dart';
 
 class FoodReferenceSuggestionTile extends StatelessWidget {
   final FoodReference foodReference;
@@ -22,7 +22,7 @@ class FoodReferenceSuggestionTile extends StatelessWidget {
       return sensitivity.of(foodReference);
     });
 
-    return SearchResultTile(
+    return SearchableTile(
       searchable: foodReference,
       leading: SensitivityIndicator(foodSensitivity),
       onTap: onTap,

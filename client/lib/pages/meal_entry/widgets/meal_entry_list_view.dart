@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/food_search/food_search.dart';
-import '../../../blocs/foods_suggestion/recent_foods_cubit.dart';
 import '../../../blocs/meal_entry/meal_entry.dart';
 import '../../../blocs/foods_suggestion/foods_suggestion.dart';
 import '../../../models/diary_entry/meal_entry.dart';
