@@ -31,9 +31,14 @@ class DiaryRepository with FirestoreRepository, TimelineRepository {
   }
 
   /// Recent unique foods listed from most to least recent
-  Future<BuiltList<FoodReference>> recentFoods() async {
+  Future<BuiltList<FoodReference>> recentFoods({DateTime? start, DateTime? end}) async {
     final diaryEntries = await getAll();
-    final mealEntries = diaryEntries.whereType<MealEntry>().toList()..sort((a, b) => a.datetime.compareTo(b.datetime));
+    final mealEntries = diaryEntries
+        .whereType<MealEntry>()
+        .where((element) => start?.isBefore(element.datetime) ?? true)
+        .where((element) => end?.isAfter(element.datetime) ?? true)
+        .toList()
+      ..sort((a, b) => a.datetime.compareTo(b.datetime));
     final recentMealElements =
         mealEntries.reversed.expand((element) => element.mealElements.reversed).toList().toBuiltList();
     final recentFoods = <FoodReference>[];

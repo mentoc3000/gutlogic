@@ -1,18 +1,18 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../blocs/food_search/food_search.dart';
-import '../../../models/food/custom_food.dart';
-import '../../../models/food/food.dart';
-import '../../../resources/sensitivity/sensitivity_service.dart';
-import '../../../widgets/sensitivity_indicator.dart';
-import 'search_result_tile.dart';
+import '../../blocs/food_search/food_search.dart';
+import '../../models/food/custom_food.dart';
+import '../../models/food/food.dart';
+import '../../resources/sensitivity/sensitivity_service.dart';
+import '../sensitivity_indicator.dart';
+import 'searchable_tile.dart';
 
-class FoodSearchResultTile extends StatelessWidget {
+class FoodTile extends StatelessWidget {
   final Food food;
   final VoidCallback onTap;
 
-  const FoodSearchResultTile({
+  const FoodTile({
     required this.food,
     required this.onTap,
   });
@@ -23,7 +23,7 @@ class FoodSearchResultTile extends StatelessWidget {
       return sensitivity.of(food.toFoodReference());
     });
 
-    return SearchResultTile(
+    return SearchableTile(
       searchable: food,
       leading: SensitivityIndicator(foodSensitivity),
       onTap: onTap,

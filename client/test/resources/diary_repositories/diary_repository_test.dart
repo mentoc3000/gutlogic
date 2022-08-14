@@ -25,17 +25,18 @@ void main() {
     late FakeFirebaseFirestore instance;
     late FirestoreService firestoreService;
     late DiaryRepository repository;
+    final datetime = DateTime.now().toUtc();
     final mayo = EdamamFoodReference(id: 'mayo', name: 'Mayo');
     final mustard = EdamamFoodReference(id: 'mustard', name: 'Mustard');
     final ketchup = EdamamFoodReference(id: 'ketchup', name: 'Ketchup');
+    final bread = EdamamFoodReference(id: 'bread', name: 'Bread');
 
     setUp(() async {
       const name = 'Gas';
       const severity = Severity.mild;
-      final datetime = DateTime.now().toUtc();
       final mealEntry1 = MealEntry(
         id: 'id1',
-        datetime: datetime.subtract(const Duration(days: 1)),
+        datetime: datetime,
         mealElements: [
           MealElement(id: 'meid0', foodReference: mayo),
           MealElement(id: 'meid1', foodReference: mustard),
@@ -43,18 +44,25 @@ void main() {
       );
       final symptomEntry = SymptomEntry(
         id: 'id2',
-        datetime: datetime,
+        datetime: datetime.subtract(const Duration(days: 1)),
         symptom: Symptom(symptomType: SymptomType(id: 'symptomType1', name: name), severity: severity),
       );
       final mealEntry2 = MealEntry(
         id: 'id3',
-        datetime: datetime.add(const Duration(days: 1)),
+        datetime: datetime.subtract(const Duration(days: 2)),
         mealElements: [
           MealElement(id: 'meid2', foodReference: mayo),
           MealElement(id: 'meid3', foodReference: ketchup),
         ].toBuiltList(),
       );
-      diaryEntries = [symptomEntry, mealEntry1, mealEntry2].toBuiltList();
+      final mealEntry3 = MealEntry(
+        id: 'id4',
+        datetime: datetime.subtract(const Duration(days: 3)),
+        mealElements: [
+          MealElement(id: 'meid4', foodReference: bread),
+        ].toBuiltList(),
+      );
+      diaryEntries = [symptomEntry, mealEntry1, mealEntry2, mealEntry3].toBuiltList();
 
       instance = FakeFirebaseFirestore();
       await instance
@@ -69,6 +77,10 @@ void main() {
           .collection('diary')
           .doc(mealEntry2.id)
           .set(serializers.serialize(mealEntry2) as Map<String, dynamic>);
+      await instance
+          .collection('diary')
+          .doc(mealEntry3.id)
+          .set(serializers.serialize(mealEntry3) as Map<String, dynamic>);
 
       firestoreService = MockFirestoreService();
       when(firestoreService.instance).thenReturn(instance);
@@ -100,7 +112,15 @@ void main() {
 
     test('gets recent foods', () async {
       final recentFoods = await repository.recentFoods();
-      expect(recentFoods, [ketchup, mayo, mustard].toBuiltList());
+      expect(recentFoods, [mustard, mayo, ketchup, bread].toBuiltList());
+    });
+
+    test('gets recent foods in range', () async {
+      final recentFoods = await repository.recentFoods(
+        start: datetime.subtract(const Duration(days: 2, hours: 6)),
+        end: datetime.subtract(const Duration(days: 1, hours: 6)),
+      );
+      expect(recentFoods, [ketchup, mayo].toBuiltList());
     });
   });
 }

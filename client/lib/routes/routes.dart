@@ -21,6 +21,7 @@ import '../pages/main_tabs.dart';
 import '../pages/meal_element_entry/meal_element_entry_page.dart';
 import '../pages/meal_entry/meal_entry_page.dart';
 import '../pages/pantry_entry/pantry_entry_page.dart';
+import '../pages/prior_foods/prior_foods_page.dart';
 import '../pages/profile/profile_page.dart';
 import '../pages/reauthenticate/reauthenticate_page.dart';
 import '../pages/register/register_page.dart';
@@ -170,5 +171,9 @@ class Routes {
 
   Route<Widget> createFoodGroupRoute({required String name}) {
     return MaterialPageRoute(builder: (context) => FoodGroupPage(group: name));
+  }
+
+  Route<Widget> createPriorFoodsPageRoute({required DateTime dateTime}) {
+    return MaterialPageRoute(builder: (conext) => PriorFoodsPage.provisioned(dateTime: dateTime));
   }
 }

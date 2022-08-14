@@ -8,6 +8,7 @@ import '../../models/severity.dart';
 import '../../models/symptom_type.dart';
 import '../../widgets/cards/datetime_card.dart';
 import '../../widgets/cards/notes_card.dart';
+import '../../widgets/cards/prior_foods_card.dart';
 import '../../widgets/floating_action_buttons/search_floating_action_button.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
@@ -90,6 +91,7 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
             context.read<SymptomEntryBloc>().add(UpdateSymptomEntryNotes(notes));
           },
         ),
+        PriorFoodsCard(dateTime: entry.datetime),
       ];
     }
 
