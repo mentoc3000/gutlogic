@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/sensitivity/sensitivity_level.dart';
-
 export 'package:flutter/material.dart' show Color;
 
 class GLColors {
@@ -19,6 +18,8 @@ class GLColors {
   static const red = Color(0xFFA30000);
   static const purple = Color(0xFF4C1E4F);
   static const blue = Color(0xFF004777);
+  static const yellow = Colors.yellow;
+  static const orange = Colors.orange;
 
   static const googleBlue = Color(0xFF4285F4);
   static const edamamGreen = Color(0xFF79CA38);
@@ -39,7 +40,7 @@ class GLColors {
   static const white = Colors.white;
 
   static const mildSeverity = Color(0xFFfee385); // happy face color
-  static const severeSeverity = Color(0xFFE13D5E);
+  static const severeSeverity = Color(0xFFE13D5E); // angry face color
 
   static Color fromSensitivityLevel(SensitivityLevel sensitivityLevel) {
     switch (sensitivityLevel) {

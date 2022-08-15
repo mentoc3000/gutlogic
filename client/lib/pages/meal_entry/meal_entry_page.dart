@@ -6,8 +6,8 @@ import '../../models/diary_entry/meal_entry.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/snack_bars/undo_delete_snack_bar.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import 'widgets/meal_entry_list_view.dart';
 
 class MealEntryPage extends StatelessWidget {
@@ -63,7 +63,7 @@ class MealEntryPage extends StatelessWidget {
 
   Widget builder(BuildContext context, MealEntryState state) {
     if (state is MealEntryLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
 
     if (state is MealEntryLoaded) {
@@ -72,9 +72,9 @@ class MealEntryPage extends StatelessWidget {
     }
 
     if (state is MealEntryError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
 
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 }

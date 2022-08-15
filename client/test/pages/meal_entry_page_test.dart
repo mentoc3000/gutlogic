@@ -12,7 +12,7 @@ import 'package:gutlogic/models/food_reference/food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
-import 'package:gutlogic/pages/loading_page.dart';
+import 'package:gutlogic/widgets/gl_loading_widget.dart';
 import 'package:gutlogic/pages/meal_entry/meal_entry_page.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
@@ -127,7 +127,7 @@ void main() {
       whenListen(mealEntryBloc, Stream.value(MealEntryLoading()), initialState: MealEntryLoading());
       await tester.pumpWidget(mealEntryPage);
       expect(find.text('Meal/Snack'), findsOneWidget);
-      expect(find.byType(LoadingPage), findsOneWidget);
+      expect(find.byType(GLLoadingWidget), findsOneWidget);
       verifyNever(() => mealEntryBloc.add(any()));
     });
 

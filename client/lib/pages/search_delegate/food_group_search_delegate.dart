@@ -7,8 +7,8 @@ import '../../blocs/food_search/food_search.dart';
 import '../../models/food/food.dart';
 import '../../models/food_group_entry.dart';
 import '../../models/food_reference/food_reference.dart';
-import '../../pages/error_page.dart';
-import '../../pages/loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import '../../style/gl_text_style.dart';
 import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
@@ -46,9 +46,9 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
           return buildLoadingPage(context);
         }
         if (state is FoodGroupSearchError) {
-          return ErrorPage(message: state.message);
+          return GLErrorWidget(message: state.message);
         }
-        return const ErrorPage();
+        return const GLErrorWidget();
       },
     );
   }
@@ -73,13 +73,13 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
         if (state is FoodSearchLoading) {
           return GLScaffold(
             floatingActionButton: buildAddFab(context),
-            body: LoadingPage(),
+            body: GLLoadingWidget(),
           );
         }
         if (state is FoodSearchError) {
-          return ErrorPage(message: state.message);
+          return GLErrorWidget(message: state.message);
         }
-        return const ErrorPage();
+        return const GLErrorWidget();
       },
     );
   }
@@ -110,7 +110,7 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
   GLScaffold buildLoadingPage(BuildContext context) {
     return GLScaffold(
       floatingActionButton: buildAddFab(context),
-      body: LoadingPage(),
+      body: GLLoadingWidget(),
     );
   }
 

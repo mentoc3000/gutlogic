@@ -54,30 +54,22 @@ void main() {
   });
 
   group('MainTabs', () {
-    testWidgets('starts on browse page', (WidgetTester tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(homepage);
-        expect(find.byType(BrowsePage), findsOneWidget);
-        expect(find.byType(TabBar), findsOneWidget);
-      });
-    });
-
     testWidgets('switches between tabs', (WidgetTester tester) async {
       await tester.runAsync(() async {
         await tester.pumpWidget(homepage);
         await tester.pumpWidget(homepage);
 
         // Start on browse page
-        expect(find.byType(BrowsePage), findsOneWidget);
-        expect(find.byType(PantryPage), findsNothing);
+        expect(find.byType(PantryPage), findsOneWidget);
+        expect(find.byType(BrowsePage), findsNothing);
 
-        // Switch to pantry page
-        final settingsTab = find.text('Pantry');
+        // Switch to browse page
+        final settingsTab = find.text('Foods');
         expect(settingsTab, findsOneWidget);
         await tester.tap(settingsTab);
         await tester.pumpAndSettle();
         expect(find.byType(DiaryPage), findsNothing);
-        expect(find.byType(PantryPage), findsOneWidget);
+        expect(find.byType(BrowsePage), findsOneWidget);
         mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
 
         // Switch to diary page

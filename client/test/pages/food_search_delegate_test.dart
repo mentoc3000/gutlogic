@@ -9,7 +9,7 @@ import 'package:gutlogic/models/food/custom_food.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food_reference/food_reference.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
-import 'package:gutlogic/pages/loading_page.dart';
+import 'package:gutlogic/widgets/gl_loading_widget.dart';
 import 'package:gutlogic/pages/search_delegate/food_search_delegate.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:gutlogic/widgets/gl_app_bar.dart';
@@ -292,7 +292,7 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pump();
       await tester.pump();
-      expect(find.byType(LoadingPage), findsOneWidget);
+      expect(find.byType(GLLoadingWidget), findsOneWidget);
     });
 
     testWidgets('shows error', (WidgetTester tester) async {

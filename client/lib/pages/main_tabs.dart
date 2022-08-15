@@ -5,13 +5,14 @@ import '../resources/firebase/analytics_service.dart';
 import '../util/keys.dart';
 import '../widgets/gl_icons.dart';
 import '../widgets/gl_scaffold.dart';
+import 'analysis/analysis_page.dart';
 import 'browse/browse_page.dart';
 import 'diary/diary_page.dart';
 import 'pantry/pantry_page.dart';
 
 class MainTabs extends StatefulWidget {
   final AnalyticsService analytics;
-  static const initialTab = 1;
+  static const initialTab = 0;
 
   const MainTabs({required this.analytics});
 
@@ -29,26 +30,31 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
 
   final tabs = [
     const Tab(
+      key: Keys.pantryTab,
+      text: 'Pantry',
+      icon: Icon(GLIcons.pantry),
+    ),
+    const Tab(
       key: Keys.diaryTab,
       text: 'Timeline',
       icon: Icon(GLIcons.diary),
     ),
     const Tab(
       key: Keys.browseTab,
-      text: 'Browse',
+      text: 'Foods',
       icon: Icon(GLIcons.browse),
     ),
     const Tab(
-      key: Keys.pantryTab,
-      text: 'Pantry',
-      icon: Icon(GLIcons.pantry),
+      text: 'Analysis',
+      icon: Icon(GLIcons.analysis),
     ),
   ];
 
   final pages = [
+    PantryPage.provisioned(),
     DiaryPage.provisioned(),
     const BrowsePage(),
-    PantryPage.provisioned(),
+    AnalysisPage.provisioned(),
   ];
 
   @override

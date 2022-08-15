@@ -5,8 +5,8 @@ import '../../blocs/food/food.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import 'widgets/food_list_view.dart';
 
 class FoodPage extends StatelessWidget {
@@ -46,14 +46,14 @@ class FoodPage extends StatelessWidget {
 
   Widget bodyBuilder(BuildContext context, FoodState state) {
     if (state is FoodLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
     if (state is FoodLoaded) {
       return FoodListView(food: state.food, irritants: state.irritants);
     }
     if (state is FoodError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 }

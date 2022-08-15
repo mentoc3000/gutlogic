@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/recent_foods/recent_foods.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import 'widgets/prior_foods_list_view.dart';
 
 class PriorFoodsPage extends StatelessWidget {
@@ -30,14 +30,14 @@ class PriorFoodsPage extends StatelessWidget {
 
   Widget builder(BuildContext context, RecentFoodsState state) {
     if (state is RecentFoodsLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
     if (state is RecentFoodsLoaded) {
       return PriorFoodsListView(recentFoods: state.recentFoods);
     }
     if (state is RecentFoodsError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 }

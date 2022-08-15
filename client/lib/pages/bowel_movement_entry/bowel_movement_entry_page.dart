@@ -8,8 +8,8 @@ import '../../widgets/cards/notes_card.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/cards/prior_foods_card.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import 'widgets/bm_type_card.dart';
 import 'widgets/bm_volume_card.dart';
 
@@ -102,7 +102,7 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
 
     Widget buildBody(BowelMovementEntryState state) {
       if (state is BowelMovementEntryLoading) {
-        return LoadingPage();
+        return GLLoadingWidget();
       }
 
       if (state is BowelMovementEntryLoaded) {
@@ -115,10 +115,10 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
       }
 
       if (state is BowelMovementEntryError) {
-        return ErrorPage(message: state.message);
+        return GLErrorWidget(message: state.message);
       }
 
-      return const ErrorPage();
+      return const GLErrorWidget();
     }
 
     return GLScaffold(

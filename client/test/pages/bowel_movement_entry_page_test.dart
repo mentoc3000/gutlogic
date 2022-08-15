@@ -8,7 +8,7 @@ import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/pages/bowel_movement_entry/bowel_movement_entry_page.dart';
 import 'package:gutlogic/pages/bowel_movement_entry/widgets/bm_type_card.dart';
 import 'package:gutlogic/pages/bowel_movement_entry/widgets/bm_volume_card.dart';
-import 'package:gutlogic/pages/loading_page.dart';
+import 'package:gutlogic/widgets/gl_loading_widget.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockBowelMovementEntryBloc extends MockBloc<BowelMovementEntryEvent, BowelMovementEntryState>
@@ -66,7 +66,7 @@ void main() {
 
         await tester.pumpWidget(bowelmovementEntryPage);
         expect(find.text('Bowel Movement'), findsOneWidget);
-        expect(find.byType(LoadingPage), findsOneWidget);
+        expect(find.byType(GLLoadingWidget), findsOneWidget);
         verifyNever(() => bowelmovementEntryBloc.add(any()));
       });
     });

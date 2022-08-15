@@ -7,7 +7,7 @@ import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
-import 'package:gutlogic/pages/loading_page.dart';
+import 'package:gutlogic/widgets/gl_loading_widget.dart';
 import 'package:gutlogic/pages/meal_element_entry/meal_element_entry_page.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:mocktail/mocktail.dart';
@@ -75,7 +75,7 @@ void main() {
 
         await tester.pumpWidget(mealElementPage);
         expect(find.text('Ingredient'), findsOneWidget);
-        expect(find.byType(LoadingPage), findsOneWidget);
+        expect(find.byType(GLLoadingWidget), findsOneWidget);
         verifyNever(() => mealElementBloc.add(any()));
       });
     });

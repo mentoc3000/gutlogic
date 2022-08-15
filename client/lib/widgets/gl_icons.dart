@@ -5,8 +5,8 @@ import '../assets/sick_face_icon.dart';
 
 class GLIcons {
   static const account = Icons.lock;
-  static const profile = Icons.face;
   static const add = Icons.add;
+  static const analysis = MdiIcons.chartBar;
   static const arrowBack = Icons.arrow_back;
   static const arrowRight = Icons.keyboard_arrow_right;
   static const bowelMovement = MdiIcons.toilet;
@@ -25,12 +25,13 @@ class GLIcons {
   static const predictedSensitivity = Icons.circle;
   static const priorFoods = Icons.history;
   static const privacy = Icons.security;
+  static const profile = Icons.face;
   static const search = Icons.search;
   static const selected = Icons.check;
   static const settings = Icons.settings;
   static const sort = Icons.sort_by_alpha;
   static const symptom = SickFaceIcon.sickFace;
+  static const userSensitivity = Icons.verified;
   static const visibility = Icons.visibility;
   static const visibilityOff = Icons.visibility_off;
-  static const userSensitivity = Icons.verified;
 }

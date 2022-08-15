@@ -12,8 +12,8 @@ import '../../widgets/cards/prior_foods_card.dart';
 import '../../widgets/floating_action_buttons/search_floating_action_button.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import '../search_delegate/symptom_type_search_delegate.dart';
 import 'widgets/severity_card.dart';
 
@@ -115,7 +115,7 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
       if (state is SymptomEntryLoading) {
         return GLScaffold(
           appBar: defaultAppBar,
-          body: LoadingPage(),
+          body: GLLoadingWidget(),
         );
       }
 
@@ -144,13 +144,13 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
       if (state is SymptomEntryError) {
         return GLScaffold(
           appBar: defaultAppBar,
-          body: ErrorPage(message: state.message),
+          body: GLErrorWidget(message: state.message),
         );
       }
 
       return GLScaffold(
         appBar: defaultAppBar,
-        body: const ErrorPage(),
+        body: const GLErrorWidget(),
       );
     }
 

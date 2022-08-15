@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/food_groups/food_groups.dart';
-import '../../error_page.dart';
-import '../../loading_page.dart';
+import '../../../widgets/gl_error_widget.dart';
+import '../../../widgets/gl_loading_widget.dart';
 import 'food_groups_list.dart';
 
 class FoodGroups extends StatelessWidget {
@@ -19,14 +19,14 @@ class FoodGroups extends StatelessWidget {
 
   Widget builder(BuildContext context, FoodGroupsState state) {
     if (state is FoodGroupsLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
     if (state is FoodGroupsLoaded) {
       return FoodGroupsList(groups: state.groups);
     }
     if (state is FoodGroupsError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 }

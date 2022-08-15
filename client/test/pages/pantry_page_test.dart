@@ -11,7 +11,7 @@ import 'package:gutlogic/models/pantry/pantry_sort.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_level.dart';
 import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
-import 'package:gutlogic/pages/loading_page.dart';
+import 'package:gutlogic/widgets/gl_loading_widget.dart';
 import 'package:gutlogic/pages/pantry/pantry_page.dart';
 import 'package:gutlogic/routes/routes.dart';
 import 'package:mocktail/mocktail.dart';
@@ -85,7 +85,7 @@ void main() {
           initialState: PantrySortLoading(sort: defaultSort));
       await tester.pumpWidget(pantryPage);
       expect(find.text('Pantry'), findsOneWidget);
-      expect(find.byType(LoadingPage), findsOneWidget);
+      expect(find.byType(GLLoadingWidget), findsOneWidget);
       verifyNever(() => pantryBloc.add(any()));
     });
 

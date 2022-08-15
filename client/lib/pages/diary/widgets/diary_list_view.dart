@@ -7,6 +7,7 @@ import '../../../models/diary_entry/bowel_movement_entry.dart';
 import '../../../models/diary_entry/diary_entry.dart';
 import '../../../models/diary_entry/meal_entry.dart';
 import '../../../models/diary_entry/symptom_entry.dart';
+import '../../../util/date_time_ext.dart';
 import 'bowel_movement_entry_list_tile.dart';
 import 'date_tile.dart';
 import 'meal_entry_list_tile.dart';
@@ -117,8 +118,4 @@ class DiaryListView extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
     );
   }
-}
-
-extension Date on DateTime {
-  DateTime toMidnight() => DateTime(year, month, day);
 }

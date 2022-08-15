@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../pages/loading_page.dart';
+import '../gl_loading_widget.dart';
 
 /// Builds a widget using the current value of a subject. If the subject stream is empty, waits for the next value.
 ///
@@ -37,7 +37,7 @@ class LoadingBuilder<T> extends StatelessWidget {
     return FutureBuilder(
       future: future,
       builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
-        return snapshot.hasData ? builder(context, snapshot.requireData) : LoadingPage();
+        return snapshot.hasData ? builder(context, snapshot.requireData) : GLLoadingWidget();
       },
     );
   }
