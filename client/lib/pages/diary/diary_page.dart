@@ -8,8 +8,8 @@ import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/icon_buttons/settings_icon_button.dart';
 import '../../widgets/snack_bars/undo_delete_snack_bar.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import 'widgets/diary_floating_action_button.dart';
 import 'widgets/diary_list_view.dart';
 
@@ -39,7 +39,7 @@ class DiaryPage extends StatelessWidget {
 
   Widget builder(BuildContext context, DiaryState state) {
     if (state is DiaryLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
     if (state is DiaryLoaded) {
       if (state.diaryEntries.isEmpty) {
@@ -48,9 +48,9 @@ class DiaryPage extends StatelessWidget {
       return DiaryListView(diaryEntries: state.diaryEntries);
     }
     if (state is DiaryError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 
   void listener(BuildContext context, DiaryState state) {

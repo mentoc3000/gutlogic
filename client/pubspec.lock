@@ -463,6 +463,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.55.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -515,6 +522,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.0"
+  flutter_spinkit:
+    dependency: "direct main"
+    description:
+      name: flutter_spinkit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.0"
   flutter_svg:
     dependency: "direct main"
     description:

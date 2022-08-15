@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/pantry/pantry.dart';
 import '../../models/pantry/pantry_entry.dart';
-import '../../pages/error_page.dart';
-import '../../pages/loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import '../../widgets/list_tiles/pantry_list_tile.dart';
 import 'searchable_search_delegate.dart';
 
@@ -49,12 +49,12 @@ class PantrySearchDelegate extends SearchableSearchDelegate<PantryEntry> {
           );
         }
         if (state is PantryLoading) {
-          return LoadingPage();
+          return GLLoadingWidget();
         }
         if (state is PantryError) {
-          return ErrorPage(message: state.message);
+          return GLErrorWidget(message: state.message);
         }
-        return const ErrorPage();
+        return const GLErrorWidget();
       },
     );
   }

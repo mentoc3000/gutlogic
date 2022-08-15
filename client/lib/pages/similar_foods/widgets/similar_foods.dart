@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/similar_foods/similar_foods.dart';
 import '../../../models/food_reference/food_reference.dart';
-import '../../error_page.dart';
-import '../../loading_page.dart';
+import '../../../widgets/gl_error_widget.dart';
+import '../../../widgets/gl_loading_widget.dart';
 import 'similar_foods_list.dart';
 
 class SimilarFoods extends StatelessWidget {
@@ -22,14 +22,14 @@ class SimilarFoods extends StatelessWidget {
 
   Widget builder(BuildContext context, SimilarFoodsState state) {
     if (state is SimilarFoodsLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
     if (state is SimilarFoodsLoaded) {
       return SimilarFoodsList(foods: state.foods, maxIntensities: state.maxIntensities);
     }
     if (state is SimilarFoodsError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 }

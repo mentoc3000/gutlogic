@@ -187,7 +187,7 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
           final width = widget.width != null && widget.width! < size.maxWidth ? widget.width! : size.maxWidth;
           return Stack(
             children: <Widget>[
-              _MeasureLine(
+              MeasureLine(
                 states: SeveritySlider.options,
                 handleTap: handleTap,
                 animationValue: _animationValue,
@@ -217,8 +217,8 @@ class _SeveritySliderState extends State<SeveritySlider> with SingleTickerProvid
 //const double circleDiameter = 30;
 const double paddingSize = 10;
 
-class _MeasureLine extends StatelessWidget {
-  const _MeasureLine({
+class MeasureLine extends StatelessWidget {
+  const MeasureLine({
     required this.handleTap,
     required this.animationValue,
     required this.states,
@@ -233,7 +233,6 @@ class _MeasureLine extends StatelessWidget {
   final double width;
   final TextStyle? optionStyle;
   final double circleDiameter;
-
   List<Widget> _buildUnits() {
     final res = <Widget>[];
     final animatingUnitIndex = animationValue.round();

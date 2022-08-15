@@ -39,6 +39,15 @@ class IrritantService with FirestoreRepository {
         .map((doc) => serializers.deserializeWith(FoodIrritantsApi.serializer, doc.data()) as FoodIrritantsApi);
   }
 
+  Future<BuiltSet<String>> names() async {
+    final snapshot = await firestoreService.irritantDataCollection.get();
+    return snapshot.docs
+        .map((doc) => serializers.deserializeWith(FoodIrritantDataApi.serializer, doc.data()))
+        .whereType<FoodIrritantDataApi>()
+        .map((i) => i.name)
+        .toBuiltSet();
+  }
+
   /// Dose thresholds at which the intensity increases
   Future<BuiltList<double>?> intensityThresholds(String irritant) async {
     // Get steps from cache, if available

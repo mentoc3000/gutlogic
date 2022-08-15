@@ -16,7 +16,7 @@ import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/pages/diary/diary_page.dart';
-import 'package:gutlogic/pages/loading_page.dart';
+import 'package:gutlogic/widgets/gl_loading_widget.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
 import 'package:gutlogic/routes/routes.dart';
@@ -96,7 +96,7 @@ void main() {
         whenListen(diaryBloc, Stream.value(DiaryLoading()), initialState: DiaryLoading());
         await tester.pumpWidget(diaryPage);
         expect(find.text('Timeline'), findsOneWidget);
-        expect(find.byType(LoadingPage), findsOneWidget);
+        expect(find.byType(GLLoadingWidget), findsOneWidget);
         verifyNever(() => diaryBloc.add(any()));
       });
     });

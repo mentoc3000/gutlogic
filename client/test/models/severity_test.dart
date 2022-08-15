@@ -29,5 +29,15 @@ void main() {
       expect(serializers.serialize(Severity.intense, specifiedType: const FullType(Severity)), 3);
       expect(serializers.serialize(Severity.severe, specifiedType: const FullType(Severity)), 4);
     });
+
+    test('is comparable', () {
+      expect(Severity.mild < Severity.moderate, true);
+      expect(Severity.moderate < Severity.intense, true);
+      expect(Severity.intense < Severity.severe, true);
+
+      expect(Severity.moderate > Severity.mild, true);
+      expect(Severity.intense > Severity.moderate, true);
+      expect(Severity.severe > Severity.intense, true);
+    });
   });
 }

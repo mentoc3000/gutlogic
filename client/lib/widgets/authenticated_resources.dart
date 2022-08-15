@@ -9,6 +9,7 @@ import '../blocs/symptom_type/symptom_type_bloc.dart';
 import '../blocs/user_cubit.dart';
 import '../models/user/application_user.dart';
 import '../resources/api_service.dart';
+import '../resources/analysis_service.dart';
 import '../resources/diary_repositories/bowel_movement_entry_repository.dart';
 import '../resources/diary_repositories/diary_repository.dart';
 import '../resources/diary_repositories/meal_element_repository.dart';
@@ -134,6 +135,13 @@ class AuthenticatedResources extends StatelessWidget {
             final customFoodRepository = CustomFoodRepository(firestoreService: context.read<FirestoreService>());
             return FoodService(edamamFoodRepository: edamamFoodRepository, customFoodRepository: customFoodRepository);
           }),
+          RepositoryProvider(create: (context) {
+            return AnalysisService(
+              diaryRepository: context.read<DiaryRepository>(),
+              pantryService: context.read<PantryService>(),
+              irritantService: context.read<IrritantService>(),
+            );
+          })
         ],
         child: MultiBlocProvider(
           providers: const [

@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/symptom_type/symptom_type.dart';
 import '../../models/symptom_type.dart';
-import '../../pages/error_page.dart';
-import '../../pages/loading_page.dart';
+import '../../widgets/gl_loading_widget.dart';
 import '../../widgets/list_tiles/gl_list_tile.dart';
+import '../../widgets/gl_error_widget.dart';
 import 'searchable_search_delegate.dart';
 import '../../widgets/list_tiles/searchable_tile.dart';
 
@@ -65,12 +65,12 @@ class SymptomTypeSearchDelegate extends SearchableSearchDelegate<SymptomType> {
           }
         }
         if (state is SymptomTypesLoading) {
-          return LoadingPage();
+          return GLLoadingWidget();
         }
         if (state is SymptomTypeError) {
-          return ErrorPage(message: state.message);
+          return GLErrorWidget(message: state.message);
         }
-        return const ErrorPage();
+        return const GLErrorWidget();
       },
     );
   }

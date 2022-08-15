@@ -5,9 +5,9 @@ import '../../blocs/pantry_entry/pantry_entry.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../widgets/gl_app_bar.dart';
+import '../../widgets/gl_error_widget.dart';
 import '../../widgets/gl_scaffold.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_loading_widget.dart';
 import 'widgets/pantry_entry_list_view.dart';
 
 class PantryEntryPage extends StatelessWidget {
@@ -68,7 +68,7 @@ class PantryEntryPage extends StatelessWidget {
 
   Widget bodyBuilder(BuildContext context, PantryEntryState state) {
     if (state is PantryEntryLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
     if (state is PantryEntryLoaded) {
       return PantryEntryListView(
@@ -79,8 +79,8 @@ class PantryEntryPage extends StatelessWidget {
       );
     }
     if (state is PantryEntryError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 }

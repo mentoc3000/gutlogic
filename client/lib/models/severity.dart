@@ -17,6 +17,24 @@ class Severity extends EnumClass {
 
   static BuiltSet<Severity> get values => _$values;
   static Severity valueOf(String name) => _$valueOf(name);
+
+  int _toNum() {
+    switch (this) {
+      case Severity.mild:
+        return 1;
+      case Severity.moderate:
+        return 2;
+      case Severity.intense:
+        return 3;
+      case Severity.severe:
+        return 4;
+      default:
+        throw ArgumentError(this);
+    }
+  }
+
+  bool operator <(Severity other) => _toNum() < other._toNum();
+  bool operator >(Severity other) => _toNum() > other._toNum();
 }
 
 final _severitySerializer = SeveritySerializer();
@@ -29,18 +47,7 @@ class SeveritySerializer implements PrimitiveSerializer<Severity> {
 
   @override
   Object serialize(Serializers serializers, Severity severity, {FullType specifiedType = FullType.unspecified}) {
-    switch (severity) {
-      case Severity.mild:
-        return 1;
-      case Severity.moderate:
-        return 2;
-      case Severity.intense:
-        return 3;
-      case Severity.severe:
-        return 4;
-      default:
-        throw ArgumentError(severity);
-    }
+    return severity._toNum();
   }
 
   @override

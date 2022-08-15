@@ -16,8 +16,8 @@ import '../../widgets/gl_scaffold.dart';
 import '../../widgets/icon_buttons/search_icon_button.dart';
 import '../../widgets/icon_buttons/settings_icon_button.dart';
 import '../../widgets/snack_bars/undo_delete_snack_bar.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import 'widgets/pantry_list_view.dart';
 import 'widgets/pantry_sort_popup_menu_botton.dart';
 
@@ -88,7 +88,7 @@ class PantryPage extends StatelessWidget {
 
   Widget builder(BuildContext context, PantrySortState state) {
     if (state is PantrySortLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
     if (state is PantrySortLoaded) {
       final items = state.items;
@@ -99,9 +99,9 @@ class PantryPage extends StatelessWidget {
       }
     }
     if (state is PantrySortError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 
   void listener(BuildContext context, PantryState state) {

@@ -5,8 +5,8 @@ import '../../blocs/meal_element/meal_element.dart';
 import '../../models/meal_element.dart';
 import '../../widgets/gl_app_bar.dart';
 import '../../widgets/gl_scaffold.dart';
-import '../error_page.dart';
-import '../loading_page.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import 'widgets/meal_element_entry_list_view.dart';
 import 'widgets/quantity_card.dart';
 
@@ -56,7 +56,7 @@ class MealElementEntryPage extends StatelessWidget {
 
   Widget bodyBuilder(BuildContext context, MealElementState state) {
     if (state is MealElementLoading) {
-      return LoadingPage();
+      return GLLoadingWidget();
     }
 
     if (state is MealElementLoaded) {
@@ -71,10 +71,10 @@ class MealElementEntryPage extends StatelessWidget {
     }
 
     if (state is MealElementError) {
-      return ErrorPage(message: state.message);
+      return GLErrorWidget(message: state.message);
     }
 
-    return const ErrorPage();
+    return const GLErrorWidget();
   }
 
   Widget builder(BuildContext context, MealElementState state) {

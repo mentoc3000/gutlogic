@@ -198,7 +198,7 @@ void main() {
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Browse'));
+    await tester.tap(find.text('Foods'));
     await tester.pump();
     await tester.pumpAndSettle();
     await tester.tap(find.text(foodGroupName));

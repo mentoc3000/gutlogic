@@ -9,7 +9,7 @@ import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
-import 'package:gutlogic/pages/loading_page.dart';
+import 'package:gutlogic/widgets/gl_loading_widget.dart';
 import 'package:gutlogic/pages/symptom_entry/symptom_entry_page.dart';
 import 'package:gutlogic/pages/symptom_entry/widgets/severity_slider.dart';
 import 'package:gutlogic/widgets/gl_icons.dart';
@@ -81,7 +81,7 @@ void main() {
 
         await tester.pumpWidget(symptomEntryPage);
         expect(find.text('Symptom'), findsOneWidget);
-        expect(find.byType(LoadingPage), findsOneWidget);
+        expect(find.byType(GLLoadingWidget), findsOneWidget);
         verifyNever(() => symptomEntryBloc.add(any()));
       });
     });
