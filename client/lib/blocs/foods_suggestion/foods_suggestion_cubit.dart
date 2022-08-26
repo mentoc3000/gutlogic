@@ -6,10 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/food_reference/food_reference.dart';
 import 'foods_suggestion_state.dart';
 
-abstract class FoodGroupCubit extends Cubit<FoodsSuggestionState> {
+abstract class FoodSuggestionCubit extends Cubit<FoodsSuggestionState> {
   final Future<BuiltList<FoodReference>> Function() foodsGetter;
 
-  FoodGroupCubit({required this.foodsGetter}) : super(const FoodsSuggestionLoading()) {
+  FoodSuggestionCubit({required this.foodsGetter}) : super(const FoodsSuggestionLoading()) {
     update();
   }
 

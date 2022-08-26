@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../resources/diary_repositories/diary_repository.dart';
 import 'foods_suggestion_cubit.dart';
 
-class RecentFoodsCubit extends FoodGroupCubit {
+class RecentFoodsCubit extends FoodSuggestionCubit {
   final DiaryRepository diaryRepository;
 
   RecentFoodsCubit({required this.diaryRepository}) : super(foodsGetter: diaryRepository.recentFoods) {

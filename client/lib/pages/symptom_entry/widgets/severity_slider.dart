@@ -247,7 +247,7 @@ class MeasureLine extends StatelessWidget {
         scale = (1 - unitAnimatingValue) * 0.7;
         opacity = 0.3 + unitAnimatingValue * 0.7;
       }
-      final faceValue = (states.length - index - 1).toDouble();
+      final faceValue = index.toDouble();
       res.add(Expanded(
         key: ValueKey(text),
         child: GestureDetector(

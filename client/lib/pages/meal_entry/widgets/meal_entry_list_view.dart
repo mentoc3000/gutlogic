@@ -17,14 +17,14 @@ class MealEntryListView extends StatelessWidget {
   const MealEntryListView({Key? key, required this.mealEntry, required this.notesController}) : super(key: key);
 
   void addMealElement(BuildContext context) {
-    final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
+    final foodSearchBloc = BlocProvider.of<FoodSearchBloc>(context);
     final mealEntryBloc = context.read<MealEntryBloc>();
     final recentFoodsCubit = RecentFoodsCubit.fromContext(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
-        foodBloc: foodBloc,
+        foodSearchBloc: foodSearchBloc,
         foodSuggestionCubit: recentFoodsCubit,
         onSelect: (food) => mealEntryBloc.add(AddMealElement(food)),
       ),

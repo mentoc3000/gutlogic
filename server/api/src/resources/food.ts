@@ -119,3 +119,15 @@ router.get("/v0/search", search);
 router.get("/v0/:foodID", get);
 
 export default router;
+
+/// Begin regular api calls to Edamam server
+///
+/// The first call to the Edamam server is always slow, taking several sections. Subsequent ones
+/// are fast, taking less than one second. Once Edamam has not gotten a request for 60 minutes
+/// it is slow to start again. This function makes a request of Edamam every 20 minutes to ensure
+/// the user always sees a speedy response.
+export function startEdamamHeartbeat() {
+  const heartbeatInterval = 20 * 60 * 1000; // 20 minutes
+  const foodId = "food_a1gb9ubb72c7snbuxr3weagwv0dd";
+  setInterval(() => edamam.get({ foodId: foodId, label: "Apple" }), heartbeatInterval);
+}

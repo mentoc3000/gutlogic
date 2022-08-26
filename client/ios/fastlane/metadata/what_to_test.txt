@@ -1,9 +1,3 @@
-Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities. This version adds a major new feature: showing which irritant is present in many major foods and how much. You can find these foods by browsing for foods by category but they are equally as accessible via the timeline and pantry.
+Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities. This version makes some changes behind the scenes to make food searches faster.
 
-Prior to releasing it to the public, we would like you, our trusted beta testers, to try it out and give us some feedback. Try taking either or both of these approaches to really put the app through its paces:
-
-1. Use it like a typical user might. Navigate the app how it was intended. Is it intuitive to use and easy to navigate, or clunky and confusing? Does the app react how you would expect or does it take a few tries to figure things out? Are there any features that you would like to see? The answers to these kinds of questions are valuable feedback for us.
-
-2. Be a maverick. Do things that we would never expect a normal user to do. Try unlikely sequences of operations to see if the app breaks. Suddenly put your phone into airplane mode to see if it can handle an internet outage, or, even better, use the app in a place of very slow or spotty connectivity. We want to be able to handle all of those edge cases.
-
-Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Jul 31. Thanks in advance for your time and candid feedback!
+Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Aug 26. Thanks in advance for your time and candid feedback!

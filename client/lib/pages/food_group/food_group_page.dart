@@ -16,13 +16,13 @@ class FoodGroupPage extends StatelessWidget {
   const FoodGroupPage({Key? key, required this.group}) : super(key: key);
 
   void showFoodSearch(BuildContext context) {
-    final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
+    final foodSearchBloc = BlocProvider.of<FoodSearchBloc>(context);
     final recentFoodsCubit = RecentFoodsCubit.fromContext(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
-        foodBloc: foodBloc,
+        foodSearchBloc: foodSearchBloc,
         foodSuggestionCubit: recentFoodsCubit,
         onSelect: (food) => Navigator.push(context, Routes.of(context).createFoodPageRoute(food)),
       ),
