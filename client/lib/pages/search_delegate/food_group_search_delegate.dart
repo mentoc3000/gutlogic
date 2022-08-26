@@ -20,12 +20,12 @@ import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
 
 class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
-  final FoodSearchBloc foodBloc;
+  final FoodSearchBloc foodSearchBloc;
   final FoodGroupSearchCubit foodGroupSearchCubit;
   final String noResultsMessage = 'No matches found.\nNeed something special?\nCreate a custom food!';
 
   FoodGroupSearchDelegate({
-    required this.foodBloc,
+    required this.foodSearchBloc,
     required this.foodGroupSearchCubit,
     required void Function(FoodReference) onSelect,
   }) : super(onSelect: onSelect, searchFieldLabel: 'Search for food') {
@@ -55,10 +55,10 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
 
   @override
   Widget buildResults(BuildContext context) {
-    foodBloc.add(StreamFoodQuery(query));
+    foodSearchBloc.add(StreamFoodQuery(query));
 
     return BlocBuilder<FoodSearchBloc, FoodSearchState>(
-      bloc: foodBloc,
+      bloc: foodSearchBloc,
       builder: (BuildContext context, FoodSearchState state) {
         if (query.isEmpty) {
           return Column(children: const []);

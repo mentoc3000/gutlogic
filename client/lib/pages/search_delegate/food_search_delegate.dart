@@ -18,24 +18,24 @@ import 'widgets/food_reference_suggestion_tile.dart';
 import '../../widgets/list_tiles/food_tile.dart';
 
 class FoodSearchDelegate extends SearchableSearchDelegate<FoodReference> {
-  final FoodSearchBloc foodBloc;
-  final FoodGroupCubit foodSuggestionCubit;
+  final FoodSearchBloc foodSearchBloc;
+  final FoodSuggestionCubit foodSuggestionCubit;
   final String noResultsMessage = 'No matches found.\nNeed something special?\nCreate a custom food!';
 
   FoodSearchDelegate({
-    required this.foodBloc,
+    required this.foodSearchBloc,
     required this.foodSuggestionCubit,
     required void Function(FoodReference) onSelect,
   }) : super(onSelect: onSelect, searchFieldLabel: 'Search for food') {
     foodSuggestionCubit.update();
-    foodBloc.add(StreamFoodQuery(query));
+    foodSearchBloc.add(StreamFoodQuery(query));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     return BlocProvider.value(
       value: foodSuggestionCubit,
-      child: BlocBuilder<FoodGroupCubit, FoodsSuggestionState>(
+      child: BlocBuilder<FoodSuggestionCubit, FoodsSuggestionState>(
         builder: (BuildContext context, FoodsSuggestionState state) {
           if (state is FoodsSuggestionLoaded) {
             return buildSuggestionList(context, state.suggestedFoods);
@@ -54,10 +54,10 @@ class FoodSearchDelegate extends SearchableSearchDelegate<FoodReference> {
 
   @override
   Widget buildResults(BuildContext context) {
-    foodBloc.add(StreamFoodQuery(query));
+    foodSearchBloc.add(StreamFoodQuery(query));
 
     return BlocBuilder<FoodSearchBloc, FoodSearchState>(
-      bloc: foodBloc,
+      bloc: foodSearchBloc,
       builder: (BuildContext context, FoodSearchState state) {
         if (query.isEmpty) {
           return Column(children: const []);

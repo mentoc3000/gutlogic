@@ -169,7 +169,8 @@ server:deploy:release:
   script:
     - npm run deploy
     - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/api/src/config.json"
-    - gcloud run deploy api --source=./api/ --region=us-cental1
+    - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
+    - gcloud run deploy api --source=./api/ --region=us-central1
   rules:
     - !reference [.server-release-commit-rules, rules]
   dependencies:

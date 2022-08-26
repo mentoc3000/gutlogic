@@ -15,13 +15,13 @@ class BrowsePage extends StatelessWidget {
   const BrowsePage({Key? key}) : super(key: key);
 
   void showFoodSearch(BuildContext context) {
-    final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
+    final foodSearchBloc = BlocProvider.of<FoodSearchBloc>(context);
     final foodGroupSearchCubit = FoodGroupSearchCubit.fromContext(context);
 
     showSearch(
       context: context,
       delegate: FoodGroupSearchDelegate(
-        foodBloc: foodBloc,
+        foodSearchBloc: foodSearchBloc,
         foodGroupSearchCubit: foodGroupSearchCubit,
         onSelect: (food) => Navigator.push(context, Routes.of(context).createFoodPageRoute(food)),
       ),

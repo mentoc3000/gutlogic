@@ -36,13 +36,13 @@ class PantryPage extends StatelessWidget {
   }
 
   void showAddFoodSearch(BuildContext context) {
-    final foodBloc = BlocProvider.of<FoodSearchBloc>(context);
+    final foodSearchBloc = BlocProvider.of<FoodSearchBloc>(context);
     final recentFoodsCubit = RecentFoodsCubit.fromContext(context);
 
     showSearch(
       context: context,
       delegate: FoodSearchDelegate(
-        foodBloc: foodBloc,
+        foodSearchBloc: foodSearchBloc,
         foodSuggestionCubit: recentFoodsCubit,
         onSelect: (food) => Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food)),
       ),
