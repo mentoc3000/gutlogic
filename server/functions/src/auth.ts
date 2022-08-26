@@ -1,10 +1,14 @@
-const functions = require('firebase-functions');
-const tools = require('firebase-tools');
+const functions = require("firebase-functions");
+const tools = require("firebase-tools");
+
+type User = {
+  uid: String;
+};
 
 /**
  * Deletes user data when an account is deleted.
  */
-exports.onUserDeleted = async (user) => {
+const onUserDeleted = async (user: User) => {
   console.log(`Deleting data associated with ${user.uid}.`);
 
   // Provided automatically in the Cloud Functions environment.
@@ -29,3 +33,5 @@ exports.onUserDeleted = async (user) => {
 
   console.log(`Successfully deleted data associated with ${user.uid}.`);
 };
+
+export { onUserDeleted };

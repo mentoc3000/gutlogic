@@ -56,6 +56,7 @@ workflow:
       - server/package-lock.json
   paths:
     - server/.npm-cache
+    - server/functions/lib
 
 .server:
   image: google/cloud-sdk:latest
@@ -95,6 +96,9 @@ server:prep:
   script:
     # before_script will automatically update npm cache
     - echo "Updating server cache."
+    - cd functions
+    - npm install -g typescript
+    - npm run build
   rules:
     - !reference [.server-develop-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]
