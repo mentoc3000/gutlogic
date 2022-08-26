@@ -2,7 +2,7 @@ const test = require('ava');
 
 const { fft } = require('./helpers');
 
-const functions = require('../index');
+const functions = require('../lib/index');
 
 test.after.always(async () => {
   // Do cleanup tasks.

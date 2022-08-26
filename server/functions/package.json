@@ -2,9 +2,20 @@
   "name": "gut-logic-cloud-functions",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "serve": "firebase emulators:start",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
   "engines": {
     "node": "16"
   },
+  "main": "lib/index.js",
   "dependencies": {
     "axios": "^0.26.1",
     "firebase": "^9.6.8",
