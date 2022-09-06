@@ -1,4 +1,5 @@
 import urlcat from "x/urlcat/src/index.ts";
+import log from "../resources/logger.ts";
 import { err, ok, Result } from "../result.ts";
 
 export type EdamamQualifier = { uri: string | null; label: string | null };
@@ -71,6 +72,7 @@ export async function search(
     const data = await edamam({ ingr: name });
     return ok(data.hints); // ignore edamams suggested result and return full list (called `hints`)
   } catch {
+    log.w("Edamam is unavailable");
     return err(EdamamError.Unavailable);
   }
 }
@@ -87,6 +89,7 @@ export async function get(
     if (resultWithMatchingID === undefined) return err(EdamamError.NotFound);
     return ok(resultWithMatchingID);
   } catch {
+    log.w("Edamam is unavailable");
     return err(EdamamError.Unavailable);
   }
 }

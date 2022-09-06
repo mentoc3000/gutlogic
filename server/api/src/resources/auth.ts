@@ -3,6 +3,7 @@ import { FlattenedJWSInput, importX509, JWSHeaderParameters, jwtVerify, KeyLike 
 import { GetKeyFunction } from "x/jose/types.d.ts";
 import { JOSEError, JWKSNoMatchingKey, JWKSTimeout } from "x/jose/util/errors.ts";
 import config from "../config.json" assert { type: "json" };
+import log from "./logger.ts";
 
 /*
 The code below was drawn in part from the deno package jose
@@ -140,6 +141,8 @@ async function fetchKeys(
   url: URL,
   timeout: number,
 ): Promise<Map<string, string>> {
+  log.i("Fetching new Firestore keys");
+
   let controller!: AbortController;
   let id!: ReturnType<typeof setTimeout>;
   let timedOut = false;
