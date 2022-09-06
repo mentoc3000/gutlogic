@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "x/oak/mod.ts";
 import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam.ts";
+import log from "./logger.ts";
 
 export type Measure = {
   unit: string;
@@ -129,5 +130,8 @@ export default router;
 export function startEdamamHeartbeat() {
   const heartbeatInterval = 20 * 60 * 1000; // 20 minutes
   const foodId = "food_a1gb9ubb72c7snbuxr3weagwv0dd";
-  setInterval(() => edamam.get({ foodId: foodId, label: "Apple" }), heartbeatInterval);
+  setInterval(() => {
+    edamam.get({ foodId: foodId, label: "Apple" });
+    log.i("Pinged Edamam server");
+  }, heartbeatInterval);
 }
