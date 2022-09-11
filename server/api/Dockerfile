@@ -1,12 +1,12 @@
-FROM denoland/deno:1.24.2
+FROM node:16.17.0-alpine3.16
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
 
 EXPOSE 8080
-
-WORKDIR /app
-
-USER deno
-
-COPY . ./
-RUN deno cache --importmap=imports.json src/main.ts
-
-CMD ["task", "start"]
+CMD ["npm", "run", "start"]

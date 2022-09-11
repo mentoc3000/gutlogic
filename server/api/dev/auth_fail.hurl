@@ -4,4 +4,4 @@ Authorization: Bearer 12345
 HTTP/1.1 401
 
 [Asserts]
-header "Content-Type" == "application/json; charset=utf-8"
+header "Content-Type" == "application/json; charset=UTF-8"

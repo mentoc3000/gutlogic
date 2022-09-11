@@ -1,6 +1,6 @@
-import { Request, Response, Router } from "x/oak/mod.ts";
-import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam.ts";
-import log from "./logger.ts";
+import { Request, Response, Router } from "@oakserver/oak";
+import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
+import log from "./logger";
 
 export type Measure = {
   unit: string;
@@ -15,11 +15,11 @@ export type Food = {
 };
 
 function isValidLabel(label: string | null): boolean {
-  return label != null && label != "";
+  return label !== null && label !== "";
 }
 
 function isValidWeight(weight: number | null): boolean {
-  return weight != null && weight > 0;
+  return weight !== null && weight > 0;
 }
 
 function genericizeEdamamMeasure(edamamMeasure: EdamamMeasure): Measure[] {
@@ -34,9 +34,9 @@ function genericizeEdamamMeasure(edamamMeasure: EdamamMeasure): Measure[] {
     });
   }
 
-  if (edamamMeasure.qualified != null && edamamMeasure.qualified.length == 0) {
+  if (edamamMeasure.qualified) {
     for (var qualifiedMeasure of edamamMeasure.qualified) {
-      if (qualifiedMeasure.qualifiers != null) {
+      if (qualifiedMeasure.qualifiers !== null) {
         for (var qualifier of qualifiedMeasure.qualifiers) {
           if (
             isValidWeight(qualifiedMeasure.weight)
@@ -96,11 +96,11 @@ async function get(
 }
 
 async function search(
-  { request, response }: { request: Request; response: Response },
+  { request, response }: { request: Request; response: Response; },
 ) {
   const name = request.url.searchParams.get("name");
 
-  if (name == null) {
+  if (name === null) {
     response.status = 400;
     return;
   }
@@ -128,6 +128,7 @@ export default router;
 /// it is slow to start again. This function makes a request of Edamam every 20 minutes to ensure
 /// the user always sees a speedy response.
 export function startEdamamHeartbeat() {
+  log.i("Starting Edamam heartbeat");
   const heartbeatInterval = 20 * 60 * 1000; // 20 minutes
   const foodId = "food_a1gb9ubb72c7snbuxr3weagwv0dd";
   setInterval(() => {
