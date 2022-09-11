@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
   "noImplicitReturns": true,
   "strict": true,

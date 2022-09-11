@@ -1,0 +1,43 @@
+{
+  "name": "gut-logic-api",
+  "version": "1.1.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "test": "ava",
+    "start": "ts-node src/main.ts"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "dependencies": {
+    "@oakserver/oak": "^11.0.0",
+    "axios": "^0.27.2",
+    "firebase-admin": "^10.0.2",
+    "jose": "^4.9.2",
+    "ts-node": "^10.9.1",
+    "urlcat": "^2.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.16",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "ava": "^4.3.3",
+    "eslint": "^8.23.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.1",
+    "isomorphic-fetch": "^3.0.0",
+    "sinon": "^14.0.0",
+    "ts-sinon": "^2.0.2",
+    "tslib": "^2.4.0",
+    "typescript": "^4.8.2"
+  },
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=ts-node/esm"
+    ]
+  }
+}

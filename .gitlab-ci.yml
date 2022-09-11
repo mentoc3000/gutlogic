@@ -53,10 +53,12 @@ workflow:
 .server-cache: &server-cache
   key:
     files:
-      - server/package-lock.json
+      - server/firebase/package-lock.json
+      - server/api/package-lock.json
   paths:
-    - server/.npm-cache
-    - server/functions/lib
+    - server/api/.npm-cache
+    - server/firebase/.npm-cache
+    - server/firebase/functions/lib
 
 .server:
   image: google/cloud-sdk:latest
@@ -69,17 +71,19 @@ workflow:
     - apt -y install nodejs unzip
     - node --version
     # move into the server directory
-    - cd server
+    - cd server/firebase
     # install the server dependencies
     - npm ci --cache .npm-cache --prefer-offline --log-level error
-    - curl -fsSL https://deno.land/x/install/install.sh | sh
-    - cp /root/.deno/bin/deno /usr/local/bin && rm -rf /root/.deno
+    - cd ../api
+    - npm ci --cache .npm-cache --prefer-offline --log-level error
+    - cd ..
   cache:
     <<: *server-cache
     policy: pull
 
 .firebase:
   before_script:
+    - cd firebase
     # add locally installed bins to the path so we can run firebase-tools
     - PATH="$(npm bin):$PATH"
     # set the firebase project for the job
@@ -96,7 +100,7 @@ server:prep:
   script:
     # before_script will automatically update npm cache
     - echo "Updating server cache."
-    - cd functions
+    - cd firebase/functions
     - npm run build
   rules:
     - !reference [.server-develop-commit-rules, rules]
@@ -111,6 +115,9 @@ server:lint:
   extends:
     - .server
   script:
+    - cd firebase
+    - npm run lint
+    - cd ../api
     - npm run lint
   rules:
     - !reference [.server-develop-commit-rules, rules]
@@ -129,8 +136,8 @@ server:test:
     - !reference [.firebase, before_script]
   script:
     - npm run test
-    - cd api
-    - deno test
+    - cd ../api
+    - npm run test
   rules:
     - !reference [.server-develop-commit-rules, rules]
     - !reference [.server-release-commit-rules, rules]
@@ -150,6 +157,7 @@ server:deploy:develop:
     - !reference [.firebase, before_script]
   script:
     - npm run deploy
+    - cd ..
     - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/api/src/config.json"
     - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
     - gcloud run deploy api --source=./api/ --region=us-central1
@@ -170,7 +178,9 @@ server:deploy:release:
     - !reference [.gcloud, before_script]
     - !reference [.firebase, before_script]
   script:
+    - cd firebase
     - npm run deploy
+    - cd ..
     - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/api/src/config.json"
     - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
     - gcloud run deploy api --source=./api/ --region=us-central1

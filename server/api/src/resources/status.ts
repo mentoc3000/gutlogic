@@ -1,6 +1,8 @@
-import { Response, Router } from "x/oak/mod.ts";
+import { Response, Router } from "@oakserver/oak";
+import log from './logger';
 
-function status({ response }: { response: Response }) {
+function status({ response }: { response: Response; }) {
+  log.d("Received status ping");
   response.body = { status: "ok" };
 }
 

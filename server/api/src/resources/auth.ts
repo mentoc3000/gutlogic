@@ -1,9 +1,47 @@
-import { Context } from "x/oak/mod.ts";
-import { FlattenedJWSInput, importX509, JWSHeaderParameters, jwtVerify, KeyLike } from "x/jose/index.ts";
-import { GetKeyFunction } from "x/jose/types.d.ts";
-import { JOSEError, JWKSNoMatchingKey, JWKSTimeout } from "x/jose/util/errors.ts";
-import config from "../config.json" assert { type: "json" };
-import log from "./logger.ts";
+import { Context } from "@oakserver/oak";
+import { FlattenedJWSInput, importX509, JWSHeaderParameters, jwtVerify, KeyLike } from "jose";
+import * as config from "../config.json";
+import log from "./logger";
+
+
+class JWKSNoMatchingKey extends Error {
+  constructor() {
+    super();
+
+    // assign the error class name in your custom error (as a shortcut)
+    this.name = this.constructor.name;
+
+    // capturing the stack trace keeps the reference to your error class
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+
+
+class JWKSTimeout extends Error {
+  constructor() {
+    super();
+
+    // assign the error class name in your custom error (as a shortcut)
+    this.name = this.constructor.name;
+
+    // capturing the stack trace keeps the reference to your error class
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+
+class JWKSError extends Error {
+  constructor(message: string) {
+    super(message);
+
+    // assign the error class name in your custom error (as a shortcut)
+    this.name = this.constructor.name;
+
+    // capturing the stack trace keeps the reference to your error class
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
 
 /*
 The code below was drawn in part from the deno package jose
@@ -68,11 +106,15 @@ class RemoteKeySet {
   }
 
   coolingDown() {
-    return typeof this._keysTimestamp === "number" ? Date.now() < this._keysTimestamp + this._cooldownDuration : false;
+    return typeof this._keysTimestamp === "number"
+      ? Date.now() < this._keysTimestamp + this._cooldownDuration
+      : false;
   }
 
   fresh() {
-    return typeof this._keysTimestamp === "number" ? Date.now() < this._keysTimestamp + this._cacheMaxAge : false;
+    return typeof this._keysTimestamp === "number"
+      ? Date.now() < this._keysTimestamp + this._cacheMaxAge
+      : false;
   }
 
   async getKey(
@@ -126,6 +168,7 @@ class RemoteKeySet {
           this._keysCache = new Map(keys as [string, KeyLike][]);
           this._keysTimestamp = Date.now();
           this._pendingFetch = undefined;
+          return null;
         })
         .catch((err: Error) => {
           this._pendingFetch = undefined;
@@ -165,7 +208,7 @@ async function fetchKeys(
   if (id !== undefined) clearTimeout(id);
 
   if (response.status !== 200) {
-    throw new JOSEError(
+    throw new JWKSError(
       "Expected 200 OK from the JSON Web Key Set HTTP response",
     );
   }
@@ -175,15 +218,13 @@ async function fetchKeys(
     const json = JSON.parse(text);
     return new Map(Object.entries(json));
   } catch {
-    throw new JOSEError(
+    throw new JWKSError(
       "Failed to parse the Key Set HTTP response as Map",
     );
   }
 }
 
-function createRemoteKeySet(
-  url: URL,
-): GetKeyFunction<JWSHeaderParameters, FlattenedJWSInput> {
+function createRemoteKeySet(url: URL): KeyLike {
   return RemoteKeySet.prototype.getKey.bind(new RemoteKeySet(url));
 }
 
@@ -233,6 +274,7 @@ const authMiddleware = async (ctx: Context, next: any) => {
   }
 
   if (await validateJwt(jwt)) {
+    // eslint-disable-next-line callback-return
     await next();
   } else {
     ctx.response.status = 401;

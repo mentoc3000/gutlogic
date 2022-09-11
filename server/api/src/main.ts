@@ -1,8 +1,8 @@
-import { Application, Router } from "x/oak/mod.ts";
+import { Application, Router } from "@oakserver/oak";
 
-import status from "./resources/status.ts";
-import food, { startEdamamHeartbeat } from "./resources/food.ts";
-import auth from "./resources/auth.ts";
+import status from "./resources/status";
+import food, { startEdamamHeartbeat } from "./resources/food";
+import auth from "./resources/auth";
 
 const router = new Router();
 
@@ -16,4 +16,4 @@ app.use(router.allowedMethods());
 
 startEdamamHeartbeat();
 
-await app.listen({ port: 8080 });
+app.listen({ port: 8080 });
