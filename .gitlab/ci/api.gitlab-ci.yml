@@ -1,0 +1,109 @@
+.api-merge-request-rules:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      changes: [server/api/**/*]
+    - if: $CI_MERGE_REQUEST_ID
+      allow_failure: true
+      when: manual
+
+.api-develop-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes: [server/api/**/*]
+    - if: $CI_COMMIT_BRANCH == "develop"
+      allow_failure: true
+      when: manual
+
+.api-release-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      changes: [server/api/**/*]
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      allow_failure: true
+      when: manual
+
+.api-cache: &api-cache
+  key:
+    files:
+      - server/api/package-lock.json
+  paths:
+    - server/api/.npm-cache
+
+.api:
+  image: google/cloud-sdk:latest
+  tags:
+    - docker
+  before_script:
+    # install node
+    - apt update
+    - curl -sL https://deb.nodesource.com/setup_16.x | bash -
+    - apt -y install nodejs unzip
+    - node --version
+    # move into the server directory
+    - cd server/api
+    # install the server dependencies
+    - npm ci --cache .npm-cache --prefer-offline --log-level error
+  cache:
+    <<: *api-cache
+    policy: pull
+
+.gcloud:
+  before_script:
+    - gcloud config set project $GCLOUD_PROJECT
+
+api:lint:
+  stage: test
+  extends:
+    - .api
+  script:
+    - npm run lint
+  rules:
+    - !reference [.api-develop-commit-rules, rules]
+    - !reference [.api-release-commit-rules, rules]
+    - !reference [.api-merge-request-rules, rules]
+  allow_failure: true
+
+api:test:
+  stage: test
+  extends:
+    - .api
+  script:
+    - npm run test
+  rules:
+    - !reference [.api-develop-commit-rules, rules]
+    - !reference [.api-release-commit-rules, rules]
+    - !reference [.api-merge-request-rules, rules]
+
+api:deploy:develop:
+  stage: deploy
+  extends:
+    - .api
+  variables:
+    GCLOUD_PROJECT: gutlogic-dev
+  before_script:
+    - !reference [.api, before_script]
+    - !reference [.gcloud, before_script]
+  script:
+    - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/src/config.json"
+    - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
+    - gcloud run deploy api --source=./ --region=us-central1
+  rules:
+    - !reference [.api-develop-commit-rules, rules]
+  environment: develop
+
+api:deploy:release:
+  stage: deploy
+  extends:
+    - .api
+  variables:
+    GCLOUD_PROJECT: gutlogic
+  before_script:
+    - !reference [.api, before_script]
+    - !reference [.gcloud, before_script]
+  script:
+    - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/src/config.json"
+    - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
+    - gcloud run deploy api --source=./ --region=us-central1
+  rules:
+    - !reference [.api-release-commit-rules, rules]
+  environment: release
