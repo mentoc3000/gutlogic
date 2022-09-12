@@ -1,0 +1,130 @@
+.firebase-merge-request-rules:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      changes: [server/firebase/**/*]
+    - if: $CI_MERGE_REQUEST_ID
+      allow_failure: true
+      when: manual
+
+.firebase-develop-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes: [server/firebase/**/*]
+    - if: $CI_COMMIT_BRANCH == "develop"
+      allow_failure: true
+      when: manual
+
+.firebase-release-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      changes: [server/firebase/**/*]
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      allow_failure: true
+      when: manual
+
+.firebase-cache: &firebase-cache
+  key:
+    files:
+      - server/firebase/package-lock.json
+  paths:
+    - server/firebase/.npm-cache
+    - server/firebase/functions/lib
+
+.firebase:
+  image: node:16-alpine
+  tags:
+    - docker
+  before_script:
+    # move into the server directory
+    - cd server/firebase
+    # install the server dependencies
+    - npm ci --cache .npm-cache --prefer-offline --log-level error
+  cache:
+    <<: *firebase-cache
+    policy: pull
+
+.firebase-run:
+  before_script:
+    # install alpine deps (ideally this would happen in a custom dockerfile)
+    - apk add --quiet --no-cache openjdk8
+    # add locally installed bins to the path so we can run firebase-tools
+    - PATH="$(npm bin):$PATH"
+    # set the firebase project for the job
+    - firebase use $FIREBASE_PROJECT
+
+firebase:prep:
+  stage: prep
+  extends:
+    - .firebase
+  script:
+    # before_script will automatically update npm cache
+    - echo "Updating server cache."
+    - cd functions
+    - npm run build
+  rules:
+    - !reference [.firebase-develop-commit-rules, rules]
+    - !reference [.firebase-release-commit-rules, rules]
+    - !reference [.firebase-merge-request-rules, rules]
+  cache:
+    <<: *firebase-cache
+    policy: pull-push
+
+firebase:lint:
+  stage: test
+  extends:
+    - .firebase
+  script:
+    - npm run lint
+  rules:
+    - !reference [.firebase-develop-commit-rules, rules]
+    - !reference [.firebase-release-commit-rules, rules]
+    - !reference [.firebase-merge-request-rules, rules]
+  dependencies:
+    - firebase:prep
+  allow_failure: true
+
+firebase:test:
+  stage: test
+  extends:
+    - .firebase
+  before_script:
+    - !reference [.firebase, before_script]
+    - !reference [.firebase-run, before_script]
+  script:
+    - npm run test
+  rules:
+    - !reference [.firebase-develop-commit-rules, rules]
+    - !reference [.firebase-release-commit-rules, rules]
+    - !reference [.firebase-merge-request-rules, rules]
+  dependencies:
+    - firebase:prep
+
+firebase:deploy:develop:
+  stage: deploy
+  extends:
+    - .firebase
+  before_script:
+    - !reference [.firebase, before_script]
+    - !reference [.firebase-run, before_script]
+  script:
+    - npm run deploy
+  rules:
+    - !reference [.firebase-develop-commit-rules, rules]
+  dependencies:
+    - firebase:prep
+  environment: develop
+
+firebase:deploy:release:
+  stage: deploy
+  extends:
+    - .firebase
+  before_script:
+    - !reference [.firebase, before_script]
+    - !reference [.firebase-run, before_script]
+  script:
+    - npm run deploy
+  rules:
+    - !reference [.firebase-release-commit-rules, rules]
+  dependencies:
+    - firebase:prep
+  environment: release
