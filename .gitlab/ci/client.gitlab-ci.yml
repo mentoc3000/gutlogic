@@ -79,6 +79,29 @@ client:prep:
     <<: *client-cache
     policy: pull-push
 
+# client:svgo:
+#   stage: prep
+#   image: node-alpine
+#   before_script:
+#     - npm i -g svgo
+#   script:
+#     - svgo -rf . .
+#   rules:
+#     - !reference [.client-develop-commit-rules, rules]
+#     - !reference [.client-release-commit-rules, rules]
+#     - !reference [.client-merge-request-rules, rules]
+#   artifacts:
+#     paths:
+#       - client/**/*.svg
+#     expire_in: 1 day
+#   cache:
+#     key:
+#       files:
+#         - client/pubspec.lock
+#     paths:
+#       - client/**/*.svg
+#     policy: push
+
 client:lint:
   stage: test
   extends:
