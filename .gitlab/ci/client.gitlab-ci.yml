@@ -29,6 +29,7 @@
   paths:
     - client/.pub-cache
     - client/.dart_tool/package_config.json
+    - client/build/ios/archive/Runner.xcarchive
 
 .client:
   image: cirrusci/flutter:3.0.5
@@ -160,16 +161,25 @@ client:build:ios:
     - macos
   script:
     - pod repo update
-    - flutter build ios --flavor $FLUTTER_FLAVOR --release --no-codesign
+    # copy GOOGLE_APPLICATION_CREDENTIALS from environment into fastlane target
+    - cd ios
+    - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/gc_keys.json"
+    # prep fastlane
+    - gem install --user-install bundler
+    - bundle install
+    - bundle exec fastlane run increment_build_number build_number:"$CI_PIPELINE_ID"
+    - flutter pub run flutter_launcher_icons:main
+    - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
   rules:
-    # TODO we only run the build job on merge requests because the deploy jobs aren't able to reuse the artifacts
-    # from this job for some reason. If we can figure out how to reuse the build artifacts during deployment, this
-    # job should be the only one performing builds and run with the commented rules below.
-    # - !reference [.client-develop-commit-rules, rules]
-    # - !reference [.client-release-commit-rules, rules]
     - !reference [.client-merge-request-rules, rules]
+    - !reference [.client-develop-commit-rules, rules]
+    - !reference [.client-release-commit-rules, rules]
   dependencies:
     - client:prep
+  artifacts:
+    paths:
+      - client/build/ios/archive/Runner.xcarchive
+    expire_in: 1 day
 
 client:screenshots:
   stage: predeploy
@@ -210,19 +220,9 @@ client:screenshots:
   tags:
     - macos
   script:
-    # move into ios
-    - cd ios
-    # copy GOOGLE_APPLICATION_CREDENTIALS from environment into fastlane target
-    - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/gc_keys.json"
-    # prep fastlane
-    - gem install --user-install bundler
-    - bundle install
-    - bundle exec fastlane run increment_build_number build_number:"$CI_PIPELINE_ID"
-    # build:client:ios is skipped on deploy jobs due to issue #29
-    - flutter pub run flutter_launcher_icons:main
-    - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
-    # execute fastlane (archives and uploads app)
     - bundle exec fastlane $FASTLANE_CHANNEL
+  dependencies:
+    - client:build:ios
 
 client:deploy:develop:ios:
   extends:
