@@ -6,11 +6,9 @@ import '../../resources/user_repository.dart';
 import 'account_delete_state.dart';
 
 class AccountDeleteCubit extends Cubit<AccountDeleteState> {
-  final UserRepository _users;
+  final UserRepository users;
 
-  AccountDeleteCubit({required UserRepository users})
-      : _users = users,
-        super(const AccountDeleteInitial());
+  AccountDeleteCubit({required this.users}) : super(const AccountDeleteInitial());
 
   static BlocProvider<AccountDeleteCubit> provider({required Widget child}) {
     return BlocProvider(create: (c) => AccountDeleteCubit(users: c.read<UserRepository>()), child: child);
@@ -19,7 +17,7 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
   Future<void> delete() async {
     try {
       emit(const AccountDeleteLoading());
-      await _users.delete();
+      await users.delete();
       emit(const AccountDeleteSuccess());
     } on StaleAuthenticationException {
       emit(const AccountDeleteFailure.reauthenticate());

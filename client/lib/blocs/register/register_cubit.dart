@@ -8,11 +8,9 @@ import '../../resources/user_repository.dart';
 import 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  final UserRepository _users;
+  final UserRepository users;
 
-  RegisterCubit({required UserRepository users})
-      : _users = users,
-        super(const RegisterInitial());
+  RegisterCubit({required this.users}) : super(const RegisterInitial());
 
   static BlocProvider<RegisterCubit> provider({required Widget child}) {
     return BlocProvider<RegisterCubit>(create: (c) => RegisterCubit(users: c.read<UserRepository>()), child: child);
@@ -22,11 +20,11 @@ class RegisterCubit extends Cubit<RegisterState> {
     try {
       emit(const RegisterLoading());
 
-      if (auth.email != null && await _users.exists(email: auth.email!)) {
+      if (auth.email != null && await users.exists(email: auth.email!)) {
         return emit(RegisterFailure.conflict());
       }
 
-      await _users.login(authentication: auth);
+      await users.login(authentication: auth);
 
       emit(RegisterSuccess(method: auth.method));
     } catch (error, trace) {

@@ -6,11 +6,9 @@ import '../../resources/user_repository.dart';
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final UserRepository _users;
+  final UserRepository users;
 
-  LoginCubit({required UserRepository users})
-      : _users = users,
-        super(const LoginInitial());
+  LoginCubit({required this.users}) : super(const LoginInitial());
 
   static BlocProvider<LoginCubit> provider({required Widget child}) {
     return BlocProvider<LoginCubit>(create: (c) => LoginCubit(users: c.read<UserRepository>()), child: child);
@@ -20,11 +18,11 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(const LoginLoading());
 
-      if (auth.email != null && await _users.exists(email: auth.email!) == false) {
+      if (auth.email != null && await users.exists(email: auth.email!) == false) {
         return emit(LoginFailure.missing());
       }
 
-      await _users.login(authentication: auth);
+      await users.login(authentication: auth);
 
       emit(LoginSuccess(method: auth.method));
     } on DisabledUserException {
