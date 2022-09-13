@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:gutlogic/util/future_ext.dart';
 
 import 'screenshots/screenshots_config.dart';
@@ -16,6 +18,7 @@ void main() async {
     await orchestrateIOSJobs(config);
   } catch (ex) {
     log.e('Error running screenshots driver on iOS: $ex');
+    exit(1);
   }
 
   // TODO add Android emulator orchestration
@@ -24,6 +27,7 @@ void main() async {
   //   await orchestrateAPKJobs(config);
   // } catch (ex) {
   //   log.e('Error running screenshots driver on Android: $ex');
+  //   exit(1);
   // }
 
   log.i('Finished running screenshots driver');
