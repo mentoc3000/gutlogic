@@ -5,11 +5,9 @@ import '../../resources/profile_repository.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  final ProfileRepository _repository;
+  final ProfileRepository repository;
 
-  ProfileCubit({required ProfileRepository repository})
-      : _repository = repository,
-        super(ProfileInitial(repository.value));
+  ProfileCubit({required this.repository}) : super(ProfileInitial(repository.value));
 
   static BlocProvider<ProfileCubit> provider({required Widget child}) {
     return BlocProvider(create: (c) => ProfileCubit(repository: c.read<ProfileRepository>()), child: child);
@@ -20,10 +18,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     try {
       emit(ProfileSaving(profile));
-      await _repository.update(profile: profile);
+      await repository.update(profile: profile);
       emit(ProfileSuccess(profile));
     } catch (ex) {
-      emit(ProfileFailure(_repository.value));
+      emit(ProfileFailure(repository.value));
     }
   }
 }
