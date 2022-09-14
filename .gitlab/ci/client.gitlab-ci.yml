@@ -31,6 +31,7 @@
     - client/.dart_tool/package_config.json
     - client/build/ios/archive/Runner.xcarchive
     - client/ios/.bundle
+    - client/ios/vendor
 
 .client:
   image: cirrusci/flutter:3.0.5
