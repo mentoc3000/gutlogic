@@ -177,6 +177,9 @@ client:build:ios:
     - !reference [.client-merge-request-rules, rules]
     - !reference [.client-develop-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
+  cache:
+    <<: *client-cache
+    policy: pull-push
   dependencies:
     - client:prep
   artifacts:
