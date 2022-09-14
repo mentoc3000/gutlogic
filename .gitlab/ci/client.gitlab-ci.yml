@@ -181,7 +181,7 @@ client:build:ios:
     - client:prep
   artifacts:
     paths:
-      - client/build/ios/archive/Runner.xcarchive
+      - client/**/*
     expire_in: 1 day
 
 client:screenshots:
