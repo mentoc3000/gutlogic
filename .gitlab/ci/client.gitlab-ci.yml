@@ -23,18 +23,15 @@
       when: manual
 
 .client-cache: &client-cache
-  - key:
+  key:
     files:
       - client/pubspec.lock
-    paths:
-      - client/.pub-cache
-      - client/.dart_tool/package_config.json
-      - client/build/ios/archive/Runner.xcarchive
-  - key:
-    files:
       - client/ios/Gemfile.lock
-    paths:
-      - client/ios/vendor/bundle
+  paths:
+    - client/.pub-cache
+    - client/.dart_tool/package_config.json
+    - client/build/ios/archive/Runner.xcarchive
+    - client/ios/vendor/bundle
 
 .client:
   image: cirrusci/flutter:3.0.5
