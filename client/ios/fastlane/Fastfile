@@ -98,7 +98,9 @@ platform :ios do
       workspace: "Runner.xcworkspace",
       scheme: "development",
       export_method: "ad-hoc",
-      include_bitcode: true
+      include_bitcode: true,  
+      skip_build_archive: true,
+      archive_path: "../build/ios/archive/Runner.xcarchive",
     )
 
   end
@@ -114,7 +116,9 @@ platform :ios do
       workspace: "Runner.xcworkspace",
       scheme: "production",
       export_method: "app-store",
-      include_bitcode: true
+      include_bitcode: true,
+      skip_build_archive: true,
+      archive_path: "../build/ios/archive/Runner.xcarchive",
     )
 
   end
