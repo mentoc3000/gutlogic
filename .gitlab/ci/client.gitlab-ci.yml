@@ -230,7 +230,7 @@ client:deploy:develop:ios:
   rules:
     - !reference [.client-develop-commit-rules, rules]
   dependencies:
-    - client:prep
+    - client:build:ios
   environment: develop
 
 client:deploy:staging:ios:
@@ -247,7 +247,7 @@ client:deploy:staging:ios:
     - if: $CI_COMMIT_BRANCH =~ /^release/
       when: manual
   dependencies:
-    - client:prep
+    - client:build:ios
   environment: staging
 
 client:deploy:release:ios:
@@ -261,6 +261,6 @@ client:deploy:release:ios:
     - if: $CI_COMMIT_BRANCH =~ /^release/
       when: manual
   dependencies:
-    - client:prep
+    - client:build:ios
     - client:screenshots
   environment: release
