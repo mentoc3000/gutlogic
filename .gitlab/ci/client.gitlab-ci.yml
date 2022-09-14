@@ -34,8 +34,7 @@
     files:
       - client/ios/Gemfile.lock
     paths:
-      - client/ios/.bundle
-      - client/ios/vendor/ruby
+      - client/ios/vendor/bundle
 
 .client:
   image: cirrusci/flutter:3.0.5
