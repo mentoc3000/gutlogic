@@ -222,6 +222,7 @@ client:screenshots:
     - macos
   script:
     # prep fastlane
+    - cd ios/fastlane
     - gem install --user-install bundler
     - bundle install
     - bundle exec fastlane $FASTLANE_CHANNEL
