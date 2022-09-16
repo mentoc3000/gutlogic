@@ -224,7 +224,6 @@ client:screenshots:
     # prep fastlane
     - gem install --user-install bundler
     - bundle install
-    - bundle exec fastlane run increment_build_number build_number:"$CI_PIPELINE_ID"
     - bundle exec fastlane $FASTLANE_CHANNEL
   dependencies:
     - client:build:ios
