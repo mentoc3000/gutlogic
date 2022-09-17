@@ -30,7 +30,6 @@
   paths:
     - client/.pub-cache
     - client/.dart_tool/package_config.json
-    - client/build/ios/archive/Runner.xcarchive
     - client/ios/vendor/bundle
 
 .client:
@@ -174,9 +173,10 @@ client:build:ios:
     - !reference [.client-merge-request-rules, rules]
     - !reference [.client-develop-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
-  cache:
-    <<: *client-cache
-    policy: pull-push
+  artifacts:
+    paths:
+      - client/build/ios/archive/Runner.xcarchive
+    expire_in: 1 days
   dependencies:
     - client:prep
 
