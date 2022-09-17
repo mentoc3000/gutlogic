@@ -164,10 +164,9 @@ client:build:ios:
   script:
     - pod repo update
     # prep fastlane
-    - cd ios/fastlane
+    - cd ios
     - gem install --user-install bundler
     - bundle install
-    - cd ..
     - bundle exec fastlane run increment_build_number build_number:"$CI_PIPELINE_ID"
     - flutter pub run flutter_launcher_icons:main
     - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
