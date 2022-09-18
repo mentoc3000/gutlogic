@@ -168,7 +168,7 @@ client:build:ios:
     - bundle install
     - bundle exec fastlane run increment_build_number build_number:"$CI_PIPELINE_ID"
     - flutter pub run flutter_launcher_icons:main
-    - flutter build ios --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
+    - flutter build ipa --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID --no-codesign
   rules:
     - !reference [.client-merge-request-rules, rules]
     - !reference [.client-develop-commit-rules, rules]
