@@ -444,7 +444,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8396608324AD26C100D079F4 /* ReleaseDevelopment.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-development";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Runner-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -530,7 +531,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8396608324AD26C100D079F4 /* ReleaseDevelopment.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-development";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Runner-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -620,7 +622,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8396608124AD26C100D079F4 /* DebugProduction.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-production";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Runner-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -706,7 +709,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8396608024AD26C100D079F4 /* ReleaseProduction.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-production";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Runner-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -792,7 +796,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8396608024AD26C100D079F4 /* ReleaseProduction.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-production";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Runner-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -882,7 +887,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8396608424AD26C100D079F4 /* DebugDevelopment.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-development";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Runner-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
