@@ -4,9 +4,11 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
+
+ENV GOOGLE_APPLICATION_CREDENTIALS /usr/src/app/firebase-adminsdk.json
 
 EXPOSE 8080
 CMD ["npm", "run", "start"]

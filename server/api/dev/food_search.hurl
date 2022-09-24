@@ -7,4 +7,4 @@ name: broccoli
 HTTP/1.1 200
 
 [Asserts]
-header "Content-Type" == "application/json; charset=UTF-8"
+header "Content-Type" == "application/json; charset=utf-8"

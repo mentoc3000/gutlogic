@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "@oakserver/oak";
+import express, { Request, Response, NextFunction } from "express";
 import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
 import log from "./logger";
 
@@ -77,62 +77,44 @@ function genericizeEdamamFoodMeasures(
 }
 
 async function get(
-  { params, request, response }: {
-    params: any;
-    request: Request;
-    response: Response;
-  },
+  req: Request<{ foodID: string; }, unknown, unknown, { name: string; }>,
+  res: Response,
 ) {
-  const name = request.url.searchParams.get("name");
+  const name = req.query.name;
 
-  const foodID = params.foodID;
+  const foodID = req.params.foodID;
   const result = await edamam.get({ foodId: foodID, label: name });
 
   if (result.ok) {
-    response.body = { data: genericizeEdamamFoodMeasures(result.value) };
+    res.json({ data: genericizeEdamamFoodMeasures(result.value) });
   } else {
-    response.status = 404;
+    res.status(404).end();
   }
 }
 
 async function search(
-  { request, response }: { request: Request; response: Response; },
+  req: Request<unknown, unknown, unknown, { name: string; }>,
+  res: Response,
 ) {
-  const name = request.url.searchParams.get("name");
+  const name = req.query.name;
 
   if (name === null) {
-    response.status = 400;
+    res.status(400).end();
     return;
   }
 
   const result = await edamam.search({ name: name });
 
   if (result.ok) {
-    response.body = { data: result.value.map(genericizeEdamamFoodMeasures) };
+    res.json({ data: result.value.map(genericizeEdamamFoodMeasures) });
   } else {
-    response.body = { data: [] };
+    res.json({ data: [] });
   }
 }
 
-const router = new Router();
+const router = express.Router();
 
 router.get("/v0/search", search);
 router.get("/v0/:foodID", get);
 
 export default router;
-
-/// Begin regular api calls to Edamam server
-///
-/// The first call to the Edamam server is always slow, taking several sections. Subsequent ones
-/// are fast, taking less than one second. Once Edamam has not gotten a request for 60 minutes
-/// it is slow to start again. This function makes a request of Edamam every 20 minutes to ensure
-/// the user always sees a speedy response.
-export function startEdamamHeartbeat() {
-  log.i("Starting Edamam heartbeat");
-  const heartbeatInterval = 20 * 60 * 1000; // 20 minutes
-  const foodId = "food_a1gb9ubb72c7snbuxr3weagwv0dd";
-  setInterval(() => {
-    edamam.get({ foodId: foodId, label: "Apple" });
-    log.i("Pinged Edamam server");
-  }, heartbeatInterval);
-}

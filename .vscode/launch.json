@@ -5,6 +5,31 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Cloud Run: Run/Debug Locally",
+      "type": "cloudcode.cloudrun",
+      "request": "launch",
+      "build": {
+        "docker": {
+          "path": "server/api/Dockerfile"
+        }
+      },
+      "image": "gut-logic",
+      "service": {
+        "name": "gut-logic",
+        "containerPort": 8080,
+        "resources": {
+          "limits": {
+            "memory": "256Mi"
+          }
+        }
+      },
+      "target": {
+        "minikube": {}
+      },
+      "watch": true,
+      "externalPortForward": 3000
+    },
+    {
       "name": "Python: Current File",
       "type": "python",
       "request": "launch",
@@ -49,16 +74,7 @@
       "name": "All Tests",
       "type": "dart",
       "request": "launch",
-      "program": "client/test/", // or tests/foo for a subset of tests
+      "program": "client/test/"
     }
-    // {
-    //   "name": "Flutter Driver Tests",
-    //   "request": "launch",
-    //   "program": "client/test_driver/app_test.dart",
-    //   "type": "dart",
-    //   "env": {
-    //     "VM_SERVICE_URL": "http://127.0.0.1:8887/"
-    //   }
-    // }
   ]
 }

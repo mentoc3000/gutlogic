@@ -74,19 +74,24 @@ api:test:
     - !reference [.api-release-commit-rules, rules]
     - !reference [.api-merge-request-rules, rules]
 
-api:deploy:develop:
+.api:deploy:
   stage: deploy
   extends:
     - .api
-  variables:
-    GCLOUD_PROJECT: gutlogic-dev
   before_script:
     - !reference [.api, before_script]
     - !reference [.gcloud, before_script]
   script:
     - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/src/config.json"
+    - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/firebase-adminsdk.json"
     - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
     - gcloud run deploy api --source=./ --region=us-central1
+
+api:deploy:develop:
+  extends:
+    - .api:deploy
+  variables:
+    GCLOUD_PROJECT: gutlogic-dev
   rules:
     - !reference [.api-develop-commit-rules, rules]
   environment: develop
@@ -94,16 +99,9 @@ api:deploy:develop:
 api:deploy:release:
   stage: deploy
   extends:
-    - .api
+    - .api:deploy
   variables:
     GCLOUD_PROJECT: gutlogic
-  before_script:
-    - !reference [.api, before_script]
-    - !reference [.gcloud, before_script]
-  script:
-    - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/src/config.json"
-    - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
-    - gcloud run deploy api --source=./ --region=us-central1
   rules:
     - !reference [.api-release-commit-rules, rules]
   environment: release
