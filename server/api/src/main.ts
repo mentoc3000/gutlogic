@@ -1,19 +1,16 @@
-import { Application, Router } from "@oakserver/oak";
+import express from "express";
 
 import status from "./resources/status";
-import food, { startEdamamHeartbeat } from "./resources/food";
+import food from "./resources/food";
 import auth from "./resources/auth";
+import log from './resources/logger';
 
-const router = new Router();
+const app = express();
 
-router.use("/", status.routes(), status.allowedMethods());
-router.use("/food", auth, food.routes(), food.allowedMethods());
+app.use("/", status);
+app.use("/food", auth, food);
 
-const app = new Application();
+const port = 8080;
+app.listen({ port });
 
-app.use(router.routes());
-app.use(router.allowedMethods());
-
-startEdamamHeartbeat();
-
-app.listen({ port: 8080 });
+log.i(`Listening on port ${port}`);

@@ -2,6 +2,7 @@ import urlcat from "urlcat";
 import axios from 'axios';
 import log from "../resources/logger";
 import { err, ok, Result } from "../result";
+import { resourceLimits } from 'worker_threads';
 
 export type EdamamQualifier = { uri: string | null; label: string | null; };
 
@@ -77,12 +78,12 @@ export async function search(
 
 // Get an Edamam food by [id], returning the first result. If a [name] is provided, return the first result with a matching name.
 export async function get(
-  { foodId, label }: { foodId: string; label: string | null; },
+  { foodId, label }: { foodId: string; label: string | null | undefined; },
 ): Promise<Result<EdamamFoodMeasures, EdamamError>> {
   try {
     const data = await edamam({ ingr: foodId }); // edamam has no direct lookup of foods by ID, reuse search API
     const resultWithMatchingID = data.hints.find((e: any) =>
-      e.food.foodId === foodId && (label === null || e.food.label === label)
+      e.food.foodId === foodId && (!label || e.food.label === label)
     );
     if (resultWithMatchingID === undefined) return err(EdamamError.NotFound);
     return ok(resultWithMatchingID);
