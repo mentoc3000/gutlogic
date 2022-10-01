@@ -2,7 +2,6 @@ import urlcat from "urlcat";
 import axios from 'axios';
 import log from "../resources/logger";
 import { err, ok, Result } from "../result";
-import { resourceLimits } from 'worker_threads';
 
 export type EdamamQualifier = { uri: string | null; label: string | null; };
 

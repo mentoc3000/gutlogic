@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import * as config from "../config.json";
 import log from "./logger";
 
-initializeApp();
 
 const validateJwt = async (jwt: string): Promise<boolean> => {
   const projectId = config.projectId;

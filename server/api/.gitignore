@@ -1,3 +1,4 @@
 node_modules
 src/config.json
 firebase-adminsdk.json
+SubscriptionKey_*.p8
