@@ -15,7 +15,7 @@ import {
 } from "../app-store-server-api/Models";
 import log from "../resources/logger";
 
-type DecodedNotificationData = {
+export type DecodedNotificationData = {
   appAppleId: string;
   bundleId: string;
   bundleVersion: number;
@@ -24,7 +24,7 @@ type DecodedNotificationData = {
   transactionInfo: JWSTransactionDecodedPayload;
 };
 
-type DecodedNotification = {
+export type DecodedNotification = {
   notificationType: NotificationType;
   subtype?: NotificationSubtype;
   notificationUUID: string;
@@ -86,6 +86,11 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       return;
     }
 
+    await this.handleEvent(event, res);
+  }
+
+  async handleEvent(event: DecodedNotification, res: Response): Promise<void> {
+
     switch (event.notificationType) {
       case NotificationType.ConsumptionRequest:
         // Notification not expected from App Store API
@@ -100,6 +105,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
           // Plan changes apply immediately
           case NotificationSubtype.Downgrade:
           // Plan changes apply at next renewal
+          case undefined:
           case null:
             // Subscription level unchanged
             res.status(200).end();
@@ -126,6 +132,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
             res.status(200).end();
             return;
 
+          case undefined:
           case null: {
             // Grace period has ended. Cancel subscription
             const status = await this.unsubscribe(event.data);
@@ -145,6 +152,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
         switch (event.subtype) {
           case NotificationSubtype.BillingRecovery:
           // Expired subscription that previously failed to renew now successfully renewed
+          case undefined:
           case null: {
             // Active subscription has successfully auto renewed
             const status = await this.purchase(event.data);
@@ -199,6 +207,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
             return;
           }
 
+          case undefined:
           case null:
             // User redeemed an offer for their active subscription
             res.status(200).end();
@@ -263,6 +272,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
           // User subscribed for the first time
           case NotificationSubtype.Resubscribe: {
             // User resubscribed
+            // BUG: this is undefined; add tests
             const status = await this.purchase(event.data);
             res.status(status).end();
             return;
@@ -289,7 +299,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     }
   }
 
-  private async purchase(data: DecodedNotificationData): Promise<number> {
+  async purchase(data: DecodedNotificationData): Promise<number> {
     const userId = data.transactionInfo?.appAccountToken;
     const expirationDate = data.transactionInfo?.expiresDate;
 
@@ -313,7 +323,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     return 200;
   }
 
-  private async undoPurchase(data: DecodedNotificationData): Promise<number> {
+  async undoPurchase(data: DecodedNotificationData): Promise<number> {
     const productId = data.transactionInfo?.productId;
     if (productId !== productDataMap.premium_subscription_monthly.productId) {
       log.e(`Unknown productId ${productId} in transaction ${data.transactionInfo?.transactionId}`);
@@ -328,7 +338,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     return 200;
   }
 
-  private async unsubscribe(data: DecodedNotificationData): Promise<number> {
+  async unsubscribe(data: DecodedNotificationData): Promise<number> {
     const productId = data.transactionInfo?.productId;
     if (productId !== productDataMap.premium_subscription_monthly.productId) {
       log.e(`Unknown productId ${productId} in transaction ${data.transactionInfo?.transactionId}`);
