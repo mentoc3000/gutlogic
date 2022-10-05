@@ -16,12 +16,12 @@ import {
 import log from "../resources/logger";
 
 export type DecodedNotificationData = {
-  appAppleId: string;
+  appAppleId?: string;
   bundleId: string;
-  bundleVersion: number;
+  bundleVersion?: number;
   environment: Environment;
-  renewalInfo: JWSRenewalInfoDecodedPayload;
-  transactionInfo: JWSTransactionDecodedPayload;
+  renewalInfo?: JWSRenewalInfoDecodedPayload;
+  transactionInfo?: JWSTransactionDecodedPayload;
 };
 
 export type DecodedNotification = {
@@ -35,7 +35,6 @@ export type DecodedNotification = {
 
 async function decodeNotification(body: ResponseBodyV2): Promise<DecodedNotification> {
   const event = await decodeNotificationPayload(body.signedPayload);
-  log.d(JSON.stringify(event));
   const eventData = event.data;
   const renewalInfo = eventData.signedRenewalInfo ? await decodeRenewalInfo(eventData.signedRenewalInfo) : undefined;
   const transactionInfo = eventData.signedTransactionInfo ? await decodeTransaction(eventData.signedTransactionInfo) : undefined;
@@ -60,6 +59,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
   constructor(private iapRepository: IapRepository) {
     super();
 
+    this.handleServerEvent = this.handleServerEvent.bind(this);
     this.handleEvent = this.handleEvent.bind(this);
     this.purchase = this.purchase.bind(this);
     this.undoPurchase = this.undoPurchase.bind(this);

@@ -7,7 +7,8 @@
     "test": "ava",
     "start": "ts-node src/main.ts",
     "watch": "nodemon src/main.ts",
-    "trigger-test-notification": "ts-node dev/trigger_test_notification.ts"
+    "trigger-test-notification": "ts-node dev/trigger_test_notification.ts",
+    "docker": "docker build . -t api-test && docker run -p 8080:8080 -d api-test"
   },
   "engines": {
     "node": "16"
