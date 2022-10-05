@@ -59,6 +59,11 @@ async function decodeNotification(body: ResponseBodyV2): Promise<DecodedNotifica
 export class AppStorePurchaseHandler extends PurchaseHandler {
   constructor(private iapRepository: IapRepository) {
     super();
+
+    this.handleEvent = this.handleEvent.bind(this);
+    this.purchase = this.purchase.bind(this);
+    this.undoPurchase = this.undoPurchase.bind(this);
+    this.unsubscribe = this.unsubscribe.bind(this);
   }
 
   async handleServerEvent(req: Request<unknown, unknown, ResponseBodyV2>, res: Response): Promise<void> {
