@@ -39,5 +39,11 @@ export default router;
 // Scheduled job for expiring subscriptions in the case of missing store events
 export function startSubscriptionRevocationCheck() {
   const revocationInterval = 60 * 60 * 1000; // 1 hour, to reduce cost
-  setInterval(() => iapRepository.expireSubscriptions(), revocationInterval);
+  setInterval(() => {
+    try {
+      iapRepository.expireSubscriptions();
+    } catch (e) {
+      log.e(JSON.stringify(e));
+    }
+  }, revocationInterval);
 }
