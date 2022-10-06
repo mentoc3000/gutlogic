@@ -73,7 +73,8 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       event = await decodeNotification(req.body);
       log.d(`App Store notification received: ${event.notificationType}`);
     } catch (e) {
-      log.e(`Failed with error ${JSON.stringify(e)} to decode notification ${JSON.stringify(req.body)}`);
+      const err = JSON.stringify(e, Object.getOwnPropertyNames(e));
+      log.e(`Failed with error ${err} to decode notification ${JSON.stringify(req.body)}`);
       res.status(403).end();
       return;
     }
@@ -322,7 +323,8 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     try {
       await this.iapRepository.purchasePremium({ userId: userId!, expirationDateMs: expirationDate! });
     } catch (e) {
-      log.w(`Failed to execute purchase for transaction ${data.transactionInfo?.transactionId} with error ${JSON.stringify(e)}`);
+      const err = JSON.stringify(e, Object.getOwnPropertyNames(e));
+      log.w(`Failed to execute purchase for transaction ${data.transactionInfo?.transactionId} with error ${err}`);
       return 400;
     }
     return 200;
