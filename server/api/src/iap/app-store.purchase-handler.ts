@@ -314,6 +314,11 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       return 400;
     }
 
+    if (!(userId)) {
+      log.w("Missing userId");
+      return 400;
+    }
+
     const productId = data.transactionInfo?.productId;
     if (productId !== productDataMap.premium_subscription_monthly.productId) {
       log.e(`Unknown productId ${productId} in transaction ${data.transactionInfo?.transactionId}`);
