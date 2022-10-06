@@ -52,19 +52,20 @@ export class IapRepository {
   }
 
   async expireSubscriptions(): Promise<void> {
-    const documents = await this.firestore.collection("users")
-      .where("hasActivePremiumSubscription", "==", true)
-      .where("premiumSubscriptionExpirationDate", "<=", firestore.Timestamp.now())
+    const snapshot = await this.firestore.collection("users")
+      .where("premiumSubscriptionExpirationDate", "<", firestore.Timestamp.now())
       .get();
-    if (!documents.size) return;
+    if (!snapshot.size) return;
     const writeBatch = this.firestore.batch();
-    documents.docs.forEach((doc) =>
-      writeBatch.update(
-        doc.ref,
-        { hasActivePremiumSubscription: false },
+    snapshot.docs.forEach((doc) =>
+      writeBatch.update(doc.ref,
+        {
+          hasActivePremiumSubscription: false,
+          premiumSubscriptionExpirationDate: null,
+        },
       )
     );
     await writeBatch.commit();
-    console.log(`Expired ${documents.size} subscriptions`);
+    console.log(`Expired ${snapshot.size} subscriptions`);
   }
 }
