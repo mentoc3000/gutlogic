@@ -12,10 +12,7 @@ import 'user_cubit_test.mocks.dart';
 @GenerateMocks([UserRepository, User])
 void main() {
   final firebaseUser = MockUser();
-  final user = ApplicationUser(
-    firebaseUser: firebaseUser,
-    consented: true,
-  );
+  final user = ApplicationUser(firebaseUser: firebaseUser, consented: true, premiumStatus: 'ACTIVE');
 
   group('User Cubit', () {
     test('emits users', () {

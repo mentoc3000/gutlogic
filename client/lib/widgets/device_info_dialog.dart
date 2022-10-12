@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../resources/user_repository.dart';
 import '../style/gl_colors.dart';
 import '../util/app_config.dart';
 
@@ -48,6 +49,17 @@ class DeviceInfoDialog extends StatelessWidget {
   }
 }
 
+String getUserIdString(String? userId) {
+  late final String splitId;
+  if (userId != null) {
+    final splitIdx = (userId.length / 2).floor();
+    splitId = '${userId.substring(0, splitIdx)}\n${userId.substring(splitIdx)}';
+  } else {
+    splitId = 'null';
+  }
+  return splitId;
+}
+
 class IosDeviceInfoContent extends StatelessWidget {
   final AppConfig config;
   final IosDeviceInfo device;
@@ -56,6 +68,10 @@ class IosDeviceInfoContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userId = context.read<UserRepository>().user?.id;
+    final splitId = getUserIdString(userId);
+    final server = config.isProduction ? 'prod' : 'dev';
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -65,7 +81,9 @@ class IosDeviceInfoContent extends StatelessWidget {
           DeviceInfoElement('Device:', device.name),
           DeviceInfoElement('Model:', device.model),
           DeviceInfoElement('System Name:', device.systemName),
-          DeviceInfoElement('System Version:', device.systemVersion)
+          DeviceInfoElement('System Version:', device.systemVersion),
+          DeviceInfoElement('User ID:', splitId),
+          DeviceInfoElement('Server', server),
         ],
       ),
     );
@@ -80,6 +98,10 @@ class AndroidDeviceInfoContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userId = context.read<UserRepository>().user?.id;
+    final splitId = getUserIdString(userId);
+    final server = config.isProduction ? 'prod' : 'dev';
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -89,7 +111,9 @@ class AndroidDeviceInfoContent extends StatelessWidget {
           DeviceInfoElement('Manufacturer:', device.manufacturer),
           DeviceInfoElement('Model:', device.model),
           DeviceInfoElement('Android Version:', device.version.release),
-          DeviceInfoElement('Android SDK:', device.version.sdkInt)
+          DeviceInfoElement('Android SDK:', device.version.sdkInt),
+          DeviceInfoElement('User ID:', splitId),
+          DeviceInfoElement('Server', server),
         ],
       ),
     );
@@ -109,7 +133,7 @@ class DeviceInfoElement extends StatelessWidget {
       child: Row(
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(value),
+          Text(value, maxLines: 2),
         ],
       ),
     );

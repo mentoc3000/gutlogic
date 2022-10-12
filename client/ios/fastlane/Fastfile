@@ -41,6 +41,24 @@ lane :certificate_develop_local do |options|
 
 end
 
+desc "Match the local development certificate for the production app."
+lane :certificate_production_local do |options|
+
+  # Default to readonly matching.
+  readonly = options.fetch(:readonly, true)
+  force = options.fetch(:force, false)
+
+  match(
+    api_key: get_app_store_connect_api_key,
+    app_identifier: ["com.gutlogic.app"],
+    type: "development",
+    force: force,
+    readonly: readonly,
+    force_for_new_devices: true
+  )
+
+end
+
 desc "Match the staging development certificate for the development app."
 lane :certificate_develop_adhoc do |options|
 
@@ -80,6 +98,7 @@ desc "Match all of the certificates."
 lane :certificates do |options|
 
   certificate_develop_local(options)
+  certificate_production_local(options)
   certificate_develop_adhoc(options)
   certificate_release(options)
 

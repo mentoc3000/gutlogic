@@ -1,6 +1,6 @@
 /* eslint-disable no-fallthrough */
 import { PurchaseHandler } from "./purchase-handler";
-import { productDataMap } from "./products";
+import { ProductData, productDataMap } from "./products";
 import { IapRepository } from "./iap.repository";
 import { Request, Response } from "express";
 import { decodeNotificationPayload, decodeRenewalInfo, decodeTransaction } from "../app-store-server-api/Decoding";
@@ -14,6 +14,16 @@ import {
   Timestamp,
 } from "../app-store-server-api/Models";
 import log from "../resources/logger";
+import { firestore } from 'firebase-admin';
+import * as appleReceiptVerify from 'node-apple-receipt-verify';
+import * as config from "../config.json";
+
+// Add typings for missing property in library interface.
+declare module "node-apple-receipt-verify" {
+  interface PurchasedProducts {
+    originalTransactionId: string;
+  }
+}
 
 export type DecodedNotificationData = {
   appAppleId?: string;
@@ -64,6 +74,14 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     this.purchase = this.purchase.bind(this);
     this.undoPurchase = this.undoPurchase.bind(this);
     this.unsubscribe = this.unsubscribe.bind(this);
+
+    appleReceiptVerify.config({
+      verbose: false,
+      secret: config.appStoreSharedSecret,
+      extended: true,
+      environment: config.projectId === "gutlogic" ? ["production", "sandbox"] : ["sandbox"], // Optional, defaults to ['production'],
+      excludeOldTransactions: true,
+    });
   }
 
   async handleServerEvent(req: Request<unknown, unknown, ResponseBodyV2>, res: Response): Promise<void> {
@@ -76,19 +94,6 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       const err = JSON.stringify(e, Object.getOwnPropertyNames(e));
       log.e(`Failed with error ${err} to decode notification ${JSON.stringify(req.body)}`);
       res.status(403).end();
-      return;
-    }
-
-    try {
-      if (event.data?.transactionInfo?.appAccountToken) {
-        await this.iapRepository.logTransaction({
-          userId: event.data.transactionInfo.appAccountToken,
-          transaction: event,
-        });
-      }
-    } catch (e) {
-      log.e(`Failed to log notification ${event.notificationUUID}`);
-      res.status(400).end();
       return;
     }
 
@@ -278,7 +283,6 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
           // User subscribed for the first time
           case NotificationSubtype.Resubscribe: {
             // User resubscribed
-            // BUG: this is undefined; add tests
             const status = await this.purchase(event.data);
             res.status(status).end();
             return;
@@ -306,16 +310,10 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
   }
 
   async purchase(data: DecodedNotificationData): Promise<number> {
-    const userId = data.transactionInfo?.appAccountToken;
     const expirationDate = data.transactionInfo?.expiresDate;
 
     if (!(expirationDate)) {
-      log.w(`Transaction for user ${userId} missing expiration date`);
-      return 400;
-    }
-
-    if (!(userId)) {
-      log.w("Missing userId");
+      log.w(`Transaction missing expiration date`);
       return 400;
     }
 
@@ -325,8 +323,28 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       return 200;
     }
 
+    const purchaseDate = data.transactionInfo?.purchaseDate;
+    const originalTransactionId = data.transactionInfo?.originalTransactionId;
+
+    let userId: string;
     try {
-      await this.iapRepository.purchasePremium({ userId: userId!, expirationDateMs: expirationDate! });
+      userId = await this.iapRepository.getUserIdFrom(originalTransactionId);
+    } catch (e) {
+      log.w(`Failed to find user for original transaction id ${originalTransactionId}`);
+      return 400;
+    }
+
+    try {
+      await this.iapRepository.updatePurchase({
+        userId: userId!,
+        purchaseData: {
+          premiumIapSource: "app_store",
+          premiumOrderId: originalTransactionId,
+          premiumPurchaseDate: firestore.Timestamp.fromMillis(purchaseDate),
+          premiumExpirationDate: firestore.Timestamp.fromMillis(expirationDate ?? 0),
+          premiumStatus: (expirationDate ?? 0) <= Date.now() ? "EXPIRED" : "ACTIVE",
+        }
+      });
     } catch (e) {
       const err = JSON.stringify(e, Object.getOwnPropertyNames(e));
       log.w(`Failed to execute purchase for transaction ${data.transactionInfo?.transactionId} with error ${err}`);
@@ -358,5 +376,56 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     }
 
     return 200;
+  }
+
+  handleSubscription(userId: string, productData: ProductData, token: string): Promise<boolean> {
+    return this.handleValidation(userId, token);
+  }
+
+  private async handleValidation(userId: string, token: string): Promise<boolean> {
+    // Validate receipt and fetch the products
+    let products: appleReceiptVerify.PurchasedProducts[];
+    try {
+      products = await appleReceiptVerify.validate({ receipt: token });
+    } catch (e) {
+      if (e instanceof appleReceiptVerify.EmptyError) {
+        // Receipt is valid but it is now empty.
+        log.w("Received valid empty receipt");
+        return true;
+      } else if (e instanceof appleReceiptVerify.ServiceUnavailableError) {
+        log.w("App store is currently unavailable, could not validate");
+        // Handle app store services not being available
+        return false;
+      }
+      return false;
+    }
+
+    // Process the received products
+    for (const product of products) {
+      log.d(`Verifying transaction for user ${userId}: ${JSON.stringify(product)}`);
+
+      // Process the product
+      switch (product.productId) {
+        case "premium_subscription_monthly":
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            await this.iapRepository.updatePurchase({
+              userId,
+              purchaseData: {
+                premiumIapSource: "app_store",
+                premiumOrderId: product.originalTransactionId,
+                premiumPurchaseDate: firestore.Timestamp.fromMillis(product.purchaseDate),
+                premiumExpirationDate: firestore.Timestamp.fromMillis(product.expirationDate ?? 0),
+                premiumStatus: (product.expirationDate ?? 0) <= Date.now() ? "EXPIRED" : "ACTIVE",
+              }
+            });
+            break;
+          } catch (e) {
+            log.e(`Failed to update purchase of ${product}`);
+            return false;
+          }
+      }
+    }
+    return true;
   }
 }

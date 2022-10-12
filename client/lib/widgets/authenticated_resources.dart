@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
 import '../blocs/food_group_search/food_group_search.dart';
 import '../blocs/food_search/food_search_bloc.dart';
+import '../blocs/subscription/subscription.dart';
 import '../blocs/symptom_type/symptom_type_bloc.dart';
 import '../blocs/user_cubit.dart';
 import '../models/user/application_user.dart';
@@ -23,17 +24,16 @@ import '../resources/food/edamam_food_repository.dart';
 import '../resources/food/edamam_service.dart';
 import '../resources/food/food_service.dart';
 import '../resources/food_group_repository.dart';
+import '../resources/iap_service.dart';
 import '../resources/irritant_service.dart';
 import '../resources/pantry_service.dart';
 import '../resources/profile_repository.dart';
-import '../resources/sensitivity/heuristic_sensitivity_prediction_service.dart';
 import '../resources/sensitivity/sensitivity_repository.dart';
 import '../resources/sensitivity/sensitivity_service.dart';
 import '../resources/symptom_type_repository.dart';
 import '../resources/user_food_details_repository.dart';
 import '../resources/user_repository.dart';
 import '../routes/routes.dart';
-import '../util/app_config.dart';
 
 class AuthenticatedResources extends StatelessWidget {
   final Widget child;
@@ -68,6 +68,7 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) => CloudFunctionService()),
           RepositoryProvider(create: ApiService.fromContext),
+          RepositoryProvider(create: IapService.fromContext),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
             return SensitivityRepository(
@@ -146,25 +147,15 @@ class AuthenticatedResources extends StatelessWidget {
         child: MultiBlocProvider(
           providers: const [
             // TODO move these into their most tightly nested widget trees
+            BlocProvider(create: SubscriptionCubit.fromContext, lazy: false),
             BlocProvider(create: FoodSearchBloc.fromContext),
             BlocProvider(create: SymptomTypeBloc.fromContext),
             BlocProvider(create: FoodGroupSearchCubit.fromContext),
           ],
-          child: ChangeNotifierProvider(
-            create: (context) {
-              // TODO move this into its most tightly nested widget tree
-              final sensitivityRepository = context.read<SensitivityRepository>();
-              final heuristicPredictionService = context.read<AppConfig>().isDevelopment
-                  ? HeuristicSensitivityPredictionService(
-                      irritantService: context.read<IrritantService>(),
-                      sensitivityMapStream: sensitivityRepository.streamAll(),
-                    )
-                  : null;
-              return SensitivityService(
-                sensitivityRepository: sensitivityRepository,
-                heuristicPredictionService: heuristicPredictionService,
-              );
-            },
+          child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: SensitivityService.fromContext),
+            ],
             child: child,
           ),
         ),

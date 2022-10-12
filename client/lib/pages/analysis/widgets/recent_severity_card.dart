@@ -1,4 +1,3 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/widgets.dart';
@@ -7,10 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/recent_severity/recent_severity.dart';
 import '../../../models/severity.dart';
 import '../../../util/date_time_ext.dart';
-import '../../../widgets/cards/headed_card.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
 import '../../../widgets/severity_indicator.dart';
+import 'analysis_card.dart';
 import 'insufficient_data.dart';
 
 class RecentSeverityCard extends StatelessWidget {
@@ -28,10 +27,9 @@ class RecentSeverityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HeadedCard(
-      heading: heading,
-      content: BlocBuilder<RecentSeverityCubit, RecentSeverityState>(builder: builder),
-    );
+    final subscribedContent = BlocBuilder<RecentSeverityCubit, RecentSeverityState>(builder: builder);
+    final exampleContent = _RecentSeverityChart(recentSeverities: _exampleData());
+    return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {
@@ -61,17 +59,20 @@ class RecentSeverityCard extends StatelessWidget {
     return sizeAndCenter(const GLErrorWidget());
   }
 
-  BuiltMap<DateTime, Severity?> _exampleData(BuiltMap<DateTime, Severity?> emptyRecentSeverities) {
+  List<MapEntry<DateTime, Severity?>> _exampleData() {
     final severities = [
+      Severity.moderate,
       null,
-      Severity.mild,
+      Severity.severe,
       Severity.moderate,
       Severity.intense,
-      Severity.severe,
+      Severity.mild,
       null,
-      Severity.moderate,
     ];
-    return BuiltMap(Map.fromIterables(emptyRecentSeverities.keys, severities));
+    final now = DateTime.now();
+    final daysCount = severities.length;
+    final dates = Iterable.generate(daysCount, (index) => now.subtract(Duration(days: daysCount - index - 1)));
+    return Map.fromIterables(dates, severities).entries.toList();
   }
 }
 

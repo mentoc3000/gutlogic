@@ -29,6 +29,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Match the local development certificate for the development app.
 
+### certificate_production_local
+
+```sh
+[bundle exec] fastlane certificate_production_local
+```
+
+Match the local development certificate for the production app.
+
 ### certificate_develop_adhoc
 
 ```sh
