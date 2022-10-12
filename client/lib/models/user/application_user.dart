@@ -31,11 +31,17 @@ abstract class ApplicationUser implements Built<ApplicationUser, ApplicationUser
   /// True if the user has consented to the privacy policy and terms of use.
   bool get consented;
 
+  String? get premiumStatus;
+
+  /// True if premium subscription is active
+  bool get hasActivePremiumSubscription => premiumStatus == 'ACTIVE';
+
   ApplicationUser._(); // required by built_value
 
   factory ApplicationUser({
     required User firebaseUser,
     required bool consented,
+    required String? premiumStatus,
   }) = _$ApplicationUser._;
 
   Future<String> getToken() => firebaseUser.getIdToken();

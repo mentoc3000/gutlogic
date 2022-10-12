@@ -62,7 +62,7 @@ void main() {
 
   setUpAll(() async {
     // Mock user repository
-    final user = ApplicationUser(firebaseUser: MockUser(), consented: true);
+    final user = ApplicationUser(firebaseUser: MockUser(), consented: true, premiumStatus: 'ACTIVE');
     final userRepository = MockUserRepository();
     when(userRepository.user).thenReturn(user);
 

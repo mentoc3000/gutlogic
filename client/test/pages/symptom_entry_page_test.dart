@@ -3,6 +3,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gutlogic/blocs/subscription/subscription.dart';
 import 'package:gutlogic/blocs/symptom_entry/symptom_entry.dart';
 import 'package:gutlogic/blocs/symptom_type/symptom_type.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
@@ -19,9 +20,12 @@ class MockSymptomEntryBloc extends MockBloc<SymptomEntryEvent, SymptomEntryState
 
 class MockSymptomTypeBloc extends MockBloc<SymptomTypeEvent, SymptomTypeState> implements SymptomTypeBloc {}
 
+class MockSubscriptionCubit extends MockCubit<SubscriptionState> implements SubscriptionCubit {}
+
 void main() {
   late SymptomEntryBloc symptomEntryBloc;
   late SymptomTypeBloc symptomTypeBloc;
+  late SubscriptionCubit subscriptionCubit;
   late Widget symptomEntryPage;
   late SymptomEntry symptomEntry;
 
@@ -36,9 +40,13 @@ void main() {
       notes: 'notes',
     );
 
+    subscriptionCubit = MockSubscriptionCubit();
+    whenListen(subscriptionCubit, Stream.value(const Subscribed()), initialState: const Subscribed());
+
     symptomEntryPage = MaterialApp(
       home: MultiBlocProvider(
         providers: [
+          BlocProvider.value(value: subscriptionCubit),
           BlocProvider.value(value: symptomEntryBloc),
           BlocProvider.value(value: symptomTypeBloc),
         ],
@@ -50,6 +58,7 @@ void main() {
   tearDown(() {
     symptomEntryBloc.close();
     symptomTypeBloc.close();
+    subscriptionCubit.close();
   });
 
   group('SymptomEntryPage', () {
@@ -184,6 +193,37 @@ void main() {
       expect(find.text(symptomEntry.notes!), findsNothing);
       expect(find.text(newNote), findsOneWidget);
       verify(() => symptomEntryBloc.add(const UpdateSymptomEntryNotes(newNote))).called(1);
+    });
+
+    testWidgets('Does not show subscribe message when subscribed', (WidgetTester tester) async {
+      whenListen(
+        symptomEntryBloc,
+        Stream.fromIterable([
+          SymptomEntryLoading(),
+          SymptomEntryLoaded(symptomEntry),
+        ]),
+        initialState: SymptomEntryLoading(),
+      );
+
+      await tester.pumpWidget(symptomEntryPage);
+      await tester.pumpAndSettle();
+      expect(find.text('Subscribe to unlock'), findsNothing);
+    });
+
+    testWidgets('Shows subscribe message when not subscribed', (WidgetTester tester) async {
+      whenListen(
+        symptomEntryBloc,
+        Stream.fromIterable([
+          SymptomEntryLoading(),
+          SymptomEntryLoaded(symptomEntry),
+        ]),
+        initialState: SymptomEntryLoading(),
+      );
+      whenListen(subscriptionCubit, Stream.value(const NotSubscribed()), initialState: const NotSubscribed());
+
+      await tester.pumpWidget(symptomEntryPage);
+      await tester.pumpAndSettle();
+      expect(find.text('Subscribe to unlock'), findsOneWidget);
     });
   });
 }

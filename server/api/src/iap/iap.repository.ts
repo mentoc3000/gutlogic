@@ -22,48 +22,54 @@ export interface SubscriptionPurchase extends BasePurchase {
   status: SubscriptionStatus;
 }
 
-type UserSubscription = {
-  hasActivePremiumSubscription: boolean;
-  premiumSubscriptionExpirationDate: firestore.Timestamp;
-};
+export interface PurchaseLog {
+  premiumIapSource: string;
+  premiumOrderId: string;
+  premiumPurchaseDate: firestore.Timestamp;
+  premiumExpirationDate: firestore.Timestamp;
+  premiumStatus: string;
+}
 
 export class IapRepository {
   constructor(private firestore: FirebaseFirestore.Firestore) {
   }
 
-  async purchasePremium({ userId, expirationDateMs }: { userId: string; expirationDateMs: number; }): Promise<void> {
-    const premiumSubscriptionExpirationDate = firestore.Timestamp.fromMillis(expirationDateMs);
-    const data: UserSubscription = {
-      hasActivePremiumSubscription: true,
-      premiumSubscriptionExpirationDate,
-    };
-    await this.firestore
+  async getUserIdFrom(originalTransactionId: string): Promise<string> {
+    const snapshot = await this.firestore
       .collection("users")
-      .doc(userId)
-      .update(data);
+      .where("premiumOrderId", "==", originalTransactionId)
+      .get();
+
+    if (snapshot.empty) {
+      throw Error("User not found");
+    }
+
+    if (snapshot.size > 1) {
+      throw Error("Multiple users found");
+    }
+
+    const doc = snapshot.docs.pop();
+    return doc.id;
   }
 
-  async logTransaction({ userId, transaction }: { userId: string; transaction: any; }): Promise<void> {
+  async updatePurchase({ userId, purchaseData }:
+    { userId: string; purchaseData: { premiumIapSource: IAPSource; premiumOrderId: string; } & Partial<PurchaseLog>; }
+  ): Promise<void> {
     await this.firestore
       .collection("users")
       .doc(userId)
-      .collection("iap_transactions")
-      .add(transaction);
+      .set(purchaseData, { merge: true });
   }
 
   async expireSubscriptions(): Promise<void> {
     const snapshot = await this.firestore.collection("users")
-      .where("premiumSubscriptionExpirationDate", "<", firestore.Timestamp.now())
+      .where("premiumExpirationDate", "<", firestore.Timestamp.now())
+      .where("premiumStatus", "==", "ACTIVE")
       .get();
     if (!snapshot.size) return;
     const writeBatch = this.firestore.batch();
     snapshot.docs.forEach((doc) =>
-      writeBatch.update(doc.ref,
-        {
-          hasActivePremiumSubscription: false,
-          premiumSubscriptionExpirationDate: null,
-        },
-      )
+      writeBatch.update(doc.ref, { premiumStatus: 'EXPIRED' })
     );
     await writeBatch.commit();
     console.log(`Expired ${snapshot.size} subscriptions`);

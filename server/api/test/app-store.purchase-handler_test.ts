@@ -58,8 +58,10 @@ function purchaseEvent(notificationType: NotificationType, subtype: Notification
         data: {
             transactionInfo: {
                 appAccountToken: "user1234",
+                purchaseDate: 166400000,
                 expiresDate: 166500000,
                 productId: productDataMap.premium_subscription_monthly.productId,
+                originalTransactionId: "transaction5000",
                 transactionId: "transaction5678",
             } as JWSTransactionDecodedPayload
         } as DecodedNotificationData
@@ -112,7 +114,8 @@ test("DidFailToRenew is accepted", async t => {
 });
 
 test("DidRenew completes purchase", async t => {
-    iapRepositoryStub.purchasePremium.returns(Promise.resolve());
+    iapRepositoryStub.updatePurchase.returns(Promise.resolve());
+    iapRepositoryStub.getUserIdFrom.returns(Promise.resolve('abc123'));
     const event = purchaseEvent(NotificationType.DidRenew, undefined);
     const res = createResponse();
 
@@ -140,7 +143,8 @@ test("GracePeriodExpired is accepted", async t => {
 });
 
 test("OfferRedeemed purchases new subscription", async t => {
-    iapRepositoryStub.purchasePremium.returns(Promise.resolve());
+    iapRepositoryStub.updatePurchase.returns(Promise.resolve());
+    iapRepositoryStub.getUserIdFrom.returns(Promise.resolve('abc123'));
     const event = purchaseEvent(NotificationType.OfferRedeemed, NotificationSubtype.InitialBuy);
     const res = createResponse();
 
@@ -181,7 +185,8 @@ test("RefundDeclined is accepted", async t => {
 });
 
 test("RenewalExtended ...", async t => {
-    iapRepositoryStub.purchasePremium.returns(Promise.resolve());
+    iapRepositoryStub.updatePurchase.returns(Promise.resolve());
+    iapRepositoryStub.getUserIdFrom.returns(Promise.resolve('abc123'));
     const event = purchaseEvent(NotificationType.RenewalExtended, undefined);
     const res = createResponse();
 
@@ -195,7 +200,8 @@ test("RenewalExtended ...", async t => {
 // });
 
 test("Subscribed is accepted", async t => {
-    iapRepositoryStub.purchasePremium.returns(Promise.resolve());
+    iapRepositoryStub.updatePurchase.returns(Promise.resolve());
+    iapRepositoryStub.getUserIdFrom.returns(Promise.resolve('abc123'));
     const event = purchaseEvent(NotificationType.Subscribed, NotificationSubtype.InitialBuy);
     const res = createResponse();
 
@@ -230,7 +236,8 @@ test("Executes routed message", async t => {
     const app = express();
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
-    iapRepositoryStub.purchasePremium.returns(Promise.resolve());
+    iapRepositoryStub.updatePurchase.returns(Promise.resolve());
+    iapRepositoryStub.getUserIdFrom.returns(Promise.resolve('abc123'));
     const event = purchaseEvent(NotificationType.Subscribed, NotificationSubtype.InitialBuy);
     app.use("/", async (req, res) => {
         await handler.handleEvent(req.body, res);

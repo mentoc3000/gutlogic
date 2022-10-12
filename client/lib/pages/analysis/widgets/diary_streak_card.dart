@@ -6,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/diary_streak/diary_streak.dart';
 import '../../../style/gl_colors.dart';
 import '../../../util/date_time_ext.dart';
-import '../../../widgets/cards/headed_card.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
+import 'analysis_card.dart';
 
 class DiaryStreakCard extends StatelessWidget {
   static String heading = 'Timeline Use Streak';
@@ -25,10 +25,9 @@ class DiaryStreakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HeadedCard(
-      heading: heading,
-      content: BlocBuilder<DiaryStreakCubit, DiaryStreakState>(builder: builder),
-    );
+    final subscribedContent = BlocBuilder<DiaryStreakCubit, DiaryStreakState>(builder: builder);
+    final exampleContent = _DiaryStreakChart(diaryStreak: _exampleData());
+    return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {

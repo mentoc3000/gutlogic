@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../auth/auth.dart';
+import '../models/serializers.dart';
 import '../models/user/application_user.dart';
+import '../models/user/application_user_data.dart';
 import '../util/null_utils.dart';
 import 'firebase/firestore_service.dart';
 
@@ -38,27 +40,29 @@ class UserRepository {
       return prev?.uid == next?.uid;
     }
 
-    Stream<UntypedDocumentSnapshot?> mapUserToSnapshotStream(User? user) {
-      return user == null ? Stream.value(null) : _getUserMetaDocumentReference(user.uid).snapshots();
+    Stream<ApplicationUserData?> mapUserToData(User? user) {
+      if (user == null) return Stream.value(null);
+
+      return _getUserMetaDocumentReference(user.uid).snapshots().map(_deserializeUserData);
     }
 
-    // Transform the stream of users into a stream of snapshots. The user stream emits new values for a few different
+    // Transform the stream of users into a stream of user data. The user stream emits new values for a few different
     // operations but we only want a new snapshot stream when the UID changes, so we filter for distinct UIDs.
-    final snapshots = users.distinct(isFirebaseUIDDistinct).switchMap(mapUserToSnapshotStream);
+    final snapshots = users.distinct(isFirebaseUIDDistinct).switchMap(mapUserToData);
 
     // Combine the stream of users (not distinct UIDs this time) and the stream of snapshots into an async map, which
     // creates a new ApplicationUser each time either value changes. We end up with a stream of ApplicationUsers that
     // emits whenever the Firebase User or metadata document is meaningfully changed.
     final applicationUserStream = CombineLatestStream.list([users, snapshots]).asyncMap((values) async {
-      if (values[0] == null || values[1] == null) return null;
+      if (values[0] == null) return null;
 
       final user = values[0] as User;
-      final snap = values[1] as UntypedDocumentSnapshot;
-      final data = snap.data() ?? {};
+      final data = values[1] as ApplicationUserData?;
 
       return ApplicationUser(
         firebaseUser: user,
-        consented: data['consented'] as bool? ?? false,
+        consented: data?.consented ?? false,
+        premiumStatus: data?.premiumStatus,
       );
     });
 
@@ -70,6 +74,10 @@ class UserRepository {
     final applicationUserSubject = BehaviorSubject<ApplicationUser?>.seeded(null);
     applicationUserSubject.addStream(distinctApplicationUserStream);
     return applicationUserSubject;
+  }
+
+  ApplicationUserData? _deserializeUserData(DocumentSnapshot<Map<String, dynamic>> snap) {
+    return snap.data() == null ? null : serializers.deserializeWith(ApplicationUserData.serializer, snap.data()!);
   }
 
   /// Create a future that waits for the first user that passes the filter lambda.

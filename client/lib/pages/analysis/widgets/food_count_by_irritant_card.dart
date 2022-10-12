@@ -8,9 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/food_count_by_irritant/food_count_by_irritant.dart';
 import '../../../models/sensitivity/sensitivity_level.dart';
 import '../../../style/gl_colors.dart';
-import '../../../widgets/cards/headed_card.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
+import 'analysis_card.dart';
 import 'insufficient_data.dart';
 
 class FoodCountByIrritantCard extends StatelessWidget {
@@ -28,10 +28,9 @@ class FoodCountByIrritantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HeadedCard(
-      heading: heading,
-      content: BlocBuilder<FoodCountByIrritantCubit, FoodCountByIrritantState>(builder: builder),
-    );
+    final subscribedContent = BlocBuilder<FoodCountByIrritantCubit, FoodCountByIrritantState>(builder: builder);
+    final exampleContent = _IrritantSensitivityMatrixCardContent(matrix: _exampleData());
+    return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {

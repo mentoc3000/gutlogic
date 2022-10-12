@@ -27,6 +27,7 @@ import '../pages/reauthenticate/reauthenticate_page.dart';
 import '../pages/register/register_page.dart';
 import '../pages/settings/settings_page.dart';
 import '../pages/similar_foods/similar_foods_page.dart';
+import '../pages/subscribe/subscribe_page.dart';
 import '../pages/symptom_entry/symptom_entry_page.dart';
 
 class Routes {
@@ -109,6 +110,14 @@ class Routes {
     return MaterialPageRoute(
       builder: (context) => ProfilePage(),
       settings: const RouteSettings(name: 'Profile Page'),
+    );
+  }
+
+  Route<Widget> get subscribe {
+    return MaterialPageRoute(
+      builder: (context) => const SubscribePage(),
+      settings: const RouteSettings(name: 'Subscribe Page'),
+      fullscreenDialog: true,
     );
   }
 

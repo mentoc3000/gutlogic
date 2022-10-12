@@ -8,9 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/symptom_type_count/symptom_type_count.dart';
 import '../../../models/symptom_type.dart';
 import '../../../style/gl_colors.dart';
-import '../../../widgets/cards/headed_card.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
+import 'analysis_card.dart';
 import 'insufficient_data.dart';
 
 class SymptomTypeCountCard extends StatelessWidget {
@@ -30,10 +30,9 @@ class SymptomTypeCountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HeadedCard(
-      heading: heading,
-      content: BlocBuilder<SymptomTypeCountCubit, SymptomTypeCountState>(builder: builder),
-    );
+    final subscribedContent = BlocBuilder<SymptomTypeCountCubit, SymptomTypeCountState>(builder: builder);
+    final exampleContent = _SymptomTypeCountChart(symptomTypeCount: _exampleData());
+    return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {

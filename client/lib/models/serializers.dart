@@ -29,6 +29,7 @@ import 'sensitivity/sensitivity_source.dart';
 import 'severity.dart';
 import 'symptom.dart';
 import 'symptom_type.dart';
+import 'user/application_user_data.dart';
 import 'user_food_details.dart';
 import 'user_food_details_api.dart';
 import 'user/profile.dart';
@@ -36,6 +37,7 @@ import 'user/profile.dart';
 part 'serializers.g.dart';
 
 @SerializersFor([
+  ApplicationUserData,
   BowelMovement,
   BowelMovementEntry,
   CustomFood,

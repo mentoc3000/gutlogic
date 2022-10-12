@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/bowel_movement_entry/bowel_movement_entry.dart';
+import 'package:gutlogic/blocs/subscription/subscription.dart';
 import 'package:gutlogic/models/bowel_movement.dart';
 import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/pages/bowel_movement_entry/bowel_movement_entry_page.dart';
@@ -14,8 +15,11 @@ import 'package:mocktail/mocktail.dart';
 class MockBowelMovementEntryBloc extends MockBloc<BowelMovementEntryEvent, BowelMovementEntryState>
     implements BowelMovementEntryBloc {}
 
+class MockSubscriptionCubit extends MockCubit<SubscriptionState> implements SubscriptionCubit {}
+
 void main() {
   late BowelMovementEntryBloc bowelmovementEntryBloc;
+  late SubscriptionCubit subscriptionCubit;
   late Widget bowelmovementEntryPage;
   late BowelMovementEntry bowelmovementEntry;
 
@@ -29,9 +33,15 @@ void main() {
       notes: 'notes',
     );
 
+    subscriptionCubit = MockSubscriptionCubit();
+    whenListen(subscriptionCubit, Stream.value(const Subscribed()), initialState: const Subscribed());
+
     bowelmovementEntryPage = MaterialApp(
-      home: BlocProvider.value(
-        value: bowelmovementEntryBloc,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: subscriptionCubit),
+          BlocProvider.value(value: bowelmovementEntryBloc),
+        ],
         child: BowelMovementEntryPage(),
       ),
     );
@@ -132,6 +142,31 @@ void main() {
       expect(find.text(bowelmovementEntry.notes!), findsNothing);
       expect(find.text(newNote), findsOneWidget);
       verify(() => bowelmovementEntryBloc.add(const UpdateBowelMovementEntryNotes(newNote))).called(1);
+    });
+
+    testWidgets('Does not show subscribe message when subscribed', (WidgetTester tester) async {
+      whenListen(
+        bowelmovementEntryBloc,
+        Stream.fromIterable([BowelMovementEntryLoaded(bowelmovementEntry)]),
+        initialState: BowelMovementEntryLoading(),
+      );
+
+      await tester.pumpWidget(bowelmovementEntryPage);
+      await tester.pumpAndSettle();
+      expect(find.text('Subscribe to unlock'), findsNothing);
+    });
+
+    testWidgets('Shows subscribe message when not subscribed', (WidgetTester tester) async {
+      whenListen(
+        bowelmovementEntryBloc,
+        Stream.fromIterable([BowelMovementEntryLoaded(bowelmovementEntry)]),
+        initialState: BowelMovementEntryLoading(),
+      );
+      whenListen(subscriptionCubit, Stream.value(const NotSubscribed()), initialState: const NotSubscribed());
+
+      await tester.pumpWidget(bowelmovementEntryPage);
+      await tester.pumpAndSettle();
+      expect(find.text('Subscribe to unlock'), findsOneWidget);
     });
   });
 }

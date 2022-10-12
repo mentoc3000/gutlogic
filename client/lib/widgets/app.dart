@@ -7,7 +7,9 @@ import '../resources/firebase/analytics_service.dart';
 import '../resources/user_repository.dart';
 import '../style/gl_colors.dart';
 import '../style/gl_theme.dart';
+import '../util/app_config.dart';
 import 'authenticated_resources.dart';
+import 'flavor_banner.dart';
 import 'gl_widget_config.dart';
 
 class GutLogicApp extends StatelessWidget {
@@ -38,7 +40,7 @@ class GutLogicApp extends StatelessWidget {
               children: [
                 Container(color: GLColors.lightestGray),
                 AuthenticatedResources(navigatorKey: _navigatorKey, child: child ?? Container()),
-                //if (context.read<AppConfig>().isDebug) FlavorBanner(),
+                if (context.read<AppConfig>().isDebug) FlavorBanner(navigatorKey: _navigatorKey),
               ],
             ),
           );
