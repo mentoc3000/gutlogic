@@ -1,6 +1,8 @@
+const start = Date.now();
+
 import express from "express";
 import * as admin from "firebase-admin";
-import * as bodyParser from "body-parser";
+import { urlencoded, json } from "body-parser";
 
 admin.initializeApp();
 
@@ -12,8 +14,8 @@ import log from './resources/logger';
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(urlencoded({ extended: false }));
+app.use(json());
 
 app.use("/", status);
 app.use("/food", auth, food);
@@ -24,4 +26,7 @@ startSubscriptionRevocationCheck();
 const port = 8080;
 app.listen({ port });
 
+const end = Date.now();
+
+log.i(`Server loaded in ${(end - start) / 1000} seconds`);
 log.i(`Listening on port ${port}`);

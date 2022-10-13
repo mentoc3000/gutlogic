@@ -1,4 +1,4 @@
-import * as firestore from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 
 export type NonSubscriptionStatus = "PENDING" | "COMPLETED" | "CANCELLED";
 export type SubscriptionStatus = "PENDING" | "ACTIVE" | "EXPIRED";
@@ -13,20 +13,20 @@ export interface BasePurchase {
   orderId: string;
   productId: string;
   userId: string;
-  transactionDate: firestore.Timestamp;
+  transactionDate: Timestamp;
 }
 
 export interface SubscriptionPurchase extends BasePurchase {
   type: "SUBSCRIPTION";
-  expiryDate: firestore.Timestamp;
+  expiryDate: Timestamp;
   status: SubscriptionStatus;
 }
 
 export interface PurchaseLog {
   premiumIapSource: string;
   premiumOrderId: string;
-  premiumPurchaseDate: firestore.Timestamp;
-  premiumExpirationDate: firestore.Timestamp;
+  premiumPurchaseDate: Timestamp;
+  premiumExpirationDate: Timestamp;
   premiumStatus: string;
 }
 
@@ -63,7 +63,7 @@ export class IapRepository {
 
   async expireSubscriptions(): Promise<void> {
     const snapshot = await this.firestore.collection("users")
-      .where("premiumExpirationDate", "<", firestore.Timestamp.now())
+      .where("premiumExpirationDate", "<", Timestamp.now())
       .where("premiumStatus", "==", "ACTIVE")
       .get();
     if (!snapshot.size) return;
