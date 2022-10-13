@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
 import log from "./logger";
 

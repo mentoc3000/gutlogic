@@ -1,5 +1,5 @@
 import { X509Certificate } from "crypto";
-import * as jose from "jose";
+import { CompactVerifyGetKey, importX509, compactVerify } from "jose";
 import { APPLE_ROOT_CA_G3_FINGERPRINT } from "./AppleRootCertificate";
 import { CertificateValidationError } from "./Errors";
 import {
@@ -34,19 +34,19 @@ export async function decodeNotificationPayload(payload: string): Promise<Decode
  */
 async function decodeJWS(token: string): Promise<any> {
   // Extracts the key used to sign the JWS from the header of the token
-  const getKey: jose.CompactVerifyGetKey = async (protectedHeader, _token) => {
+  const getKey: CompactVerifyGetKey = async (protectedHeader, _token) => {
     // RC 7515 stipulates that the key used to sign the JWS must be the first in the chain.
     // https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6
 
-    // jose will not import the certificate unless it is in a proper PKCS8 format.
+    // will not import the certificate unless it is in a proper PKCS8 format.
     const certs = protectedHeader.x5c?.map((c) => `-----BEGIN CERTIFICATE-----\n${c}\n-----END CERTIFICATE-----`) ?? [];
 
     validateCertificates(certs);
 
-    return jose.importX509(certs[0], "ES256");
+    return importX509(certs[0], "ES256");
   };
 
-  const { payload } = await jose.compactVerify(token, getKey);
+  const { payload } = await compactVerify(token, getKey);
 
   const decoded = new TextDecoder().decode(payload);
   const json = JSON.parse(decoded);

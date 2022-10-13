@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { v4 as uuidv4 } from "uuid";
-import * as jose from "jose";
+import { importPKCS8, KeyLike, SignJWT } from "jose";
 import {
     CheckTestNotificationResponse,
     Environment,
@@ -28,7 +28,7 @@ export class AppStoreServerAPI {
     readonly environment: Environment;
     private readonly baseUrl: string;
 
-    private readonly key: Promise<jose.KeyLike>;
+    private readonly key: Promise<KeyLike>;
     private readonly keyId: string;
     private readonly issuerId: string;
     private readonly bundleId: string;
@@ -42,7 +42,7 @@ export class AppStoreServerAPI {
      * @param bundleId bundle ID of your app
      */
     constructor(key: string, keyId: string, issuerId: string, bundleId: string, environment = Environment.Production) {
-        this.key = jose.importPKCS8(key, "ES256");
+        this.key = importPKCS8(key, "ES256");
         this.keyId = keyId;
         this.issuerId = issuerId;
         this.bundleId = bundleId;
@@ -164,7 +164,7 @@ export class AppStoreServerAPI {
 
         const privateKey = await this.key;
 
-        const jwt = await new jose.SignJWT(payload)
+        const jwt = await new SignJWT(payload)
             .setProtectedHeader({ alg: "ES256", kid: this.keyId, typ: "JWT" })
             .setIssuer(this.issuerId)
             .setIssuedAt()

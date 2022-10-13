@@ -1,21 +1,19 @@
 // Derived from https://github.com/flutter/codelabs/tree/master/in_app_purchases/complete/firebase-backend/functions/src
 
-import * as admin from "firebase-admin";
+import { firestore } from "firebase-admin";
 import { PurchaseHandler } from "./purchase-handler";
 import { AppStorePurchaseHandler } from "./app-store.purchase-handler";
 import { IapRepository, IAPSource } from "./iap.repository";
 import express, { Request, Response } from "express";
 import log from '../resources/logger';
-import { isRegularExpressionLiteral } from 'typescript';
 import authMiddleware from '../resources/auth';
 import { productDataMap } from './products';
-import { equal } from 'assert';
 
 //
 // Dependencies
 //
 
-const iapRepository = new IapRepository(admin.firestore());
+const iapRepository = new IapRepository(firestore());
 const purchaseHandlers: { [source in IAPSource]: PurchaseHandler } = {
   // "google_play": new GooglePlayPurchaseHandler(iapRepository),
   "app_store": new AppStorePurchaseHandler(iapRepository),
