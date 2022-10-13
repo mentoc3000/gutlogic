@@ -85,13 +85,21 @@ api:test:
     - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/src/config.json"
     - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/firebase-adminsdk.json"
     - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
-    - gcloud run deploy api --source=./ --region=us-central1
+    - gcloud beta run deploy api
+      --source=./ --region=us-central1
+      --min-instances=$MIN_INSTANCES
+      --max-instances=$MAX_INSTANCES
+      --cpu=1
+      --cpu-boost
+      --memory=512Mi
 
 api:deploy:develop:
   extends:
     - .api:deploy
   variables:
     GCLOUD_PROJECT: gutlogic-dev
+    MIN_INSTANCES: 0
+    MAX_INSTANCES: 100
   rules:
     - !reference [.api-develop-commit-rules, rules]
   environment: develop
@@ -102,6 +110,8 @@ api:deploy:release:
     - .api:deploy
   variables:
     GCLOUD_PROJECT: gutlogic
+    MIN_INSTANCES: 1
+    MAX_INSTANCES: 100
   rules:
     - !reference [.api-release-commit-rules, rules]
   environment: release
