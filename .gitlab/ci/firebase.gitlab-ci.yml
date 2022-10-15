@@ -1,7 +1,10 @@
 .firebase-merge-request-rules:
   rules:
     - if: $CI_MERGE_REQUEST_ID
-      changes: [server/firebase/**/*]
+      changes:
+        - server/firebase/**/*
+        - firebase.gitlab-ci.yml
+        - .gitlab-ci.yml
     - if: $CI_MERGE_REQUEST_ID
       allow_failure: true
       when: manual
@@ -9,7 +12,10 @@
 .firebase-develop-commit-rules:
   rules:
     - if: $CI_COMMIT_BRANCH == "develop"
-      changes: [server/firebase/**/*]
+      changes:
+        - server/firebase/**/*
+        - firebase.gitlab-ci.yml
+        - .gitlab-ci.yml
     - if: $CI_COMMIT_BRANCH == "develop"
       allow_failure: true
       when: manual
@@ -17,7 +23,10 @@
 .firebase-release-commit-rules:
   rules:
     - if: $CI_COMMIT_BRANCH =~ /^release/
-      changes: [server/firebase/**/*]
+      changes:
+        - server/firebase/**/*
+        - firebase.gitlab-ci.yml
+        - .gitlab-ci.yml
     - if: $CI_COMMIT_BRANCH =~ /^release/
       allow_failure: true
       when: manual
