@@ -1,6 +1,6 @@
 import test from 'ava';
 import * as sinon from 'ts-sinon';
-import { DecodedNotificationPayload, JWSTransactionDecodedPayload, NotificationSubtype, NotificationType } from '../src/app-store-server-api/Models';
+import { JWSTransactionDecodedPayload, NotificationSubtype, NotificationType } from '../src/app-store-server-api/Models';
 import { AppStorePurchaseHandler, DecodedNotification, DecodedNotificationData } from '../src/iap/app-store.purchase-handler';
 import { IapRepository } from '../src/iap/iap.repository';
 import { createResponse, createRequest } from 'node-mocks-http';

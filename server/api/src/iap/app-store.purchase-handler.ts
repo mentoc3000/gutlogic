@@ -79,7 +79,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       verbose: false,
       secret: config.appStoreSharedSecret,
       extended: true,
-      environment: config.projectId === "gutlogic" ? ["production", "sandbox"] : ["sandbox"], // Optional, defaults to ['production'],
+      environment: ["production", "sandbox"], // Optional, defaults to ['production'],
       excludeOldTransactions: true,
     });
   }
@@ -318,7 +318,8 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     }
 
     const productId = data.transactionInfo?.productId;
-    if (productId !== productDataMap.premium_subscription_monthly.productId) {
+    const productData = productDataMap[productId];
+    if (!productData) {
       log.e(`Unknown productId ${productId} in transaction ${data.transactionInfo?.transactionId}`);
       return 200;
     }
@@ -355,7 +356,8 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
   async undoPurchase(data: DecodedNotificationData): Promise<number> {
     const productId = data.transactionInfo?.productId;
-    if (productId !== productDataMap.premium_subscription_monthly.productId) {
+    const productData = productDataMap[productId];
+    if (!productData) {
       log.e(`Unknown productId ${productId} in transaction ${data.transactionInfo?.transactionId}`);
       return 200;
     }
@@ -370,7 +372,8 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
   async unsubscribe(data: DecodedNotificationData): Promise<number> {
     const productId = data.transactionInfo?.productId;
-    if (productId !== productDataMap.premium_subscription_monthly.productId) {
+    const productData = productDataMap[productId];
+    if (!productData) {
       log.e(`Unknown productId ${productId} in transaction ${data.transactionInfo?.transactionId}`);
       return 200;
     }
@@ -393,10 +396,11 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
         log.w("Received valid empty receipt");
         return true;
       } else if (e instanceof appleReceiptVerify.ServiceUnavailableError) {
-        log.w("App store is currently unavailable, could not validate");
+        log.w("App Store is currently unavailable, could not validate");
         // Handle app store services not being available
         return false;
       }
+      log.w("App Store receipt is invalid");
       return false;
     }
 
@@ -407,6 +411,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       // Process the product
       switch (product.productId) {
         case "premium_subscription_monthly":
+        case "premium_subscription_monthly_dev":
           try {
             // eslint-disable-next-line no-await-in-loop
             await this.iapRepository.updatePurchase({
