@@ -88,6 +88,25 @@ class IapService {
   }
 
   Future<void> completePurchase(PurchaseDetails purchaseDetails) => _inAppPurchase.completePurchase(purchaseDetails);
+
+  Future<void> restore() async => _inAppPurchase.restorePurchases();
+
+  /// Transfer purchase to different user
+  /// Returns true if purchase was successfully transferred; false on failure or if user already has this purchase
+  Future<bool> transferPurchase({required String userId, required PurchaseDetails purchaseDetails}) async {
+    final body = {
+      'source': purchaseDetails.verificationData.source,
+      'productId': purchaseDetails.productID,
+      'verificationData': purchaseDetails.verificationData.serverVerificationData,
+      'userId': userId,
+    };
+    try {
+      await apiService.post(path: '/iap/transfer', body: body);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
 }
 
 class IapException implements Exception {

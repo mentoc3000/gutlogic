@@ -35,13 +35,15 @@ export class IapRepository {
   }
 
   async getUserIdFrom(originalTransactionId: string): Promise<string> {
+    // BUG: match source as well as premiumOrderId
     const snapshot = await this.firestore
       .collection("users")
       .where("premiumOrderId", "==", originalTransactionId)
+      .where("premiumStatus", "!=", "TRANSFERRED")
       .get();
 
     if (snapshot.empty) {
-      throw Error("User not found");
+      return null;
     }
 
     if (snapshot.size > 1) {
@@ -53,7 +55,7 @@ export class IapRepository {
   }
 
   async updatePurchase({ userId, purchaseData }:
-    { userId: string; purchaseData: { premiumIapSource: IAPSource; premiumOrderId: string; } & Partial<PurchaseLog>; }
+    { userId: string; purchaseData: Partial<PurchaseLog>; }
   ): Promise<void> {
     await this.firestore
       .collection("users")

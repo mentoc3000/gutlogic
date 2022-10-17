@@ -34,7 +34,7 @@ interface VerifyPurchaseParams {
 // Handling of purchase verifications
 const verifyPurchase = async function verifyPurchase(
   req: Request<unknown, unknown, VerifyPurchaseParams>, res: Response): Promise<void> {
-  log.d(`Received verification message ${JSON.stringify(req.body)}`);
+  log.d(`Received verification request ${JSON.stringify(req.body)}`);
 
   // Get the product data from the map
   const productData = productDataMap[req.body.productId];
@@ -69,6 +69,45 @@ const verifyPurchase = async function verifyPurchase(
   }
 };
 
+
+// Handling of purchase transfer
+const transferPurchase = async function transferPurchase(
+  req: Request<unknown, unknown, VerifyPurchaseParams>, res: Response): Promise<void> {
+  log.d(`Received transfer request ${JSON.stringify(req.body)}`);
+
+  // Get the product data from the map
+  const productData = productDataMap[req.body.productId];
+
+  // If it was for an unknown product, do not process it.
+  if (!productData) {
+    console.warn(`verifyPurchase called for an unknown product ("${req.body.productId}")`);
+    res.status(400).end();
+    return;
+  }
+
+  // If it was for an unknown source, do not process it.
+  if (!purchaseHandlers[req.body.source]) {
+    console.warn(`verifyPurchase called for an unknown source ("${req.body.source}")`);
+    res.status(400).end();
+    return;
+  }
+
+  log.d(`Verifying transaction ${JSON.stringify(productData)}`);
+
+  // Process the purchase for the product
+  const isTransferred = await purchaseHandlers[req.body.source].transferPurchase(
+    req.body.userId,
+    productData,
+    req.body.verificationData,
+  );
+
+  if (isTransferred) {
+    res.status(200).end();
+  } else {
+    res.status(400).end();
+  }
+};
+
 // Handling of AppStore server-to-server events
 const handleAppStoreServerEvent = (purchaseHandlers.app_store as AppStorePurchaseHandler)
   .handleServerEvent;
@@ -81,6 +120,7 @@ const handleAppStoreServerEvent = (purchaseHandlers.app_store as AppStorePurchas
 const router = express.Router();
 
 router.post("/app_store", handleAppStoreServerEvent);
+router.post("/transfer", authMiddleware, transferPurchase);
 router.post("/verify", authMiddleware, verifyPurchase);
 
 export default router;
@@ -88,11 +128,15 @@ export default router;
 // Scheduled job for expiring subscriptions in the case of missing store events
 export function startSubscriptionRevocationCheck() {
   const revocationInterval = 60 * 60 * 1000; // 1 hour, to reduce cost
-  setInterval(() => {
-    try {
-      iapRepository.expireSubscriptions();
-    } catch (e) {
-      log.e(JSON.stringify(e));
-    }
-  }, revocationInterval);
+  const expireSubscriptions = () => {
+    iapRepository.expireSubscriptions().catch((e) => {
+      log.e(JSON.stringify(e, Object.getOwnPropertyNames(e)));
+    });
+  };
+
+  // Expire subscriptions when first starting server
+  expireSubscriptions();
+
+  // Then, regularly
+  setInterval(expireSubscriptions, revocationInterval);
 }
