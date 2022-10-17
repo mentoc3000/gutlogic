@@ -2,7 +2,8 @@
   // See https://go.microsoft.com/fwlink/?LinkId=733558
   // for the documentation about the tasks.json format
   "version": "2.0.0",
-  "tasks": [{
+  "tasks": [
+    {
       "label": "Dart analyzer",
       "type": "shell",
       "options": {
@@ -10,7 +11,8 @@
       },
       "command": "dartanalyzer ./lib ./test",
       "problemMatcher": []
-    }, {
+    },
+    {
       "label": "Code generation build",
       "type": "shell",
       "options": {
@@ -98,7 +100,7 @@
         "cwd": "${workspaceFolder}/client"
       },
       "osx": {
-      "command": "bash test/generate_coverage_test_file.sh; flutter test --coverage; genhtml coverage/lcov.info -o coverage/html; rm test/coverage_helper_test.dart",
+        "command": "bash test/generate_coverage_test_file.sh; flutter test --coverage; genhtml coverage/lcov.info -o coverage/html; rm test/coverage_helper_test.dart",
       },
       "windows": {
         "command": "",
@@ -156,6 +158,15 @@
       "type": "shell",
       "command": "adb shell setprop debug.firebase.analytics.app com.gutlogic.app.dev",
       "problemMatcher": []
-    }
+    },
+    {
+      "label": "Deploy API server",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/server/api"
+      },
+      "command": "gcloud run deploy api --source=./ --region=us-central1",
+      "problemMatcher": []
+    },
   ]
 }

@@ -3,3 +3,4 @@ src/config.json
 firebase-adminsdk.json
 SubscriptionKey_*.p8
 dist
+*.js
