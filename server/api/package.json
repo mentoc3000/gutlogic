@@ -5,10 +5,9 @@
   "scripts": {
     "lint": "eslint . --ext .ts",
     "test": "ava --timeout=1m",
-    "start": "ts-node src/main.ts",
-    "build": "ncc build src/main.ts -o dist",
-    "watch": "nodemon src/main.ts",
-    "trigger-test-notification": "ts-node dev/trigger_test_notification.ts",
+    "start": "node src/main.js",
+    "build": "tsc -p .",
+    "trigger-test-notification": "node dev/trigger_test_notification.js",
     "docker": "docker build . -t api-test && docker run -p 8080:8080 -d api-test"
   },
   "engines": {
@@ -21,8 +20,6 @@
     "firebase-admin": "^10.0.2",
     "jose": "^4.9.3",
     "node-apple-receipt-verify": "^1.12.1",
-    "node-fetch": "^3.2.10",
-    "ts-node": "^10.9.1",
     "urlcat": "^2.0.4"
   },
   "devDependencies": {
@@ -33,26 +30,16 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
-    "@vercel/ncc": "^0.34.0",
     "ava": "^4.3.3",
     "eslint": "^8.23.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.1",
     "isomorphic-fetch": "^3.0.0",
     "node-mocks-http": "^1.11.0",
-    "nodemon": "^2.0.20",
     "sinon": "^14.0.0",
     "supertest": "^6.3.0",
     "ts-sinon": "^2.0.2",
     "tslib": "^2.4.0",
     "typescript": "^4.8.2"
-  },
-  "ava": {
-    "extensions": {
-      "ts": "module"
-    },
-    "nodeArguments": [
-      "--loader=ts-node/esm"
-    ]
   }
 }

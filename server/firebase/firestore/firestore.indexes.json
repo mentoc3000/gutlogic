@@ -13,6 +13,20 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "premiumExpirationDate",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "premiumStatus",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []
