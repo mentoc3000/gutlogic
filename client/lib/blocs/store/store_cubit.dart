@@ -47,14 +47,9 @@ class StoreCubit extends Cubit<StoreState> {
 
   void _onPurchaseData(List<PurchaseDetails> purchaseDetailsList) async {
     await Future.forEach(purchaseDetailsList, (PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.pendingCompletePurchase) {
-        logger.d('Purchase status: pending');
-        // Handle edge cases where purchase is not complete
-        await iapService.completePurchase(purchaseDetails);
-      }
+      logger.d('Purchase status: ${purchaseDetails.status}');
 
       if (purchaseDetails.status == PurchaseStatus.purchased) {
-        logger.d('Purchase status: purchased');
         // Send to server
         final user = userRepository.user;
         final verificationRequestSent = await iapService.verifyPurchase(
@@ -64,6 +59,16 @@ class StoreCubit extends Cubit<StoreState> {
         if (verificationRequestSent) {
           await loadProducts();
         }
+      }
+
+      if (purchaseDetails.pendingCompletePurchase) {
+        // Handle edge cases where purchase is not complete
+        await iapService.completePurchase(purchaseDetails);
+      }
+
+      if (purchaseDetails.status == PurchaseStatus.restored) {
+        // TODO: how to handle failure?
+        await _completeRestore(purchaseDetails);
       }
 
       if (purchaseDetails.status == PurchaseStatus.canceled || purchaseDetails.status == PurchaseStatus.error) {
@@ -87,7 +92,8 @@ class StoreCubit extends Cubit<StoreState> {
       final product = await iapService.getPremiumProduct();
       emit(ProductLoaded(product));
     } catch (error, trace) {
-      logger.e(error, trace);
+      logger.e(error);
+      logger.e(trace);
       emit(const Unavailable());
     }
   }
@@ -96,6 +102,32 @@ class StoreCubit extends Cubit<StoreState> {
     emit(const SubscriptionPending());
     try {
       await iapService.buy(product);
+    } catch (error, trace) {
+      emit(SubscriptionError.fromError(error: error, trace: trace));
+      await loadProducts();
+    }
+  }
+
+  Future<void> triggerRestore() async {
+    emit(const SubscriptionPending());
+    try {
+      await iapService.restore();
+    } catch (error, trace) {
+      emit(SubscriptionError.fromError(error: error, trace: trace));
+      await loadProducts();
+    }
+  }
+
+  Future<void> _completeRestore(PurchaseDetails purchaseDetails) async {
+    try {
+      final userId = userRepository.user!.id;
+      final transferSuccess = await iapService.transferPurchase(userId: userId, purchaseDetails: purchaseDetails);
+      if (transferSuccess) {
+      } else {
+        // emit(SubscriptionError(message: 'Purchase could not be restored.'));
+        await loadProducts();
+      }
+      await iapService.completePurchase(purchaseDetails);
     } catch (error, trace) {
       emit(SubscriptionError.fromError(error: error, trace: trace));
       await loadProducts();

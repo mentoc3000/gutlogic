@@ -22,7 +22,7 @@ class SubscribeListView extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [buildButton(context)],
+              children: [buildStoreContent(context)],
             ),
           ],
         ),
@@ -30,15 +30,15 @@ class SubscribeListView extends StatelessWidget {
     );
   }
 
-  Widget buildButton(BuildContext context) {
+  Widget buildStoreContent(BuildContext context) {
     return BlocConsumer<StoreCubit, StoreState>(
-      builder: buttonBuilder,
-      buildWhen: buttonBuildWhen,
-      listener: buttonListener,
+      builder: storeContentBuilder,
+      buildWhen: storeContentBuildWhen,
+      listener: storeContentListener,
     );
   }
 
-  Widget buttonBuilder(BuildContext context, StoreState state) {
+  Widget storeContentBuilder(BuildContext context, StoreState state) {
     final subscriptionCubit = context.read<StoreCubit>();
 
     if (state is ProductsLoading || state is SubscriptionPending) {
@@ -52,6 +52,10 @@ class SubscribeListView extends StatelessWidget {
             onPressed: () => unawaited(subscriptionCubit.subscribe(state.product)),
             child: const ShrinkWrappedButtonContent(label: 'Subscribe'),
           ),
+          GLTertiaryButton(
+            onPressed: () => unawaited(subscriptionCubit.triggerRestore()),
+            child: const ShrinkWrappedButtonContent(label: 'Restore Purchase'),
+          )
         ],
       );
     } else {
@@ -59,7 +63,7 @@ class SubscribeListView extends StatelessWidget {
     }
   }
 
-  void buttonListener(BuildContext context, StoreState state) {
+  void storeContentListener(BuildContext context, StoreState state) {
     if (state is Subscribed) {
       Navigator.of(context).pop();
     }
@@ -68,7 +72,7 @@ class SubscribeListView extends StatelessWidget {
     }
   }
 
-  bool buttonBuildWhen(StoreState previous, StoreState current) {
+  bool storeContentBuildWhen(StoreState previous, StoreState current) {
     return current is! Subscribed && current is! SubscriptionError;
   }
 }

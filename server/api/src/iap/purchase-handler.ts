@@ -19,4 +19,10 @@ export abstract class PurchaseHandler {
         productData: ProductData,
         token: string,
     ): Promise<boolean>;
+
+    abstract transferPurchase(
+        userId: string,
+        productData: ProductData,
+        token: string,
+    ): Promise<boolean>;
 }

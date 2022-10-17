@@ -1,7 +1,7 @@
 /* eslint-disable no-fallthrough */
 import { PurchaseHandler } from "./purchase-handler";
 import { ProductData, productDataMap } from "./products";
-import { IapRepository } from "./iap.repository";
+import { IapRepository, PurchaseLog } from "./iap.repository";
 import { Request, Response } from "express";
 import { decodeNotificationPayload, decodeRenewalInfo, decodeTransaction } from "../app-store-server-api/Decoding";
 import {
@@ -74,6 +74,9 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     this.purchase = this.purchase.bind(this);
     this.undoPurchase = this.undoPurchase.bind(this);
     this.unsubscribe = this.unsubscribe.bind(this);
+    this.handleValidation = this.handleValidation.bind(this);
+    this.transferPurchase = this.transferPurchase.bind(this);
+    this.transferPremium = this.transferPremium.bind(this);
 
     appleReceiptVerify.config({
       verbose: false,
@@ -259,7 +262,6 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
       case NotificationType.RefundDeclined:
         // App Store declined a refund req initiated by the app developer
-        log.i(`Refund declined for user ${event.data?.transactionInfo?.appAccountToken}`);
         res.status(200).end();
         return;
 
@@ -283,8 +285,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
           // User subscribed for the first time
           case NotificationSubtype.Resubscribe: {
             // User resubscribed
-            const status = await this.purchase(event.data);
-            res.status(status).end();
+            res.status(200).end();
             return;
           }
 
@@ -330,6 +331,10 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     let userId: string;
     try {
       userId = await this.iapRepository.getUserIdFrom(originalTransactionId);
+      if (userId === null) {
+        log.w(`No user ${userId} exists`);
+        return 400;
+      }
     } catch (e) {
       log.w(`Failed to find user for original transaction id ${originalTransactionId}`);
       return 400;
@@ -385,6 +390,16 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     return this.handleValidation(userId, token);
   }
 
+  private purchaseData(product: appleReceiptVerify.PurchasedProducts): PurchaseLog {
+    return {
+      premiumIapSource: "app_store",
+      premiumOrderId: product.originalTransactionId,
+      premiumPurchaseDate: firestore.Timestamp.fromMillis(product.purchaseDate),
+      premiumExpirationDate: firestore.Timestamp.fromMillis(product.expirationDate ?? 0),
+      premiumStatus: (product.expirationDate ?? 0) <= Date.now() ? "EXPIRED" : "ACTIVE",
+    };
+  }
+
   private async handleValidation(userId: string, token: string): Promise<boolean> {
     // Validate receipt and fetch the products
     let products: appleReceiptVerify.PurchasedProducts[];
@@ -413,17 +428,14 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
         case "premium_subscription_monthly":
         case "premium_subscription_monthly_dev":
           try {
+            // Check if this transaction id with an active subscription already exists with a user
             // eslint-disable-next-line no-await-in-loop
-            await this.iapRepository.updatePurchase({
-              userId,
-              purchaseData: {
-                premiumIapSource: "app_store",
-                premiumOrderId: product.originalTransactionId,
-                premiumPurchaseDate: firestore.Timestamp.fromMillis(product.purchaseDate),
-                premiumExpirationDate: firestore.Timestamp.fromMillis(product.expirationDate ?? 0),
-                premiumStatus: (product.expirationDate ?? 0) <= Date.now() ? "EXPIRED" : "ACTIVE",
-              }
-            });
+            const existingUserId = await this.iapRepository.getUserIdFrom(product.originalTransactionId);
+            // TODO: return message explaining rejection
+            if (existingUserId !== null) return false;
+
+            // eslint-disable-next-line no-await-in-loop
+            await this.iapRepository.updatePurchase({ userId, purchaseData: this.purchaseData(product) });
             break;
           } catch (e) {
             log.e(`Failed to update purchase of ${product}`);
@@ -432,5 +444,62 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       }
     }
     return true;
+  }
+
+  async transferPurchase(userId: string, productData: ProductData, token: string): Promise<boolean> {
+    // Validate receipt and fetch the products
+    let products: appleReceiptVerify.PurchasedProducts[];
+    try {
+      products = await appleReceiptVerify.validate({ receipt: token });
+    } catch (e) {
+      if (e instanceof appleReceiptVerify.EmptyError) {
+        // Receipt is valid but it is now empty.
+        log.w("Received valid empty receipt");
+      } else if (e instanceof appleReceiptVerify.ServiceUnavailableError) {
+        log.w("App store is currently unavailable, could not validate");
+      } else {
+        log.w(`Receipt validation error: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
+      }
+      return false;
+    }
+
+    // Remove expired purchases
+    const now = Date.now();
+    products = products.filter((product) => (Boolean(product.expirationDate)) || product.expirationDate > now);
+
+    // Process the received products
+    for (const product of products) {
+      log.d(`Transferring product for user ${userId}: ${JSON.stringify(product)}`);
+
+      // Process the product
+      switch (product.productId) {
+        case "premium_subscription_monthly":
+        case "premium_subscription_monthly_dev":
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            await this.transferPremium(userId, product);
+            break;
+          } catch (e) {
+            log.e(`Failed to transfer purchase of ${product.productId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
+            return false;
+          }
+        default:
+          log.w(`Unrecognized product ${product.productId}`);
+      }
+    }
+    return true;
+  }
+
+  private async transferPremium(userId: string, product: appleReceiptVerify.PurchasedProducts): Promise<void> {
+    // Original account
+    const fromUserId = await this.iapRepository.getUserIdFrom(product.originalTransactionId);
+    if (fromUserId === null) throw Error(`User ${fromUserId} not found`);
+    if (fromUserId === userId) return;
+
+    // Set purchase in new account
+    await this.iapRepository.updatePurchase({ userId, purchaseData: this.purchaseData(product) });
+
+    // Mark original account as having purchase transferred
+    await this.iapRepository.updatePurchase({ userId: fromUserId, purchaseData: { premiumStatus: "TRANSFERRED" } });
   }
 }
