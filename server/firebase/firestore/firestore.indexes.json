@@ -13,7 +13,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "source",
+          "fieldPath": "premiumIapSource",
           "order": "ASCENDING"
         }
       ]
