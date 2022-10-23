@@ -5,8 +5,14 @@ import 'button_helpers.dart';
 class ShrinkWrappedButtonContent extends StatelessWidget {
   final String label;
   final Widget? leader;
+  final TextStyle? textStyle;
 
-  const ShrinkWrappedButtonContent({Key? key, required this.label, this.leader}) : super(key: key);
+  const ShrinkWrappedButtonContent({
+    Key? key,
+    required this.label,
+    this.leader,
+    this.textStyle,
+  }) : super(key: key);
 
   factory ShrinkWrappedButtonContent.icon({Key? key, required String label, required IconData iconData}) {
     return ShrinkWrappedButtonContent(key: key, label: label, leader: Icon(iconData));
@@ -15,7 +21,7 @@ class ShrinkWrappedButtonContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = buttonHeight(context);
-    final text = Text(label, textAlign: TextAlign.center);
+    final text = Text(label, textAlign: TextAlign.center, style: textStyle);
     final showLeader = leader != null;
 
     return Container(

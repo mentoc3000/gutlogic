@@ -183,8 +183,8 @@ class Routes {
     return MaterialPageRoute(builder: (context) => FoodGroupPage(group: name));
   }
 
-  Route<Widget> createPriorFoodsPageRoute({required DateTime dateTime}) {
-    return MaterialPageRoute(builder: (conext) => PriorFoodsPage.provisioned(dateTime: dateTime));
+  Route<Widget> createPriorFoodsPageRoute({required DateTime priorTo}) {
+    return MaterialPageRoute(builder: (conext) => PriorFoodsPage.provisioned(priorTo: priorTo));
   }
 
   Route<Widget> createSimilarFoodsRoute({required FoodReference food}) {

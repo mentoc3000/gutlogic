@@ -8,6 +8,7 @@ class PushCard extends StatelessWidget {
   final void Function()? onTap;
 
   const PushCard({Key? key, required this.child, this.onTap}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

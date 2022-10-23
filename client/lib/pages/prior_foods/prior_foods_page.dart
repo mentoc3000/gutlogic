@@ -11,11 +11,11 @@ import 'widgets/prior_foods_list_view.dart';
 class PriorFoodsPage extends StatelessWidget {
   const PriorFoodsPage({Key? key}) : super(key: key);
 
-  static Widget provisioned({required DateTime dateTime}) {
+  static Widget provisioned({required DateTime priorTo}) {
     const duration = Duration(days: 3);
-    final start = dateTime.subtract(duration);
+    final start = priorTo.subtract(duration);
     return BlocProvider(
-      create: (context) => RecentFoodsCubit.fromContext(context, start: start, end: dateTime),
+      create: (context) => RecentFoodsCubit.fromContext(context, start: start, end: priorTo),
       child: const PriorFoodsPage(),
     );
   }

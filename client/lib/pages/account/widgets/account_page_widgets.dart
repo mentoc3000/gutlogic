@@ -6,7 +6,6 @@ import '../../../resources/user_repository.dart';
 import '../../../routes/routes.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/buttons/buttons.dart';
-import '../../../widgets/buttons/gl_flat_button.dart';
 import '../../../widgets/info_container.dart';
 
 class AccountPageCreateButton extends StatelessWidget {

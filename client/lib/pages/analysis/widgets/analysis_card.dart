@@ -7,7 +7,6 @@ import '../../../blocs/subscription/subscription.dart';
 import '../../../routes/routes.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/buttons/buttons.dart';
-import '../../../widgets/buttons/gl_raised_button.dart';
 import '../../../widgets/cards/headed_card.dart';
 
 class AnalysisCard extends StatelessWidget {
@@ -41,10 +40,7 @@ class AnalysisCard extends StatelessWidget {
                 child: Container(
                   color: GLColors.white.withOpacity(0.8),
                   child: Center(
-                    child: GLRaisedButton(
-                      // TODO: improve colors
-                      color: GLColors.cancel,
-                      textColor: GLColors.white,
+                    child: GLCtaButton(
                       onPressed: () => Navigator.of(context).push(Routes.of(context).subscribe),
                       child: const ShrinkWrappedButtonContent(label: 'Subscribe to unlock'),
                     ),

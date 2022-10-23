@@ -13,8 +13,13 @@ The Pantry tracks the foods you should avoid
 • Never have to wonder if something will make you sick
 
 The Timeline logs your food, poop, and symptoms
-• Unique continuous scroll view 
+• Unique continuous scroll view
 • Identify trigger foods and patterns in your symptoms
 • Discover links between what you eat and how you feel
+
+Subscribe to Premium to help you interpret your results
+• Identify the irritants that trigger your symptoms
+• Find foods with similar sets of irritants
+• Observe symptom trends over time
 
 As always, please consult with your doctor if you’re not feeling well.

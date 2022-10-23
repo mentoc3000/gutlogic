@@ -707,7 +707,8 @@ final vegetables = [
   )
 ].toBuiltSet();
 final vegetableListSorted = vegetables.toList()..sort((a, b) => a.foodRef.name.compareTo(b.foodRef.name));
-final vegetableMaxIntensities = Map.fromIterables(vegetableListSorted, [
+final dosesList = vegetables.map((p0) => p0.doses);
+final dosesMaxIntensities = Map.fromIterables(dosesList, [
   1, // Acorn Squash
   3, // Artichoke Heart
   3, // Artichoke, Jerusalem
@@ -777,3 +778,77 @@ final intensityThresholds = {
   'Sorbitol': [0.0, 0.2, 0.35].build(),
   'Fructose': [0.0, 0.03, 0.2].build(),
 };
+
+final diaryStreak = BuiltMap<DateTime, int>({
+  DateTime.now(): 3,
+  DateTime.now().subtract(const Duration(days: 1)): 2,
+  DateTime.now().subtract(const Duration(days: 2)): 1,
+  DateTime.now().subtract(const Duration(days: 3)): 0,
+  DateTime.now().subtract(const Duration(days: 4)): 2,
+});
+
+final foodCountByIrritant = BuiltMap<String, BuiltMap<SensitivityLevel, int>>({
+  'Fructan': BuiltMap<SensitivityLevel, int>({
+    SensitivityLevel.none: 1,
+    SensitivityLevel.mild: 2,
+    SensitivityLevel.moderate: 4,
+    SensitivityLevel.severe: 6,
+    SensitivityLevel.unknown: 1,
+  }),
+  'Fructose': BuiltMap<SensitivityLevel, int>({
+    SensitivityLevel.none: 6,
+    SensitivityLevel.mild: 2,
+    SensitivityLevel.moderate: 2,
+    SensitivityLevel.severe: 0,
+    SensitivityLevel.unknown: 1,
+  }),
+  'Sorbitol': BuiltMap<SensitivityLevel, int>({
+    SensitivityLevel.none: 4,
+    SensitivityLevel.mild: 5,
+    SensitivityLevel.moderate: 2,
+    SensitivityLevel.severe: 2,
+    SensitivityLevel.unknown: 2,
+  }),
+  'Mannitol': BuiltMap<SensitivityLevel, int>({
+    SensitivityLevel.none: 7,
+    SensitivityLevel.mild: 3,
+    SensitivityLevel.moderate: 1,
+    SensitivityLevel.severe: 0,
+    SensitivityLevel.unknown: 1,
+  }),
+  ' Lactose': BuiltMap<SensitivityLevel, int>({
+    SensitivityLevel.none: 5,
+    SensitivityLevel.mild: 4,
+    SensitivityLevel.moderate: 3,
+    SensitivityLevel.severe: 2,
+    SensitivityLevel.unknown: 1,
+  }),
+  'GOS': BuiltMap<SensitivityLevel, int>({
+    SensitivityLevel.none: 2,
+    SensitivityLevel.mild: 2,
+    SensitivityLevel.moderate: 3,
+    SensitivityLevel.severe: 3,
+    SensitivityLevel.unknown: 1,
+  }),
+});
+
+final severities = [
+  Severity.moderate,
+  null,
+  Severity.severe,
+  Severity.moderate,
+  Severity.intense,
+  Severity.mild,
+  null,
+];
+final now = DateTime.now();
+final daysCount = severities.length;
+final dates = Iterable.generate(daysCount, (index) => now.subtract(Duration(days: daysCount - index - 1)));
+final recentSeverities = BuiltMap<DateTime, Severity?>(Map.fromIterables(dates, severities));
+
+final symptomTypeCount = BuiltMap<SymptomType, int>({
+  SymptomType(id: 'id', name: 'Bloating'): 10,
+  SymptomType(id: 'id', name: 'Diarrhea'): 4,
+  SymptomType(id: 'id', name: 'Cramping'): 2,
+  SymptomType(id: 'id', name: 'Pain'): 1,
+});

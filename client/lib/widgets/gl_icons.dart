@@ -11,6 +11,7 @@ class GLIcons {
   static const arrowRight = Icons.keyboard_arrow_right;
   static const bowelMovement = MdiIcons.toilet;
   static const browse = Icons.manage_search;
+  static const check = Icons.check;
   static const clear = Icons.clear;
   static const dataSources = Icons.list;
   static const delete = Icons.delete;
@@ -29,6 +30,7 @@ class GLIcons {
   static const search = Icons.search;
   static const selected = Icons.check;
   static const settings = Icons.settings;
+  static const similarFoods = MdiIcons.compareHorizontal;
   static const sort = Icons.sort_by_alpha;
   static const symptom = SickFaceIcon.sickFace;
   static const userSensitivity = Icons.verified;

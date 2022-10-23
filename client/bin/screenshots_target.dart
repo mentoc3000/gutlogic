@@ -2,6 +2,8 @@ import 'package:built_collection/built_collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/blocs/subscription/subscription.dart';
+import 'package:gutlogic/resources/analysis_service.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
@@ -27,6 +29,7 @@ import 'package:gutlogic/style/gl_theme.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'data.dart';
 import 'screenshots/screenshots_capture.dart';
@@ -42,6 +45,7 @@ class MainTabsPageWrapper extends StatelessWidget {
 
 @GenerateMocks([
   AnalyticsService,
+  AnalysisService,
   BowelMovementEntryRepository,
   FoodService,
   FoodGroupsRepository,
@@ -51,6 +55,7 @@ class MainTabsPageWrapper extends StatelessWidget {
   MealEntryRepository,
   PantryService,
   SensitivityRepository,
+  SubscriptionCubit,
   SymptomEntryRepository,
   User,
   UserRepository,
@@ -65,6 +70,7 @@ void main() {
     final user = ApplicationUser(firebaseUser: MockUser(), consented: true, premiumStatus: 'ACTIVE');
     final userRepository = MockUserRepository();
     when(userRepository.user).thenReturn(user);
+    when(userRepository.stream).thenAnswer((_) => BehaviorSubject.seeded(user));
 
     // Mock diary
     final diaryRepository = MockDiaryRepository();
@@ -78,9 +84,9 @@ void main() {
     final irritantService = MockIrritantService();
     when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(irritants));
     when(irritantService.maxIntensity(any))
-        .thenAnswer((invocation) => Future.value(vegetableMaxIntensities[invocation.positionalArguments[0]]));
+        .thenAnswer((invocation) => Future.value(dosesMaxIntensities[invocation.positionalArguments[0]]));
     when(irritantService.intensityThresholds(any))
-        .thenAnswer((realInvocation) => Future.value(intensityThresholds[realInvocation.positionalArguments[0]]));
+        .thenAnswer((invocation) => Future.value(intensityThresholds[invocation.positionalArguments[0]]));
 
     // Mock meal entry
     final mealEntryRepository = MockMealEntryRepository();
@@ -112,6 +118,13 @@ void main() {
     when(foodGroupsRepository.groups()).thenAnswer((_) => Future.value(foodGroupNames));
     when(foodGroupsRepository.foods(group: 'Vegetables')).thenAnswer((_) => Future.value(vegetables));
 
+    // Mock analyses
+    final analysisService = MockAnalysisService();
+    when(analysisService.foodCountByIrritantAndLevel()).thenAnswer((_) => Stream.value(foodCountByIrritant));
+    when(analysisService.recentSeverity(count: anyNamed('count'))).thenAnswer((_) => Stream.value(recentSeverities));
+    when(analysisService.symptomTypeCount(since: anyNamed('since'))).thenAnswer((_) => Stream.value(symptomTypeCount));
+    when(analysisService.diaryStreak(count: anyNamed('count'))).thenAnswer((_) => Stream.value(diaryStreak));
+
     // remove debug banner for screenshots
     WidgetsApp.debugAllowBannerOverride = false;
 
@@ -129,12 +142,14 @@ void main() {
         RepositoryProvider<SensitivityRepository>(create: (context) => sensitivityRepository),
         RepositoryProvider<SymptomEntryRepository>(create: (context) => symptomEntryRepository),
         RepositoryProvider<UserRepository>(create: (context) => userRepository),
+        RepositoryProvider<AnalysisService>(create: (context) => analysisService),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => UserCubit(repository: context.read<UserRepository>())),
           BlocProvider(create: (context) => DiaryBloc(repository: context.read<DiaryRepository>())),
           BlocProvider(create: (context) => PantryBloc(pantryService: context.read<PantryService>())),
+          BlocProvider(create: SubscriptionCubit.fromContext)
         ],
         child: ChangeNotifierProvider(
           create: (context) => SensitivityService(sensitivityRepository: context.read<SensitivityRepository>()),
@@ -206,5 +221,16 @@ void main() {
     await tester.pumpAndSettle();
 
     await capture(binding, '2. browse');
+
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Analysis'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+    await tester.drag(find.text('Pantry Foods by Irritant'), const Offset(0.0, -180.0));
+    await tester.pumpAndSettle();
+
+    await capture(binding, '7. analysis');
   });
 }

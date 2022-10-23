@@ -90,13 +90,13 @@ class _BowelMovementEntryPageState extends State<BowelMovementEntryPage> {
             context.read<BowelMovementEntryBloc>().add(UpdateType(value));
           },
         ),
+        PriorFoodsCard(priorTo: entry.datetime),
         NotesCard(
           controller: _notesController,
           onChanged: (value) {
             context.read<BowelMovementEntryBloc>().add(UpdateBowelMovementEntryNotes(value));
           },
         ),
-        PriorFoodsCard(dateTime: entry.datetime),
       ];
     }
 
