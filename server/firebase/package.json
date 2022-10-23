@@ -6,7 +6,7 @@
     "lint": "eslint .",
     "build": "tsc",
     "test": "firebase emulators:exec \"ava --timeout=2m\"",
-    "deploy": "firebase deploy && node ./bin/update_data.js"
+    "deploy": "firebase deploy --force && node ./bin/update_data.js"
   },
   "engines": {
     "node": "16"
