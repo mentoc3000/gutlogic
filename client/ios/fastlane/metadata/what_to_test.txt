@@ -1,3 +1,9 @@
-Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities. This version makes some changes behind the scenes to make food searches faster.
+Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities.
 
-Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Aug 26. Thanks in advance for your time and candid feedback!
+This version adds Gut Logic Premium, subscription features to help users understand their symptoms. These features are
+1. Charts and graphs to help users understand their data (found in the Analytics tab)
+2. List foods that preceded a symptom or bowel movement (accessible from the symptom and bowel movement entry pages)
+3. List foods that have similar irritants to a given food (accessible from a food's page)
+This version includes numerous small improvements and bug fixes
+
+Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Nov 11. Thanks in advance for your time and candid feedback!

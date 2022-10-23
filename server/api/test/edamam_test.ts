@@ -48,6 +48,18 @@ test("Returns get result", async t => {
   t.is(edamamFoodMeasure.food?.label, label);
 });
 
+test("Removes incomplete measures", async t => {
+  const status = 200;
+  const foodId = "food_arpwzeqanprx8zb88lm78a51xaa5";
+  const label = "Pizza";
+  const body = responses.get.pizza;
+  setFetchStub(status, body);
+
+  const result = await edamam.get({ foodId, label });
+  const edamamFoodMeasure = unwrap(result);
+  edamamFoodMeasure.measures.forEach((m) => t.true(Boolean(m.label) && Boolean(m.weight)));
+});
+
 test("Returns no result with mismatched label", async t => {
   const status = 200;
   const foodId = "food_arpwzeqanprx8zb88lm78a51xaa5";
