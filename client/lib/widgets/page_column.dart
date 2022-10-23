@@ -12,7 +12,7 @@ class ConstrainedScrollView extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       return SingleChildScrollView(
         child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          constraints: BoxConstraints(minHeight: constraints.maxHeight, minWidth: constraints.maxWidth),
           child: IntrinsicHeight(child: builder(context, constraints)),
         ),
       );

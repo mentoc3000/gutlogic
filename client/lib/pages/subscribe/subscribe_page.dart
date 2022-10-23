@@ -11,15 +11,28 @@ class SubscribePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GLScaffold(
-      appBar: AppBar(
-        backgroundColor: GLColors.transparent,
-        foregroundColor: GLColors.gray,
-        elevation: 0.0,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF188774),
+            Color(0xFF18AD7C),
+          ],
+        ),
       ),
-      body: BlocProvider(
-        create: (context) => StoreCubit.fromContext(context),
-        child: const SubscribeListView(),
+      child: GLScaffold(
+        backgroundColor: GLColors.transparent,
+        appBar: AppBar(
+          backgroundColor: GLColors.transparent,
+          foregroundColor: GLColors.white,
+          elevation: 0.0,
+        ),
+        body: BlocProvider(
+          create: (context) => StoreCubit.fromContext(context),
+          child: const SubscribeListView(),
+        ),
       ),
     );
   }

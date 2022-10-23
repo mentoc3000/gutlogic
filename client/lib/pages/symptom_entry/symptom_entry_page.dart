@@ -85,13 +85,13 @@ class _SymptomEntryPageState extends State<SymptomEntryPage> {
           severity: entry.symptom.severity,
           onChanged: (Severity newValue) => context.read<SymptomEntryBloc>().add(UpdateSeverity(newValue)),
         ),
+        PriorFoodsCard(priorTo: entry.datetime),
         NotesCard(
           controller: _notesController,
           onChanged: (String notes) {
             context.read<SymptomEntryBloc>().add(UpdateSymptomEntryNotes(notes));
           },
         ),
-        PriorFoodsCard(dateTime: entry.datetime),
       ];
     }
 
