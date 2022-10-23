@@ -30,7 +30,6 @@ class ApiService {
 
   /// Send get request to server and return the parsed body
   /// [path] is the url following the base url, beginning with a slash
-  // TODO: replace Map with generic?
   Future<Map<String, dynamic>> get({required String path, Map<String, dynamic>? params}) async {
     if (!userRepository.authenticated) throw AuthException();
 

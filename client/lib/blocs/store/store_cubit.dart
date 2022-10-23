@@ -67,7 +67,6 @@ class StoreCubit extends Cubit<StoreState> {
       }
 
       if (purchaseDetails.status == PurchaseStatus.restored) {
-        // TODO: how to handle failure?
         await _completeRestore(purchaseDetails);
       }
 
@@ -124,7 +123,6 @@ class StoreCubit extends Cubit<StoreState> {
       final transferSuccess = await iapService.transferPurchase(userId: userId, purchaseDetails: purchaseDetails);
       if (transferSuccess) {
       } else {
-        // emit(SubscriptionError(message: 'Purchase could not be restored.'));
         await loadProducts();
       }
       await iapService.completePurchase(purchaseDetails);

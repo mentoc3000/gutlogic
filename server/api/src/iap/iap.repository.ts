@@ -34,12 +34,12 @@ export class IapRepository {
   constructor(private firestore: FirebaseFirestore.Firestore) {
   }
 
-  async getUserIdFrom(originalTransactionId: string): Promise<string> {
-    // BUG: match source as well as premiumOrderId
+  async getUserIdFrom(source: string, originalTransactionId: string): Promise<string> {
     const snapshot = await this.firestore
       .collection("users")
       .where("premiumOrderId", "==", originalTransactionId)
       .where("premiumStatus", "!=", "TRANSFERRED")
+      .where("premiumIapSource", "==", source)
       .get();
 
     if (snapshot.empty) {

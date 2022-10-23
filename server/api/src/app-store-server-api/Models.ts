@@ -1,3 +1,5 @@
+// Modifications made from npm project to be up to date with latest api
+
 export enum Environment {
   Production = "Production",
   Sandbox = "Sandbox",

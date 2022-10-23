@@ -1,14 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { getAuth } from 'firebase-admin/auth';
-import * as config from "../config.json";
-import log from "./logger";
 
 
 const validateJwt = async (jwt: string): Promise<boolean> => {
-  const projectId = config.projectId;
   try {
-    const decodedToken = await getAuth().verifyIdToken(jwt);
-    // TODO: verify contents
+    await getAuth().verifyIdToken(jwt);
   } catch {
     return false;
   }
