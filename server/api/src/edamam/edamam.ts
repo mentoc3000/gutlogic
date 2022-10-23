@@ -62,12 +62,17 @@ async function edamam(query: any): Promise<EdamamResponse> {
   return data;
 }
 
+function cleanEntry(edamamFoodMeasure: EdamamFoodMeasures): void {
+  edamamFoodMeasure.measures = edamamFoodMeasure.measures.filter((m) => Boolean(m.label) && Boolean(m.weight));
+}
+
 // Search Edamam foods by name.
 export async function search(
   { name }: { name: string; },
 ): Promise<Result<EdamamFoodMeasures[], EdamamError>> {
   try {
     const data = await edamam({ ingr: name });
+    data.hints.forEach(cleanEntry);
     return ok(data.hints); // ignore edamams suggested result and return full list (called `hints`)
   } catch {
     log.w("Edamam is unavailable");
@@ -85,6 +90,7 @@ export async function get(
       e.food.foodId === foodId && (!label || e.food.label === label)
     );
     if (resultWithMatchingID === undefined) return err(EdamamError.NotFound);
+    cleanEntry(resultWithMatchingID);
     return ok(resultWithMatchingID);
   } catch {
     log.w("Edamam is unavailable");

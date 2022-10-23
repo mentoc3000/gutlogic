@@ -33,7 +33,7 @@ class BrowsePage extends StatelessWidget {
     return GLScaffold(
       appBar: GLAppBar(
         leading: const SettingsIconButton(),
-        title: 'Browse Foods',
+        title: 'Foods',
       ),
       body: const FoodGroups(),
       floatingActionButton: SearchFloatingActionButton(

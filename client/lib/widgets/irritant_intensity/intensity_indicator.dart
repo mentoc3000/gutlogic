@@ -68,7 +68,7 @@ class IntensityIndicator extends StatelessWidget {
     Color? color,
   }) {
     final decoration = BoxDecoration(
-      border: showBorder ? Border.all(width: 2.0, color: GLColors.darkGray) : null,
+      border: showBorder ? Border.all(width: 1.6, color: GLColors.darkGray) : null,
       borderRadius: const BorderRadius.all(Radius.circular(radius)),
       color: color,
     );
