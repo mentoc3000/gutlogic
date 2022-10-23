@@ -16,7 +16,6 @@ class PriorFoodsListView extends StatelessWidget {
       tiles = [
         const ListTile(
           title: Text(
-            // TODO: improve message?
             'No foods have recently been logged in the Timeline',
             style: tileSubheadingStyle,
             textAlign: TextAlign.center,

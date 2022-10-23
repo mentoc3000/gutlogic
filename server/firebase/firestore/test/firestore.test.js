@@ -5,7 +5,6 @@ const firebase = require('@firebase/testing');
 const userID = 'test-user-id';
 
 function initialize(auth) {
-  // TODO get the projectId from the environment
   return firebase.initializeTestApp({ projectId: 'gutlogic-dev', auth: auth }).firestore();
 }
 

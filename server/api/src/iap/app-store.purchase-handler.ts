@@ -274,8 +274,9 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
       case NotificationType.Revoke: {
         // In-app purchase through family sharing is no longer available
-        const status = await this.undoPurchase(event.data);
-        res.status(status).end();
+        // Family sharing is not supported
+        log.w(`Unexpected notification type: ${event.notificationType}`);
+        res.status(200).end();
         return;
       }
 
@@ -330,7 +331,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
     let userId: string;
     try {
-      userId = await this.iapRepository.getUserIdFrom(originalTransactionId);
+      userId = await this.iapRepository.getUserIdFrom("app_store", originalTransactionId);
       if (userId === null) {
         log.w(`No user ${userId} exists`);
         return 400;
@@ -369,7 +370,8 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
     // TODO: Reset expiration date to prior value
     log.e(
-      `Undo purchase requested by user ${data.transactionInfo?.appAccountToken} but server functionality is not implemented`,
+      `Undo purchase requested by user ${data.transactionInfo?.appAccountToken} but server functionality is not implemented.
+      Allow user to continue subscription to end of pay period.`,
     );
 
     return 200;
@@ -430,8 +432,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
           try {
             // Check if this transaction id with an active subscription already exists with a user
             // eslint-disable-next-line no-await-in-loop
-            const existingUserId = await this.iapRepository.getUserIdFrom(product.originalTransactionId);
-            // TODO: return message explaining rejection
+            const existingUserId = await this.iapRepository.getUserIdFrom("app_store", product.originalTransactionId);
             if (existingUserId !== null) return false;
 
             // eslint-disable-next-line no-await-in-loop
@@ -492,7 +493,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
   private async transferPremium(userId: string, product: appleReceiptVerify.PurchasedProducts): Promise<void> {
     // Original account
-    const fromUserId = await this.iapRepository.getUserIdFrom(product.originalTransactionId);
+    const fromUserId = await this.iapRepository.getUserIdFrom("app_store", product.originalTransactionId);
     if (fromUserId === null) throw Error(`User ${fromUserId} not found`);
     if (fromUserId === userId) return;
 

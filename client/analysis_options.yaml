@@ -40,8 +40,5 @@ linter:
     # Reasoning: avoid mutability when possible.
     prefer_final_locals: true
 
-    # TODO migrate to always_use_package_imports
-    prefer_relative_imports: true
-
     # Reasoning: keep the pubspec dependency list tidy.
     sort_pub_dependencies: true

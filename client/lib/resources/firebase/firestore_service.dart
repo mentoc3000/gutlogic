@@ -40,8 +40,6 @@ class FirestoreService {
 
     if (data == null) return null;
 
-    // TODO should we assert data.containsKey('id') == false?
-
     data['id'] = snapshot.id;
 
     return data;

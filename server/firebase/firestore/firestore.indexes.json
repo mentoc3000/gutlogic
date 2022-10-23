@@ -11,6 +11,10 @@
         {
           "fieldPath": "premiumStatus",
           "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "source",
+          "order": "ASCENDING"
         }
       ]
     },
