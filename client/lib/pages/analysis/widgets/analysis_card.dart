@@ -41,7 +41,7 @@ class AnalysisCard extends StatelessWidget {
                   color: GLColors.white.withOpacity(0.8),
                   child: Center(
                     child: GLCtaButton(
-                      onPressed: () => Navigator.of(context).push(Routes.of(context).subscribe),
+                      onPressed: () => Navigator.of(context).push(Routes.of(context).createSubscribeRoute()),
                       child: const ShrinkWrappedButtonContent(label: 'Subscribe to unlock'),
                     ),
                   ),

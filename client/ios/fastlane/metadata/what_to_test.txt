@@ -4,6 +4,6 @@ This version adds Gut Logic Premium, subscription features to help users underst
 1. Charts and graphs to help users understand their data (found in the Analytics tab)
 2. List foods that preceded a symptom or bowel movement (accessible from the symptom and bowel movement entry pages)
 3. List foods that have similar irritants to a given food (accessible from a food's page)
-This version includes numerous small improvements and bug fixes
+Please test the subscription process as well as the new features. You will not be charged to subscribe to this beta version.
 
 Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Nov 11. Thanks in advance for your time and candid feedback!

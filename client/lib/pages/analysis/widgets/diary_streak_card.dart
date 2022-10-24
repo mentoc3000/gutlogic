@@ -11,7 +11,6 @@ import '../../../widgets/gl_error_widget.dart';
 import 'analysis_card.dart';
 
 class DiaryStreakCard extends StatelessWidget {
-  static String heading = 'Timeline Use Streak';
   static const int daysShown = 5;
 
   const DiaryStreakCard({Key? key}) : super(key: key);
@@ -25,13 +24,14 @@ class DiaryStreakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const heading = 'Timeline use streak';
     final subscribedContent = BlocBuilder<DiaryStreakCubit, DiaryStreakState>(builder: builder);
     final exampleContent = _DiaryStreakChart(diaryStreak: _exampleData());
     return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {
-    const minHeight = 100.0;
+    const minHeight = 72.0;
     return SizedBox(
       height: minHeight,
       child: Center(child: child),

@@ -7,7 +7,9 @@ import '../../widgets/gl_scaffold.dart';
 import 'widgets/subscribe_list_view.dart';
 
 class SubscribePage extends StatelessWidget {
-  const SubscribePage();
+  final VoidCallback? onSubscribed;
+
+  const SubscribePage({this.onSubscribed});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class SubscribePage extends StatelessWidget {
         ),
         body: BlocProvider(
           create: (context) => StoreCubit.fromContext(context),
-          child: const SubscribeListView(),
+          child: SubscribeListView(onSubscribed: onSubscribed),
         ),
       ),
     );

@@ -38,8 +38,8 @@ export class IapRepository {
     const snapshot = await this.firestore
       .collection("users")
       .where("premiumOrderId", "==", originalTransactionId)
-      .where("premiumStatus", "!=", "TRANSFERRED")
       .where("premiumIapSource", "==", source)
+      .where("premiumStatus", "!=", "TRANSFERRED")
       .get();
 
     if (snapshot.empty) {
@@ -54,6 +54,25 @@ export class IapRepository {
     return doc.id;
   }
 
+  async isActive(source: string, originalTransactionId: string): Promise<boolean> {
+    const snapshot = await this.firestore
+      .collection("users")
+      .where("premiumOrderId", "==", originalTransactionId)
+      .where("premiumIapSource", "==", source)
+      .where("premiumStatus", "==", "ACTIVE")
+      .get();
+
+    if (snapshot.empty) {
+      return false;
+    }
+
+    if (snapshot.size > 1) {
+      throw Error("Multiple users found");
+    }
+
+    return true;
+  }
+
   async updatePurchase({ userId, purchaseData }:
     { userId: string; purchaseData: Partial<PurchaseLog>; }
   ): Promise<void> {
@@ -65,8 +84,8 @@ export class IapRepository {
 
   async expireSubscriptions(): Promise<void> {
     const snapshot = await this.firestore.collection("users")
-      .where("premiumExpirationDate", "<", Timestamp.now())
       .where("premiumStatus", "==", "ACTIVE")
+      .where("premiumExpirationDate", "<", Timestamp.now())
       .get();
     if (!snapshot.size) return;
     const writeBatch = this.firestore.batch();

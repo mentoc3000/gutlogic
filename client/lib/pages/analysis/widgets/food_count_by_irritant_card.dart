@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/food_count_by_irritant/food_count_by_irritant.dart';
@@ -14,8 +14,6 @@ import 'analysis_card.dart';
 import 'insufficient_data.dart';
 
 class FoodCountByIrritantCard extends StatelessWidget {
-  static String heading = 'Pantry Foods by Irritant';
-
   const FoodCountByIrritantCard({Key? key}) : super(key: key);
 
   /// Build a [FoodCountByIrritantCard] with its own Bloc provider
@@ -28,6 +26,7 @@ class FoodCountByIrritantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const heading = 'Pantry foods by irritant';
     final subscribedContent = BlocBuilder<FoodCountByIrritantCubit, FoodCountByIrritantState>(builder: builder);
     final exampleContent = _IrritantSensitivityMatrixCardContent(matrix: _exampleData());
     return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
@@ -51,8 +50,15 @@ class FoodCountByIrritantCard extends StatelessWidget {
       if (hasData) {
         return _IrritantSensitivityMatrixCardContent(matrix: state.foodCountByIrritant);
       } else {
-        const message = 'No data to show\n\nUse the Foods tab to find\nmore foods to add to the Pantry';
-        return sizeAndCenter(Stack(children: const [InsufficientData(message: message)]));
+        // Stack needed for message widget
+        return sizeAndCenter(Stack(
+          children: [
+            InsufficientData(
+              onTap: () => DefaultTabController.of(context)!.animateTo(2),
+              message: 'Add foods to the Pantry',
+            ),
+          ],
+        ));
       }
     }
     if (state is FoodCountByIrritantError) {

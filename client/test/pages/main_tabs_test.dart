@@ -9,14 +9,15 @@ import 'package:gutlogic/pages/diary/diary_page.dart';
 import 'package:gutlogic/pages/main_tabs.dart';
 import 'package:gutlogic/pages/pantry/pantry_page.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
+import 'package:gutlogic/resources/firebase/analytics_service.dart';
 import 'package:gutlogic/resources/food_group_repository.dart';
 import 'package:gutlogic/resources/pantry_service.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
-import 'package:mockito/mockito.dart' as mockito;
 import 'package:mocktail/mocktail.dart';
 
-import '../flutter_test_config.dart';
 import '../util/test_overlay.dart';
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 class MockDiaryRepository extends Mock implements DiaryRepository {}
 
@@ -44,12 +45,13 @@ void main() {
 
     homepage = MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<AnalyticsService>(create: (context) => MockAnalyticsService()),
         RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
         RepositoryProvider<PantryService>(create: (context) => pantryService),
         RepositoryProvider<SensitivityService>(create: (context) => sensitivityService),
         RepositoryProvider<FoodGroupsRepository>(create: (context) => foodGroupsRepository),
       ],
-      child: TestOverlay(child: MainTabs(analytics: analyticsService)),
+      child: TestOverlay(child: Builder(builder: (context) => MainTabs.provisioned(context))),
     );
   });
 
@@ -70,7 +72,6 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(DiaryPage), findsNothing);
         expect(find.byType(BrowsePage), findsOneWidget);
-        mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
 
         // Switch to diary page
         final diaryTab = find.text('Timeline');
@@ -80,7 +81,6 @@ void main() {
         await tester.pump(const Duration(seconds: 1));
         expect(find.byType(DiaryPage), findsOneWidget);
         expect(find.byType(PantryPage), findsNothing);
-        mockito.verify(analyticsService.setCurrentScreen(mockito.any)).called(1);
       });
     });
   });

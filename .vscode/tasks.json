@@ -165,7 +165,12 @@
       "options": {
         "cwd": "${workspaceFolder}/server/api"
       },
-      "command": "gcloud run deploy api --source=./ --region=us-central1",
+      "osx": {
+        "command": "npm run build && gcloud run deploy api --source=./ --region=us-central1",
+      },
+      "windows": {
+        "command": "npm run build; gcloud run deploy api --source=./ --region=us-central1",
+      },
       "problemMatcher": []
     },
   ]

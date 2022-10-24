@@ -113,9 +113,9 @@ class Routes {
     );
   }
 
-  Route<Widget> get subscribe {
+  Route<Widget> createSubscribeRoute({VoidCallback? onSubscribed}) {
     return MaterialPageRoute(
-      builder: (context) => const SubscribePage(),
+      builder: (context) => SubscribePage(onSubscribed: onSubscribed),
       settings: const RouteSettings(name: 'Subscribe Page'),
       fullscreenDialog: true,
     );

@@ -6,11 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/store/store.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/buttons/buttons.dart';
-import '../../../widgets/gl_loading_widget.dart';
 import '../../../widgets/snack_bars/error_snack_bar.dart';
 
 class PurchaseInterface extends StatelessWidget {
-  const PurchaseInterface({Key? key}) : super(key: key);
+  final VoidCallback? onSubscribed;
+
+  const PurchaseInterface({Key? key, required this.onSubscribed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class PurchaseInterface extends StatelessWidget {
     final subscriptionCubit = context.read<StoreCubit>();
 
     if (state is ProductsLoading || state is SubscriptionPending) {
-      return GLFlatButton(onPressed: () {}, child: GLLoadingWidget());
+      return const Center(child: CircularProgressIndicator(color: GLColors.white));
     } else if (state is ProductLoaded) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -71,7 +72,9 @@ class PurchaseInterface extends StatelessWidget {
   void storeContentListener(BuildContext context, StoreState state) {
     if (state is Subscribed) {
       Navigator.of(context).pop();
+      if (onSubscribed != null) onSubscribed!();
     }
+
     if (state is SubscriptionError) {
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackBar(text: state.message));
     }

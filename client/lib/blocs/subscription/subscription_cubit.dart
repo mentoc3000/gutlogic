@@ -24,6 +24,8 @@ class SubscriptionCubit extends Cubit<SubscriptionState> with StreamSubscriber<A
   void _onData(ApplicationUser? user) async {
     if (user != null && user.hasActivePremiumSubscription) {
       emit(const Subscribed());
+    } else {
+      emit(const NotSubscribed());
     }
   }
 
