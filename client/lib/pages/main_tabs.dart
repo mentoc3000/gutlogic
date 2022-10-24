@@ -12,12 +12,17 @@ import 'pantry/pantry_page.dart';
 
 class MainTabs extends StatefulWidget {
   final AnalyticsService analytics;
-  static const initialTab = 0;
 
-  const MainTabs({required this.analytics});
+  const MainTabs._({required this.analytics});
 
   static Widget provisioned(BuildContext context) {
-    return MainTabs(analytics: Provider.of<AnalyticsService>(context));
+    return DefaultTabController(
+      initialIndex: 0,
+      length: 4,
+      child: MainTabs._(
+        analytics: Provider.of<AnalyticsService>(context),
+      ),
+    );
   }
 
   @override
@@ -25,9 +30,6 @@ class MainTabs extends StatefulWidget {
 }
 
 class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin, RouteAware {
-  late final TabController controller;
-  int selectedIndex = MainTabs.initialTab;
-
   final tabs = [
     const Tab(
       key: Keys.pantryTab,
@@ -54,7 +56,7 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
     PantryPage.provisioned(),
     DiaryPage.provisioned(),
     const BrowsePage(),
-    AnalysisPage.provisioned(),
+    const AnalysisPage(),
   ];
 
   @override
@@ -72,39 +74,17 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
   }
 
   @override
-  void initState() {
-    super.initState();
-    controller = TabController(
-      vsync: this,
-      length: tabs.length,
-      initialIndex: selectedIndex,
-    );
-    controller.addListener(() {
-      setState(() {
-        if (selectedIndex != controller.index) {
-          selectedIndex = controller.index;
-          sendCurrentTabToAnalytics();
-        }
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: tabs.length,
-      child: GLScaffold(
-        body: buildTabBarView(context),
-        bottomNavigationBar: buildTabBar(context),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+    return GLScaffold(
+      body: buildTabBarView(context),
+      bottomNavigationBar: buildTabBar(context),
+      backgroundColor: Theme.of(context).colorScheme.primary,
     );
   }
 
   Widget buildTabBar(BuildContext context) {
     return SafeArea(
       child: TabBar(
-        controller: controller,
         tabs: tabs,
         labelColor: Theme.of(context).colorScheme.onPrimary,
         indicatorSize: TabBarIndicatorSize.label,
@@ -116,16 +96,7 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
 
   Widget buildTabBarView(BuildContext context) {
     return TabBarView(
-      controller: controller,
       children: pages,
     );
   }
-
-  @override
-  void didPush() => sendCurrentTabToAnalytics();
-
-  @override
-  void didPopNext() => sendCurrentTabToAnalytics();
-
-  void sendCurrentTabToAnalytics() => widget.analytics.setCurrentScreen('${tabs[selectedIndex].text} Page');
 }

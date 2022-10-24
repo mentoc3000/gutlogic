@@ -7,7 +7,9 @@ import 'purchase_interface.dart';
 import 'subscribe_title.dart';
 
 class SubscribeListView extends StatelessWidget {
-  const SubscribeListView();
+  final VoidCallback? onSubscribed;
+
+  const SubscribeListView({required this.onSubscribed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +17,11 @@ class SubscribeListView extends StatelessWidget {
       builder: (context, constraints) => Padding(
         padding: const EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 20.0),
         child: Column(
-          children: const [
-            Expanded(child: PremiumLogo()),
-            FeatureSummary(),
-            FeatureList(),
-            PurchaseInterface(),
+          children: [
+            const Expanded(child: PremiumLogo()),
+            const FeatureSummary(),
+            const FeatureList(),
+            PurchaseInterface(onSubscribed: onSubscribed),
           ],
         ),
       ),

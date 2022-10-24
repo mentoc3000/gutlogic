@@ -428,20 +428,31 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
       // Process the product
       switch (product.productId) {
         case "premium_subscription_monthly":
-        case "premium_subscription_monthly_dev":
+        case "premium_subscription_monthly_dev": {
+          let activeSubscriptionExists: boolean;
           try {
             // Check if this transaction id with an active subscription already exists with a user
             // eslint-disable-next-line no-await-in-loop
-            const existingUserId = await this.iapRepository.getUserIdFrom("app_store", product.originalTransactionId);
-            if (existingUserId !== null) return false;
+            activeSubscriptionExists = await this.iapRepository.isActive("app_store", product.originalTransactionId);
+          } catch (e) {
+            log.e(`Failed in finding user for transaction id ${product.originalTransactionId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
+            return false;
+          }
 
+          if (activeSubscriptionExists) {
+            log.w(`Active subscription already exists with order id ${product.originalTransactionId}`);
+            return false;
+          }
+
+          try {
             // eslint-disable-next-line no-await-in-loop
             await this.iapRepository.updatePurchase({ userId, purchaseData: this.purchaseData(product) });
             break;
           } catch (e) {
-            log.e(`Failed to update purchase of ${product}`);
+            log.e(`Failed to update purchase for user ${userId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
             return false;
           }
+        }
       }
     }
     return true;

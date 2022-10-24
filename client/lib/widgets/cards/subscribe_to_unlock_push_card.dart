@@ -37,7 +37,8 @@ class SubscribeToUnlockPushCard extends StatelessWidget {
       if (state is Subscribed) {
         onTap = onTapSubscribed;
       } else {
-        onTap = () => Navigator.of(context).push(Routes.of(context).subscribe);
+        onTap =
+            () => Navigator.of(context).push(Routes.of(context).createSubscribeRoute(onSubscribed: onTapSubscribed));
         children.addAll([
           const SizedBox(height: 4.0),
           Row(

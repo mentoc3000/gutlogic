@@ -5,15 +5,15 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "premiumIapSource",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "premiumOrderId",
           "order": "ASCENDING"
         },
         {
           "fieldPath": "premiumStatus",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "premiumIapSource",
           "order": "ASCENDING"
         }
       ]
@@ -23,11 +23,11 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "premiumExpirationDate",
+          "fieldPath": "premiumStatus",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "premiumStatus",
+          "fieldPath": "premiumExpirationDate",
           "order": "ASCENDING"
         }
       ]

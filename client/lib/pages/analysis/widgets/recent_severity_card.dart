@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/recent_severity/recent_severity.dart';
@@ -13,7 +13,6 @@ import 'analysis_card.dart';
 import 'insufficient_data.dart';
 
 class RecentSeverityCard extends StatelessWidget {
-  static String heading = 'Recent Symptom Severity';
   static int dateCount = 7;
 
   const RecentSeverityCard({Key? key}) : super(key: key);
@@ -27,6 +26,7 @@ class RecentSeverityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const heading = 'Recent symptom severity';
     final subscribedContent = BlocBuilder<RecentSeverityCubit, RecentSeverityState>(builder: builder);
     final exampleContent = _RecentSeverityChart(recentSeverities: _exampleData());
     return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
@@ -47,10 +47,13 @@ class RecentSeverityCard extends StatelessWidget {
     if (state is RecentSeverityLoaded) {
       final hasData = state.recentSeverities.values.fold<bool>(false, (acc, el) => acc || el != null);
       final recentSeveritiesEntries = state.recentSeverities.entries.sortedBy((e) => e.key);
-      const message = 'No symptoms logged\nin the Timeline\nin the past week';
       return Stack(children: [
         _RecentSeverityChart(recentSeverities: recentSeveritiesEntries),
-        if (!hasData) const InsufficientData(message: message),
+        if (!hasData)
+          InsufficientData(
+            onTap: () => DefaultTabController.of(context)!.animateTo(1),
+            message: 'Start tracking symptoms',
+          ),
       ]);
     }
     if (state is RecentSeverityError) {

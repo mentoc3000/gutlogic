@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/symptom_type_count/symptom_type_count.dart';
@@ -14,7 +14,6 @@ import 'analysis_card.dart';
 import 'insufficient_data.dart';
 
 class SymptomTypeCountCard extends StatelessWidget {
-  static String heading = 'Most Common Symptom Types This Month';
   static const Duration duration = Duration(days: 30);
   static const int maxSymptomTypes = 5;
 
@@ -30,6 +29,7 @@ class SymptomTypeCountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const heading = 'Most common symptom types this month';
     final subscribedContent = BlocBuilder<SymptomTypeCountCubit, SymptomTypeCountState>(builder: builder);
     final exampleContent = _SymptomTypeCountChart(symptomTypeCount: _exampleData());
     return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
@@ -53,8 +53,14 @@ class SymptomTypeCountCard extends StatelessWidget {
       if (hasData) {
         return _SymptomTypeCountChart(symptomTypeCount: state.symptomTypeCount);
       } else {
-        const message = 'No symptoms logged\nin the Timeline\nin the past month';
-        return sizeAndCenter(Stack(children: const [InsufficientData(message: message)]));
+        return sizeAndCenter(Stack(
+          children: [
+            InsufficientData(
+              onTap: () => DefaultTabController.of(context)!.animateTo(1),
+              message: 'Start tracking symptoms',
+            ),
+          ],
+        ));
       }
     }
     if (state is SymptomTypeCountError) {

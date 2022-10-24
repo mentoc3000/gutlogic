@@ -37,10 +37,12 @@ import 'screenshots_target.mocks.dart';
 
 class MainTabsPageWrapper extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        home: MainTabs(analytics: MockAnalyticsService()),
-        theme: glTheme,
-      );
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MainTabs.provisioned(context),
+      theme: glTheme,
+    );
+  }
 }
 
 @GenerateMocks([
@@ -131,6 +133,7 @@ void main() {
     app = MultiProvider(
       providers: [
         Provider(create: (context) => Routes()),
+        RepositoryProvider<AnalyticsService>(create: (context) => MockAnalyticsService()),
         RepositoryProvider<BowelMovementEntryRepository>(create: (context) => bowelMovementEntryRepository),
         RepositoryProvider<DiaryRepository>(create: (context) => diaryRepository),
         RepositoryProvider<FoodService>(create: (context) => foodService),
@@ -169,13 +172,13 @@ void main() {
     await tester.pumpAndSettle();
 
     // Start filename with a number to put them in the correct order on the App Store
-    await capture(binding, '3. timeline');
+    await capture(binding, '4. timeline');
 
     await tester.tap(find.text(mealEntry2.mealElements[0].foodReference.name));
     await tester.pump();
     await tester.pumpAndSettle();
 
-    await capture(binding, '4. meal');
+    await capture(binding, '5. meal');
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
@@ -184,7 +187,7 @@ void main() {
     await tester.pump();
     await tester.pumpAndSettle();
 
-    await capture(binding, '5. bowel_movement');
+    await capture(binding, '6. bowel_movement');
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
@@ -193,7 +196,7 @@ void main() {
     await tester.pump();
     await tester.pumpAndSettle();
 
-    await capture(binding, '6. symptom');
+    await capture(binding, '7. symptom');
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
@@ -228,9 +231,9 @@ void main() {
     await tester.tap(find.text('Analysis'));
     await tester.pump();
     await tester.pumpAndSettle();
-    await tester.drag(find.text('Pantry Foods by Irritant'), const Offset(0.0, -180.0));
+    await tester.drag(find.text('Pantry foods by irritant'), const Offset(0.0, -180.0));
     await tester.pumpAndSettle();
 
-    await capture(binding, '7. analysis');
+    await capture(binding, '3. analysis');
   });
 }
