@@ -23,95 +23,12 @@ lane :get_app_store_connect_api_key do
 
 end
 
-desc "Match the local development certificate for the development app."
-lane :certificate_develop_local do |options|
-
-  # Default to readonly matching.
-  readonly = options.fetch(:readonly, true)
-  force = options.fetch(:force, false)
-
-  match(
-    api_key: get_app_store_connect_api_key,
-    app_identifier: ["com.gutlogic.app.dev"],
-    type: "development",
-    force: force,
-    readonly: readonly,
-    force_for_new_devices: true
-  )
-
-end
-
-desc "Match the local development certificate for the production app."
-lane :certificate_production_local do |options|
-
-  # Default to readonly matching.
-  readonly = options.fetch(:readonly, true)
-  force = options.fetch(:force, false)
-
-  match(
-    api_key: get_app_store_connect_api_key,
-    app_identifier: ["com.gutlogic.app"],
-    type: "development",
-    force: force,
-    readonly: readonly,
-    force_for_new_devices: true
-  )
-
-end
-
-desc "Match the staging development certificate for the development app."
-lane :certificate_develop_adhoc do |options|
-
-  # Default to readonly matching.
-  readonly = options.fetch(:readonly, true)
-  force = options.fetch(:force, false)
-
-  match(
-    api_key: get_app_store_connect_api_key,
-    app_identifier: ["com.gutlogic.app.dev"],
-    type: "adhoc",
-    force: force,
-    readonly: readonly,
-    force_for_new_devices: true
-  )
-
-end
-
-desc "Match the certificate for the release app."
-lane :certificate_release do |options|
-
-  # Default to readonly matching.
-  readonly = options.fetch(:readonly, true)
-  force = options.fetch(:force, false)
-
-  match(
-    api_key: get_app_store_connect_api_key,
-    app_identifier: ["com.gutlogic.app"],
-    type: "appstore",
-    force: force,
-    readonly: readonly
-  )
-
-end
-
-desc "Match all of the certificates."
-lane :certificates do |options|
-
-  certificate_develop_local(options)
-  certificate_production_local(options)
-  certificate_develop_adhoc(options)
-  certificate_release(options)
-
-end
-
 platform :ios do
 
   desc "Build the development app for distribution, signed with the staging certificate."
   lane :build_develop do
 
     # Build number is incremented manually by GitLab CI
-
-    certificate_develop_adhoc()
 
     gym(
       workspace: "Runner.xcworkspace",
@@ -127,8 +44,6 @@ platform :ios do
   lane :build_release do
 
     # Build number is incremented manually by GitLab CI
-
-    certificate_release()
 
     gym(
       workspace: "Runner.xcworkspace",
