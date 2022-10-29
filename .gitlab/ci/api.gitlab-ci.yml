@@ -65,6 +65,7 @@ api:prep:
   extends:
     - .api
   script:
+    - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/firebase-adminsdk.json"
     - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/src/config.json"
     - npm run build
   rules:
@@ -74,7 +75,7 @@ api:prep:
   artifacts:
     paths:
       - server/api/**/*.js
-      - server/api/src/config.json
+      - server/api/**/*.json
     expire_in: 1 day
 
 api:lint:
@@ -108,7 +109,9 @@ api:test:
     - !reference [.api, before_script]
     - !reference [.gcloud, before_script]
   script:
+    # copy creds again for correct environment
     - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/firebase-adminsdk.json"
+    - cp "$APP_ENGINE_PARAMETERS" "$(pwd)/src/config.json"
     - gcloud auth activate-service-account --key-file $CLOUD_RUN_CREDENTIALS
     - gcloud beta run deploy api
       --source=./ --region=us-central1
@@ -135,8 +138,13 @@ api:deploy:release:
     - .api:deploy
   variables:
     GCLOUD_PROJECT: gutlogic
-    MIN_INSTANCES: 1
+    MIN_INSTANCES: 0
     MAX_INSTANCES: 100
   rules:
     - !reference [.api-release-commit-rules, rules]
   environment: release
+  # TODO: remove artifact storage
+  artifacts:
+    paths:
+      - server/api/**/*
+    expire_in: 1 day

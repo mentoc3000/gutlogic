@@ -79,7 +79,8 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     this.transferPremium = this.transferPremium.bind(this);
 
     appleReceiptVerify.config({
-      verbose: false,
+      // TODO: turn off verbosity
+      verbose: true,
       secret: config.appStoreSharedSecret,
       extended: true,
       environment: ["production", "sandbox"], // Optional, defaults to ['production'],
@@ -417,7 +418,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
         // Handle app store services not being available
         return false;
       }
-      log.w("App Store receipt is invalid");
+      log.w(`App Store receipt is invalid: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
       return false;
     }
 

@@ -3,8 +3,16 @@ const start = Date.now();
 import express from "express";
 import * as admin from "firebase-admin";
 import { urlencoded, json } from "body-parser";
+import * as serviceAccount from "../firebase-adminsdk.json";
+const serviceAccountCamel = {
+    projectId: serviceAccount.project_id,
+    clientEmail: serviceAccount.client_email,
+    privateKey: serviceAccount.private_key,
+};
 
-admin.initializeApp();
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountCamel),
+});
 
 import status from "./resources/status";
 import food from "./resources/food";

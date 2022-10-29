@@ -47,9 +47,9 @@ class EdamamService {
     } catch (e) {
       if (e is HttpException) {
         if (e.statusCode == 404 || e.statusCode == 443) return null;
-      } else {
-        throw EdamamException(message: 'Something is wrong with Edamam');
+        if (e.statusCode == 401) throw EdamamException(message: 'API authentication error');
       }
+      throw EdamamException(message: 'Something is wrong with Edamam');
     }
 
     try {
