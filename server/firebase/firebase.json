@@ -6,6 +6,14 @@
   "hosting": {
     "target": "app",
     "appAssociation": "AUTO",
-    "rewrites": [ { "source": "/**", "dynamicLinks": true } ]
+    "rewrites": [
+      {
+        "source": "/**",
+        "dynamicLinks": true
+      }
+    ]
+  },
+  "functions": {
+    "predeploy": "npm --prefix functions run build"
   }
 }

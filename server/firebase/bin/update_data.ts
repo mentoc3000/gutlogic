@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const admin = require('firebase-admin');
-const sqlite = require('sqlite');
-const sqlite3 = require('sqlite3').verbose();
-const { replaceFirestoreCollection } = require('../src/firebase_collection');
-const { getIrritants, getFoodGroups, getFoodGroups2, getIrritantData } = require('../src/irritant_db');
+import { readFileSync } from 'fs';
+import path from 'path';
+import admin from 'firebase-admin';
+import * as sqlite from 'sqlite';
+import * as sqlite3 from 'sqlite3';
+
+sqlite3.verbose();
+
+import { replaceFirestoreCollection } from '../src/firebase_collection';
+import { getIrritants, getFoodGroups, getFoodGroups2, getIrritantData } from '../src/irritant_db';
 
 (async () => {
   const dbPath = path.resolve(__dirname, '../data', 'irritants.sqlite3');
@@ -19,7 +22,7 @@ const { getIrritants, getFoodGroups, getFoodGroups2, getIrritantData } = require
   });
 
   const certPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-  const certData = JSON.parse(fs.readFileSync(certPath));
+  const certData = JSON.parse(readFileSync(certPath, { encoding: 'utf8' }));
   const certProject = certData['project_id'];
 
   console.log(`Initializing Firebase project ${certProject} using credentials from ${certPath}`);

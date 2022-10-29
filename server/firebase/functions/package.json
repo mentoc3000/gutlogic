@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "tsc -p .",
+    "watch": "tsc -p . --watch",
     "serve": "firebase emulators:start",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
@@ -15,7 +15,7 @@
   "engines": {
     "node": "16"
   },
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "dependencies": {
     "axios": "^0.26.1",
     "firebase": "^9.6.8",

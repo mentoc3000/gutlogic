@@ -35,9 +35,10 @@
   key:
     files:
       - server/firebase/package-lock.json
+      - server/firebase/functions/package-lock.json
   paths:
     - server/firebase/.npm-cache
-    - server/firebase/functions/lib
+    - server/firebase/**/*.js
 
 .firebase:
   image: node:16.17-alpine
@@ -68,9 +69,6 @@ firebase:prep:
   extends:
     - .firebase
   script:
-    # before_script will automatically update npm cache
-    - echo "Updating server cache."
-    - cd functions
     - npm run build
   rules:
     - !reference [.firebase-develop-commit-rules, rules]

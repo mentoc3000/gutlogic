@@ -1,10 +1,10 @@
-const admin = require("firebase-admin");
+import * as admin from "firebase-admin";
 admin.initializeApp();
 
-const functions = require("firebase-functions");
-const food = require("./food");
-const auth = require("./auth");
+import * as functions from "firebase-functions";
+import * as food from "./food";
+import * as auth from "./auth";
 
-exports.onUserDeleted = functions.auth.user().onDelete(auth.onUserDeleted);
+export const onUserDeleted = functions.auth.user().onDelete(auth.onUserDeleted);
 
-exports.edamamFoodSearch = functions.https.onCall(food.edamamFoodSearch);
+export const edamamFoodSearch = functions.https.onCall(food.edamamFoodSearch);

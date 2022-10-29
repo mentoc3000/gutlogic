@@ -1,4 +1,4 @@
-const functions = require("firebase-functions");
+import * as functions from "firebase-functions";
 const tools = require("firebase-tools");
 
 type User = {

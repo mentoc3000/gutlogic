@@ -3,8 +3,8 @@
   "version": "1.2.0",
   "private": true,
   "scripts": {
-    "lint": "eslint .",
-    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "build": "tsc -p .",
     "test": "firebase emulators:exec \"ava --timeout=2m\"",
     "deploy": "firebase deploy --force && node ./bin/update_data.js"
   },
@@ -20,6 +20,8 @@
   },
   "devDependencies": {
     "@firebase/testing": "^0.20.11",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
     "ava": "^4.1.0",
     "eslint": "^8.11.0",
     "eslint-plugin-promise": "^6.0.0",
