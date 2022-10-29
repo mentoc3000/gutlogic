@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 /**
  * Retrieve Edamam food data
@@ -7,9 +7,9 @@ const _appId = "47b2ce40";
 const _appKey = "6baa72019f5be55b501442052edf134b";
 const _edamamUrl = "http://api.edamam.com/api/food-database/v2/parser";
 
-const edamamFoodSearch = async (input: { query: String }, context: any) => {
+const edamamFoodSearch = async (input: { query: String; }, context: any) => {
   const query = input.query;
-  const edamamQuery = await axios.create({
+  const edamamQuery = axios.create({
     baseURL: _edamamUrl,
     params: {
       app_id: _appId,
@@ -20,7 +20,7 @@ const edamamFoodSearch = async (input: { query: String }, context: any) => {
 
   let status, data;
   try {
-    ({ status, data } = await edamamQuery.get());
+    ({ status, data } = await edamamQuery.get(''));
   } catch (error: any) {
     if (error.response) {
       // The request was made and the server responded with a status code

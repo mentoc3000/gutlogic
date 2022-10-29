@@ -1,8 +1,8 @@
-const test = require('ava');
+import test from 'ava';
 
-const { fft } = require('./helpers');
+import { fft } from './helpers';
 
-const functions = require('../lib/index');
+import * as functions from '../src/index';
 
 test.after.always(async () => {
   // Do cleanup tasks.
