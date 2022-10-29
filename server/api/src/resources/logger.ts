@@ -12,9 +12,13 @@ class Logger {
     this.show = true;
   }
 
-  private log(payload: JsonPayload) {
+  private log(fields: { severity: string, message: string; }) {
     if (this.show) {
-      const entry = Object.assign(payload);
+      const globalFields = {
+        // Log viewer accesses 'component' as 'jsonPayload.component'.
+        component: 'arbitrary-property',
+      };
+      const entry = Object.assign(fields, globalFields);
       console.log(JSON.stringify(entry));
     }
   }
