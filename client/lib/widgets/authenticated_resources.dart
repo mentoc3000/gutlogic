@@ -76,12 +76,8 @@ class AuthenticatedResources extends StatelessWidget {
               crashlytics: context.read<CrashlyticsService>(),
             );
           }),
-          RepositoryProvider(create: (context) {
-            return IrritantService(firestoreService: context.read<FirestoreService>());
-          }),
-          RepositoryProvider(create: (context) {
-            return FoodGroupsRepository(firestoreService: context.read<FirestoreService>());
-          }),
+          RepositoryProvider(create: IrritantService.fromContext),
+          RepositoryProvider(create: FoodGroupsRepository.fromContext),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
             return UserFoodDetailsRepository(

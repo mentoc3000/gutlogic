@@ -2,7 +2,7 @@ import path from 'path';
 import test from 'ava';
 import { Database, open } from 'sqlite';
 import * as sqlite3 from 'sqlite3';
-import * as irritant_db from '../src/irritant_db';
+import { getIrritants, getIrritantData, getFoodGroups, selectCanonicalMap, extendIrritants } from '../src/resources/irritant_db';
 
 sqlite3.verbose();
 
@@ -15,16 +15,19 @@ test.before(async () => {
     filename: dbPath,
     driver: sqlite3.cached.Database
   });
+  await extendIrritants(db);
 });
 
 test.after.always(async () => {
+  const cleanupSql = 'DROP TABLE IF EXISTS extended_irritant_content;';
+  await db.exec(cleanupSql);
   if (db) {
     db.close();
   }
 });
 
 test('getIrritants', async t => {
-  const irritants = await irritant_db.getIrritants(db);
+  const irritants = await getIrritants(db);
 
   const sql = `
 SELECT count(DISTINCT foods.food_id) as count
@@ -45,7 +48,7 @@ WHERE foods.show_irritants;
 });
 
 test('getIrritantData', async t => {
-  const irritantData = await irritant_db.getIrritantData(db);
+  const irritantData = await getIrritantData(db);
 
   const sql = 'SELECT COUNT(*) AS count FROM irritants WHERE low_dose IS NOT NULL AND moderate_dose IS NOT NULL AND high_dose IS NOT NULL';
   const row = await db.get<Count>(sql);
@@ -55,25 +58,6 @@ test('getIrritantData', async t => {
 });
 
 test('getFoodGroups', async t => {
-  const foodGroups = await irritant_db.getFoodGroups(db);
-
-  const sql = `
-SELECT COUNT(DISTINCT food_group_name) AS count
-  FROM food_groups
-  JOIN foods on foods.food_id = food_groups.food_id
- WHERE foods.searchable_in_edamam AND foods.show_irritants AND foods.show_in_browse;
-`;
-  const row = await db.get<Count>(sql);
-  const groupCount = row.count;
-
-  t.is(foodGroups.length, groupCount);
-
-  foodGroups.forEach((foodGroup) => {
-    t.true(foodGroup.foodRefs.length > 0);
-  });
-});
-
-test('getFoodGroups2', async t => {
   const sql = `
 SELECT COUNT(*) as count
   FROM food_groups AS fg
@@ -86,7 +70,7 @@ SELECT COUNT(*) as count
 `;
   const row = await db.get<Count>(sql);
   const foodCount = row.count;
-  const foodGroups = await irritant_db.getFoodGroups2(db);
+  const foodGroups = await getFoodGroups(db);
 
   t.is(foodGroups.length, foodCount);
 
@@ -101,7 +85,7 @@ test('selectCanonicalMap', async t => {
   const row = await db.get<Count>(sql);
   const foodCount = row.count;
 
-  const canonicals = await irritant_db.selectCanonicalMap(db);
+  const canonicals = await selectCanonicalMap(db);
 
   t.is(canonicals.size, foodCount);
 

@@ -1,37 +1,94 @@
 import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gutlogic/resources/api_service.dart';
+import 'package:provider/provider.dart';
 
 import '../models/food_reference/food_reference.dart';
-import '../models/irritant/food_irritant_data_api.dart';
+import '../models/irritant/intensity_thresholds.dart';
 import '../models/irritant/food_irritants_api.dart';
 import '../models/irritant/irritant.dart';
 import '../models/serializers.dart';
 import '../util/math.dart';
-import 'firebase/firestore_repository.dart';
 import 'firebase/firestore_service.dart';
 
-class IrritantService with FirestoreRepository {
-  final Map<String, BuiltList<double>?> _intensityThresholdCache = {};
+class IrritantService {
+  final ApiService apiService;
+  late final Future<BuiltMap<String, BuiltList<double>>> _intensityThresholdCache;
+  late final Future<BuiltList<FoodIrritantsApi>> _elementaryFoodCache;
 
-  IrritantService({required FirestoreService firestoreService}) {
-    this.firestoreService = firestoreService;
+  IrritantService({required this.apiService}) {
+    _elementaryFoodCache = _getElementaryFoods();
+    _intensityThresholdCache = _getIntensityThresholds();
   }
 
-  Future<BuiltList<Irritant>?> ofRef(FoodReference food) {
-    return firestoreService.irritantCollection
-        .where('foodIds', arrayContains: food.id)
-        .get()
-        .then(deserialize)
-        .then((value) => value.firstWhere((element) => element != null, orElse: () => null)?.irritants);
+  static IrritantService fromContext(BuildContext context) {
+    return IrritantService(apiService: context.read<ApiService>());
   }
 
-  Future<BuiltList<Irritant>?> ofName(String name) {
-    return firestoreService.irritantCollection
-        .where('names', arrayContains: name)
-        .get()
-        .then(deserialize)
-        .then((value) => value.firstWhere((element) => element != null)?.irritants);
+  Future<BuiltMap<String, BuiltList<double>>> _getIntensityThresholds() async {
+    try {
+      final res = await apiService.get(path: '/irritant/intensityThresholds');
+      final data = res['data'] as List;
+      final intensityThresholdsList = data
+          .map((e) => serializers.deserializeWith(IntensityThresholds.serializer, e))
+          .whereType<IntensityThresholds>();
+      final names = intensityThresholdsList.map((e) => e.name);
+      final thresholds = intensityThresholdsList.map((e) => e.intensitySteps);
+      return BuiltMap(Map.fromIterables(names, thresholds));
+    } catch (error) {
+      if (error is HttpException) {
+        if (error.statusCode == 401) {
+          throw IrritantServiceException(message: 'API authentication error');
+        } else {
+          throw IrritantServiceException(message: 'API unavailable');
+        }
+      } else {
+        throw IrritantServiceException(message: 'Unknown error');
+      }
+    }
+  }
+
+  Future<BuiltList<FoodIrritantsApi>> _getElementaryFoods() async {
+    try {
+      final res = await apiService.get(path: '/irritant/elementaryFoods');
+      final data = res['data'] as List;
+      return data
+          .map((e) => serializers.deserializeWith(FoodIrritantsApi.serializer, e))
+          .whereType<FoodIrritantsApi>()
+          .toBuiltList();
+    } catch (error) {
+      if (error is HttpException) {
+        if (error.statusCode == 401) {
+          throw IrritantServiceException(message: 'API authentication error');
+        } else {
+          throw IrritantServiceException(message: 'API unavailable');
+        }
+      } else {
+        throw IrritantServiceException(message: 'Unknown error');
+      }
+    }
+  }
+
+  Future<FoodIrritantsApi?> _getFoodIrritantsOf(FoodReference food) async {
+    // Check if food is elementary
+    final elementaryFoods = await _elementaryFoodCache;
+    final foodIrritantsApi = elementaryFoods.cast<FoodIrritantsApi?>().firstWhere(
+          (p0) => p0?.foodIds.contains(food.id) ?? false,
+          orElse: () => null,
+        );
+    if (foodIrritantsApi != null) {
+      return foodIrritantsApi;
+    }
+
+    // TODO: query api server
+    return null;
+  }
+
+  Future<BuiltList<Irritant>?> ofRef(FoodReference food) async {
+    final foodIrritantsApi = await _getFoodIrritantsOf(food);
+    return foodIrritantsApi?.irritants;
   }
 
   static Iterable<FoodIrritantsApi?> deserialize(UntypedQuerySnapshot snapshot) {
@@ -39,38 +96,16 @@ class IrritantService with FirestoreRepository {
         .map((doc) => serializers.deserializeWith(FoodIrritantsApi.serializer, doc.data()) as FoodIrritantsApi);
   }
 
+  /// Set of irritant names
   Future<BuiltSet<String>> names() async {
-    final snapshot = await firestoreService.irritantDataCollection.get();
-    return snapshot.docs
-        .map((doc) => serializers.deserializeWith(FoodIrritantDataApi.serializer, doc.data()))
-        .whereType<FoodIrritantDataApi>()
-        .map((i) => i.name)
-        .toBuiltSet();
+    final intensityThresholds = await _intensityThresholdCache;
+    return intensityThresholds.keys.toBuiltSet();
   }
 
   /// Dose thresholds at which the intensity increases
   Future<BuiltList<double>?> intensityThresholds(String irritant) async {
-    // Get steps from cache, if available
-    late final BuiltList<double>? thresholds;
-    if (_intensityThresholdCache.containsKey(irritant)) {
-      thresholds = _intensityThresholdCache[irritant];
-    } else {
-      final irritantDataDoc = await firestoreService.irritantDataCollection.where('name', isEqualTo: irritant).get();
-
-      // Return null if irritant can't be found
-      if (irritantDataDoc.docs.isEmpty) {
-        thresholds = null;
-      } else {
-        thresholds = serializers
-            .deserializeWith(FoodIrritantDataApi.serializer, irritantDataDoc.docs.first.data())
-            ?.intensitySteps
-            .toBuiltList();
-      }
-
-      _intensityThresholdCache[irritant] = thresholds;
-    }
-
-    return thresholds;
+    final intensityThresholds = await _intensityThresholdCache;
+    return intensityThresholds[irritant];
   }
 
   Future<int> maxIntensity(BuiltMap<String, double> doses) async {
@@ -89,20 +124,14 @@ class IrritantService with FirestoreRepository {
   }
 
   Future<BuiltList<FoodIrritantsApi>> similar(FoodReference food) async {
-    final ref = await firestoreService.irritantCollection
-        .where('foodIds', arrayContains: food.id)
-        .get()
-        .then(deserialize)
-        .then((value) => value.firstWhere((element) => element != null, orElse: () => null));
+    final ref = await _getFoodIrritantsOf(food);
     if (ref == null) return BuiltList<FoodIrritantsApi>();
     final irritantNames = ref.irritants.map((i) => i.name).toSet();
 
     // Get foods that contain at least one irritant that food has
-    final allFoodIrritantsApi = await firestoreService.irritantCollection.get().then(deserialize);
+    final elementaryFoods = await _elementaryFoodCache;
 
-    final foodIrritantsApi = allFoodIrritantsApi
-        // Filter out nulls
-        .whereType<FoodIrritantsApi>()
+    final foodIrritantsApi = elementaryFoods
         // Only foods that have at least one non-zero concentration of irritants
         .where((f) => f.irritants.toList().fold(false, (acc, el) => acc || el.concentration > 0))
         // Use foods that contain at least one irritant shared by the food of interest
@@ -164,3 +193,9 @@ int _diffCount(FoodIrritantsApi a, FoodIrritantsApi b) {
 }
 
 bool _hasSameIrritants(FoodIrritantsApi a, FoodIrritantsApi b) => _diffCount(a, b) == 0;
+
+class IrritantServiceException implements Exception {
+  final String message;
+
+  IrritantServiceException({required this.message});
+}

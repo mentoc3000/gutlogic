@@ -25,9 +25,6 @@ class FirestoreService {
   CollectionReference<UntypedData> get userDiaryCollection => instance.collection('user_data/$userID/diary');
   CollectionReference<UntypedData> get customFoodCollection => instance.collection('user_data/$userID/foods');
   CollectionReference<UntypedData> get userFoodDetailsCollection => instance.collection('user_data/$userID/pantry');
-  CollectionReference<UntypedData> get irritantCollection => instance.collection('food_irritants');
-  CollectionReference<UntypedData> get irritantDataCollection => instance.collection('irritant_data');
-  CollectionReference<UntypedData> get foodGroupsCollection => instance.collection('food_groups2');
   DocumentReference<UntypedData> get userDocument => instance.doc('users/$userID');
 
   FirestoreService({required this.userID, FirebaseFirestore? instance}) {

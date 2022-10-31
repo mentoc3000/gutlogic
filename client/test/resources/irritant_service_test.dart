@@ -1,13 +1,16 @@
 import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/irritant/food_irritants_api.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
-import 'package:gutlogic/resources/firebase/firestore_service.dart';
+import 'package:gutlogic/resources/api_service.dart';
 import 'package:gutlogic/resources/irritant_service.dart';
+import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
+
+import 'irritant_service_test.mocks.dart';
 
 const foodId = 'food_a1gb9ubb72c7snbuxr3weagwv0dd';
 const apple = {
@@ -41,28 +44,27 @@ const mannitol = {
   'intensitySteps': [0.0, 0.4, 0.5, 1.0],
 };
 
+@GenerateMocks([ApiService])
 void main() {
   group('IrritantService', () {
-    late FakeFirebaseFirestore firestore;
     late IrritantService repository;
-    const collectionPath = 'food_irritants';
+    late MockApiService apiService;
+
+    setUp(() async {
+      apiService = MockApiService();
+      when(apiService.get(path: '/irritant/elementaryFoods')).thenAnswer((_) => Future.value({
+            'data': [apple, grape, bread]
+          }));
+      when(apiService.get(path: '/irritant/intensityThresholds')).thenAnswer((_) => Future.value({
+            'data': [mannitol]
+          }));
+      repository = IrritantService(apiService: apiService);
+    });
 
     group('get irritant', () {
-      setUp(() async {
-        firestore = FakeFirebaseFirestore();
-        repository = IrritantService(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
-        await firestore.doc('$collectionPath/1234').set(apple);
-      });
-
       test('fetches irritants by food reference', () async {
         final food = EdamamFoodReference(id: foodId, name: 'apple');
         final irritants = await repository.ofRef(food);
-        expect(irritants!.length, 2);
-        expect(irritants.first.concentration, 0.012);
-      });
-
-      test('fetches irritants by name', () async {
-        final irritants = await repository.ofName('apple');
         expect(irritants!.length, 2);
         expect(irritants.first.concentration, 0.012);
       });
@@ -75,12 +77,6 @@ void main() {
     });
 
     group('get intensity', () {
-      setUp(() async {
-        firestore = FakeFirebaseFirestore();
-        repository = IrritantService(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
-        await firestore.doc('irritant_data/mannitol').set(mannitol);
-      });
-
       test('gets threshold', () async {
         final irritant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
         final intensity = await repository.intensityThresholds(irritant.name);
@@ -100,13 +96,10 @@ void main() {
         final thresholds = [0.0, 0.4, 0.5, 1.0];
         expect(intensity, thresholds);
 
-        const mannitolModified = {
-          'name': 'mannitol',
-          'intensitySteps': [0.0, 0.1, 0.2, 0.3],
-        };
-        await firestore.doc('food_irritant_data/mannitol').set(mannitolModified);
+        // API Service becomes unavailable
+        when(apiService.get(path: anyNamed('path'))).thenThrow(Error());
 
-        // IrritantService should use cached steps instead of new ones
+        // IrritantService should use cached steps
         final intensity2 = await repository.intensityThresholds(irriant.name);
         expect(intensity2, thresholds);
       });
@@ -116,15 +109,6 @@ void main() {
       final names = BuiltList<String>();
       final foodIds = BuiltList<String>();
       const EdamamFoodReference? cannonical = null;
-
-      setUp(() async {
-        firestore = FakeFirebaseFirestore();
-        repository = IrritantService(firestoreService: FirestoreService(userID: 'testUID', instance: firestore));
-        await firestore.doc('$collectionPath/12').set(bread);
-        await firestore.doc('$collectionPath/1234').set(apple);
-        await firestore.doc('$collectionPath/123').set(grape);
-      });
-
       test('gets list of similar foods', () async {
         final fuji = EdamamFoodReference(id: foodId, name: 'Fuji');
         final similars = await repository.similar(fuji);

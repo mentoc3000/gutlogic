@@ -17,6 +17,7 @@ admin.initializeApp({
 import status from "./resources/status";
 import food from "./resources/food";
 import auth from "./resources/auth";
+import irritant from "./resources/irritant";
 import iap, { startSubscriptionRevocationCheck } from "./iap/index";
 import log from './resources/logger';
 
@@ -28,6 +29,7 @@ app.use(json());
 app.use("/", status);
 app.use("/food", auth, food);
 app.use("/iap", iap);
+app.use("/irritant", irritant);
 
 startSubscriptionRevocationCheck();
 

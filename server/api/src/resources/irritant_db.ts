@@ -1,10 +1,36 @@
-import { Database } from 'sqlite';
+import path from 'path';
+import * as sqlite from 'sqlite';
+import * as sqlite3 from 'sqlite3';
+import log from './logger';
 
 interface FoodReference { $: string, id: string, name: string; }
 interface Irritant { name: string, concentration: number, dosePerServing: number; }
 interface FoodGroup { name: string, foodRefs: FoodReference[]; }
-interface FoodEntry { foodIds: string[], names: string[], irritants: Irritant[], canonical: FoodReference; }
+interface FoodIrritants { foodIds: string[], names: string[], irritants: Irritant[], canonical: FoodReference; }
 interface IrritantConcentrations { Raffinose: string, Stachyose: string, Fructan: string, Kestose: string, Nystose: string; }
+interface FoodIrritantData { name: string, intensitySteps: number[]; }
+
+export default class IrritantDb {
+  readonly dbPath: string;
+  private _db: sqlite.Database | null;
+
+  constructor() {
+    this.dbPath = path.resolve(__dirname, '../../data', 'irritants.sqlite3');
+  }
+
+  async get(): Promise<sqlite.Database> {
+    if (!this._db) {
+      log.d(`Opening irritant database from ${this.dbPath}`);
+      this._db = await sqlite.open({
+        filename: this.dbPath,
+        driver: sqlite3.cached.Database
+      });
+      // TODO: move to image deployment
+      await extendIrritants(this._db);
+    }
+    return Promise.resolve(this._db);
+  }
+}
 
 // Returns a new multi-map (each key is a list of values) using the key returned by the [keyfunc] function and the value returned by the [valfunc] function.
 function multimap<T, S, R>(collection: T[], keyfunc: (arg0: T) => S, valfunc: (arg0: T) => R): Map<S, R[]> {
@@ -22,7 +48,7 @@ function multimap<T, S, R>(collection: T[], keyfunc: (arg0: T) => S, valfunc: (a
 }
 
 // Returns a new multi-map of edamam ID values keyed by food ID.
-async function selectEdamamIdMap(db: Database): Promise<Map<string, string[]>> {
+async function selectEdamamIdMap(db: sqlite.Database): Promise<Map<string, string[]>> {
   const sql = `SELECT food_id, edamam_id FROM edamam`;
   interface Row { food_id: string, edamam_id: string; }
 
@@ -33,7 +59,7 @@ async function selectEdamamIdMap(db: Database): Promise<Map<string, string[]>> {
 }
 
 // Returns a new multi-map of food name values keyed by food ID.
-async function selectFoodNameMap(db: Database) {
+async function selectFoodNameMap(db: sqlite.Database) {
   const sql = `
 SELECT food_id,
        canonical_name
@@ -49,7 +75,7 @@ SELECT food_id,
 }
 
 // Returns a new multi-map of canonical edamam food references keyed by food ID.
-export async function selectCanonicalMap(db: Database): Promise<Map<string, FoodReference>> {
+export async function selectCanonicalMap(db: sqlite.Database): Promise<Map<string, FoodReference>> {
   const sql = `SELECT food_id, canonical_name, canonical_edamam_id FROM foods
                WHERE canonical_name IS NOT NULL AND canonical_edamam_id IS NOT NULL`;
   interface Row { food_id: string, canonical_name: string, canonical_edamam_id: string; }
@@ -66,7 +92,7 @@ export async function selectCanonicalMap(db: Database): Promise<Map<string, Food
 }
 
 // Returns a new multi-map of { name, concentration, dosePerServing } values keyed by food ID.
-async function selectIrritantMap(db: Database): Promise<Map<string, Irritant[]>> {
+async function selectIrritantMap(db: sqlite.Database): Promise<Map<string, Irritant[]>> {
   const sql = `
 SELECT foods.food_id AS food_id,
        display_name AS irritant,
@@ -88,7 +114,7 @@ SELECT foods.food_id AS food_id,
   const keyfunc = (row: Row) => row.food_id;
   const valfunc = (row: Row) => ({ name: row.irritant, concentration: row.concentration, dosePerServing: row.concentration * row.weight_per_serving });
 
-  return multimap(await extended_irritant_content(db, sql), keyfunc, valfunc);
+  return multimap(await db.all<Row[]>(sql), keyfunc, valfunc);
 }
 
 /// Return the irritant with the maximum concentration with name matching [name].
@@ -164,7 +190,8 @@ function processIrritants(irritants: Irritant[]) {
   return processedIrritants;
 }
 
-export async function getIrritants(db: Database): Promise<FoodEntry[]> {
+export async function getIrritants(db: sqlite.Database): Promise<FoodIrritants[]> {
+  // TODO: cache result
   const edamamIdMap = await selectEdamamIdMap(db);
   const irritantMap = await selectIrritantMap(db);
   const foodNameMap = await selectFoodNameMap(db);
@@ -180,31 +207,6 @@ export async function getIrritants(db: Database): Promise<FoodEntry[]> {
 
   // combine the edamam/irritant/name multi-maps into a list of { foodIds, names, irritants } objects
   return Array.from(irritantMap.keys()).map(createIrritantEntry);
-}
-
-/// Food Groups data, version 1
-export async function getFoodGroups(db: Database): Promise<FoodGroup[]> {
-  const sql = `
-SELECT food_group_name,
-       canonical_edamam_id,
-       canonical_name
-  FROM food_groups AS fg
-       JOIN
-       foods AS f ON f.food_id = fg.food_id
- WHERE canonical_edamam_id IS NOT NULL AND 
-       f.show_irritants AND 
-       f.searchable_in_edamam AND
-       f.show_in_browse;
-`;
-  interface Row { food_group_name: string, canonical_edamam_id: string, canonical_name: string; }
-
-  const keyfunc = (row: Row) => row.food_group_name;
-  const valfunc = (row: Row) => ({ $: 'EdamamFoodReference', id: row.canonical_edamam_id, name: row.canonical_name });
-
-  const groups = multimap(await db.all<Row[]>(sql), keyfunc, valfunc);
-
-  // flatten the food reference multi-map into a list of { name, foodRefs } objects
-  return Array.from(groups.entries()).map(entry => ({ name: entry[0], foodRefs: entry[1] }));
 }
 
 /// Create an object with irritant name properties and dose per serving values
@@ -253,7 +255,7 @@ function processIrritantDoses(irritants: IrritantConcentrations) {
 }
 
 /// Query irritant_content with excess fructose addition
-async function extended_irritant_content(db: Database, query: string): Promise<any[]> {
+export async function extendIrritants(db: sqlite.Database): Promise<void> {
   const setupSql = `
 CREATE TABLE IF NOT EXISTS extended_irritant_content (
     food_id,
@@ -289,17 +291,12 @@ INSERT INTO extended_irritant_content SELECT f.food_id,
                                              AS g ON f.food_id = g.food_id AND 
                                                      f.source_id = g.source_id;`;
 
-  const cleanupSql = 'DROP TABLE IF EXISTS extended_irritant_content;';
-
   await db.exec(setupSql);
-  const rows = await db.all(query);
-  await db.exec(cleanupSql);
-
-  return rows;
 }
 
-/// Food Groups data, version 2
-export async function getFoodGroups2(db: Database) {
+/// Food groups data
+export async function getFoodGroups(db: sqlite.Database) {
+  // TODO: cache result
   const selectSql = `
 SELECT food_group_name,
        canonical_name,
@@ -328,13 +325,14 @@ SELECT food_group_name,
  `;
   interface Row extends IrritantConcentrations { food_group_name: string, canonical_edamam_id: string, canonical_name: string; }
 
-  const rows: Row[] = await extended_irritant_content(db, selectSql);
+  const rows: Row[] = await db.all(selectSql);
   const toFoodRef = (row: Row) => ({ '$': 'EdamamFoodReference', 'id': row.canonical_edamam_id, 'name': row.canonical_name });
 
   return rows.map(row => ({ group: row.food_group_name, foodRef: toFoodRef(row), doses: processIrritantDoses(row) }));
 }
 
-export async function getIrritantData(db: Database): Promise<{ name: string, intensitySteps: number[]; }[]> {
+export async function getIrritantData(db: sqlite.Database): Promise<FoodIrritantData[]> {
+  // TODO: cache result
   const sql = `SELECT display_name,
                       low_dose,
                       moderate_dose,
@@ -357,3 +355,4 @@ export async function getIrritantData(db: Database): Promise<{ name: string, int
 
   return data;
 }
+
