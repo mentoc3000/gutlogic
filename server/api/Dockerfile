@@ -8,6 +8,10 @@ RUN npm ci
 
 COPY . .
 
+# Allow writing to irritants db file to support temperary tables
+RUN chmod a+rw ./data
+RUN chmod a+rw ./data/irritants.sqlite3
+
 ENV GOOGLE_APPLICATION_CREDENTIALS /usr/src/app/firebase-adminsdk.json
 
 EXPOSE 8080
