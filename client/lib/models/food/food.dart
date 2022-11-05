@@ -5,6 +5,7 @@ import '../food_reference/food_reference.dart';
 import '../irritant/irritant.dart';
 import '../measure.dart';
 import '../model_interfaces.dart';
+import 'ingredient.dart';
 
 part 'food.g.dart';
 
@@ -15,6 +16,7 @@ abstract class Food with Ided, Named implements Searchable {
   BuiltList<Measure> get measures;
   String? get brand;
   BuiltList<Irritant>? get irritants;
+  BuiltList<Ingredient>? get ingredients;
 
   FoodReference toFoodReference();
 }

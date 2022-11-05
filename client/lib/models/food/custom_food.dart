@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_cast
+
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -7,11 +9,9 @@ import '../food_reference/custom_food_reference.dart';
 import '../measure.dart';
 import '../model_interfaces.dart';
 import 'food.dart';
+import 'ingredient.dart';
 
 part 'custom_food.g.dart';
-
-// Necessary to correctly type constructor
-const BuiltList<Irritant>? _nullIrritants = null;
 
 abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>, Searchable {
   static Serializer<CustomFood> get serializer => _$customFoodSerializer;
@@ -27,7 +27,9 @@ abstract class CustomFood implements Food, Built<CustomFood, CustomFoodBuilder>,
         name: name,
         measures: Food.defaultMeasures,
         brand: null,
-        irritants: _nullIrritants,
+        // Necessary to correctly type constructor
+        irritants: null as BuiltList<Irritant>?,
+        ingredients: null as BuiltList<Ingredient>?,
       );
 
   factory CustomFood.fromBuilder([CustomFoodBuilder Function(CustomFoodBuilder) updates]) = _$CustomFood;

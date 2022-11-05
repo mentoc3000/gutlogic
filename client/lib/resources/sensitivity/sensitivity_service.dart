@@ -42,7 +42,8 @@ class SensitivityService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Sensitivity> of(FoodReference food) async {
+  Future<Sensitivity> of(FoodReference? food) async {
+    if (food == null) return Sensitivity.unknown;
     return _cache[food] ?? (await heuristicPredictionService?.predict(food)) ?? Sensitivity.unknown;
   }
 

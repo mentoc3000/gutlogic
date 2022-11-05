@@ -10,6 +10,7 @@ import 'diary_entry/meal_entry.dart';
 import 'diary_entry/symptom_entry.dart';
 import 'food/custom_food.dart';
 import 'food/edamam_food.dart';
+import 'food/ingredient.dart';
 import 'food/food.dart';
 import 'food_group_entry.dart';
 import 'food_reference/custom_food_reference.dart';
@@ -45,21 +46,22 @@ part 'serializers.g.dart';
   DiaryEntry,
   EdamamFood,
   EdamamFoodReference,
-  Food,
-  IntensityThresholds,
   ElementaryFood,
+  Food,
   FoodGroupEntry,
   FoodReference,
-  Sensitivity,
-  MealElement,
-  Measure,
+  Ingredient,
+  IntensityThresholds,
   Irritant,
+  MealElement,
   MealEntry,
+  Measure,
   PantryEntry,
   Profile,
   Quantity,
-  SensitivityLevel,
+  Sensitivity,
   SensitivityEntry,
+  SensitivityLevel,
   SensitivitySource,
   Severity,
   Symptom,

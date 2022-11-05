@@ -1,9 +1,11 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/diary_entry/bowel_movement_entry.dart';
 import '../models/diary_entry/meal_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
+import '../models/food/ingredient.dart';
 import '../models/food_reference/food_reference.dart';
 import '../models/meal_element.dart';
 import '../models/pantry/pantry_entry.dart';
@@ -15,6 +17,7 @@ import '../pages/bowel_movement_entry/bowel_movement_entry_page.dart';
 import '../pages/consent/consent_page.dart';
 import '../pages/food/food_page.dart';
 import '../pages/food_group/food_group_page.dart';
+import '../pages/ingredients/ingredients_page.dart';
 import '../pages/landing/landing_page.dart';
 import '../pages/login/login_page.dart';
 import '../pages/main_tabs.dart';
@@ -189,5 +192,9 @@ class Routes {
 
   Route<Widget> createSimilarFoodsRoute({required FoodReference food}) {
     return MaterialPageRoute(builder: (context) => SimilarFoodsPage(food: food));
+  }
+
+  Route<Widget> createIngredientsPageRoute({required BuiltList<Ingredient> ingredients}) {
+    return MaterialPageRoute(builder: (context) => IngredientsPage(ingredients: ingredients));
   }
 }

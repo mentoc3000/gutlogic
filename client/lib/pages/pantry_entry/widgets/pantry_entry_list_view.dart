@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/pantry_entry/pantry_entry.dart';
 import '../../../models/food/food.dart';
 import '../../../models/pantry/pantry_entry.dart';
+import '../../../widgets/cards/ingredients_card.dart';
 import '../../../widgets/cards/irritants_card.dart';
 import '../../../widgets/cards/notes_card.dart';
 import '../../../widgets/cards/similar_foods_card.dart';
@@ -31,6 +32,7 @@ class PantryEntryListView extends StatelessWidget {
         onChanged: (sensitivityLevel) => pantryBloc.add(UpdateSensitivityLevel(sensitivityLevel)),
       ),
       if (food?.irritants != null) IrritantsCard(irritants: food!.irritants!),
+      if (food?.ingredients != null && food!.ingredients!.isNotEmpty) IngredientsCard(ingredients: food!.ingredients!),
       if (food?.irritants != null && food!.irritants!.isNotEmpty && food != null)
         SimilarFoodsCard(food: food!.toFoodReference()),
       NotesCard(
