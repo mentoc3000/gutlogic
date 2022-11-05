@@ -20,6 +20,7 @@ class GLIcons {
   static const expandLess = Icons.expand_less;
   static const expandMore = Icons.expand_more;
   static const filter = Icons.filter_list;
+  static const ingredients = Icons.featured_play_list_outlined;
   static const meal = Icons.fastfood;
   static const pantry = MdiIcons.chartBoxOutline;
   static const password = Icons.lock;

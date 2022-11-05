@@ -93,9 +93,9 @@ test('selectCanonicalMap', async t => {
   });
 });
 
-test('irritants', async t => {
+test('irritantsInFoodId', async t => {
   const foodId = 'food_b4m99bgatuhmfybeq0d7xa9uvr1b';
-  const irritants = await idb.irritantsInFood(db, foodId);
+  const irritants = await idb.irritantsInFoodId(db, foodId);
 
   const fructose = irritants.filter((i) => i.name === 'Fructose')[0];
   const mannitol = irritants.filter((i) => i.name === 'Mannitol')[0];
@@ -107,3 +107,11 @@ test('irritants', async t => {
   t.is(mannitol.dosePerServing, 0);
   t.is(lactose.length, 0);
 });
+
+test('irritantsInFoodId with missing entry', async t => {
+  const foodId = '12345';
+  const irritants = await idb.irritantsInFoodId(db, foodId);
+
+  t.is(irritants, null);
+});
+

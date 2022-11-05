@@ -6,6 +6,7 @@ import '../food_reference/edamam_food_reference.dart';
 import '../irritant/irritant.dart';
 import '../measure.dart';
 import 'food.dart';
+import 'ingredient.dart';
 
 part 'edamam_food.g.dart';
 
@@ -20,6 +21,7 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
     BuiltList<Measure>? measures,
     String? brand,
     BuiltList<Irritant>? irritants,
+    BuiltList<Ingredient>? ingredients,
   }) =>
       _$EdamamFood._(
         id: id,
@@ -27,6 +29,7 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
         measures: measures ?? Food.defaultMeasures,
         brand: brand,
         irritants: irritants,
+        ingredients: ingredients,
       );
 
   factory EdamamFood.fromBuilder([EdamamFoodBuilder Function(EdamamFoodBuilder) updates]) = _$EdamamFood;

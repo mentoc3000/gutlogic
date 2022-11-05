@@ -71,6 +71,18 @@ function multimap<T, S, R>(collection: T[], keyfunc: (arg0: T) => S, valfunc: (a
   return map;
 }
 
+const allConcentrations = `       
+  MAX(CASE WHEN ic.irritant_name = 'Excess Fructose' THEN ic.concentration ELSE NULL END) AS Fructose,
+  MAX(CASE WHEN ic.irritant_name = 'Mannitol' THEN ic.concentration ELSE NULL END) AS Mannitol,
+  MAX(CASE WHEN ic.irritant_name = 'Sorbitol' THEN ic.concentration ELSE NULL END) AS Sorbitol,
+  MAX(CASE WHEN ic.irritant_name = 'Lactose' THEN ic.concentration ELSE NULL END) AS Lactose,
+  MAX(CASE WHEN ic.irritant_name = 'Raffinose' THEN ic.concentration ELSE NULL END) AS Raffinose,
+  MAX(CASE WHEN ic.irritant_name = 'Stachyose' THEN ic.concentration ELSE NULL END) AS Stachyose,
+  MAX(CASE WHEN ic.irritant_name = 'Nystose' THEN ic.concentration ELSE NULL END) AS Nystose,
+  MAX(CASE WHEN ic.irritant_name = 'Kestose' THEN ic.concentration ELSE NULL END) AS Kestose,
+  MAX(CASE WHEN ic.irritant_name = 'Fructan' THEN ic.concentration ELSE NULL END) AS Fructan`;
+const allDosePerServings = allConcentrations.split('/n').map((s) => 'weight_per_serving * ' + s).join('\n');
+
 // Returns a new multi-map of edamam ID values keyed by food ID.
 async function selectEdamamIdMap(db: sqlite.Database): Promise<Map<string, string[]>> {
   const sql = `SELECT food_id, edamam_id FROM edamam`;
@@ -283,16 +295,8 @@ export async function foodsInGroups(db: sqlite.Database): Promise<FoodInGroup[]>
   const selectSql = `
 SELECT food_group_name,
        canonical_name,
-       canonical_edamam_id,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Excess Fructose' THEN ic.concentration ELSE NULL END) AS Fructose,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Mannitol' THEN ic.concentration ELSE NULL END) AS Mannitol,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Sorbitol' THEN ic.concentration ELSE NULL END) AS Sorbitol,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Lactose' THEN ic.concentration ELSE NULL END) AS Lactose,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Raffinose' THEN ic.concentration ELSE NULL END) AS Raffinose,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Stachyose' THEN ic.concentration ELSE NULL END) AS Stachyose,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Nystose' THEN ic.concentration ELSE NULL END) AS Nystose,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Kestose' THEN ic.concentration ELSE NULL END) AS Kestose,
-       weight_per_serving * MAX(CASE WHEN ic.irritant_name = 'Fructan' THEN ic.concentration ELSE NULL END) AS Fructan
+       canonical_edamam_id,`
+    + allDosePerServings + `
   FROM food_groups AS fg
        JOIN
        foods AS f ON f.food_id = fg.food_id
@@ -339,20 +343,11 @@ export async function irritantThresholds(db: sqlite.Database): Promise<FoodIrrit
   return data;
 }
 
-/// Food groups data
-export async function irritantsInFood(db: sqlite.Database, foodId: string): Promise<Irritant[]> {
+export async function irritantsInFoodId(db: sqlite.Database, foodId: string): Promise<Irritant[] | null> {
   // TODO: cache result
   const selectSql = `
-SELECT weight_per_serving,
-       MAX(CASE WHEN ic.irritant_name = 'Excess Fructose' THEN ic.concentration ELSE NULL END) AS Fructose,
-       MAX(CASE WHEN ic.irritant_name = 'Mannitol' THEN ic.concentration ELSE NULL END) AS Mannitol,
-       MAX(CASE WHEN ic.irritant_name = 'Sorbitol' THEN ic.concentration ELSE NULL END) AS Sorbitol,
-       MAX(CASE WHEN ic.irritant_name = 'Lactose' THEN ic.concentration ELSE NULL END) AS Lactose,
-       MAX(CASE WHEN ic.irritant_name = 'Raffinose' THEN ic.concentration ELSE NULL END) AS Raffinose,
-       MAX(CASE WHEN ic.irritant_name = 'Stachyose' THEN ic.concentration ELSE NULL END) AS Stachyose,
-       MAX(CASE WHEN ic.irritant_name = 'Nystose' THEN ic.concentration ELSE NULL END) AS Nystose,
-       MAX(CASE WHEN ic.irritant_name = 'Kestose' THEN ic.concentration ELSE NULL END) AS Kestose,
-       MAX(CASE WHEN ic.irritant_name = 'Fructan' THEN ic.concentration ELSE NULL END) AS Fructan
+SELECT weight_per_serving,`
+    + allConcentrations + `
   FROM edamam
        JOIN
        foods ON foods.food_id = edamam.food_id
@@ -363,6 +358,9 @@ SELECT weight_per_serving,
 
   interface Row extends IrritantValues { weight_per_serving: number; }
   const row: Row = await db.get(selectSql, foodId);
+
+  if (!row) return null;
+
   const weightPerServing = row.weight_per_serving;
   const reducedIrritantConcentrations = reduceIrritants(row);
 
@@ -374,3 +372,16 @@ SELECT weight_per_serving,
   return irritants;
 }
 
+export async function foodRef(db: sqlite.Database, name: string): Promise<FoodReference | null> {
+  const selectSql = `
+  SELECT canonical_edamam_id
+  FROM food_names
+  JOIN foods on food_names.food_id = foods.food_id
+  WHERE food_names.food_name = ?;`;
+
+  const row: { canonical_edamam_id: string; } = await db.get(selectSql, name);
+
+  if (!row) return null;
+
+  return { $: 'EdamamFoodReference', name, id: row.canonical_edamam_id };
+}

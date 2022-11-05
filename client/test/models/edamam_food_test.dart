@@ -30,6 +30,14 @@ void main() {
           {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_ounce', 'label': 'Ounce', 'weight': 28.349524},
           {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_pound', 'label': 'Pound', 'weight': 453.59238},
           {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram', 'label': 'Kilogram', 'weight': 1000}
+        ],
+        'irritants': [
+          {'name': 'Fructan', 'concentration': 0.032, 'dosePerServing': 1.23},
+        ],
+        'ingredients': [
+          {'name': 'Brown Rice'},
+          {'name': 'Water'},
+          {'name': 'Salt'},
         ]
       };
       final food = serializers.deserializeWith(EdamamFood.serializer, foodJson)!;

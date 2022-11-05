@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
-import irritantDb, { irritantsInFood, Irritant } from './irritant_db';
+import parseIngredients, { Ingredient } from './ingredients';
+import irritantDb, { irritantsInFoodId, Irritant } from './irritant_db';
 import log from "./logger";
 
 export type Measure = {
@@ -14,6 +15,7 @@ export type Food = {
   brand: string | null;
   measures: Measure[];
   irritants?: Irritant[];
+  ingredients?: Ingredient[];
 };
 
 export interface FoodReference { $: string, id: string, name: string; }
@@ -72,7 +74,9 @@ async function toFood(edamamFoodMeasures: EdamamFoodMeasures): Promise<Food | nu
     [],
   ) ?? [];
   const db = await irritantDb.get();
-  const irritants = await irritantsInFood(db, edamamFoodMeasures.food.foodId);
+  const irritants = await irritantsInFoodId(db, edamamFoodMeasures.food.foodId);
+  const foodContentsLabel = edamamFoodMeasures.food.foodContentsLabel;
+  const ingredients = foodContentsLabel ? await parseIngredients(foodContentsLabel) : null;
 
   return {
     id: edamamFoodMeasures.food.foodId,
@@ -80,6 +84,7 @@ async function toFood(edamamFoodMeasures: EdamamFoodMeasures): Promise<Food | nu
     brand: edamamFoodMeasures.food.brand,
     measures,
     irritants,
+    ingredients,
   };
 }
 
