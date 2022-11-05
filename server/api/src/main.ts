@@ -4,6 +4,8 @@ import express from "express";
 import * as admin from "firebase-admin";
 import { urlencoded, json } from "body-parser";
 import * as serviceAccount from "../firebase-adminsdk.json";
+import db from "./resources/irritant_db";
+
 const serviceAccountCamel = {
     projectId: serviceAccount.project_id,
     clientEmail: serviceAccount.client_email,
@@ -40,3 +42,7 @@ const end = Date.now();
 
 log.i(`Server loaded in ${(end - start) / 1000} seconds`);
 log.i(`Listening on port ${port}`);
+
+process.on('SIGINT', () => {
+    db.close();
+});

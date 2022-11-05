@@ -12,25 +12,25 @@ import 'package:gutlogic/models/measure.dart';
 import 'package:gutlogic/models/quantity.dart';
 import 'package:gutlogic/resources/diary_repositories/meal_element_repository.dart';
 import 'package:gutlogic/resources/food/food_service.dart';
-import 'package:gutlogic/resources/irritant_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'meal_element_bloc_test.mocks.dart';
 
-@GenerateMocks([MealElementRepository, FoodService, IrritantService])
+@GenerateMocks([MealElementRepository, FoodService])
 void main() {
   group('MealElementBloc', () {
     late MockMealElementRepository mealElementRepository;
     late MockFoodService foodService;
-    late MockIrritantService irritantService;
 
     final measure = Measure(unit: 'block');
+    final irritants = [Irritant(name: 'GOS', concentration: 0.002, dosePerServing: 0.2)].toBuiltList();
     final edamamFood = EdamamFood(
       id: '123',
       name: 'silken tofu',
       measures: [measure].build(),
+      irritants: irritants,
     );
     final edamamFoodReference = edamamFood.toFoodReference();
     final edamamFoodMealElement = MealElement(
@@ -38,8 +38,6 @@ void main() {
       foodReference: edamamFoodReference,
       quantity: Quantity(amount: 1, measure: measure),
     );
-
-    final irritants = [Irritant(name: 'GOS', concentration: 0.002, dosePerServing: 0.2)].toBuiltList();
 
     final quantitylessMealElement = MealElement(id: '7', foodReference: edamamFoodReference);
 
@@ -55,17 +53,12 @@ void main() {
 
       foodService = MockFoodService();
       when(foodService.streamFood(edamamFoodReference)).thenAnswer((_) => Stream.value(edamamFood));
-
-      irritantService = MockIrritantService();
-      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value());
-      when(irritantService.ofRef(edamamFoodReference)).thenAnswer((_) => Future.value(irritants));
     });
 
     test('initial state', () {
       final bloc = MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       );
       expect(bloc.state, MealElementLoading());
     });
@@ -75,12 +68,11 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
       act: (bloc) async => bloc.add(StreamMealElement(edamamFoodMealElement)),
       expect: () => [
         MealElementLoading(),
-        MealElementLoaded(mealElement: edamamFoodMealElement, food: edamamFood, irritants: irritants),
+        MealElementLoaded(mealElement: edamamFoodMealElement, food: edamamFood),
       ],
       verify: (bloc) async {
         verify(mealElementRepository.stream(edamamFoodMealElement)).called(1);
@@ -96,7 +88,6 @@ void main() {
         return MealElementBloc(
           mealElementRepository: mealElementRepository,
           foodService: foodService,
-          irritantService: irritantService,
         );
       },
       act: (bloc) async => bloc.add(StreamMealElement(quantitylessMealElement)),
@@ -105,7 +96,6 @@ void main() {
         MealElementLoaded(
           mealElement: quantitylessMealElement.rebuild((b) => b..quantity.measure = measure.toBuilder()),
           food: edamamFood,
-          irritants: irritants,
         ),
       ],
     );
@@ -118,7 +108,6 @@ void main() {
         return MealElementBloc(
           mealElementRepository: mealElementRepository,
           foodService: foodService,
-          irritantService: irritantService,
         );
       },
       act: (bloc) async => bloc.add(StreamMealElement(edamamFoodMealElement)),
@@ -127,7 +116,6 @@ void main() {
         MealElementLoaded(
           mealElement: edamamFoodMealElement,
           food: edamamFood.rebuild((b) => b.measures = <Measure>[].build().toBuilder()),
-          irritants: irritants,
         )
       ],
     );
@@ -140,11 +128,10 @@ void main() {
         return MealElementBloc(
           mealElementRepository: mealElementRepository,
           foodService: foodService,
-          irritantService: irritantService,
         );
       },
       act: (bloc) async => bloc.add(StreamMealElement(customFoodMealElement)),
-      expect: () => [MealElementLoaded(mealElement: customFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: customFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.stream(customFoodMealElement)).called(1);
       },
@@ -155,7 +142,6 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
       act: (bloc) async {
         bloc.add(StreamMealElement(edamamFoodMealElement));
@@ -164,9 +150,9 @@ void main() {
       },
       expect: () => [
         MealElementLoading(),
-        MealElementLoaded(mealElement: edamamFoodMealElement, food: edamamFood, irritants: irritants),
+        MealElementLoaded(mealElement: edamamFoodMealElement, food: edamamFood),
         MealElementLoading(),
-        MealElementLoaded(mealElement: edamamFoodMealElement, food: edamamFood, irritants: irritants),
+        MealElementLoaded(mealElement: edamamFoodMealElement, food: edamamFood),
       ],
       verify: (bloc) async {
         verify(mealElementRepository.stream(edamamFoodMealElement)).called(2);
@@ -178,10 +164,9 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
-      act: (bloc) async => bloc.add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null)),
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      act: (bloc) async => bloc.add(Load(mealElement: edamamFoodMealElement, food: null)),
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verifyNever(mealElementRepository.stream(edamamFoodMealElement));
       },
@@ -192,17 +177,15 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
-          ..add(Load(mealElement: edamamFoodMealElement.rebuild((b) => b.notes = 'asdf'), food: null, irritants: null));
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
+          ..add(Load(mealElement: edamamFoodMealElement.rebuild((b) => b.notes = 'asdf'), food: null));
       },
       expect: () => [
-        MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null),
-        MealElementLoaded(
-            mealElement: edamamFoodMealElement.rebuild((b) => b.notes = 'asdf'), food: null, irritants: null)
+        MealElementLoaded(mealElement: edamamFoodMealElement, food: null),
+        MealElementLoaded(mealElement: edamamFoodMealElement.rebuild((b) => b.notes = 'asdf'), food: null)
       ],
       verify: (bloc) async {
         verifyNever(mealElementRepository.stream(edamamFoodMealElement));
@@ -215,15 +198,14 @@ void main() {
         return MealElementBloc(
           mealElementRepository: mealElementRepository,
           foodService: foodService,
-          irritantService: irritantService,
         );
       },
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(const Delete());
       },
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.delete(edamamFoodMealElement)).called(1);
         // verify(analyticsService.logEvent('delete_meal_element')).called(1);
@@ -235,15 +217,14 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(const Delete())
           ..add(const Delete());
       },
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.delete(edamamFoodMealElement)).called(2);
       },
@@ -255,16 +236,15 @@ void main() {
         return MealElementBloc(
           mealElementRepository: mealElementRepository,
           foodService: foodService,
-          irritantService: irritantService,
         );
       },
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(Update(edamamFoodMealElement));
       },
       wait: debounceWaitDuration,
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.update(edamamFoodMealElement)).called(1);
         // verify(analyticsService.logUpdateEvent('update_meal_element')).called(1);
@@ -276,17 +256,16 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(Update(edamamFoodMealElement))
           ..add(Update(edamamFoodMealElement))
           ..add(Update(edamamFoodMealElement));
       },
       wait: debounceWaitDuration,
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.update(edamamFoodMealElement)).called(1);
       },
@@ -298,16 +277,15 @@ void main() {
         return MealElementBloc(
           mealElementRepository: mealElementRepository,
           foodService: foodService,
-          irritantService: irritantService,
         );
       },
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(const UpdateNotes('noted'));
       },
       wait: debounceWaitDuration,
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.updateNotes(edamamFoodMealElement, any)).called(1);
         // verify(analyticsService.logUpdateEvent('update_meal_element', 'notes')).called(1);
@@ -319,17 +297,16 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(const UpdateNotes('noted'))
           ..add(const UpdateNotes('note'))
           ..add(const UpdateNotes('not'));
       },
       wait: debounceWaitDuration,
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.updateNotes(edamamFoodMealElement, 'not')).called(1);
         verifyNoMoreInteractions(mealElementRepository);
@@ -342,16 +319,15 @@ void main() {
         return MealElementBloc(
           mealElementRepository: mealElementRepository,
           foodService: foodService,
-          irritantService: irritantService,
         );
       },
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.1, unit: 'cup')));
       },
       wait: debounceWaitDuration,
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.updateQuantity(edamamFoodMealElement, any)).called(1);
         // verify(analyticsService.logUpdateEvent('update_meal_element', 'quantity')).called(1);
@@ -363,18 +339,17 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.1, unit: 'cup')))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.2, unit: 'cup')))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.3, unit: 'cup')))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.4, unit: 'cup')));
       },
       wait: debounceWaitDuration,
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.updateQuantity(
                 edamamFoodMealElement, Quantity.unweighed(amount: 2.4, unit: 'cup')))
@@ -388,18 +363,17 @@ void main() {
       build: () => MealElementBloc(
         mealElementRepository: mealElementRepository,
         foodService: foodService,
-        irritantService: irritantService,
       ),
       act: (bloc) async {
         bloc
-          ..add(Load(mealElement: edamamFoodMealElement, food: null, irritants: null))
+          ..add(Load(mealElement: edamamFoodMealElement, food: null))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.4, unit: 'cup')))
           ..add(const UpdateNotes('too much'))
           ..add(UpdateQuantity(Quantity.unweighed(amount: 2.0, unit: 'cup')))
           ..add(const UpdateNotes('not enough'));
       },
       wait: debounceWaitDuration,
-      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null, irritants: null)],
+      expect: () => [MealElementLoaded(mealElement: edamamFoodMealElement, food: null)],
       verify: (bloc) async {
         verify(mealElementRepository.updateQuantity(edamamFoodMealElement, any)).called(1);
         verify(mealElementRepository.updateNotes(edamamFoodMealElement, any)).called(1);

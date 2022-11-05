@@ -16,7 +16,7 @@ import 'food_reference/custom_food_reference.dart';
 import 'food_reference/edamam_food_reference.dart';
 import 'food_reference/food_reference.dart';
 import 'irritant/intensity_thresholds.dart';
-import 'irritant/food_irritants_api.dart';
+import 'irritant/elementary_food.dart';
 import 'irritant/irritant.dart';
 import 'meal_element.dart';
 import 'measure.dart';
@@ -47,7 +47,7 @@ part 'serializers.g.dart';
   EdamamFoodReference,
   Food,
   IntensityThresholds,
-  FoodIrritantsApi,
+  ElementaryFood,
   FoodGroupEntry,
   FoodReference,
   Sensitivity,

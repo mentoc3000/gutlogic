@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/food/food.dart';
 import '../../models/food_reference/food_reference.dart';
 import '../../widgets/gl_app_bar.dart';
-import '../../widgets/gl_scaffold.dart';
 import '../../widgets/gl_error_widget.dart';
 import '../../widgets/gl_loading_widget.dart';
+import '../../widgets/gl_scaffold.dart';
 import 'widgets/food_list_view.dart';
 
 class FoodPage extends StatelessWidget {
@@ -49,7 +49,7 @@ class FoodPage extends StatelessWidget {
       return GLLoadingWidget();
     }
     if (state is FoodLoaded) {
-      return FoodListView(food: state.food, irritants: state.irritants);
+      return FoodListView(food: state.food);
     }
     if (state is FoodError) {
       return GLErrorWidget(message: state.message);

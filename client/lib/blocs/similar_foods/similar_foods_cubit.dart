@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/food_reference/food_reference.dart';
-import '../../models/irritant/food_irritants_api.dart';
+import '../../models/irritant/elementary_food.dart';
 import '../../resources/irritant_service.dart';
 import '../bloc_helpers.dart';
 import 'similar_foods_state.dart';
@@ -27,7 +27,7 @@ class SimilarFoodsCubit extends Cubit<SimilarFoodsState>
     );
   }
 
-  void _onData(BuiltList<FoodIrritantsApi> foods) async {
+  void _onData(BuiltList<ElementaryFood> foods) async {
     // Get the irritants in each food
     final irritantsList = foods.map((f) => f.irritants);
     final foodReferences = foods.map((f) => f.canonical).whereType<FoodReference>().toBuiltList();

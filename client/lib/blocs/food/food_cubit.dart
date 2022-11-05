@@ -29,8 +29,7 @@ class FoodCubit extends Cubit<FoodState> with StreamSubscriber<Food?, FoodState>
 
   void _onData(Food? food) async {
     if (food != null) {
-      final irritants = await irritantService.ofRef(food.toFoodReference());
-      emit(FoodLoaded(food: food, irritants: irritants));
+      emit(FoodLoaded(food: food));
     } else {
       emit(FoodError(message: 'Food not found'));
     }

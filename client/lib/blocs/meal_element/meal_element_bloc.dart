@@ -8,7 +8,6 @@ import '../../models/food_reference/edamam_food_reference.dart';
 import '../../models/meal_element.dart';
 import '../../resources/diary_repositories/meal_element_repository.dart';
 import '../../resources/food/food_service.dart';
-import '../../resources/irritant_service.dart';
 import '../bloc_helpers.dart';
 import 'meal_element_event.dart';
 import 'meal_element_state.dart';
@@ -17,16 +16,13 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState>
     with StreamSubscriber<MealElement?, MealElementState> {
   final MealElementRepository mealElementRepository;
   final FoodService foodService;
-  final IrritantService irritantService;
 
   MealElementBloc({
     required this.mealElementRepository,
     required this.foodService,
-    required this.irritantService,
   }) : super(MealElementLoading()) {
     on<StreamMealElement>(_onStreamMealElement);
-    on<Load>((event, emit) =>
-        emit(MealElementLoaded(mealElement: event.mealElement, food: event.food, irritants: event.irritants)));
+    on<Load>((event, emit) => emit(MealElementLoaded(mealElement: event.mealElement, food: event.food)));
     on<Delete>(_onDelete);
     on<Update>(_onUpdate, transformer: debounceTransformer);
     on<UpdateQuantity>(_onUpdateQuantity, transformer: debounceTransformer);
@@ -38,7 +34,6 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState>
     return MealElementBloc(
       mealElementRepository: context.read<MealElementRepository>(),
       foodService: context.read<FoodService>(),
-      irritantService: context.read<IrritantService>(),
     );
   }
 
@@ -59,14 +54,12 @@ class MealElementBloc extends Bloc<MealElementEvent, MealElementState>
         }
       }
 
-      final irritants = await irritantService.ofRef(mealElement.foodReference);
-
-      emit(MealElementLoaded(mealElement: mealElement, food: food, irritants: irritants));
+      emit(MealElementLoaded(mealElement: mealElement, food: food));
 
       // Subscribe to the stream, updating the mealElement but using the same food value, which cannot change.
       streamSubscription = mealElementRepository.stream(event.mealElement).listen(
         (mealElement) {
-          add(Load(mealElement: mealElement!, food: food, irritants: irritants));
+          add(Load(mealElement: mealElement!, food: food));
         },
         onError: (dynamic error, StackTrace trace) {
           add(ThrowMealElementError.fromError(error: error, trace: trace));

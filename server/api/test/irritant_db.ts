@@ -2,7 +2,7 @@ import path from 'path';
 import test from 'ava';
 import { Database, open } from 'sqlite';
 import * as sqlite3 from 'sqlite3';
-import { getIrritants, getIrritantData, getFoodGroups, selectCanonicalMap, extendIrritants } from '../src/resources/irritant_db';
+import * as idb from '../src/resources/irritant_db';
 
 sqlite3.verbose();
 
@@ -15,19 +15,16 @@ test.before(async () => {
     filename: dbPath,
     driver: sqlite3.cached.Database
   });
-  await extendIrritants(db);
 });
 
 test.after.always(async () => {
-  const cleanupSql = 'DROP TABLE IF EXISTS extended_irritant_content;';
-  await db.exec(cleanupSql);
   if (db) {
     db.close();
   }
 });
 
-test('getIrritants', async t => {
-  const irritants = await getIrritants(db);
+test('elementaryFoods', async t => {
+  const irritants = await idb.elementaryFoods(db);
 
   const sql = `
 SELECT count(DISTINCT foods.food_id) as count
@@ -47,8 +44,8 @@ WHERE foods.show_irritants;
   t.true('irritants' in irritant);
 });
 
-test('getIrritantData', async t => {
-  const irritantData = await getIrritantData(db);
+test('irritantThresholds', async t => {
+  const irritantData = await idb.irritantThresholds(db);
 
   const sql = 'SELECT COUNT(*) AS count FROM irritants WHERE low_dose IS NOT NULL AND moderate_dose IS NOT NULL AND high_dose IS NOT NULL';
   const row = await db.get<Count>(sql);
@@ -57,7 +54,7 @@ test('getIrritantData', async t => {
   t.is(irritantData.length, irritantCount);
 });
 
-test('getFoodGroups', async t => {
+test('foodsInGroups', async t => {
   const sql = `
 SELECT COUNT(*) as count
   FROM food_groups AS fg
@@ -70,7 +67,7 @@ SELECT COUNT(*) as count
 `;
   const row = await db.get<Count>(sql);
   const foodCount = row.count;
-  const foodGroups = await getFoodGroups(db);
+  const foodGroups = await idb.foodsInGroups(db);
 
   t.is(foodGroups.length, foodCount);
 
@@ -85,7 +82,7 @@ test('selectCanonicalMap', async t => {
   const row = await db.get<Count>(sql);
   const foodCount = row.count;
 
-  const canonicals = await selectCanonicalMap(db);
+  const canonicals = await idb.selectCanonicalMap(db);
 
   t.is(canonicals.size, foodCount);
 
@@ -94,4 +91,19 @@ test('selectCanonicalMap', async t => {
     t.true(food_reference.name !== null);
     t.true(food_reference.id !== null);
   });
+});
+
+test('irritants', async t => {
+  const foodId = 'food_b4m99bgatuhmfybeq0d7xa9uvr1b';
+  const irritants = await idb.irritantsInFood(db, foodId);
+
+  const fructose = irritants.filter((i) => i.name === 'Fructose')[0];
+  const mannitol = irritants.filter((i) => i.name === 'Mannitol')[0];
+  const lactose = irritants.filter((i) => i.name === 'Lactose');
+
+  t.is(fructose.name, 'Fructose');
+  t.is(fructose.dosePerServing, 6.072);
+  t.is(mannitol.name, 'Mannitol');
+  t.is(mannitol.dosePerServing, 0);
+  t.is(lactose.length, 0);
 });

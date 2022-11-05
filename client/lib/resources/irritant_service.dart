@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../models/food_reference/food_reference.dart';
 import '../models/irritant/intensity_thresholds.dart';
-import '../models/irritant/food_irritants_api.dart';
+import '../models/irritant/elementary_food.dart';
 import '../models/irritant/irritant.dart';
 import '../models/serializers.dart';
 import '../util/math.dart';
@@ -16,7 +16,7 @@ import 'firebase/firestore_service.dart';
 class IrritantService {
   final ApiService apiService;
   late final Future<BuiltMap<String, BuiltList<double>>> _intensityThresholdCache;
-  late final Future<BuiltList<FoodIrritantsApi>> _elementaryFoodCache;
+  late final Future<BuiltList<ElementaryFood>> _elementaryFoodCache;
 
   IrritantService({required this.apiService}) {
     _elementaryFoodCache = _getElementaryFoods();
@@ -50,13 +50,13 @@ class IrritantService {
     }
   }
 
-  Future<BuiltList<FoodIrritantsApi>> _getElementaryFoods() async {
+  Future<BuiltList<ElementaryFood>> _getElementaryFoods() async {
     try {
       final res = await apiService.get(path: '/irritant/elementaryFoods');
       final data = res['data'] as List;
       return data
-          .map((e) => serializers.deserializeWith(FoodIrritantsApi.serializer, e))
-          .whereType<FoodIrritantsApi>()
+          .map((e) => serializers.deserializeWith(ElementaryFood.serializer, e))
+          .whereType<ElementaryFood>()
           .toBuiltList();
     } catch (error) {
       if (error is HttpException) {
@@ -71,10 +71,10 @@ class IrritantService {
     }
   }
 
-  Future<FoodIrritantsApi?> _getFoodIrritantsOf(FoodReference food) async {
+  Future<ElementaryFood?> _getFoodIrritantsOf(FoodReference food) async {
     // Check if food is elementary
     final elementaryFoods = await _elementaryFoodCache;
-    final foodIrritantsApi = elementaryFoods.cast<FoodIrritantsApi?>().firstWhere(
+    final foodIrritantsApi = elementaryFoods.cast<ElementaryFood?>().firstWhere(
           (p0) => p0?.foodIds.contains(food.id) ?? false,
           orElse: () => null,
         );
@@ -91,9 +91,9 @@ class IrritantService {
     return foodIrritantsApi?.irritants;
   }
 
-  static Iterable<FoodIrritantsApi?> deserialize(UntypedQuerySnapshot snapshot) {
+  static Iterable<ElementaryFood?> deserialize(UntypedQuerySnapshot snapshot) {
     return snapshot.docs
-        .map((doc) => serializers.deserializeWith(FoodIrritantsApi.serializer, doc.data()) as FoodIrritantsApi);
+        .map((doc) => serializers.deserializeWith(ElementaryFood.serializer, doc.data()) as ElementaryFood);
   }
 
   /// Set of irritant names
@@ -123,9 +123,9 @@ class IrritantService {
     return maxIntensity;
   }
 
-  Future<BuiltList<FoodIrritantsApi>> similar(FoodReference food) async {
+  Future<BuiltList<ElementaryFood>> similar(FoodReference food) async {
     final ref = await _getFoodIrritantsOf(food);
-    if (ref == null) return BuiltList<FoodIrritantsApi>();
+    if (ref == null) return BuiltList<ElementaryFood>();
     final irritantNames = ref.irritants.map((i) => i.name).toSet();
 
     // Get foods that contain at least one irritant that food has
@@ -146,7 +146,7 @@ class IrritantService {
   }
 
   /// Compare both a and b to a reference. Negative if a has a more similar irritant profile.
-  static int irritantSimilarityCompare(FoodIrritantsApi ref, FoodIrritantsApi a, FoodIrritantsApi b) {
+  static int irritantSimilarityCompare(ElementaryFood ref, ElementaryFood a, ElementaryFood b) {
     // Zero concentration is the same as no data on irritant, so remove those irritants
     ref = _removeZeroConcentration(ref);
     a = _removeZeroConcentration(a);
@@ -178,12 +178,12 @@ class IrritantService {
   }
 }
 
-FoodIrritantsApi _removeZeroConcentration(FoodIrritantsApi f) {
+ElementaryFood _removeZeroConcentration(ElementaryFood f) {
   return f.rebuild((p0) => p0.irritants = p0.irritants..removeWhere((i) => i.dosePerServing == 0));
 }
 
 /// The number of different irritants between the two objects
-int _diffCount(FoodIrritantsApi a, FoodIrritantsApi b) {
+int _diffCount(ElementaryFood a, ElementaryFood b) {
   final aNames = a.irritants.map((p0) => p0.name).toSet();
   final bNames = b.irritants.map((p0) => p0.name).toSet();
   final abDiff = aNames.difference(bNames);
@@ -192,7 +192,7 @@ int _diffCount(FoodIrritantsApi a, FoodIrritantsApi b) {
   return diff.length;
 }
 
-bool _hasSameIrritants(FoodIrritantsApi a, FoodIrritantsApi b) => _diffCount(a, b) == 0;
+bool _hasSameIrritants(ElementaryFood a, ElementaryFood b) => _diffCount(a, b) == 0;
 
 class IrritantServiceException implements Exception {
   final String message;

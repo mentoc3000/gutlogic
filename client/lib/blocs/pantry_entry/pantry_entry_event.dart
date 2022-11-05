@@ -1,9 +1,7 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/food/food.dart';
 import '../../models/food_reference/food_reference.dart';
-import '../../models/irritant/irritant.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../models/sensitivity/sensitivity_level.dart';
 import '../../resources/firebase/analytics_service.dart';
@@ -20,12 +18,11 @@ abstract class PantryEntryEvent extends Equatable {
 class Load extends PantryEntryEvent {
   final PantryEntry pantryEntry;
   final Food? food;
-  final BuiltList<Irritant>? irritants;
 
-  const Load({required this.pantryEntry, required this.food, required this.irritants});
+  const Load({required this.pantryEntry, required this.food});
 
   @override
-  List<Object?> get props => [pantryEntry, food, irritants];
+  List<Object?> get props => [pantryEntry, food];
 }
 
 class CreateAndStreamEntry extends PantryEntryEvent implements Tracked {

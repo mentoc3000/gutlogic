@@ -1,16 +1,34 @@
 import path from 'path';
 import * as sqlite from 'sqlite';
 import * as sqlite3 from 'sqlite3';
+import { FoodReference } from './food';
 import log from './logger';
 
-interface FoodReference { $: string, id: string, name: string; }
-interface Irritant { name: string, concentration: number, dosePerServing: number; }
-interface FoodGroup { name: string, foodRefs: FoodReference[]; }
+export interface Irritant { name: string, concentration: number, dosePerServing: number; }
+interface FoodInGroup { group: string, foodRef: FoodReference; doses: ReducedIrritantValues; }
 interface FoodIrritants { foodIds: string[], names: string[], irritants: Irritant[], canonical: FoodReference; }
-interface IrritantConcentrations { Raffinose: string, Stachyose: string, Fructan: string, Kestose: string, Nystose: string; }
+interface ReducedIrritantValues {
+  Fructose?: number;
+  Sorbitol?: number;
+  Mannitol?: number;
+  Lactose?: number;
+  GOS?: number,
+  Fructan?: number;
+}
+interface IrritantValues {
+  Fructose?: number;
+  Sorbitol?: number;
+  Mannitol?: number;
+  Lactose?: number;
+  Raffinose?: number;
+  Stachyose?: number;
+  Nystose?: number;
+  Kestose?: number;
+  Fructan?: number;
+}
 interface FoodIrritantData { name: string, intensitySteps: number[]; }
 
-export default class IrritantDb {
+class IrritantDb {
   readonly dbPath: string;
   private _db: sqlite.Database | null;
 
@@ -25,12 +43,18 @@ export default class IrritantDb {
         filename: this.dbPath,
         driver: sqlite3.cached.Database
       });
-      // TODO: move to image deployment
-      await extendIrritants(this._db);
     }
     return Promise.resolve(this._db);
   }
+
+  async close(): Promise<void> {
+    await this._db.close();
+    this._db = null;
+  }
 }
+
+const irritantDb = new IrritantDb();
+export default irritantDb;
 
 // Returns a new multi-map (each key is a list of values) using the key returned by the [keyfunc] function and the value returned by the [valfunc] function.
 function multimap<T, S, R>(collection: T[], keyfunc: (arg0: T) => S, valfunc: (arg0: T) => R): Map<S, R[]> {
@@ -190,7 +214,7 @@ function processIrritants(irritants: Irritant[]) {
   return processedIrritants;
 }
 
-export async function getIrritants(db: sqlite.Database): Promise<FoodIrritants[]> {
+export async function elementaryFoods(db: sqlite.Database): Promise<FoodIrritants[]> {
   // TODO: cache result
   const edamamIdMap = await selectEdamamIdMap(db);
   const irritantMap = await selectIrritantMap(db);
@@ -210,11 +234,10 @@ export async function getIrritants(db: sqlite.Database): Promise<FoodIrritants[]
 }
 
 /// Create an object with irritant name properties and dose per serving values
-function processIrritantDoses(irritants: IrritantConcentrations) {
-  const processedIrritants = {};
+function reduceIrritants(irritants: IrritantValues): ReducedIrritantValues {
+  const processedIrritants: ReducedIrritantValues = {};
 
-  const simpleIrritantNames = ['Fructose', 'Sorbitol', 'Mannitol', 'Lactose'];
-  simpleIrritantNames.forEach((i) => {
+  ['Fructose', 'Sorbitol', 'Mannitol', 'Lactose'].forEach((i) => {
     if (i in irritants && irritants[i] !== null) {
       processedIrritants[i] = Math.max(irritants[i], 0);
     }
@@ -226,7 +249,7 @@ function processIrritantDoses(irritants: IrritantConcentrations) {
   if ('Raffinose' in irritants || 'Stachyose' in irritants) {
     const gos = irritants.Raffinose + irritants.Stachyose;
     if (gos !== null) {
-      processedIrritants['GOS'] = gos;
+      processedIrritants.GOS = gos;
     }
   }
 
@@ -248,54 +271,14 @@ function processIrritantDoses(irritants: IrritantConcentrations) {
 
   const fructan = totalFructan > sumFructan ? totalFructan : sumFructan;
   if (fructan !== null) {
-    processedIrritants['Fructan'] = fructan;
+    processedIrritants.Fructan = fructan;
   }
 
   return processedIrritants;
 }
 
-/// Query irritant_content with excess fructose addition
-export async function extendIrritants(db: sqlite.Database): Promise<void> {
-  const setupSql = `
-CREATE TABLE IF NOT EXISTS extended_irritant_content (
-    food_id,
-    irritant_name,
-    concentration,
-    source_id
-);
-
-INSERT INTO extended_irritant_content SELECT *
-                                        FROM irritant_content;
-
-INSERT INTO extended_irritant_content SELECT f.food_id,
-                                             'Excess Fructose' AS irritant_name,
-                                             MAX(f_concentration - g_concentration, 0) AS concentration,
-                                             f.source_id
-                                        FROM (
-                                                 SELECT food_id,
-                                                        irritant_name,
-                                                        concentration AS f_concentration,
-                                                        source_id
-                                                   FROM irritant_content
-                                                  WHERE irritant_name = 'Fructose'
-                                             )
-                                             AS f
-                                             LEFT OUTER JOIN
-                                             (
-                                                 SELECT food_id,
-                                                        source_id,
-                                                        concentration AS g_concentration
-                                                   FROM irritant_content
-                                                  WHERE irritant_name = 'Glucose'
-                                             )
-                                             AS g ON f.food_id = g.food_id AND 
-                                                     f.source_id = g.source_id;`;
-
-  await db.exec(setupSql);
-}
-
 /// Food groups data
-export async function getFoodGroups(db: sqlite.Database) {
+export async function foodsInGroups(db: sqlite.Database): Promise<FoodInGroup[]> {
   // TODO: cache result
   const selectSql = `
 SELECT food_group_name,
@@ -323,15 +306,15 @@ SELECT food_group_name,
           canonical_name
  ORDER BY canonical_name;
  `;
-  interface Row extends IrritantConcentrations { food_group_name: string, canonical_edamam_id: string, canonical_name: string; }
+  interface Row extends IrritantValues { food_group_name: string, canonical_edamam_id: string, canonical_name: string; }
 
   const rows: Row[] = await db.all(selectSql);
   const toFoodRef = (row: Row) => ({ '$': 'EdamamFoodReference', 'id': row.canonical_edamam_id, 'name': row.canonical_name });
 
-  return rows.map(row => ({ group: row.food_group_name, foodRef: toFoodRef(row), doses: processIrritantDoses(row) }));
+  return rows.map(row => ({ group: row.food_group_name, foodRef: toFoodRef(row), doses: reduceIrritants(row) }));
 }
 
-export async function getIrritantData(db: sqlite.Database): Promise<FoodIrritantData[]> {
+export async function irritantThresholds(db: sqlite.Database): Promise<FoodIrritantData[]> {
   // TODO: cache result
   const sql = `SELECT display_name,
                       low_dose,
@@ -354,5 +337,40 @@ export async function getIrritantData(db: sqlite.Database): Promise<FoodIrritant
   }
 
   return data;
+}
+
+/// Food groups data
+export async function irritantsInFood(db: sqlite.Database, foodId: string): Promise<Irritant[]> {
+  // TODO: cache result
+  const selectSql = `
+SELECT weight_per_serving,
+       MAX(CASE WHEN ic.irritant_name = 'Excess Fructose' THEN ic.concentration ELSE NULL END) AS Fructose,
+       MAX(CASE WHEN ic.irritant_name = 'Mannitol' THEN ic.concentration ELSE NULL END) AS Mannitol,
+       MAX(CASE WHEN ic.irritant_name = 'Sorbitol' THEN ic.concentration ELSE NULL END) AS Sorbitol,
+       MAX(CASE WHEN ic.irritant_name = 'Lactose' THEN ic.concentration ELSE NULL END) AS Lactose,
+       MAX(CASE WHEN ic.irritant_name = 'Raffinose' THEN ic.concentration ELSE NULL END) AS Raffinose,
+       MAX(CASE WHEN ic.irritant_name = 'Stachyose' THEN ic.concentration ELSE NULL END) AS Stachyose,
+       MAX(CASE WHEN ic.irritant_name = 'Nystose' THEN ic.concentration ELSE NULL END) AS Nystose,
+       MAX(CASE WHEN ic.irritant_name = 'Kestose' THEN ic.concentration ELSE NULL END) AS Kestose,
+       MAX(CASE WHEN ic.irritant_name = 'Fructan' THEN ic.concentration ELSE NULL END) AS Fructan
+  FROM edamam
+       JOIN
+       foods ON foods.food_id = edamam.food_id
+       LEFT OUTER JOIN
+       extended_irritant_content AS ic ON edamam.food_id = ic.food_id
+ WHERE edamam.edamam_id = ?
+ GROUP BY ic.food_id;`;
+
+  interface Row extends IrritantValues { weight_per_serving: number; }
+  const row: Row = await db.get(selectSql, foodId);
+  const weightPerServing = row.weight_per_serving;
+  const reducedIrritantConcentrations = reduceIrritants(row);
+
+  const irritants: Irritant[] = [];
+  for (let name in reducedIrritantConcentrations) {
+    const concentration = reducedIrritantConcentrations[name];
+    irritants.push({ name, concentration, dosePerServing: concentration * weightPerServing });
+  }
+  return irritants;
 }
 

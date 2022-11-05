@@ -74,7 +74,6 @@ class PantryEntryPage extends StatelessWidget {
       return PantryEntryListView(
         pantryEntry: state.pantryEntry,
         food: state.food,
-        irritants: state.irritants,
         notesController: _notesController,
       );
     }

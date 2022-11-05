@@ -58,7 +58,7 @@ void main() {
     testWidgets('loads entry', (WidgetTester tester) async {
       whenListen(
         mealElementBloc,
-        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, irritants: null)),
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null)),
         initialState: MealElementLoading(),
       );
 
@@ -98,7 +98,7 @@ void main() {
     testWidgets('updates quantity', (WidgetTester tester) async {
       whenListen(
         mealElementBloc,
-        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, irritants: null)),
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null)),
         initialState: MealElementLoading(),
       );
 
@@ -116,7 +116,7 @@ void main() {
     testWidgets('updates notes', (WidgetTester tester) async {
       whenListen(
         mealElementBloc,
-        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, irritants: null)),
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null)),
         initialState: MealElementLoading(),
       );
 
