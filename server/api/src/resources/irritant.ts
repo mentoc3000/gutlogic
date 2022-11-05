@@ -1,14 +1,13 @@
 import express, { Request, Response } from "express";
 
-import IrritantDb, { getFoodGroups, getIrritantData, getIrritants } from './irritant_db';
+import irritantDb, * as idb from './irritant_db';
 import log from './logger';
 
-const irritantDb = new IrritantDb();
 
 async function foodGroups(req: Request, res: Response) {
   try {
     const db = await irritantDb.get();
-    const foods = await getFoodGroups(db);
+    const foods = await idb.foodsInGroups(db);
     const foodGroups = {};
     for (let food of foods) {
       if (!(food.group in foodGroups)) {
@@ -26,7 +25,7 @@ async function foodGroups(req: Request, res: Response) {
 async function intensityThresholds(req: Request, res: Response) {
   try {
     const db = await irritantDb.get();
-    const thresholds = await getIrritantData(db);
+    const thresholds = await idb.irritantThresholds(db);
     res.json({ data: thresholds });
   } catch (e) {
     res.status(500).end();
@@ -37,7 +36,7 @@ async function intensityThresholds(req: Request, res: Response) {
 async function elementaryFoods(req: Request, res: Response) {
   try {
     const db = await irritantDb.get();
-    const foods = await getIrritants(db);
+    const foods = await idb.elementaryFoods(db);
     res.json({ data: foods });
   } catch (e) {
     res.status(500).end();

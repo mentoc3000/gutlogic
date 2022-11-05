@@ -1,9 +1,7 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/food/food.dart';
 import '../../models/food_reference/food_reference.dart';
-import '../../models/irritant/irritant.dart';
 import '../../models/meal_element.dart';
 import '../../models/quantity.dart';
 import '../../resources/firebase/analytics_service.dart';
@@ -20,12 +18,11 @@ abstract class MealElementEvent extends Equatable {
 class Load extends MealElementEvent {
   final MealElement mealElement;
   final Food? food;
-  final BuiltList<Irritant>? irritants;
 
-  const Load({required this.mealElement, required this.food, required this.irritants});
+  const Load({required this.mealElement, required this.food});
 
   @override
-  List<Object?> get props => [mealElement, food, irritants];
+  List<Object?> get props => [mealElement, food];
 }
 
 class Delete extends MealElementEvent implements Tracked {

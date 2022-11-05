@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
-import 'package:gutlogic/models/irritant/food_irritants_api.dart';
+import 'package:gutlogic/models/irritant/elementary_food.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
 import 'package:gutlogic/resources/api_service.dart';
 import 'package:gutlogic/resources/irritant_service.dart';
@@ -122,7 +122,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((a) => a);
         final b = ref.rebuild((b) => b);
@@ -135,7 +135,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((b) => b);
         final b = ref.rebuild((b) => b.irritants = b.irritants..removeLast());
@@ -148,7 +148,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = 0.05));
         final b = ref.rebuild((b) => b.irritants = b.irritants..removeLast());
@@ -161,7 +161,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = 0.2));
         final b = ref.rebuild((b) => b.irritants = b.irritants..removeLast());
@@ -174,7 +174,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((b) => b.irritants = b.irritants..removeAt(0));
         final b = ref.rebuild((b) => b.irritants = b.irritants..removeAt(1));
@@ -187,7 +187,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.0),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((b) => b);
         final b = ref.rebuild((b) => b.irritants = b.irritants..removeLast());
@@ -200,7 +200,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final extraIrritant = Irritant(name: 'Fructose', concentration: 0.03, dosePerServing: 1.0);
         final a = ref.rebuild((b) => b);
@@ -214,7 +214,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final extraIrritant = Irritant(name: 'Fructose', concentration: 0.03, dosePerServing: 1.0);
         final a = ref.rebuild((b) => b.irritants = b.irritants..add(extraIrritant));
@@ -229,7 +229,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final extraIrritant = Irritant(name: 'Fructose', concentration: 0.03, dosePerServing: 1.0);
         final a = ref.rebuild((b) => b.irritants = b.irritants..add(extraIrritant));
@@ -243,7 +243,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final extraIrritant = Irritant(name: 'Fructose', concentration: 0.03, dosePerServing: 1.0);
         final a = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = 0.05));
@@ -257,7 +257,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 0.5),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final extraIrritant = Irritant(name: 'Fructose', concentration: 0.03, dosePerServing: 1.0);
         final a = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = 0.2));
@@ -268,7 +268,7 @@ void main() {
 
       test('closer dose is more similar than further', () {
         final refIrritants = [Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 0.1)].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = 0.09));
         final b = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = 0.2));
@@ -278,7 +278,7 @@ void main() {
 
       test('dose similarity cutoff is logarithmic', () {
         final refIrritants = [Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 1.0)].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = exp(1.0)));
         final b = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = exp(-1.0)));
@@ -291,7 +291,7 @@ void main() {
           Irritant(name: 'Mannitol', concentration: 0.001, dosePerServing: 1.0),
           Irritant(name: 'Sorbitol', concentration: 0.005, dosePerServing: 1.0),
         ].toBuiltList();
-        final ref = FoodIrritantsApi(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
+        final ref = ElementaryFood(names: names, foodIds: foodIds, irritants: refIrritants, canonical: cannonical);
 
         final a = ref.rebuild((b) => b.irritants[0] = b.irritants[0].rebuild((p0) => p0.dosePerServing = exp(1.0)));
         final b = ref.rebuild((b) => b.irritants[1] = b.irritants[1].rebuild((p0) => p0.dosePerServing = exp(-1.1)));

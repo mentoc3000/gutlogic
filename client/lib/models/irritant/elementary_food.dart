@@ -5,10 +5,10 @@ import 'package:built_value/serializer.dart';
 import '../food_reference/edamam_food_reference.dart';
 import 'irritant.dart';
 
-part 'food_irritants_api.g.dart';
+part 'elementary_food.g.dart';
 
-abstract class FoodIrritantsApi implements Built<FoodIrritantsApi, FoodIrritantsApiBuilder> {
-  static Serializer<FoodIrritantsApi> get serializer => _$foodIrritantsApiSerializer;
+abstract class ElementaryFood implements Built<ElementaryFood, ElementaryFoodBuilder> {
+  static Serializer<ElementaryFood> get serializer => _$elementaryFoodSerializer;
 
   /// Food name
   BuiltList<String> get names;
@@ -21,16 +21,16 @@ abstract class FoodIrritantsApi implements Built<FoodIrritantsApi, FoodIrritants
   /// Cannonical Edamam food
   EdamamFoodReference? get canonical;
 
-  FoodIrritantsApi._();
+  ElementaryFood._();
 
-  factory FoodIrritantsApi({
+  factory ElementaryFood({
     required BuiltList<String> names,
     required BuiltList<String> foodIds,
     required BuiltList<Irritant> irritants,
     required EdamamFoodReference? canonical,
   }) =>
-      _$FoodIrritantsApi._(names: names, foodIds: foodIds, irritants: irritants, canonical: canonical);
+      _$ElementaryFood._(names: names, foodIds: foodIds, irritants: irritants, canonical: canonical);
 
-  factory FoodIrritantsApi.fromBuilder([FoodIrritantsApiBuilder Function(FoodIrritantsApiBuilder) updates]) =
-      _$FoodIrritantsApi;
+  factory ElementaryFood.fromBuilder([ElementaryFoodBuilder Function(ElementaryFoodBuilder) updates]) =
+      _$ElementaryFood;
 }

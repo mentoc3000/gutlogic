@@ -3,6 +3,7 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 import '../food_reference/edamam_food_reference.dart';
+import '../irritant/irritant.dart';
 import '../measure.dart';
 import 'food.dart';
 
@@ -18,12 +19,14 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
     required String name,
     BuiltList<Measure>? measures,
     String? brand,
+    BuiltList<Irritant>? irritants,
   }) =>
       _$EdamamFood._(
         id: id,
         name: name,
         measures: measures ?? Food.defaultMeasures,
         brand: brand,
+        irritants: irritants,
       );
 
   factory EdamamFood.fromBuilder([EdamamFoodBuilder Function(EdamamFoodBuilder) updates]) = _$EdamamFood;

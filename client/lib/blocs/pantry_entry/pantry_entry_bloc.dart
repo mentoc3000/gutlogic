@@ -7,7 +7,6 @@ import '../../models/food/food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
 import '../../resources/food/food_service.dart';
-import '../../resources/irritant_service.dart';
 import '../../resources/pantry_service.dart';
 import '../bloc_helpers.dart';
 import 'pantry_entry.dart';
@@ -16,17 +15,14 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState>
     with StreamSubscriber<PantryEntry?, PantryEntryState> {
   final PantryService repository;
   final FoodService foodService;
-  final IrritantService irritantService;
 
   PantryEntryBloc({
     required this.repository,
     required this.foodService,
-    required this.irritantService,
   }) : super(PantryEntryLoading()) {
     on<CreateAndStreamEntry>(_onCreateAndStreamEntry);
     on<StreamEntry>(_onStreamEntry);
-    on<Load>((event, emit) =>
-        emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: event.food, irritants: event.irritants)));
+    on<Load>((event, emit) => emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: event.food)));
     on<Delete>(_onDelete);
     on<UpdateNotes>(_onUpdateNotes, transformer: debounceTransformer);
     on<UpdateSensitivityLevel>(_onUpdateSensitivityLevel, transformer: debounceTransformer);
@@ -37,7 +33,6 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState>
     return PantryEntryBloc(
       repository: context.read<PantryService>(),
       foodService: context.read<FoodService>(),
-      irritantService: context.read<IrritantService>(),
     );
   }
 
@@ -59,13 +54,12 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState>
       emit(PantryEntryLoading());
 
       final food = await _pantryEntryFood(event.pantryEntry);
-      final irritants = await irritantService.ofRef(event.pantryEntry.foodReference);
 
-      emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: food, irritants: irritants));
+      emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: food));
 
       streamSubscription = repository.stream(event.pantryEntry).listen(
         (pantryEntry) {
-          add(Load(pantryEntry: pantryEntry!, food: food, irritants: irritants));
+          add(Load(pantryEntry: pantryEntry!, food: food));
         },
         onError: (dynamic error, StackTrace trace) {
           add(ThrowPantryEntryError.fromError(error: error, trace: trace));

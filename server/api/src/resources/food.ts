@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
+import irritantDb, { irritantsInFood, Irritant } from './irritant_db';
 import log from "./logger";
 
 export type Measure = {
@@ -12,7 +13,10 @@ export type Food = {
   name: string;
   brand: string | null;
   measures: Measure[];
+  irritants?: Irritant[];
 };
+
+export interface FoodReference { $: string, id: string, name: string; }
 
 function isValidLabel(label: string | null): boolean {
   return label !== null && label !== "";
@@ -22,7 +26,8 @@ function isValidWeight(weight: number | null): boolean {
   return weight !== null && weight > 0;
 }
 
-function genericizeEdamamMeasure(edamamMeasure: EdamamMeasure): Measure[] {
+/// Convert measures from Edamam into Gut Logic measures
+function toMeasures(edamamMeasure: EdamamMeasure): Measure[] {
   var measures: Measure[] = [];
 
   if (
@@ -57,22 +62,24 @@ function genericizeEdamamMeasure(edamamMeasure: EdamamMeasure): Measure[] {
   return measures;
 }
 
-function genericizeEdamamFoodMeasures(
-  edamamFoodMeasures: EdamamFoodMeasures,
-): Food | null {
+/// Convert Edamam Food to Gut Logic Food
+async function toFood(edamamFoodMeasures: EdamamFoodMeasures): Promise<Food | null> {
   if (!(edamamFoodMeasures?.food?.foodId)) return null;
   if (!(edamamFoodMeasures?.food?.label)) return null;
 
-  const measures = edamamFoodMeasures?.measures?.map(genericizeEdamamMeasure).reduce(
+  const measures = edamamFoodMeasures?.measures?.map(toMeasures).reduce(
     (acc, el) => acc.concat(el),
     [],
   ) ?? [];
+  const db = await irritantDb.get();
+  const irritants = await irritantsInFood(db, edamamFoodMeasures.food.foodId);
 
   return {
     id: edamamFoodMeasures.food.foodId,
     name: edamamFoodMeasures.food.label,
     brand: edamamFoodMeasures.food.brand,
-    measures: measures,
+    measures,
+    irritants,
   };
 }
 
@@ -86,7 +93,8 @@ async function get(
   const result = await edamam.get({ foodId: foodID, label: name });
 
   if (result.ok) {
-    res.json({ data: genericizeEdamamFoodMeasures(result.value) });
+    const food = await toFood(result.value);
+    res.json({ data: food });
   } else {
     res.status(404).end();
   }
@@ -106,7 +114,8 @@ async function search(
   const result = await edamam.search({ name: name });
 
   if (result.ok) {
-    res.json({ data: result.value.map(genericizeEdamamFoodMeasures) });
+    const foods = await Promise.all(result.value.map(toFood));
+    res.json({ data: foods });
   } else {
     res.json({ data: [] });
   }

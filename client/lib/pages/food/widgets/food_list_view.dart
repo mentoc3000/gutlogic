@@ -1,9 +1,7 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/food/food.dart';
-import '../../../models/irritant/irritant.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/cards/irritants_card.dart';
@@ -12,9 +10,8 @@ import '../../../widgets/cards/similar_foods_card.dart';
 
 class FoodListView extends StatelessWidget {
   final Food food;
-  final BuiltList<Irritant>? irritants;
 
-  const FoodListView({Key? key, required this.food, required this.irritants}) : super(key: key);
+  const FoodListView({Key? key, required this.food}) : super(key: key);
 
   void addFoodToPantry(BuildContext context) {
     Navigator.push(context, Routes.of(context).createPantryEntryPageRouteForFood(food.toFoodReference()));
@@ -26,8 +23,8 @@ class FoodListView extends StatelessWidget {
 
     final cards = [
       SensitivityCard(sensitivity: sensitivity, onTap: () => addFoodToPantry(context)),
-      if (irritants != null) IrritantsCard(irritants: irritants!),
-      if (irritants != null && irritants!.isNotEmpty) SimilarFoodsCard(food: food.toFoodReference()),
+      if (food.irritants != null) IrritantsCard(irritants: food.irritants!),
+      if (food.irritants != null && food.irritants!.isNotEmpty) SimilarFoodsCard(food: food.toFoodReference()),
     ];
 
     return ListView.builder(
