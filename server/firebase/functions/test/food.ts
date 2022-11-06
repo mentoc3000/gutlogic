@@ -1,16 +1,16 @@
-import test from 'ava';
+import test from "ava";
 
-import { fft } from './helpers';
+import { fft } from "./helpers";
 
-import * as functions from '../src/index';
+import * as functions from "../src/index";
 
 test.after.always(async () => {
   // Do cleanup tasks.
   fft.cleanup();
 });
 
-test('gets a single food', async (t) => {
-  const foodId = 'food_axvtyr9anluzygaadzh7ib05jsdg';
+test("gets a single food", async (t) => {
+  const foodId = "food_axvtyr9anluzygaadzh7ib05jsdg";
   const input = { query: foodId };
   const wrapped = fft.wrap(functions.edamamFoodSearch);
   const { status, data } = await wrapped(input);
@@ -18,17 +18,17 @@ test('gets a single food', async (t) => {
   t.is(data.hints[0].food.foodId, foodId);
 });
 
-test('does not get missing food', async (t) => {
-  const foodId = 'food_b8yslxla9z81r0bbv1dzpwrtp54l';
+test("does not get missing food", async (t) => {
+  const foodId = "food_b8yslxla9z81r0bbv1dzpwrtp54l";
   const input = { query: foodId };
   const wrapped = fft.wrap(functions.edamamFoodSearch);
   const { status, data } = await wrapped(input);
   t.is(status, 404);
-  t.is(data.error, 'not_found');
+  t.is(data.error, "not_found");
 });
 
-test('gets many foods', async (t) => {
-  const food = 'pizza';
+test("gets many foods", async (t) => {
+  const food = "pizza";
   const input = { query: food };
   const wrapped = fft.wrap(functions.edamamFoodSearch);
   const { status, data } = await wrapped(input);

@@ -1,8 +1,8 @@
-import test from 'ava';
-import * as sinon from 'sinon';
+import test from "ava";
+import * as sinon from "sinon";
 import * as responses from "./edamam_responses.json";
 import { unwrap } from "../src/result";
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from "axios";
 import edamam from "../src/edamam/edamam";
 
 var getStub: sinon.SinonStub;

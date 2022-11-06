@@ -1,8 +1,8 @@
-import path from 'path';
-import * as sqlite from 'sqlite';
-import * as sqlite3 from 'sqlite3';
-import { FoodReference } from './food';
-import log from './logger';
+import path from "path";
+import * as sqlite from "sqlite";
+import * as sqlite3 from "sqlite3";
+import { FoodReference } from "./food";
+import log from "./logger";
 
 export interface Irritant { name: string, concentration: number, dosePerServing: number; }
 interface FoodInGroup { group: string, foodRef: FoodReference; doses: ReducedIrritantValues; }
@@ -33,7 +33,7 @@ class IrritantDb {
   private _db: sqlite.Database | null;
 
   constructor() {
-    this.dbPath = path.resolve(__dirname, '../../data', 'irritants.sqlite3');
+    this.dbPath = path.resolve(__dirname, "../../data", "irritants.sqlite3");
   }
 
   async get(): Promise<sqlite.Database> {
@@ -81,11 +81,11 @@ const allConcentrations = `
   MAX(CASE WHEN ic.irritant_name = 'Nystose' THEN ic.concentration ELSE NULL END) AS Nystose,
   MAX(CASE WHEN ic.irritant_name = 'Kestose' THEN ic.concentration ELSE NULL END) AS Kestose,
   MAX(CASE WHEN ic.irritant_name = 'Fructan' THEN ic.concentration ELSE NULL END) AS Fructan`;
-const allDosePerServings = allConcentrations.split('/n').map((s) => 'weight_per_serving * ' + s).join('\n');
+const allDosePerServings = allConcentrations.split("/n").map((s) => "weight_per_serving * " + s).join("\n");
 
 // Returns a new multi-map of edamam ID values keyed by food ID.
 async function selectEdamamIdMap(db: sqlite.Database): Promise<Map<string, string[]>> {
-  const sql = `SELECT food_id, edamam_id FROM edamam`;
+  const sql = "SELECT food_id, edamam_id FROM edamam";
   interface Row { food_id: string, edamam_id: string; }
 
   const keyfunc = (row: Row) => row.food_id;
@@ -120,7 +120,7 @@ export async function selectCanonicalMap(db: sqlite.Database): Promise<Map<strin
   const map = new Map<string, FoodReference>();
 
   for (const row of rows) {
-    const canonical = { $: 'EdamamFoodReference', id: row.canonical_edamam_id, name: row.canonical_name };
+    const canonical = { $: "EdamamFoodReference", id: row.canonical_edamam_id, name: row.canonical_name };
     map.set(row.food_id, canonical);
   }
 
@@ -166,23 +166,23 @@ function processIrritants(irritants: Irritant[]) {
 
   // Excess fructose
   // TODO: maxConIrritant may not be necessary because MAX is calculated in sql query
-  const fructose = maxConIrritant(irritants, 'Fructose');
+  const fructose = maxConIrritant(irritants, "Fructose");
   if (fructose !== null) {
     processedIrritants.push(fructose);
   }
 
   // Disaccharides
-  const sorbitol = maxConIrritant(irritants, 'Sorbitol');
+  const sorbitol = maxConIrritant(irritants, "Sorbitol");
   if (sorbitol !== null) {
     processedIrritants.push(sorbitol);
   }
 
-  const mannitol = maxConIrritant(irritants, 'Mannitol');
+  const mannitol = maxConIrritant(irritants, "Mannitol");
   if (mannitol !== null) {
     processedIrritants.push(mannitol);
   }
 
-  const lactose = maxConIrritant(irritants, 'Lactose');
+  const lactose = maxConIrritant(irritants, "Lactose");
   if (lactose !== null) {
     processedIrritants.push(lactose);
   }
@@ -190,11 +190,11 @@ function processIrritants(irritants: Irritant[]) {
   // Galacto-oligosaccharides (GOS)
   // Raffinose and stachyose are the two GOS irritants for which we have data. GOS is the
   // sum of these two, if at least one has data.
-  const raffinose = maxConIrritant(irritants, 'Raffinose');
-  const stachyose = maxConIrritant(irritants, 'Stachyose');
+  const raffinose = maxConIrritant(irritants, "Raffinose");
+  const stachyose = maxConIrritant(irritants, "Stachyose");
   if (raffinose !== null || stachyose !== null) {
     processedIrritants.push({
-      name: 'GOS',
+      name: "GOS",
       concentration: raffinose.concentration + stachyose.concentration,
       dosePerServing: raffinose.dosePerServing + stachyose.dosePerServing,
     });
@@ -203,9 +203,9 @@ function processIrritants(irritants: Irritant[]) {
   // Fructo-oligosaccharides (fructan)
   // Kestose and nystose are two fructans for which we have data, but we also have
   // total fructan. Use fructan if it is larger than the sum of the two individuals.
-  const nystose = maxConIrritant(irritants, 'Nystose');
-  const kestose = maxConIrritant(irritants, 'Kestose');
-  const totalFructan = maxConIrritant(irritants, 'Fructan');
+  const nystose = maxConIrritant(irritants, "Nystose");
+  const kestose = maxConIrritant(irritants, "Kestose");
+  const totalFructan = maxConIrritant(irritants, "Fructan");
 
   const concentrationNystose = nystose !== null ? nystose.concentration : null;
   const concentrationKestose = kestose !== null ? kestose.concentration : null;
@@ -215,7 +215,7 @@ function processIrritants(irritants: Irritant[]) {
     // pass
   } else if (totalFructan === null || concentrationTotalFructan < concentrationNystose + concentrationKestose) {
     processedIrritants.push({
-      name: 'Fructan',
+      name: "Fructan",
       concentration: nystose.concentration + kestose.concentration,
       dosePerServing: nystose.dosePerServing + kestose.dosePerServing,
     });
@@ -249,7 +249,7 @@ export async function elementaryFoods(db: sqlite.Database): Promise<FoodIrritant
 function reduceIrritants(irritants: IrritantValues): ReducedIrritantValues {
   const processedIrritants: ReducedIrritantValues = {};
 
-  ['Fructose', 'Sorbitol', 'Mannitol', 'Lactose'].forEach((i) => {
+  ["Fructose", "Sorbitol", "Mannitol", "Lactose"].forEach((i) => {
     if (i in irritants && irritants[i] !== null) {
       processedIrritants[i] = Math.max(irritants[i], 0);
     }
@@ -258,7 +258,7 @@ function reduceIrritants(irritants: IrritantValues): ReducedIrritantValues {
   // Galacto-oligosaccharides (GOS)
   // Raffinose and stachyose are the two GOS irritants for which we have data. GOS is the
   // sum of these two, if at least one has data.
-  if ('Raffinose' in irritants || 'Stachyose' in irritants) {
+  if ("Raffinose" in irritants || "Stachyose" in irritants) {
     const gos = irritants.Raffinose + irritants.Stachyose;
     if (gos !== null) {
       processedIrritants.GOS = gos;
@@ -269,15 +269,15 @@ function reduceIrritants(irritants: IrritantValues): ReducedIrritantValues {
   // Kestose and nystose are two fructans for which we have data, but we also have
   // total fructan. Use fructan if it is larger than the sum of the two individuals.
   var totalFructan = null;
-  if ('Fructan' in irritants) {
+  if ("Fructan" in irritants) {
     totalFructan = irritants.Fructan;
   }
 
   var sumFructan = null;
-  if ('Kestose' in irritants) {
+  if ("Kestose" in irritants) {
     sumFructan += irritants.Kestose;
   }
-  if ('Nystose' in irritants) {
+  if ("Nystose" in irritants) {
     sumFructan += irritants.Nystose;
   }
 
@@ -313,7 +313,7 @@ SELECT food_group_name,
   interface Row extends IrritantValues { food_group_name: string, canonical_edamam_id: string, canonical_name: string; }
 
   const rows: Row[] = await db.all(selectSql);
-  const toFoodRef = (row: Row) => ({ '$': 'EdamamFoodReference', 'id': row.canonical_edamam_id, 'name': row.canonical_name });
+  const toFoodRef = (row: Row) => ({ "$": "EdamamFoodReference", "id": row.canonical_edamam_id, "name": row.canonical_name });
 
   return rows.map(row => ({ group: row.food_group_name, foodRef: toFoodRef(row), doses: reduceIrritants(row) }));
 }
@@ -383,5 +383,5 @@ export async function foodRef(db: sqlite.Database, name: string): Promise<FoodRe
 
   if (!row) return null;
 
-  return { $: 'EdamamFoodReference', name, id: row.canonical_edamam_id };
+  return { $: "EdamamFoodReference", name, id: row.canonical_edamam_id };
 }

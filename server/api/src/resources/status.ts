@@ -1,5 +1,5 @@
 import express, { Response } from "express";
-import log from './logger';
+import log from "./logger";
 
 function status({ req, res }: { req: Request, res: Response; }) {
   log.d("Received status ping");

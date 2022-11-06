@@ -1,5 +1,5 @@
 import urlcat from "urlcat";
-import axios from 'axios';
+import axios from "axios";
 import log from "../resources/logger";
 import { err, ok, Result } from "../result";
 

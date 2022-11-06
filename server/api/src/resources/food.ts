@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
-import parseIngredients, { Ingredient } from './ingredients';
-import irritantDb, { irritantsInFoodId, Irritant } from './irritant_db';
+import parseIngredients, { Ingredient } from "./ingredients";
+import irritantDb, { irritantsInFoodId, Irritant } from "./irritant_db";
 import log from "./logger";
 
 export type Measure = {

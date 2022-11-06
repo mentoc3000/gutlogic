@@ -5,9 +5,9 @@ import { PurchaseHandler } from "./purchase-handler";
 import { AppStorePurchaseHandler } from "./app-store.purchase-handler";
 import { IapRepository, IAPSource } from "./iap.repository";
 import express, { Request, Response } from "express";
-import log from '../resources/logger';
-import authMiddleware from '../resources/auth';
-import { productDataMap } from './products';
+import log from "../resources/logger";
+import authMiddleware from "../resources/auth";
+import { productDataMap } from "./products";
 
 //
 // Dependencies

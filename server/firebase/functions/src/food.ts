@@ -20,7 +20,7 @@ const edamamFoodSearch = async (input: { query: String; }, context: any) => {
 
   let status, data;
   try {
-    ({ status, data } = await edamamQuery.get(''));
+    ({ status, data } = await edamamQuery.get(""));
   } catch (error: any) {
     if (error.response) {
       // The request was made and the server responded with a status code
