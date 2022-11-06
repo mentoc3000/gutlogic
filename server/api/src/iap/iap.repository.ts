@@ -90,7 +90,7 @@ export class IapRepository {
     if (!snapshot.size) return;
     const writeBatch = this.firestore.batch();
     snapshot.docs.forEach((doc) =>
-      writeBatch.update(doc.ref, { premiumStatus: 'EXPIRED' })
+      writeBatch.update(doc.ref, { premiumStatus: "EXPIRED" })
     );
     await writeBatch.commit();
     console.log(`Expired ${snapshot.size} subscriptions`);

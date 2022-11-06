@@ -1,8 +1,8 @@
-import path from 'path';
-import test from 'ava';
-import { Database, open } from 'sqlite';
-import * as sqlite3 from 'sqlite3';
-import * as idb from '../src/resources/irritant_db';
+import path from "path";
+import test from "ava";
+import { Database, open } from "sqlite";
+import * as sqlite3 from "sqlite3";
+import * as idb from "../src/resources/irritant_db";
 
 sqlite3.verbose();
 
@@ -10,7 +10,7 @@ var db: Database;
 interface Count { count: number; }
 
 test.before(async () => {
-  const dbPath = path.resolve(__dirname, '../data', 'irritants.sqlite3');
+  const dbPath = path.resolve(__dirname, "../data", "irritants.sqlite3");
   db = await open({
     filename: dbPath,
     driver: sqlite3.cached.Database
@@ -23,7 +23,7 @@ test.after.always(async () => {
   }
 });
 
-test('elementaryFoods', async t => {
+test("elementaryFoods", async t => {
   const irritants = await idb.elementaryFoods(db);
 
   const sql = `
@@ -39,22 +39,22 @@ WHERE foods.show_irritants;
   t.is(irritants.length, foodCount);
 
   const irritant = irritants[0];
-  t.true('foodIds' in irritant);
-  t.true('names' in irritant);
-  t.true('irritants' in irritant);
+  t.true("foodIds" in irritant);
+  t.true("names" in irritant);
+  t.true("irritants" in irritant);
 });
 
-test('irritantThresholds', async t => {
+test("irritantThresholds", async t => {
   const irritantData = await idb.irritantThresholds(db);
 
-  const sql = 'SELECT COUNT(*) AS count FROM irritants WHERE low_dose IS NOT NULL AND moderate_dose IS NOT NULL AND high_dose IS NOT NULL';
+  const sql = "SELECT COUNT(*) AS count FROM irritants WHERE low_dose IS NOT NULL AND moderate_dose IS NOT NULL AND high_dose IS NOT NULL";
   const row = await db.get<Count>(sql);
   const irritantCount = row.count;
 
   t.is(irritantData.length, irritantCount);
 });
 
-test('foodsInGroups', async t => {
+test("foodsInGroups", async t => {
   const sql = `
 SELECT COUNT(*) as count
   FROM food_groups AS fg
@@ -77,8 +77,8 @@ SELECT COUNT(*) as count
   t.is(foodCount, foodCount2);
 });
 
-test('selectCanonicalMap', async t => {
-  const sql = 'SELECT COUNT(*) AS count FROM foods WHERE canonical_name IS NOT NULL AND canonical_edamam_id IS NOT NULL';
+test("selectCanonicalMap", async t => {
+  const sql = "SELECT COUNT(*) AS count FROM foods WHERE canonical_name IS NOT NULL AND canonical_edamam_id IS NOT NULL";
   const row = await db.get<Count>(sql);
   const foodCount = row.count;
 
@@ -93,23 +93,23 @@ test('selectCanonicalMap', async t => {
   });
 });
 
-test('irritantsInFoodId', async t => {
-  const foodId = 'food_b4m99bgatuhmfybeq0d7xa9uvr1b';
+test("irritantsInFoodId", async t => {
+  const foodId = "food_b4m99bgatuhmfybeq0d7xa9uvr1b";
   const irritants = await idb.irritantsInFoodId(db, foodId);
 
-  const fructose = irritants.filter((i) => i.name === 'Fructose')[0];
-  const mannitol = irritants.filter((i) => i.name === 'Mannitol')[0];
-  const lactose = irritants.filter((i) => i.name === 'Lactose');
+  const fructose = irritants.filter((i) => i.name === "Fructose")[0];
+  const mannitol = irritants.filter((i) => i.name === "Mannitol")[0];
+  const lactose = irritants.filter((i) => i.name === "Lactose");
 
-  t.is(fructose.name, 'Fructose');
+  t.is(fructose.name, "Fructose");
   t.is(fructose.dosePerServing, 6.072);
-  t.is(mannitol.name, 'Mannitol');
+  t.is(mannitol.name, "Mannitol");
   t.is(mannitol.dosePerServing, 0);
   t.is(lactose.length, 0);
 });
 
-test('irritantsInFoodId with missing entry', async t => {
-  const foodId = '12345';
+test("irritantsInFoodId with missing entry", async t => {
+  const foodId = "12345";
   const irritants = await idb.irritantsInFoodId(db, foodId);
 
   t.is(irritants, null);

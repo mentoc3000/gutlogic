@@ -7,13 +7,13 @@ import * as serviceAccount from "../firebase-adminsdk.json";
 import db from "./resources/irritant_db";
 
 const serviceAccountCamel = {
-    projectId: serviceAccount.project_id,
-    clientEmail: serviceAccount.client_email,
-    privateKey: serviceAccount.private_key,
+  projectId: serviceAccount.project_id,
+  clientEmail: serviceAccount.client_email,
+  privateKey: serviceAccount.private_key,
 };
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccountCamel),
+  credential: admin.credential.cert(serviceAccountCamel),
 });
 
 import status from "./resources/status";
@@ -21,7 +21,7 @@ import food from "./resources/food";
 import auth from "./resources/auth";
 import irritant from "./resources/irritant";
 import iap, { startSubscriptionRevocationCheck } from "./iap/index";
-import log from './resources/logger';
+import log from "./resources/logger";
 
 const app = express();
 
@@ -43,6 +43,6 @@ const end = Date.now();
 log.i(`Server loaded in ${(end - start) / 1000} seconds`);
 log.i(`Listening on port ${port}`);
 
-process.on('SIGINT', () => {
-    db.close();
+process.on("SIGINT", () => {
+  db.close();
 });

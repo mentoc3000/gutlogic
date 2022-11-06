@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 
-import irritantDb, * as idb from './irritant_db';
-import log from './logger';
+import irritantDb, * as idb from "./irritant_db";
+import log from "./logger";
 
 
 async function foodGroups(req: Request, res: Response) {

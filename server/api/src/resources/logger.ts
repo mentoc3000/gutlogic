@@ -16,7 +16,7 @@ class Logger {
     if (this.show) {
       const globalFields = {
         // Log viewer accesses 'component' as 'jsonPayload.component'.
-        component: 'arbitrary-property',
+        component: "arbitrary-property",
       };
       const entry = Object.assign(fields, globalFields);
       console.log(JSON.stringify(entry));

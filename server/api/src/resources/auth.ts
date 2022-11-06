@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { getAuth } from 'firebase-admin/auth';
-import log from './logger';
+import { getAuth } from "firebase-admin/auth";
+import log from "./logger";
 
 
 const validateJwt = async (jwt: string): Promise<boolean> => {

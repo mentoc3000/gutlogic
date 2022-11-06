@@ -14,8 +14,8 @@ import {
   Timestamp,
 } from "../app-store-server-api/Models";
 import log from "../resources/logger";
-import { firestore } from 'firebase-admin';
-import * as appleReceiptVerify from 'node-apple-receipt-verify';
+import { firestore } from "firebase-admin";
+import * as appleReceiptVerify from "node-apple-receipt-verify";
 import * as config from "../config.json";
 
 // Add typings for missing property in library interface.
@@ -79,8 +79,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     this.transferPremium = this.transferPremium.bind(this);
 
     appleReceiptVerify.config({
-      // TODO: turn off verbosity
-      verbose: true,
+      verbose: false,
       secret: config.appStoreSharedSecret,
       extended: true,
       environment: ["production", "sandbox"], // Optional, defaults to ['production'],
@@ -107,208 +106,208 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
   async handleEvent(event: DecodedNotification, res: Response): Promise<void> {
 
     switch (event.notificationType) {
-      case NotificationType.ConsumptionRequest:
-        // Notification not expected from App Store API
-        log.w(`Unexpected notification type: ${event.notificationType}`);
+    case NotificationType.ConsumptionRequest:
+      // Notification not expected from App Store API
+      log.w(`Unexpected notification type: ${event.notificationType}`);
+      res.status(200).end();
+      return;
+
+    case NotificationType.DidChangeRenewalPref:
+      // User made change to subscription plan
+      switch (event.subtype) {
+      case NotificationSubtype.Upgrade:
+        // Plan changes apply immediately
+      case NotificationSubtype.Downgrade:
+        // Plan changes apply at next renewal
+      case undefined:
+      case null:
+        // Subscription level unchanged
         res.status(200).end();
         return;
 
-      case NotificationType.DidChangeRenewalPref:
-        // User made change to subscription plan
-        switch (event.subtype) {
-          case NotificationSubtype.Upgrade:
-          // Plan changes apply immediately
-          case NotificationSubtype.Downgrade:
-          // Plan changes apply at next renewal
-          case undefined:
-          case null:
-            // Subscription level unchanged
-            res.status(200).end();
-            return;
+      default:
+        // Unexpected subtype
+        log.w(`Unexpected notification subtype: ${event.subtype}`);
+        res.status(200).end();
+        return;
+      }
 
-          default:
-            // Unexpected subtype
-            log.w(`Unexpected notification subtype: ${event.subtype}`);
-            res.status(200).end();
-            return;
-        }
+    case NotificationType.DidChangeRenewalStatus:
+      // Auto renew enabled or disabled
+      // Accept without action
+      res.status(200).end();
+      return;
 
-      case NotificationType.DidChangeRenewalStatus:
-        // Auto renew enabled or disabled
-        // Accept without action
+    case NotificationType.DidFailToRenew:
+      // Billing issue occured
+      switch (event.subtype) {
+      case NotificationSubtype.GracePeriod:
+        // Continue to provide service through grace period
         res.status(200).end();
         return;
 
-      case NotificationType.DidFailToRenew:
-        // Billing issue occured
-        switch (event.subtype) {
-          case NotificationSubtype.GracePeriod:
-            // Continue to provide service through grace period
-            res.status(200).end();
-            return;
-
-          case undefined:
-          case null: {
-            // Grace period has ended. Cancel subscription
-            const status = await this.unsubscribe(event.data);
-            res.status(status).end();
-            return;
-          }
-
-          default:
-            // Unexpected subtype
-            log.w(`Unexpected notification subtype: ${event.subtype}`);
-            res.status(200).end();
-            return;
-        }
-
-      case NotificationType.DidRenew:
-        // Subscription renewal success
-        switch (event.subtype) {
-          case NotificationSubtype.BillingRecovery:
-          // Expired subscription that previously failed to renew now successfully renewed
-          case undefined:
-          case null: {
-            // Active subscription has successfully auto renewed
-            const status = await this.purchase(event.data);
-            res.status(status).end();
-            return;
-          }
-
-          default:
-            // Unexpected subtype
-            log.w(`Unexpected notification subtype: ${event.subtype}`);
-            res.status(200).end();
-            return;
-        }
-
-      case NotificationType.Expired:
-        // Subscription expired
-        switch (event.subtype) {
-          case NotificationSubtype.Voluntary:
-          // User disabled subscription renewal
-          case NotificationSubtype.BillingRetry:
-          // Billin gretry period ended without a successful transaction
-          case NotificationSubtype.PriceIncrease: {
-            // User did not consent to price increase
-            const status = await this.unsubscribe(event.data);
-            res.status(status).end();
-            return;
-          }
-
-          default:
-            // Unexpected subtype
-            log.w(`Unexpected notification subtype: ${event.subtype}`);
-            res.status(200).end();
-            return;
-        }
-
-      case NotificationType.GracePeriodExpired: {
-        // Billing grace period has ended without renewal
+      case undefined:
+      case null: {
+        // Grace period has ended. Cancel subscription
         const status = await this.unsubscribe(event.data);
         res.status(status).end();
         return;
       }
 
-      case NotificationType.OfferRedeemed:
-        // user redeemed a promotional offer or offer code
-        switch (event.subtype) {
-          case NotificationSubtype.InitialBuy:
-          // User redeemed an offer for a first-time purchase
-          case NotificationSubtype.Resubscribe: {
-            // User redeemed an offer for a renewal
-            const status = await this.purchase(event.data);
-            res.status(status).end();
-            return;
-          }
-
-          case undefined:
-          case null:
-            // User redeemed an offer for their active subscription
-            res.status(200).end();
-            return;
-
-          case NotificationSubtype.Upgrade:
-          case NotificationSubtype.Downgrade:
-          default:
-            // Unexpected subtype
-            log.w(`Unexpected notification subtype: ${event.subtype}`);
-            res.status(200).end();
-            return;
-        }
-
-      case NotificationType.PriceIncrease:
-        // System has informed user of an auto-renewable subscription price increase
-        switch (event.subtype) {
-          case NotificationSubtype.Pending:
-          // User has not yet responsed to price increase
-          case NotificationSubtype.Accepted:
-            // User has consented to the price increase
-            res.status(200).end();
-            return;
-
-          default:
-            // Unexpcted subtype
-            log.w(`Unexpected notification subtype: ${event.subtype}`);
-            res.status(200).end();
-            return;
-        }
-
-      case NotificationType.Refund: {
-        // App Store successfully refunded a transaction
-        const status = await this.undoPurchase(event.data);
-        res.status(status).end();
+      default:
+        // Unexpected subtype
+        log.w(`Unexpected notification subtype: ${event.subtype}`);
+        res.status(200).end();
         return;
       }
 
-      case NotificationType.RefundDeclined:
-        // App Store declined a refund req initiated by the app developer
-        res.status(200).end();
-        return;
-
-      case NotificationType.RenewalExtended: {
-        // App Store extended the subscription renewal date requested by the developer
+    case NotificationType.DidRenew:
+      // Subscription renewal success
+      switch (event.subtype) {
+      case NotificationSubtype.BillingRecovery:
+        // Expired subscription that previously failed to renew now successfully renewed
+      case undefined:
+      case null: {
+        // Active subscription has successfully auto renewed
         const status = await this.purchase(event.data);
         res.status(status).end();
         return;
       }
 
-      case NotificationType.Revoke: {
-        // In-app purchase through family sharing is no longer available
-        // Family sharing is not supported
-        log.w(`Unexpected notification type: ${event.notificationType}`);
+      default:
+        // Unexpected subtype
+        log.w(`Unexpected notification subtype: ${event.subtype}`);
         res.status(200).end();
         return;
       }
 
-      case NotificationType.Subscribed:
-        switch (event.subtype) {
-          case NotificationSubtype.InitialBuy:
-          // User subscribed for the first time
-          case NotificationSubtype.Resubscribe: {
-            // User resubscribed
-            res.status(200).end();
-            return;
-          }
+    case NotificationType.Expired:
+      // Subscription expired
+      switch (event.subtype) {
+      case NotificationSubtype.Voluntary:
+        // User disabled subscription renewal
+      case NotificationSubtype.BillingRetry:
+        // Billin gretry period ended without a successful transaction
+      case NotificationSubtype.PriceIncrease: {
+        // User did not consent to price increase
+        const status = await this.unsubscribe(event.data);
+        res.status(status).end();
+        return;
+      }
 
-          default:
-            // Unexpected subtype
-            log.w(`Unexpected notification subtype: ${event.subtype}`);
-            res.status(200).end();
-            return;
-        }
+      default:
+        // Unexpected subtype
+        log.w(`Unexpected notification subtype: ${event.subtype}`);
+        res.status(200).end();
+        return;
+      }
 
-      case NotificationType.Test:
-        // Accept without action
-        log.i("Test notification received");
+    case NotificationType.GracePeriodExpired: {
+      // Billing grace period has ended without renewal
+      const status = await this.unsubscribe(event.data);
+      res.status(status).end();
+      return;
+    }
+
+    case NotificationType.OfferRedeemed:
+      // user redeemed a promotional offer or offer code
+      switch (event.subtype) {
+      case NotificationSubtype.InitialBuy:
+        // User redeemed an offer for a first-time purchase
+      case NotificationSubtype.Resubscribe: {
+        // User redeemed an offer for a renewal
+        const status = await this.purchase(event.data);
+        res.status(status).end();
+        return;
+      }
+
+      case undefined:
+      case null:
+        // User redeemed an offer for their active subscription
+        res.status(200).end();
+        return;
+
+      case NotificationSubtype.Upgrade:
+      case NotificationSubtype.Downgrade:
+      default:
+        // Unexpected subtype
+        log.w(`Unexpected notification subtype: ${event.subtype}`);
+        res.status(200).end();
+        return;
+      }
+
+    case NotificationType.PriceIncrease:
+      // System has informed user of an auto-renewable subscription price increase
+      switch (event.subtype) {
+      case NotificationSubtype.Pending:
+        // User has not yet responsed to price increase
+      case NotificationSubtype.Accepted:
+        // User has consented to the price increase
         res.status(200).end();
         return;
 
       default:
-        // Unrecognized notification type
-        log.w(`Unexpected notification type: ${event.notificationType}`);
+        // Unexpcted subtype
+        log.w(`Unexpected notification subtype: ${event.subtype}`);
         res.status(200).end();
         return;
+      }
+
+    case NotificationType.Refund: {
+      // App Store successfully refunded a transaction
+      const status = await this.undoPurchase(event.data);
+      res.status(status).end();
+      return;
+    }
+
+    case NotificationType.RefundDeclined:
+      // App Store declined a refund req initiated by the app developer
+      res.status(200).end();
+      return;
+
+    case NotificationType.RenewalExtended: {
+      // App Store extended the subscription renewal date requested by the developer
+      const status = await this.purchase(event.data);
+      res.status(status).end();
+      return;
+    }
+
+    case NotificationType.Revoke: {
+      // In-app purchase through family sharing is no longer available
+      // Family sharing is not supported
+      log.w(`Unexpected notification type: ${event.notificationType}`);
+      res.status(200).end();
+      return;
+    }
+
+    case NotificationType.Subscribed:
+      switch (event.subtype) {
+      case NotificationSubtype.InitialBuy:
+        // User subscribed for the first time
+      case NotificationSubtype.Resubscribe: {
+        // User resubscribed
+        res.status(200).end();
+        return;
+      }
+
+      default:
+        // Unexpected subtype
+        log.w(`Unexpected notification subtype: ${event.subtype}`);
+        res.status(200).end();
+        return;
+      }
+
+    case NotificationType.Test:
+      // Accept without action
+      log.i("Test notification received");
+      res.status(200).end();
+      return;
+
+    default:
+      // Unrecognized notification type
+      log.w(`Unexpected notification type: ${event.notificationType}`);
+      res.status(200).end();
+      return;
     }
   }
 
@@ -316,7 +315,7 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
     const expirationDate = data.transactionInfo?.expiresDate;
 
     if (!(expirationDate)) {
-      log.w(`Transaction missing expiration date`);
+      log.w("Transaction missing expiration date");
       return 400;
     }
 
@@ -428,32 +427,32 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
       // Process the product
       switch (product.productId) {
-        case "premium_subscription_monthly":
-        case "premium_subscription_monthly_dev": {
-          let activeSubscriptionExists: boolean;
-          try {
-            // Check if this transaction id with an active subscription already exists with a user
-            // eslint-disable-next-line no-await-in-loop
-            activeSubscriptionExists = await this.iapRepository.isActive("app_store", product.originalTransactionId);
-          } catch (e) {
-            log.e(`Failed in finding user for transaction id ${product.originalTransactionId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
-            return false;
-          }
-
-          if (activeSubscriptionExists) {
-            log.w(`Active subscription already exists with order id ${product.originalTransactionId}`);
-            return false;
-          }
-
-          try {
-            // eslint-disable-next-line no-await-in-loop
-            await this.iapRepository.updatePurchase({ userId, purchaseData: this.purchaseData(product) });
-            break;
-          } catch (e) {
-            log.e(`Failed to update purchase for user ${userId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
-            return false;
-          }
+      case "premium_subscription_monthly":
+      case "premium_subscription_monthly_dev": {
+        let activeSubscriptionExists: boolean;
+        try {
+          // Check if this transaction id with an active subscription already exists with a user
+          // eslint-disable-next-line no-await-in-loop
+          activeSubscriptionExists = await this.iapRepository.isActive("app_store", product.originalTransactionId);
+        } catch (e) {
+          log.e(`Failed in finding user for transaction id ${product.originalTransactionId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
+          return false;
         }
+
+        if (activeSubscriptionExists) {
+          log.w(`Active subscription already exists with order id ${product.originalTransactionId}`);
+          return false;
+        }
+
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await this.iapRepository.updatePurchase({ userId, purchaseData: this.purchaseData(product) });
+          break;
+        } catch (e) {
+          log.e(`Failed to update purchase for user ${userId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
+          return false;
+        }
+      }
       }
     }
     return true;
@@ -486,18 +485,18 @@ export class AppStorePurchaseHandler extends PurchaseHandler {
 
       // Process the product
       switch (product.productId) {
-        case "premium_subscription_monthly":
-        case "premium_subscription_monthly_dev":
-          try {
-            // eslint-disable-next-line no-await-in-loop
-            await this.transferPremium(userId, product);
-            break;
-          } catch (e) {
-            log.e(`Failed to transfer purchase of ${product.productId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
-            return false;
-          }
-        default:
-          log.w(`Unrecognized product ${product.productId}`);
+      case "premium_subscription_monthly":
+      case "premium_subscription_monthly_dev":
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await this.transferPremium(userId, product);
+          break;
+        } catch (e) {
+          log.e(`Failed to transfer purchase of ${product.productId}: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`);
+          return false;
+        }
+      default:
+        log.w(`Unrecognized product ${product.productId}`);
       }
     }
     return true;

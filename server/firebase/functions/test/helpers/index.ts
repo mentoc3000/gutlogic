@@ -1,7 +1,7 @@
 // Ava excludes files in **/helpers/** from the test runner.
 
-import firebaseFunctionsTest from 'firebase-functions-test';
+import firebaseFunctionsTest from "firebase-functions-test";
 
 export const fft = firebaseFunctionsTest({
-  projectId: 'gutlogic-dev'
+  projectId: "gutlogic-dev"
 }, process.env.GOOGLE_APPLICATION_CREDENTIALS);
