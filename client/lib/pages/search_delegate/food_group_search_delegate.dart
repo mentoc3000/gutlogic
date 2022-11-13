@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../blocs/food_group_search/food_group_search.dart';
 import '../../blocs/food_search/food_search.dart';
@@ -141,7 +142,7 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
   Widget buildSuggestionList(
     BuildContext context,
     BuiltList<FoodGroupEntry> foodGroupEntries,
-    BuiltMap<FoodGroupEntry, int?> maxIntensities,
+    BuiltMap<FoodGroupEntry, Intensity> maxIntensities,
   ) {
     return GLScaffold(
       floatingActionButton: buildAddFab(context),
@@ -152,7 +153,7 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
           itemBuilder: (BuildContext context, int index) {
             if (index < foodGroupEntries.length) {
               final result = foodGroupEntries[index];
-              final maxIntensity = maxIntensities[result];
+              final maxIntensity = maxIntensities[result] ?? Intensity.none;
               return FoodGroupEntryTile(
                 entry: result,
                 maxIntensity: maxIntensity,

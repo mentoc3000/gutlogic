@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../../models/food_reference/food_reference.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
@@ -10,7 +11,7 @@ import '../../../widgets/sensitivity_indicator.dart';
 
 class SimilarFoodTile extends StatelessWidget {
   final FoodReference food;
-  final int? maxIntensity;
+  final Intensity maxIntensity;
 
   const SimilarFoodTile({Key? key, required this.food, required this.maxIntensity}) : super(key: key);
 

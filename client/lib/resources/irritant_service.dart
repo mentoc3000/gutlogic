@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gutlogic/resources/api_service.dart';
 import 'package:provider/provider.dart';
 
 import '../models/food_reference/food_reference.dart';
-import '../models/irritant/intensity_thresholds.dart';
 import '../models/irritant/elementary_food.dart';
+import '../models/irritant/intensity.dart';
+import '../models/irritant/intensity_thresholds.dart';
 import '../models/irritant/irritant.dart';
 import '../models/serializers.dart';
 import '../util/math.dart';
+import 'api_service.dart';
 import 'firebase/firestore_service.dart';
 
 class IrritantService {
@@ -108,16 +109,34 @@ class IrritantService {
     return intensityThresholds[irritant];
   }
 
-  Future<int> maxIntensity(BuiltMap<String, double> doses) async {
-    var maxIntensity = 0;
+  static Intensity intensity({required double dose, required Iterable<double> intensityThresholds}) {
+    if (dose == 0) return Intensity.none;
+
+    final numThresholdsExceeded = intensityThresholds.map((t) => dose > t).fold<int>(0, (acc, tf) => acc += tf ? 1 : 0);
+    switch (numThresholdsExceeded) {
+      case 0:
+        return Intensity.trace;
+      case 1:
+        return Intensity.low;
+      case 2:
+        return Intensity.medium;
+      case 3:
+        return Intensity.high;
+      default:
+        throw ArgumentError(numThresholdsExceeded);
+    }
+  }
+
+  Future<Intensity> maxIntensity(BuiltMap<String, double> doses) async {
+    var maxIntensity = Intensity.none;
     for (var doseEntry in doses.entries) {
       final irritantName = doseEntry.key;
       final dose = doseEntry.value;
       final thresholds = await intensityThresholds(irritantName);
       if (thresholds == null) continue;
-      final intensity = thresholds.map((t) => dose > t).fold<int>(0, (acc, tf) => acc += tf ? 1 : 0);
+      final intensity = IrritantService.intensity(dose: dose, intensityThresholds: thresholds);
       if (intensity > maxIntensity) {
-        maxIntensity = max(maxIntensity, intensity);
+        maxIntensity = intensity;
       }
     }
     return maxIntensity;

@@ -55,9 +55,9 @@ class AnalysisService {
   }
 
   BuiltMap<DateTime, Severity?> _groupSeverity(BuiltList<DiaryEntry> event, int count) {
-    final today = DateTime.now().toLocal().toMidnight();
-    final days = List.generate(count, (index) => today.subtract(Duration(days: index)));
-    final start = days.last.toMidnight();
+    final today = DateTime.now().toLocalMidnight();
+    final days = List.generate(count, (index) => today.subtractDays(index));
+    final start = days.last.toLocalMidnight();
 
     // Sort by most recent and group by date
     final diaryEntriesByDate = event
@@ -65,7 +65,7 @@ class AnalysisService {
         .sortedBy((a) => a.datetime) // required for groupListsBy (TBC)
         .reversed // most recent dates first
         .takeWhile((value) => value.datetime.compareTo(start) >= 0) // remove dates outside of window
-        .groupListsBy((e) => e.datetime.toLocal().toMidnight())
+        .groupListsBy((e) => e.datetime.toLocalMidnight())
         .entries
         .sortedBy((element) => element.key);
 
@@ -104,9 +104,9 @@ class AnalysisService {
   }
 
   BuiltMap<DateTime, int> _countStreak(BuiltList<DiaryEntry> event, int count) {
-    final today = DateTime.now().toLocal().toMidnight();
-    final days = List.generate(count, (index) => today.subtract(Duration(days: index)));
-    final countStart = days.last.toMidnight();
+    final today = DateTime.now().toLocalMidnight();
+    final days = List.generate(count, (index) => today.subtractDays(index));
+    final countStart = days.last.toLocalMidnight();
 
     if (event.isEmpty) return BuiltMap({for (var d in days) d: 0});
 
@@ -114,14 +114,14 @@ class AnalysisService {
         .toList()
         .sortedBy((a) => a.datetime) // required for groupListsBy (TBC)
         .reversed // most recent dates first
-        .groupListsBy((e) => e.datetime.toLocal().toMidnight());
+        .groupListsBy((e) => e.datetime.toLocalMidnight());
 
     final diaryStart = diaryEntriesByDate.keys.reduce((value, element) => value.isBefore(element) ? value : element);
 
     final streak = {for (var d in days) d: 0};
 
     var streakCount = 0;
-    var day = diaryStart.toLocal().toMidnight();
+    var day = diaryStart.toLocalMidnight();
 
     while (!day.isAfter(today)) {
       // Increment count if there are diary entries on day
@@ -136,7 +136,7 @@ class AnalysisService {
         streak[day] = streakCount;
       }
 
-      day = day.add(const Duration(days: 1));
+      day = day.addDays(1);
     }
 
     return BuiltMap(streak);

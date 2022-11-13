@@ -1,5 +1,5 @@
 extension Date on DateTime {
-  DateTime toMidnight() => DateTime(year, month, day);
+  DateTime toLocalMidnight() => DateTime(year, month, day);
 
   String weekdayString() {
     switch (weekday) {
@@ -42,4 +42,12 @@ extension Date on DateTime {
         throw ArgumentError(this);
     }
   }
+
+  /// Add days, accounting for daylight savings change
+  DateTime addDays(int deltaDays) {
+    return DateTime(year, month, day + deltaDays, hour, minute, second, millisecond, microsecond);
+  }
+
+  /// Subtract days, accounting for daylight savings change
+  DateTime subtractDays(int deltaDays) => addDays(-deltaDays);
 }

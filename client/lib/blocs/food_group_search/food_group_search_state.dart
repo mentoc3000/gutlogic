@@ -1,5 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../models/food_group_entry.dart';
 import '../../util/error_report.dart';
@@ -22,12 +23,15 @@ class FoodGroupSearchLoading extends FoodGroupSearchState {
 
 class FoodGroupSearchLoaded extends FoodGroupSearchState {
   final BuiltList<FoodGroupEntry> foods;
-  final BuiltMap<FoodGroupEntry, int?> maxIntensities;
+  final BuiltMap<FoodGroupEntry, Intensity> maxIntensities;
 
   const FoodGroupSearchLoaded({required this.foods, required this.maxIntensities});
 
   factory FoodGroupSearchLoaded.empty() {
-    return FoodGroupSearchLoaded(foods: BuiltList<FoodGroupEntry>(), maxIntensities: BuiltMap<FoodGroupEntry, int?>());
+    return FoodGroupSearchLoaded(
+      foods: BuiltList<FoodGroupEntry>(),
+      maxIntensities: BuiltMap<FoodGroupEntry, Intensity>(),
+    );
   }
 
   @override

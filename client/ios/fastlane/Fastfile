@@ -102,7 +102,10 @@ platform :ios do
       api_key: get_app_store_connect_api_key,
       force: true,
       precheck_include_in_app_purchases: false, # cannot yet be performed with API key
-      overwrite_screenshots: true
+      overwrite_screenshots: true,
+      # Manually check on App Store Connect before releasing
+      submit_for_review: false,
+      automatic_release: false
     )
 
   end
