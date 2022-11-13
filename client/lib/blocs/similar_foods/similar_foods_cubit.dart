@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../models/food_reference/food_reference.dart';
 import '../../models/irritant/elementary_food.dart';
@@ -37,7 +38,7 @@ class SimilarFoodsCubit extends Cubit<SimilarFoodsState>
 
     // Get the maximum intensity for each food
     final maxIntensities = await Future.wait(doses.map((d) async => await irritantService.maxIntensity(d)));
-    final maxIntensitiesMap = BuiltMap<FoodReference, int?>(Map.fromIterables(foodReferences, maxIntensities));
+    final maxIntensitiesMap = BuiltMap<FoodReference, Intensity>(Map.fromIterables(foodReferences, maxIntensities));
 
     emit(SimilarFoodsLoaded(foods: foodReferences, maxIntensities: maxIntensitiesMap));
   }

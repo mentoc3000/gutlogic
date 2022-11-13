@@ -1,5 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../models/food_group_entry.dart';
 import '../../util/error_report.dart';
@@ -22,7 +23,7 @@ class FoodGroupLoading extends FoodGroupState {
 
 class FoodGroupLoaded extends FoodGroupState {
   final BuiltSet<FoodGroupEntry> foods;
-  final BuiltMap<FoodGroupEntry, int?> maxIntensities;
+  final BuiltMap<FoodGroupEntry, Intensity> maxIntensities;
 
   const FoodGroupLoaded({required this.foods, required this.maxIntensities});
 

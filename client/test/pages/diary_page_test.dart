@@ -16,6 +16,7 @@ import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
 import 'package:gutlogic/pages/diary/diary_page.dart';
+import 'package:gutlogic/util/date_time_ext.dart';
 import 'package:gutlogic/widgets/gl_loading_widget.dart';
 import 'package:gutlogic/resources/diary_repositories/diary_repository.dart';
 import 'package:gutlogic/resources/sensitivity/sensitivity_service.dart';
@@ -187,7 +188,7 @@ void main() {
         mealElements: BuiltList<MealElement>([]),
       );
 
-      final yesterday = today.subtract(const Duration(days: 1));
+      final yesterday = today.subtractDays(1);
       final yesterdayMealEntry = MealEntry(
         id: 'meal1',
         datetime: yesterday,
@@ -252,8 +253,8 @@ void main() {
     });
 
     testWidgets('indicates gaps in diary', (WidgetTester tester) async {
-      final lastWeek = DateTime.now().subtract(const Duration(days: 7));
-      final lastMonth = lastWeek.subtract(const Duration(days: 30));
+      final lastWeek = DateTime.now().subtractDays(7);
+      final lastMonth = lastWeek.subtractDays(30);
       final lastMonthMealEntry = MealEntry(
         id: 'meal1',
         datetime: lastMonth,

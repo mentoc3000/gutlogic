@@ -1,5 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../models/food_reference/food_reference.dart';
 import '../../util/error_report.dart';
@@ -22,7 +23,7 @@ class SimilarFoodsLoading extends SimilarFoodsState {
 
 class SimilarFoodsLoaded extends SimilarFoodsState {
   final BuiltList<FoodReference> foods;
-  final BuiltMap<FoodReference, int?> maxIntensities;
+  final BuiltMap<FoodReference, Intensity> maxIntensities;
 
   const SimilarFoodsLoaded({required this.foods, required this.maxIntensities});
 

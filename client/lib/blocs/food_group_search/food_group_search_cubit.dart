@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../models/food_group_entry.dart';
 import '../../resources/food_group_repository.dart';
@@ -44,7 +45,8 @@ class FoodGroupSearchCubit extends Cubit<FoodGroupSearchState> {
           match: query,
           keyOf: (FoodGroupEntry e) => e.foodRef.name,
         );
-        final maxIntensities = BuiltMap<FoodGroupEntry, int?>({for (var e in entries) e: _maxIntensitiesMapCache![e]});
+        final maxIntensities =
+            BuiltMap<FoodGroupEntry, Intensity>({for (var e in entries) e: _maxIntensitiesMapCache![e]});
         emit(FoodGroupSearchLoaded(foods: BuiltList(entries), maxIntensities: maxIntensities));
       }
     } catch (error, trace) {

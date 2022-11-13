@@ -70,14 +70,14 @@ void main() {
   final intense = Symptom(symptomType: SymptomType(id: 'id', name: 'Gas'), severity: Severity.intense);
   final severe = Symptom(symptomType: SymptomType(id: 'id', name: 'Pain'), severity: Severity.severe);
 
-  final today = DateTime.now().toLocal().toMidnight();
+  final today = DateTime.now().toLocalMidnight();
   final emptyDiary = BuiltList<DiaryEntry>();
   final diary = [
-    MealEntry(id: 'id', datetime: today.subtract(const Duration(days: 5)), mealElements: BuiltList<MealElement>()),
-    SymptomEntry(id: 'id', datetime: today.subtract(const Duration(days: 5)), symptom: mild),
-    SymptomEntry(id: 'id', datetime: today.subtract(const Duration(days: 5)), symptom: moderate),
-    SymptomEntry(id: 'id', datetime: today.subtract(const Duration(days: 3)), symptom: intense),
-    MealEntry(id: 'id', datetime: today.subtract(const Duration(days: 1)), mealElements: BuiltList<MealElement>()),
+    MealEntry(id: 'id', datetime: today.subtractDays(5), mealElements: BuiltList<MealElement>()),
+    SymptomEntry(id: 'id', datetime: today.subtractDays(5), symptom: mild),
+    SymptomEntry(id: 'id', datetime: today.subtractDays(5), symptom: moderate),
+    SymptomEntry(id: 'id', datetime: today.subtractDays(3), symptom: intense),
+    MealEntry(id: 'id', datetime: today.subtractDays(1), mealElements: BuiltList<MealElement>()),
     SymptomEntry(id: 'id', datetime: today, symptom: severe),
   ].toBuiltList();
 
@@ -179,11 +179,11 @@ void main() {
         final recentSeverity = analysisService.recentSeverity(count: 6);
         final expected = BuiltMap<DateTime, Severity?>({
           today: Severity.severe,
-          today.subtract(const Duration(days: 1)): null,
-          today.subtract(const Duration(days: 2)): null,
-          today.subtract(const Duration(days: 3)): Severity.intense,
-          today.subtract(const Duration(days: 4)): null,
-          today.subtract(const Duration(days: 5)): Severity.moderate,
+          today.subtractDays(1): null,
+          today.subtractDays(2): null,
+          today.subtractDays(3): Severity.intense,
+          today.subtractDays(4): null,
+          today.subtractDays(5): Severity.moderate,
         });
 
         await expectLater(recentSeverity, emits(expected));
@@ -195,8 +195,8 @@ void main() {
         final recentSeverity = analysisService.recentSeverity(count: 3);
         final expected = BuiltMap<DateTime, Severity?>({
           today: Severity.severe,
-          today.subtract(const Duration(days: 1)): null,
-          today.subtract(const Duration(days: 2)): null,
+          today.subtractDays(1): null,
+          today.subtractDays(2): null,
         });
 
         await expectLater(recentSeverity, emits(expected));
@@ -208,8 +208,8 @@ void main() {
         final recentSeverity = analysisService.recentSeverity(count: 3);
         final expected = BuiltMap<DateTime, Severity?>({
           today: null,
-          today.subtract(const Duration(days: 1)): null,
-          today.subtract(const Duration(days: 2)): null,
+          today.subtractDays(1): null,
+          today.subtractDays(2): null,
         });
 
         await expectLater(recentSeverity, emits(expected));
@@ -232,7 +232,7 @@ void main() {
       test('counts SymptomTypes since date', () async {
         when(diaryRepository.streamAll()).thenAnswer((_) => Stream.value(diary));
 
-        final since = today.subtract(const Duration(days: 4));
+        final since = today.subtractDays(4);
         final symptomTypeCount = analysisService.symptomTypeCount(since: since);
         final expected = BuiltMap<SymptomType, int>({
           SymptomType(id: 'id', name: 'Gas'): 1,
@@ -259,15 +259,15 @@ void main() {
         final symptomTypeCount = analysisService.diaryStreak(count: 10);
         final expected = BuiltMap<DateTime, int>({
           today: 2,
-          today.subtract(const Duration(days: 1)): 1,
-          today.subtract(const Duration(days: 2)): 0,
-          today.subtract(const Duration(days: 3)): 1,
-          today.subtract(const Duration(days: 4)): 0,
-          today.subtract(const Duration(days: 5)): 1,
-          today.subtract(const Duration(days: 6)): 0,
-          today.subtract(const Duration(days: 7)): 0,
-          today.subtract(const Duration(days: 8)): 0,
-          today.subtract(const Duration(days: 9)): 0,
+          today.subtractDays(1): 1,
+          today.subtractDays(2): 0,
+          today.subtractDays(3): 1,
+          today.subtractDays(4): 0,
+          today.subtractDays(5): 1,
+          today.subtractDays(6): 0,
+          today.subtractDays(7): 0,
+          today.subtractDays(8): 0,
+          today.subtractDays(9): 0,
         });
 
         await expectLater(symptomTypeCount, emits(expected));
@@ -288,8 +288,8 @@ void main() {
         final symptomTypeCount = analysisService.diaryStreak(count: 3);
         final expected = BuiltMap<DateTime, int>({
           today: 0,
-          today.subtract(const Duration(days: 1)): 0,
-          today.subtract(const Duration(days: 2)): 0,
+          today.subtractDays(1): 0,
+          today.subtractDays(2): 0,
         });
 
         await expectLater(symptomTypeCount, emits(expected));

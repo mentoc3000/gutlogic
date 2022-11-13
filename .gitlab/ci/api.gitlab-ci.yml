@@ -143,8 +143,3 @@ api:deploy:release:
   rules:
     - !reference [.api-release-commit-rules, rules]
   environment: release
-  # TODO: remove artifact storage
-  artifacts:
-    paths:
-      - server/api/**/*
-    expire_in: 1 day

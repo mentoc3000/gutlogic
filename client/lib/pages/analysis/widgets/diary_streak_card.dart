@@ -54,10 +54,10 @@ class DiaryStreakCard extends StatelessWidget {
   BuiltMap<DateTime, int> _exampleData() {
     return BuiltMap<DateTime, int>({
       DateTime.now(): 3,
-      DateTime.now().subtract(const Duration(days: 1)): 2,
-      DateTime.now().subtract(const Duration(days: 2)): 1,
-      DateTime.now().subtract(const Duration(days: 3)): 0,
-      DateTime.now().subtract(const Duration(days: 4)): 2,
+      DateTime.now().subtractDays(1): 2,
+      DateTime.now().subtractDays(2): 1,
+      DateTime.now().subtractDays(3): 0,
+      DateTime.now().subtractDays(4): 2,
     });
   }
 }
@@ -73,6 +73,7 @@ class _DiaryStreakChart extends StatelessWidget {
     const missedColor = GLColors.gray;
     const streakColor = GLColors.darkGreen;
     const todayColor = GLColors.green;
+    final now = DateTime.now().toLocalMidnight();
 
     final widgets = List<Widget>.generate(2 * diaryStreakEntries.length, (index) {
       if (index.isEven) {
@@ -93,8 +94,8 @@ class _DiaryStreakChart extends StatelessWidget {
       } else {
         final i = (index / 2).ceil() - 1;
         final count = diaryStreakEntries[i].value;
-        final date = diaryStreakEntries[i].key.toLocal().toMidnight();
-        final color = date.isAtSameMomentAs(DateTime.now().toLocal().toMidnight())
+        final date = diaryStreakEntries[i].key.toLocalMidnight();
+        final color = date.isAtSameMomentAs(now)
             ? todayColor
             : count == 0
                 ? missedColor
@@ -119,9 +120,9 @@ class _DayIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final day = DateTime.now().toLocal().toMidnight().isAtSameMomentAs(date.toLocal().toMidnight())
+    final day = DateTime.now().toLocalMidnight().isAtSameMomentAs(date.toLocalMidnight())
         ? 'Today'
-        : date.toLocal().weekdayAbbrevString();
+        : date.toLocalMidnight().weekdayAbbrevString();
     final text = Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Text(day),

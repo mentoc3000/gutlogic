@@ -7,6 +7,7 @@ import 'package:gutlogic/models/food/edamam_food.dart';
 import 'package:gutlogic/models/food_group_entry.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
 import 'package:gutlogic/models/meal_element.dart';
 import 'package:gutlogic/models/measure.dart';
@@ -18,6 +19,7 @@ import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
 import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
+import 'package:gutlogic/util/date_time_ext.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:timezone/timezone.dart';
 
@@ -649,66 +651,66 @@ final vegetables = [
 final vegetableListSorted = vegetables.toList()..sort((a, b) => a.foodRef.name.compareTo(b.foodRef.name));
 final dosesList = vegetables.map((p0) => p0.doses);
 final dosesMaxIntensities = Map.fromIterables(dosesList, [
-  1, // Acorn Squash
-  3, // Artichoke Heart
-  3, // Artichoke, Jerusalem
-  3, // Asparagus
-  0, // Bean Sprout
-  2, // Beet
-  2, // Bell Pepper, Green
-  1, // Bell Pepper, Red
-  1, // Bok Choy
-  3, // Broccoli
-  3, // Brussels Sprouts
-  3, // Butternut Squahs
-  3, // Cabbage
-  3, // Cabbage, Savoy
-  0, // Carrots
-  3, // Cauliflower
-  2, // Celeriac
-  3, // Celery
-  1, // Chives
-  3, // Corn, Sweet
-  0, // Cucumber
-  0, // Daikon
-  1, // Eggplant
-  0, // Endive
-  2, // Fennel
-  1, // Fennel Leaves
-  3, // Garlic
-  1, // Ginger
-  1, // Green Beans
-  2, // Green Peas
-  3, // Leek
-  2, // Lettuce, Butter
-  1, // Lettuce, Iceberg
-  2, // Lettuce, Romaine
-  3, // Mushroom, Button
-  3, // Navy Beans
-  1, // Okra
-  3, // Onion
-  3, // Onion Powder
-  3, // Onion, Brown
-  0, // Parsnip
-  0, // Potato
-  3, // Potato, Sweet
-  1, // Radish
-  0, // Rhubarb
-  0, // Seaweed
-  3, // Shallot
-  3, // Snow Peas
-  1, // Spinach
-  2, // Tamarillo
-  0, // Taro
-  1, // Tomato
-  2, // Tomato, Cherry
-  1, // Tomato, Roma
-  3, // Tomato, Sun Dried
-  1, // Turnip
-  3, // Wasabi
-  0, // Water Chestnut
-  1, // Yam
-  2, // Zucchini
+  Intensity.low, // Acorn Squash
+  Intensity.high, // Artichoke Heart
+  Intensity.high, // Artichoke, Jerusalem
+  Intensity.high, // Asparagus
+  Intensity.trace, // Bean Sprout
+  Intensity.medium, // Beet
+  Intensity.medium, // Bell Pepper, Green
+  Intensity.low, // Bell Pepper, Red
+  Intensity.low, // Bok Choy
+  Intensity.high, // Broccoli
+  Intensity.high, // Brussels Sprouts
+  Intensity.high, // Butternut Squahs
+  Intensity.high, // Cabbage
+  Intensity.high, // Cabbage, Savoy
+  Intensity.trace, // Carrots
+  Intensity.high, // Cauliflower
+  Intensity.medium, // Celeriac
+  Intensity.high, // Celery
+  Intensity.low, // Chives
+  Intensity.high, // Corn, Sweet
+  Intensity.none, // Cucumber
+  Intensity.none, // Daikon
+  Intensity.low, // Eggplant
+  Intensity.trace, // Endive
+  Intensity.medium, // Fennel
+  Intensity.low, // Fennel Leaves
+  Intensity.high, // Garlic
+  Intensity.low, // Ginger
+  Intensity.low, // Green Beans
+  Intensity.medium, // Green Peas
+  Intensity.high, // Leek
+  Intensity.medium, // Lettuce, Butter
+  Intensity.low, // Lettuce, Iceberg
+  Intensity.medium, // Lettuce, Romaine
+  Intensity.high, // Mushroom, Button
+  Intensity.high, // Navy Beans
+  Intensity.low, // Okra
+  Intensity.high, // Onion
+  Intensity.high, // Onion Powder
+  Intensity.high, // Onion, Brown
+  Intensity.none, // Parsnip
+  Intensity.none, // Potato
+  Intensity.high, // Potato, Sweet
+  Intensity.low, // Radish
+  Intensity.none, // Rhubarb
+  Intensity.none, // Seaweed
+  Intensity.high, // Shallot
+  Intensity.high, // Snow Peas
+  Intensity.low, // Spinach
+  Intensity.medium, // Tamarillo
+  Intensity.none, // Taro
+  Intensity.low, // Tomato
+  Intensity.medium, // Tomato, Cherry
+  Intensity.low, // Tomato, Roma
+  Intensity.high, // Tomato, Sun Dried
+  Intensity.low, // Turnip
+  Intensity.high, // Wasabi
+  Intensity.none, // Water Chestnut
+  Intensity.low, // Yam
+  Intensity.medium, // Zucchini
 ]);
 final intensityThresholds = {
   'Mannitol': [0.0, 0.2, 0.35].build(),
@@ -721,10 +723,10 @@ final intensityThresholds = {
 
 final diaryStreak = BuiltMap<DateTime, int>({
   DateTime.now(): 3,
-  DateTime.now().subtract(const Duration(days: 1)): 2,
-  DateTime.now().subtract(const Duration(days: 2)): 1,
-  DateTime.now().subtract(const Duration(days: 3)): 0,
-  DateTime.now().subtract(const Duration(days: 4)): 2,
+  DateTime.now().subtractDays(1): 2,
+  DateTime.now().subtractDays(2): 1,
+  DateTime.now().subtractDays(3): 0,
+  DateTime.now().subtractDays(4): 2,
 });
 
 final foodCountByIrritant = BuiltMap<String, BuiltMap<SensitivityLevel, int>>({

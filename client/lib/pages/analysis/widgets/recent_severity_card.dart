@@ -136,7 +136,7 @@ class _RecentSeverityChart extends StatelessWidget {
   Widget buildBottomTitles(double value, TitleMeta meta) {
     late final Text text;
     final date = recentSeverities[recentSeverities.length - value.toInt() - 1].key;
-    if (date == DateTime.now().toLocal().toMidnight()) {
+    if (date == DateTime.now().toLocalMidnight()) {
       text = const Text('Today');
     } else {
       final weekday = recentSeverities[recentSeverities.length - value.toInt() - 1].key.weekdayAbbrevString();

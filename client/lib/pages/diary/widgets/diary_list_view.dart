@@ -34,10 +34,10 @@ class DiaryListView extends StatelessWidget {
 
   List<Widget> _buildDiaryTiles(BuildContext context, List<DiaryEntry> entries) {
     // Sort and group by entry date.
-    final groups = entries.sortedBy((e) => e.datetime).groupListsBy((e) => e.datetime.toLocal().toMidnight());
+    final groups = entries.sortedBy((e) => e.datetime).groupListsBy((e) => e.datetime.toLocalMidnight());
 
     // If there are no entries for today, add an empty list
-    final today = DateTime.now().toLocal().toMidnight();
+    final today = DateTime.now().toLocalMidnight();
 
     groups.putIfAbsent(today, () => []);
 

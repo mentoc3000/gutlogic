@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../../models/food_group_entry.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
@@ -10,7 +11,7 @@ import '../../../widgets/sensitivity_indicator.dart';
 
 class FoodGroupEntryTile extends StatelessWidget {
   final FoodGroupEntry entry;
-  final int? maxIntensity;
+  final Intensity maxIntensity;
   final void Function()? onTap;
 
   const FoodGroupEntryTile({Key? key, required this.entry, required this.maxIntensity, this.onTap}) : super(key: key);

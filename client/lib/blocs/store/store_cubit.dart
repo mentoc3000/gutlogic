@@ -61,17 +61,17 @@ class StoreCubit extends Cubit<StoreState> {
         }
       }
 
-      if (purchaseDetails.pendingCompletePurchase) {
-        // Handle edge cases where purchase is not complete
-        await iapService.completePurchase(purchaseDetails);
-      }
-
       if (purchaseDetails.status == PurchaseStatus.restored) {
         await _completeRestore(purchaseDetails);
       }
 
       if (purchaseDetails.status == PurchaseStatus.canceled || purchaseDetails.status == PurchaseStatus.error) {
         await loadProducts();
+      }
+
+      if (purchaseDetails.pendingCompletePurchase) {
+        // Handle edge cases where purchase is not complete
+        await iapService.completePurchase(purchaseDetails);
       }
     });
   }

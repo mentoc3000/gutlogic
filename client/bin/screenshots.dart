@@ -46,6 +46,7 @@ Future<void> orchestrateIOSJobs(ScreenshotsConfig config) async {
       await drive(target, driver, device.udid); // TODO drive each locale
     } catch (ex) {
       log.e('Error running screenshots driver on $device: $ex');
+      rethrow;
     } finally {
       await ios.close(device);
     }
@@ -61,7 +62,7 @@ Future<void> orchestrateIOSJobs(ScreenshotsConfig config) async {
       return () => job(device);
     } else {
       log.e('Unable to find a matching device for target $target');
-      return () => Future.value();
+      throw Exception('Unable to find a matching device for target $target');
     }
   });
 
