@@ -1,5 +1,8 @@
 extension Date on DateTime {
-  DateTime toLocalMidnight() => DateTime(year, month, day);
+  DateTime toLocalMidnight() {
+    final local = toLocal();
+    return DateTime(local.year, local.month, local.day);
+  }
 
   String weekdayString() {
     switch (weekday) {

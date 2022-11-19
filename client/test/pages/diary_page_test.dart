@@ -216,6 +216,58 @@ void main() {
       expect(find.text('No Entries'), findsNothing);
     });
 
+    testWidgets('bins in correct date (morning)', (WidgetTester tester) async {
+      final detroit = getLocation('America/Detroit');
+      setLocalLocation(detroit);
+      final datetime = TZDateTime(detroit, 2020, 1, 00, 0, 12);
+      final todayMealEntry = MealEntry(
+        id: 'meal1',
+        datetime: datetime,
+        mealElements: BuiltList<MealElement>([]),
+      );
+      whenListen(
+        diaryBloc,
+        Stream.value(DiaryLoaded(<DiaryEntry>[todayMealEntry].build())),
+        initialState: DiaryLoading(),
+      );
+
+      await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
+      await scrollToTop(tester);
+      await tester.pumpAndSettle();
+
+      // Local date in header
+      final headerDateFormatter = DateFormat.MMMEd();
+      final localTodayHeaderString = headerDateFormatter.format(datetime);
+      expect(find.text(localTodayHeaderString), findsOneWidget);
+    });
+
+    testWidgets('bins in correct date (evening)', (WidgetTester tester) async {
+      final detroit = getLocation('America/Detroit');
+      setLocalLocation(detroit);
+      final datetime = TZDateTime(detroit, 2020, 1, 23, 59, 12);
+      final todayMealEntry = MealEntry(
+        id: 'meal1',
+        datetime: datetime,
+        mealElements: BuiltList<MealElement>([]),
+      );
+      whenListen(
+        diaryBloc,
+        Stream.value(DiaryLoaded(<DiaryEntry>[todayMealEntry].build())),
+        initialState: DiaryLoading(),
+      );
+
+      await tester.pumpWidget(diaryPage);
+      await tester.pumpAndSettle();
+      await scrollToTop(tester);
+      await tester.pumpAndSettle();
+
+      // Local date in header
+      final headerDateFormatter = DateFormat.MMMEd();
+      final localTodayHeaderString = headerDateFormatter.format(datetime);
+      expect(find.text(localTodayHeaderString), findsOneWidget);
+    });
+
     testWidgets('uses local time', (WidgetTester tester) async {
       final detroit = getLocation('America/Detroit');
       setLocalLocation(detroit);

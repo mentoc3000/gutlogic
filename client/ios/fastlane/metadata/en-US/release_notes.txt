@@ -1,1 +1,1 @@
-Faster food searches
+Minor bug fixes and improvements
