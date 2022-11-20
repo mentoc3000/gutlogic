@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gutlogic/models/food/ingredient.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/irritant/elementary_food.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
@@ -76,7 +77,7 @@ void main() {
       });
     });
 
-    group('get intensity', () {
+    group('get intensity of food ref', () {
       test('gets threshold', () async {
         final irritant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
         final intensity = await repository.intensityThresholds(irritant.name);
@@ -102,6 +103,77 @@ void main() {
         // IrritantService should use cached steps
         final intensity2 = await repository.intensityThresholds(irriant.name);
         expect(intensity2, thresholds);
+      });
+    });
+
+    group('get irritants of ingredients', () {
+      test('for ingredient that is a food', () async {
+        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        final ingredient = Ingredient(
+          name: 'Apple',
+          maxFracWeight: 1.0,
+          foodReference: foodRef,
+        );
+        final foodIntensity = await repository.ofRef(foodRef);
+        final ingredientIntensity = await repository.ofIngredients([ingredient]);
+        expect(ingredientIntensity, foodIntensity);
+      });
+
+      test('for ingredient that is a food with small fraction', () async {
+        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        const frac = 0.1;
+        final ingredient = Ingredient(
+          name: 'Apple',
+          maxFracWeight: frac,
+          foodReference: foodRef,
+        );
+        final foodIntensity = await repository.ofRef(foodRef);
+        final ingredientIntensity = await repository.ofIngredients([ingredient]);
+        expect(ingredientIntensity![0].concentration, foodIntensity![0].concentration * frac);
+      });
+
+      test('for ingredient that has ingredients', () async {
+        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        final ingredient = Ingredient(
+            name: 'Baked Apple',
+            maxFracWeight: 1.0,
+            ingredients: [
+              Ingredient(name: 'Apple', maxFracWeight: 1.0, foodReference: foodRef),
+              Ingredient(name: 'Sugar', maxFracWeight: 0.1),
+            ].toBuiltList());
+        final foodIntensity = await repository.ofRef(foodRef);
+        final ingredientIntensity = await repository.ofIngredients([ingredient]);
+        expect(ingredientIntensity, foodIntensity);
+      });
+
+      test('for simple ingredient list', () async {
+        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        final ingredients = [
+          Ingredient(name: 'Apple', maxFracWeight: 1.0, foodReference: foodRef),
+          Ingredient(name: 'Apple', maxFracWeight: 0.5, foodReference: foodRef),
+        ].toBuiltList();
+        final foodIntensity = await repository.ofRef(foodRef);
+        final ingredientIntensity = await repository.ofIngredients(ingredients);
+        expect(ingredientIntensity![0].concentration, foodIntensity![0].concentration * 1.5);
+      });
+
+      test('for nested ingredient list', () async {
+        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        final ingredients = [
+          Ingredient(
+            name: 'Baked Apple',
+            maxFracWeight: 1.0,
+            ingredients: [
+              Ingredient(name: 'Apple', maxFracWeight: 1.0, foodReference: foodRef),
+              Ingredient(name: 'Sugar', maxFracWeight: 0.1),
+            ].toBuiltList(),
+          ),
+          Ingredient(name: 'Raw Apple', maxFracWeight: 0.5, foodReference: foodRef),
+          Ingredient(name: 'Sugar', maxFracWeight: 0.1),
+        ].toBuiltList();
+        final foodIntensity = await repository.ofRef(foodRef);
+        final ingredientIntensity = await repository.ofIngredients(ingredients);
+        expect(ingredientIntensity![0].concentration, foodIntensity![0].concentration * 1.5);
       });
     });
 

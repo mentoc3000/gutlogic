@@ -1,10 +1,11 @@
 import { FoodReference } from "./food";
-import irritantDb, { foodRef as foodReference } from "./irritant_db";
+import irritantDb, { foodRef } from "./irritant_db";
 import log from "./logger";
 
 export interface Ingredient {
   name: string;
-  foodRef: FoodReference;
+  maxFracWeight: number; // Max possible fraction of weight of parent food or ingredient
+  foodReference: FoodReference;
   ingredients?: Ingredient[];
 }
 
@@ -13,8 +14,8 @@ export function decompose(ingredientsText: string): string[] | null {
     .trim() // Trim whitespace
     .replace(/[.,:;]$/, ""); // Remove trailing punctuation
 
-  const ingredients = [];
-  const brackets = [];
+  const ingredients: string[] = [];
+  const brackets: string[] = [];
   var ingredient = "";
 
   for (var i = 0; i < text.length; i++) {
@@ -109,23 +110,29 @@ export function isNestedIngredient(ingredientText: string): Boolean {
   return re.test(ingredientText);
 }
 
+function maxProportion(idx: number): number {
+  // Ingredients are ordered by weight from highest to lowest
+  return 1 / (idx + 1);
+}
+
 async function parse(ingredientsText: string): Promise<Ingredient[] | null> {
   try {
     const db = await irritantDb.get();
     const ingredientTexts = decompose(ingredientsText);
     if (ingredientTexts === null) return null;
-    return await Promise.all(ingredientTexts.map(async ingredientText => {
+    return await Promise.all(ingredientTexts.map(async (ingredientText, idx) => {
       let name: string = null;
-      let foodRef: FoodReference = null;
+      let foodReference: FoodReference = null;
       let ingredients: Ingredient[] = null;
+      const maxFracWeight = maxProportion(idx);
       if (isNestedIngredient(ingredientText)) {
         name = getName(ingredientText);
         ingredients = await parse(subIngredients(ingredientText));
       } else {
         name = ingredientText;
-        foodRef = await foodReference(db, getName(ingredientText));
+        foodReference = await foodRef(db, getName(ingredientText));
       }
-      return { name, foodRef, ingredients };
+      return { name, maxFracWeight, foodReference, ingredients };
     }));
   } catch (e) {
     log.e(JSON.stringify(e, Object.getOwnPropertyNames(e)));

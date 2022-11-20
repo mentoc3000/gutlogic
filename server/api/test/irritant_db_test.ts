@@ -115,3 +115,18 @@ test("irritantsInFoodId with missing entry", async t => {
   t.is(irritants, null);
 });
 
+test("foodRef", async t => {
+  const name = "Cheese, American";
+  const food = await idb.foodRef(db, name);
+
+  t.is(food.id, "food_bx7gq25bfsov27b76zqp2bhlkn1l");
+});
+
+
+test("foodRef name match is case insensitive", async t => {
+  const name = "Cheese, american";
+  const food = await idb.foodRef(db, name);
+
+  t.is(food.id, "food_bx7gq25bfsov27b76zqp2bhlkn1l");
+  t.is(food.name, name);
+});

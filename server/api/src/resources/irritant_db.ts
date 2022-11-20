@@ -377,7 +377,8 @@ export async function foodRef(db: sqlite.Database, name: string): Promise<FoodRe
   SELECT canonical_edamam_id
   FROM food_names
   JOIN foods on food_names.food_id = foods.food_id
-  WHERE food_names.food_name = ?;`;
+  WHERE food_names.food_name = ?
+  COLLATE NOCASE;`;
 
   const row: { canonical_edamam_id: string; } = await db.get(selectSql, name);
 

@@ -4,6 +4,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../models/food/ingredient.dart';
 import '../models/food_reference/food_reference.dart';
 import '../models/irritant/elementary_food.dart';
 import '../models/irritant/intensity.dart';
@@ -13,6 +14,10 @@ import '../models/serializers.dart';
 import '../util/math.dart';
 import 'api_service.dart';
 import 'firebase/firestore_service.dart';
+
+/// Irritant of an ingredient
+/// Concentration and dose is relative to parent ingredient or food
+typedef _IngredientIrritant = Irritant;
 
 class IrritantService {
   final ApiService apiService;
@@ -90,6 +95,24 @@ class IrritantService {
   Future<BuiltList<Irritant>?> ofRef(FoodReference food) async {
     final foodIrritantsApi = await _getFoodIrritantsOf(food);
     return foodIrritantsApi?.irritants;
+  }
+
+  /// Irritants in one serving of ingredient
+  Future<BuiltList<Irritant>?> ofIngredient(Ingredient ingredient) {
+    if (ingredient.foodReference != null) return ofRef(ingredient.foodReference!);
+    if (ingredient.ingredients != null) return ofIngredients(ingredient.ingredients!);
+    return Future.value();
+  }
+
+  /// Irritants in ingredients, diluted by fractional consitituency
+  Future<BuiltList<Irritant>?> ofIngredients(Iterable<Ingredient> ingredients) async {
+    final irritants = await Future.wait(ingredients.map(ofIngredient));
+    final irritantsMap = (Map.fromIterables(ingredients, irritants)..removeWhere((key, value) => value == null))
+        .cast<Ingredient, Iterable<Irritant>>();
+    if (irritantsMap.isEmpty) return null;
+    final dilutedIrritants =
+        irritantsMap.entries.map((entry) => entry.value.map((e) => _ingredientIrritant(e, entry.key.maxFracWeight)));
+    return _combineIrritants(dilutedIrritants).toBuiltList();
   }
 
   static Iterable<ElementaryFood?> deserialize(UntypedQuerySnapshot snapshot) {
@@ -195,6 +218,11 @@ class IrritantService {
       return _diffCount(ref, a) - _diffCount(ref, b);
     }
   }
+
+  /// Map between irritant name and dose per serving
+  static BuiltMap<String, double> doseMap(Iterable<Irritant> irritants) {
+    return BuiltMap<String, double>({for (var i in irritants) i.name: i.dosePerServing});
+  }
 }
 
 ElementaryFood _removeZeroConcentration(ElementaryFood f) {
@@ -212,6 +240,46 @@ int _diffCount(ElementaryFood a, ElementaryFood b) {
 }
 
 bool _hasSameIrritants(ElementaryFood a, ElementaryFood b) => _diffCount(a, b) == 0;
+
+/// Reduce the dose and concentration of an irritant that only makes up a fraction of a serving
+_IngredientIrritant _ingredientIrritant(Irritant irritant, double fracWeight) {
+  return irritant.rebuild((p0) => p0
+    ..concentration = p0.concentration != null ? p0.concentration! * fracWeight : null
+    ..dosePerServing = p0.dosePerServing != null ? p0.dosePerServing! * fracWeight : null);
+}
+
+/// Combine all ingredient irritants to get the summed irritants for the parent food or ingredient
+Iterable<Irritant> _combineIrritants(Iterable<Iterable<_IngredientIrritant>> ingredientIrritants) {
+  return ingredientIrritants.fold<Iterable<Irritant>>([], _addIngredientIrritants).cast<Irritant>();
+}
+
+Iterable<_IngredientIrritant> _addIngredientIrritants(
+    Iterable<_IngredientIrritant> a, Iterable<_IngredientIrritant> b) {
+  final aNames = a.map((e) => e.name);
+  final bNames = b.map((e) => e.name);
+  final aMap = Map.fromIterables(aNames, a);
+  final bMap = Map.fromIterables(bNames, b);
+  final names = aNames.toSet()..addAll(bNames);
+  return names.map((name) {
+    final aContainsName = aMap.containsKey(name);
+    final bContainsName = bMap.containsKey(name);
+    if (aContainsName && bContainsName) {
+      final aVal = aMap[name]!;
+      final bVal = bMap[name]!;
+      return _IngredientIrritant(
+        name: aVal.name,
+        concentration: aVal.concentration + bVal.concentration,
+        dosePerServing: aVal.dosePerServing + bVal.dosePerServing,
+      );
+    } else if (aContainsName) {
+      return aMap[name]!;
+    } else if (bContainsName) {
+      return bMap[name]!;
+    } else {
+      return null;
+    }
+  }).whereType<_IngredientIrritant>();
+}
 
 class IrritantServiceException implements Exception {
   final String message;

@@ -123,8 +123,8 @@ test("parse returns ingredient list", async t => {
 
   t.is(ingredients.length, 4);
   t.is(ingredients[1].name, "Water");
-  t.is(ingredients[1].foodRef, null);
-  t.is(ingredients[0].foodRef.id, "food_azuyr92bee8mu1aodnko9agg46su");
+  t.is(ingredients[1].foodReference, null);
+  t.is(ingredients[0].foodReference.id, "food_azuyr92bee8mu1aodnko9agg46su");
 });
 
 test("parse returns nested ingredient list", async t => {
@@ -143,5 +143,23 @@ test("parse uses whole text of described foods in name", async t => {
 
   t.is(ingredients.length, 2);
   t.is(ingredients[0].ingredients[0].name, "Whole Wheat Flour [Organic]");
-  t.is(ingredients[0].ingredients[0].foodRef.name, "Whole Wheat Flour");
+  t.is(ingredients[0].ingredients[0].foodReference.name, "Whole Wheat Flour");
 });
+
+test("parse provides maxFracWeight", async t => {
+  const ingredientsText = "Pasta (Whole Wheat Flour; Water; Yeast; Salt); Pesto (Basil; Parmesan; Olive Oil)";
+  const ingredients = await parse(ingredientsText);
+
+  t.is(ingredients[0].maxFracWeight, 1.0);
+  t.is(ingredients[1].maxFracWeight, 0.5);
+  t.is(ingredients[0].ingredients[0].maxFracWeight, 1.0);
+  t.is(ingredients[0].ingredients[1].maxFracWeight, 0.5);
+  t.is(ingredients[0].ingredients[3].maxFracWeight, 0.25);
+});
+
+test("parse gets known food id", async t => {
+  const ingredientsText = "asparagus; extra virgin olive oil; parmesan cheese; lemon rind; Salt; black pepper";
+  const ingredients = await parse(ingredientsText);
+
+  t.is(ingredients[0].foodReference.id, "food_b7bgzddbqq26mia27xpv7acn083m");
+})

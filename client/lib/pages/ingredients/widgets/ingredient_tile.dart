@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
+import 'package:gutlogic/resources/irritant_service.dart';
 
 import '../../../blocs/food_search/food_search.dart';
 import '../../../blocs/foods_suggestion/foods_suggestion.dart';
 import '../../../models/food/ingredient.dart';
 import '../../../resources/sensitivity/sensitivity_service.dart';
 import '../../../routes/routes.dart';
+import '../../../widgets/irritant_intensity/intensity_indicator.dart';
 import '../../../widgets/list_tiles/push_list_tile.dart';
 import '../../../widgets/sensitivity_indicator.dart';
 import '../../search_delegate/food_search_delegate.dart';
@@ -40,6 +43,12 @@ class IngredientTile extends StatelessWidget {
       return sensitivity.of(ingredient.foodReference);
     });
 
+    final maxIntensity = context.select((IrritantService irritantService) {
+      return irritantService.ofIngredient(ingredient).then((value) => value != null
+          ? irritantService.maxIntensity(IrritantService.doseMap(value))
+          : Future.value(Intensity.unknown));
+    });
+
     late final VoidCallback? onTap;
     if (ingredient.foodReference != null) {
       onTap = () => Navigator.push(context, Routes.of(context).createFoodPageRoute(ingredient.foodReference!));
@@ -53,6 +62,12 @@ class IngredientTile extends StatelessWidget {
     return PushListTile(
       heading: ingredient.name,
       leading: SensitivityIndicator(sensitivity),
+      trailing: FutureBuilder<Intensity>(
+        future: maxIntensity,
+        builder: (context, snapshot) => snapshot.hasData && snapshot.data != null
+            ? IntensityIndicator(snapshot.data!)
+            : const IntensityIndicator(Intensity.unknown),
+      ),
       onTap: onTap,
     );
   }
