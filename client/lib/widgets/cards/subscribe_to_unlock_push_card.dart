@@ -10,6 +10,7 @@ import 'push_card.dart';
 class SubscribeToUnlockPushCard extends StatelessWidget {
   final String text;
   final IconData icon;
+  final Widget? trailing;
   final void Function() onTapSubscribed;
 
   const SubscribeToUnlockPushCard({
@@ -17,6 +18,7 @@ class SubscribeToUnlockPushCard extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onTapSubscribed,
+    this.trailing,
   }) : super(key: key);
 
   @override
@@ -52,9 +54,17 @@ class SubscribeToUnlockPushCard extends StatelessWidget {
 
       return PushCard(
         onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
+        child: Expanded(
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children,
+              ),
+              const Spacer(),
+              if (trailing != null) trailing!
+            ],
+          ),
         ),
       );
     });

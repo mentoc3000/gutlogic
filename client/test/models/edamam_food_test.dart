@@ -35,9 +35,9 @@ void main() {
           {'name': 'Fructan', 'concentration': 0.032, 'dosePerServing': 1.23},
         ],
         'ingredients': [
-          {'name': 'Brown Rice'},
-          {'name': 'Water'},
-          {'name': 'Salt'},
+          {'name': 'Brown Rice', 'maxFracWeight': 0.9},
+          {'name': 'Water', 'maxFracWeight': 0.09},
+          {'name': 'Salt', 'maxFracWeight': 0.01},
         ]
       };
       final food = serializers.deserializeWith(EdamamFood.serializer, foodJson)!;

@@ -34,7 +34,7 @@ class SimilarFoodsCubit extends Cubit<SimilarFoodsState>
     final foodReferences = foods.map((f) => f.canonical).whereType<FoodReference>().toBuiltList();
 
     // Compute the irritant doses for a single serving of each food
-    final doses = irritantsList.map((ii) => BuiltMap<String, double>({for (var i in ii) i.name: i.dosePerServing}));
+    final doses = irritantsList.map(IrritantService.doseMap);
 
     // Get the maximum intensity for each food
     final maxIntensities = await Future.wait(doses.map((d) async => await irritantService.maxIntensity(d)));

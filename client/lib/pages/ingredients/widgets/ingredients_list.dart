@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/food/ingredient.dart';
 import '../../../util/widget_utils.dart';
-import 'ingredients_tile.dart';
+import 'ingredient_tile.dart';
 
 class IngredientsList extends StatelessWidget {
   final BuiltList<Ingredient> ingredients;

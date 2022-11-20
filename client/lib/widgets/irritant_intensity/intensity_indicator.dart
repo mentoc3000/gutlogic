@@ -22,6 +22,8 @@ class IntensityIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (intensity == Intensity.unknown) return Container();
+
     final intensityCells = [Intensity.low, Intensity.medium, Intensity.high];
 
     final traceBox = _traceBox(width: width, color: GLColors.lightGold);

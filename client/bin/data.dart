@@ -32,18 +32,20 @@ TZDateTime todayAt(int hour, int minute) {
   return TZDateTime(location, now.year, now.month, now.day, hour, minute);
 }
 
-final food = EdamamFood(
-  id: 'broccoli',
-  name: 'Broccoli',
-  brand: null,
-  measures: [Measure(unit: 'Oz')].build(),
-);
-
 final irritants = [
   Irritant(name: 'Fructan', concentration: 0.008, dosePerServing: 0.08),
   Irritant(name: 'GOS', concentration: 0.016, dosePerServing: 0.16),
   Irritant(name: 'Sorbitol', concentration: 0.003, dosePerServing: 0.03),
 ].build();
+
+// BUG: show food that has ingredients
+final food = EdamamFood(
+  id: 'broccoli',
+  name: 'Broccoli',
+  brand: null,
+  measures: [Measure(unit: 'Oz')].build(),
+  irritants: irritants,
+);
 
 final mealElement = MealElement(
   id: 'mealElement4',

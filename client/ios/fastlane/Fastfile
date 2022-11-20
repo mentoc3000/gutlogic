@@ -103,9 +103,9 @@ platform :ios do
       force: true,
       precheck_include_in_app_purchases: false, # cannot yet be performed with API key
       overwrite_screenshots: true,
+      automatic_release: true,
       # Manually check on App Store Connect before releasing
-      submit_for_review: false,
-      automatic_release: false
+      submit_for_review: false
     )
 
   end

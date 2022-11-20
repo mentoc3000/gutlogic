@@ -13,10 +13,14 @@ abstract class Ingredient implements Built<Ingredient, IngredientBuilder> {
   FoodReference? get foodReference;
   BuiltList<Ingredient>? get ingredients;
 
+  /// Maximum weight fraction of parent food or ingredient
+  double get maxFracWeight;
+
   Ingredient._();
 
   factory Ingredient({
     required String name,
+    required double maxFracWeight,
     FoodReference? foodReference,
     BuiltList<Ingredient>? ingredients,
   }) = _$Ingredient._;
