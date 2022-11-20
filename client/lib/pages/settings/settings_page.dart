@@ -32,6 +32,7 @@ class SettingsPageBody extends StatelessWidget {
       SettingsAccountTile(),
       if (user.anonymous == false) SettingsProfileTile(),
       SettingsPrivacyTile(),
+      SettingsTermsOfUseTile(),
     ], separator: const Divider(color: Colors.grey));
 
     return Column(children: [
@@ -72,6 +73,18 @@ class SettingsPrivacyTile extends StatelessWidget {
     }
 
     return PushListTile(heading: 'Privacy Policy', leading: const Icon(GLIcons.privacy), onTap: open);
+  }
+}
+
+class SettingsTermsOfUseTile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    void open() async {
+      final dest = Uri.parse('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/');
+      if (await url.canLaunchUrl(dest)) await url.launchUrl(dest);
+    }
+
+    return PushListTile(heading: 'Terms of Use', leading: const Icon(GLIcons.license), onTap: open);
   }
 }
 
