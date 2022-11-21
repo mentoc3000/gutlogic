@@ -386,3 +386,23 @@ export async function foodRef(db: sqlite.Database, name: string): Promise<FoodRe
 
   return { $: "EdamamFoodReference", name, id: row.canonical_edamam_id };
 }
+
+/// Return true if ingredients are shown for this food
+export async function showIngredients(db: sqlite.Database, foodContentsLabel: string, edamamId: string): Promise<Boolean> {
+  if (foodContentsLabel === null || foodContentsLabel === "") return false;
+
+  const selectSql = `
+  SELECT show_ingredients
+  FROM edamam
+  WHERE edamam_id = ?;`;
+  
+  const row: {show_ingredients: number; } = await db.get(selectSql, edamamId);
+
+  if (row) {
+    // Hide ingredients if show_ingredients column is not true for elementary food
+    return row.show_ingredients === 1;
+  } else {
+    // By default, show ingredients
+    return true;
+  }
+}

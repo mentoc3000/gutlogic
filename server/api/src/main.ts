@@ -31,7 +31,7 @@ app.use(json());
 app.use("/", status);
 app.use("/food", auth, food);
 app.use("/iap", iap);
-app.use("/irritant", irritant);
+app.use("/irritant", auth, irritant);
 
 startSubscriptionRevocationCheck();
 
