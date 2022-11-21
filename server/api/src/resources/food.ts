@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
 import parseIngredients, { Ingredient } from "./ingredients";
-import irritantDb, { irritantsInFoodId, Irritant } from "./irritant_db";
+import irritantDb, { irritantsInFoodId, Irritant, showIngredients } from "./irritant_db";
 import log from "./logger";
 
 export type Measure = {
@@ -76,7 +76,8 @@ async function toFood(edamamFoodMeasures: EdamamFoodMeasures): Promise<Food | nu
   const db = await irritantDb.get();
   const irritants = await irritantsInFoodId(db, edamamFoodMeasures.food.foodId);
   const foodContentsLabel = edamamFoodMeasures.food.foodContentsLabel;
-  const ingredients = foodContentsLabel ? await parseIngredients(foodContentsLabel) : null;
+  const ingredients = await showIngredients(db, foodContentsLabel, edamamFoodMeasures.food.foodId)
+    ? await parseIngredients(foodContentsLabel) : null;
 
   return {
     id: edamamFoodMeasures.food.foodId,
