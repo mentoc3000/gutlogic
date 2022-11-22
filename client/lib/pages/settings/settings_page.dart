@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart' as url;
 
 import '../../blocs/user_cubit.dart';
 import '../../models/user/application_user.dart';
+import '../../resources/legal_service.dart';
 import '../../routes/routes.dart';
 import '../../util/widget_utils.dart';
 import '../../widgets/gl_app_bar.dart';
@@ -67,24 +67,22 @@ class SettingsAccountTile extends StatelessWidget {
 class SettingsPrivacyTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    void open() async {
-      final dest = Uri.parse('http://gutlogic.co/gut_logic_privacy_policy.pdf');
-      if (await url.canLaunchUrl(dest)) await url.launchUrl(dest);
-    }
-
-    return PushListTile(heading: 'Privacy Policy', leading: const Icon(GLIcons.privacy), onTap: open);
+    return const PushListTile(
+      heading: 'Privacy Policy',
+      leading: Icon(GLIcons.privacy),
+      onTap: LegalService.openPrivacyPolicy,
+    );
   }
 }
 
 class SettingsTermsOfUseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    void open() async {
-      final dest = Uri.parse('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/');
-      if (await url.canLaunchUrl(dest)) await url.launchUrl(dest);
-    }
-
-    return PushListTile(heading: 'Terms of Use', leading: const Icon(GLIcons.license), onTap: open);
+    return const PushListTile(
+      heading: 'Terms of Use',
+      leading: Icon(GLIcons.license),
+      onTap: LegalService.openTermsOfUse,
+    );
   }
 }
 
