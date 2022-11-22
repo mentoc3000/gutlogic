@@ -165,18 +165,21 @@ void main() {
   testWidgets('screenshots', (tester) async {
     runApp(app);
 
+    // Give extra time to settle to avoid spurrious screenshot issues
+    const settleDuration = Duration(seconds: 3);
+
     await tester.pump();
     await tester.pumpAndSettle();
     await tester.tap(find.text('Timeline'));
     await tester.pump();
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(settleDuration);
 
     // Start filename with a number to put them in the correct order on the App Store
     await capture(binding, '4. timeline');
 
     await tester.tap(find.text(mealEntry2.mealElements[0].foodReference.name));
     await tester.pump();
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(settleDuration);
 
     await capture(binding, '5. meal');
 
@@ -186,6 +189,7 @@ void main() {
     await tester.tap(find.text('Bowel Movement'));
     await tester.pump();
     await tester.pumpAndSettle();
+    await tester.pumpAndSettle(settleDuration);
 
     await capture(binding, '6. bowel_movement');
 
@@ -195,6 +199,7 @@ void main() {
     await tester.tap(find.text(symptomEntry.symptom.symptomType.name));
     await tester.pump();
     await tester.pumpAndSettle();
+    await tester.pumpAndSettle(settleDuration);
 
     await capture(binding, '7. symptom');
 
@@ -203,13 +208,13 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Pantry'));
     await tester.pump();
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(settleDuration);
 
     await capture(binding, '0. pantry');
 
     await tester.tap(find.text(food.name));
     await tester.pump();
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(settleDuration);
 
     await capture(binding, '1. sensitivity');
 
@@ -221,7 +226,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text(foodGroupName));
     await tester.pump();
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(settleDuration);
 
     await capture(binding, '2. browse');
 
@@ -232,7 +237,7 @@ void main() {
     await tester.pump();
     await tester.pumpAndSettle();
     await tester.drag(find.text('Pantry foods by irritant'), const Offset(0.0, -180.0));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(settleDuration);
 
     await capture(binding, '3. analysis');
   });
