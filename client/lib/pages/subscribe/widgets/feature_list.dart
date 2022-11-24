@@ -18,6 +18,7 @@ class FeatureList extends StatelessWidget {
         children: const [
           FeatureBox(text: 'Understand what triggers your symptoms'),
           FeatureBox(text: 'Find more foods to eat and to avoid'),
+          FeatureBox(text: 'Spot discomforting ingredients'),
           FeatureBox(text: 'Watch your improvement over time'),
         ],
       ),

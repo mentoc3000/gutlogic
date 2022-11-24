@@ -16,7 +16,7 @@ class FeatureSummary extends StatelessWidget {
     );
     return const Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
+        padding: EdgeInsets.only(top: 16.0),
         child: Text(
           'Make sense of your symptoms',
           style: style,
