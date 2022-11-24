@@ -1,9 +1,5 @@
 Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities.
 
-This version adds Gut Logic Premium, subscription features to help users understand their symptoms. These features are
-1. Charts and graphs to help users understand their data (found in the Analytics tab)
-2. List foods that preceded a symptom or bowel movement (accessible from the symptom and bowel movement entry pages)
-3. List foods that have similar irritants to a given food (accessible from a food's page)
-Please test the subscription process as well as the new features. You will not be charged to subscribe to this beta version.
+This version adds ingredient parsing to the Gut Logic Premium features. You will not be charged to subscribe to this beta version to access this feature. Some foods have ingredients that contain irritants that people are sensitive to. For foods for which we have the ingredients list, you can browse the ingredients and see the irritant contents.
 
-Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Nov 11. Thanks in advance for your time and candid feedback!
+Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Dec 9. Thanks in advance for your time and candid feedback!

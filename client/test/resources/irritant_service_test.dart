@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/models/food/ingredient.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/irritant/elementary_food.dart';
+import 'package:gutlogic/models/irritant/intensity.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
 import 'package:gutlogic/resources/api_service.dart';
 import 'package:gutlogic/resources/irritant_service.dart';
@@ -13,28 +14,30 @@ import 'package:mockito/annotations.dart';
 
 import 'irritant_service_test.mocks.dart';
 
-const foodId = 'food_a1gb9ubb72c7snbuxr3weagwv0dd';
+const appleFoodId = 'food_a1gb9ubb72c7snbuxr3weagwv0dd';
 const apple = {
-  'canonical': {'\$': 'EdamamFoodReference', 'name': 'Apple', 'id': foodId},
-  'foodIds': [foodId, 'food_amhlqj0by3ozesbg96kkhar1atxt', 'food_bws9l24ba5vdl6bbn0q2gbev0sy2'],
+  'canonical': {'\$': 'EdamamFoodReference', 'name': 'Apple', 'id': appleFoodId},
+  'foodIds': [appleFoodId, 'food_amhlqj0by3ozesbg96kkhar1atxt', 'food_bws9l24ba5vdl6bbn0q2gbev0sy2'],
   'irritants': [
     {'concentration': 0.012, 'dosePerServing': 1.98, 'name': 'Sorbitol'},
     {'concentration': 0.0, 'dosePerServing': 0.0, 'name': 'Mannitol'}
   ],
   'names': ['apple'],
 };
+const grapeFoodId = 'food_8enal231kdiyfao23';
 const grape = {
   'canonical': {'\$': 'EdamamFoodReference', 'name': 'Grape', 'id': 'food_abc'},
-  'foodIds': ['food_abc'],
+  'foodIds': [grapeFoodId],
   'irritants': [
     {'concentration': 0.012, 'dosePerServing': 1.98, 'name': 'Sorbitol'},
     {'concentration': 0.01, 'dosePerServing': 0.9, 'name': 'Mannitol'}
   ],
   'names': ['grape'],
 };
+const breadFoodId = 'food_0afsnesa89dy9u';
 const bread = {
   'canonical': {'\$': 'EdamamFoodReference', 'name': 'Grape', 'id': 'food_abcde'},
-  'foodIds': ['food_abcde'],
+  'foodIds': [breadFoodId],
   'irritants': [
     {'concentration': 0.012, 'dosePerServing': 1.98, 'name': 'Fructan'},
   ],
@@ -42,7 +45,11 @@ const bread = {
 };
 const mannitol = {
   'name': 'Mannitol',
-  'intensitySteps': [0.0, 0.4, 0.5, 1.0],
+  'intensitySteps': [0.4, 0.5, 1.0],
+};
+const sorbitol = {
+  'name': 'Sorbitol',
+  'intensitySteps': [0.1, 0.2, 0.3],
 };
 
 @GenerateMocks([ApiService])
@@ -57,14 +64,14 @@ void main() {
             'data': [apple, grape, bread]
           }));
       when(apiService.get(path: '/irritant/intensityThresholds')).thenAnswer((_) => Future.value({
-            'data': [mannitol]
+            'data': [mannitol, sorbitol]
           }));
       repository = IrritantService(apiService: apiService);
     });
 
     group('get irritant', () {
       test('fetches irritants by food reference', () async {
-        final food = EdamamFoodReference(id: foodId, name: 'apple');
+        final food = EdamamFoodReference(id: appleFoodId, name: 'apple');
         final irritants = await repository.ofRef(food);
         expect(irritants!.length, 2);
         expect(irritants.first.concentration, 0.012);
@@ -81,12 +88,12 @@ void main() {
       test('gets threshold', () async {
         final irritant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
         final intensity = await repository.intensityThresholds(irritant.name);
-        final thresholds = [0.0, 0.4, 0.5, 1.0];
+        final thresholds = [0.4, 0.5, 1.0];
         expect(intensity, thresholds);
       });
 
       test('no intensity from unknown irritant', () async {
-        final irriant = Irritant(name: 'Sorbitol', concentration: 0.003, dosePerServing: 0.9);
+        final irriant = Irritant(name: 'Salt', concentration: 0.003, dosePerServing: 0.9);
         final intensity = await repository.intensityThresholds(irriant.name);
         expect(intensity, null);
       });
@@ -94,7 +101,7 @@ void main() {
       test('caches intensity thresholds', () async {
         final irriant = Irritant(name: 'Mannitol', concentration: 0.003, dosePerServing: 0.45);
         final intensity = await repository.intensityThresholds(irriant.name);
-        final thresholds = [0.0, 0.4, 0.5, 1.0];
+        final thresholds = [0.4, 0.5, 1.0];
         expect(intensity, thresholds);
 
         // API Service becomes unavailable
@@ -106,74 +113,79 @@ void main() {
       });
     });
 
+    test('gets maximum intensity', () async {
+      expect(await repository.maxIntensity({'Mannitol': 0.0}.build()), Intensity.none);
+      expect(await repository.maxIntensity({'Mannitol': 0.001}.build()), Intensity.trace);
+      expect(await repository.maxIntensity({'Mannitol': 2.0}.build()), Intensity.high);
+      expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.0}.build()), Intensity.none);
+      expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.0}.build()), Intensity.medium);
+      expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.15}.build()), Intensity.low);
+      expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.15}.build()), Intensity.medium);
+      expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 1.0}.build()), Intensity.high);
+    });
+
     group('get irritants of ingredients', () {
       test('for ingredient that is a food', () async {
-        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        final foodRef = EdamamFoodReference(id: appleFoodId, name: 'Apple');
         final ingredient = Ingredient(
           name: 'Apple',
-          maxFracWeight: 1.0,
           foodReference: foodRef,
         );
         final foodIntensity = await repository.ofRef(foodRef);
-        final ingredientIntensity = await repository.ofIngredients([ingredient]);
-        expect(ingredientIntensity, foodIntensity);
-      });
-
-      test('for ingredient that is a food with small fraction', () async {
-        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
-        const frac = 0.1;
-        final ingredient = Ingredient(
-          name: 'Apple',
-          maxFracWeight: frac,
-          foodReference: foodRef,
-        );
-        final foodIntensity = await repository.ofRef(foodRef);
-        final ingredientIntensity = await repository.ofIngredients([ingredient]);
-        expect(ingredientIntensity![0].concentration, foodIntensity![0].concentration * frac);
+        final irritants = await repository.ofIngredients([ingredient]);
+        expect(irritants, foodIntensity);
       });
 
       test('for ingredient that has ingredients', () async {
-        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        final foodRef = EdamamFoodReference(id: appleFoodId, name: 'Apple');
         final ingredient = Ingredient(
             name: 'Baked Apple',
-            maxFracWeight: 1.0,
             ingredients: [
-              Ingredient(name: 'Apple', maxFracWeight: 1.0, foodReference: foodRef),
-              Ingredient(name: 'Sugar', maxFracWeight: 0.1),
+              Ingredient(name: 'Apple', foodReference: foodRef),
+              Ingredient(name: 'Sugar'),
             ].toBuiltList());
         final foodIntensity = await repository.ofRef(foodRef);
-        final ingredientIntensity = await repository.ofIngredients([ingredient]);
-        expect(ingredientIntensity, foodIntensity);
+        final irritants = await repository.ofIngredients([ingredient]);
+        expect(irritants, foodIntensity);
       });
 
       test('for simple ingredient list', () async {
-        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        final appleRef = EdamamFoodReference(id: appleFoodId, name: 'Apple');
+        final grapeRef = EdamamFoodReference(id: grapeFoodId, name: 'Grape');
+        final breadRef = EdamamFoodReference(id: breadFoodId, name: 'Bread');
+
         final ingredients = [
-          Ingredient(name: 'Apple', maxFracWeight: 1.0, foodReference: foodRef),
-          Ingredient(name: 'Apple', maxFracWeight: 0.5, foodReference: foodRef),
+          Ingredient(name: 'Apple', foodReference: appleRef),
+          Ingredient(name: 'Grape', foodReference: grapeRef),
+          Ingredient(name: 'Bread', foodReference: breadRef),
         ].toBuiltList();
-        final foodIntensity = await repository.ofRef(foodRef);
-        final ingredientIntensity = await repository.ofIngredients(ingredients);
-        expect(ingredientIntensity![0].concentration, foodIntensity![0].concentration * 1.5);
+
+        final irritants = await repository.ofIngredients(ingredients);
+        final expected = BuiltList<Irritant>([
+          Irritant(name: 'Sorbitol', concentration: 0.012, dosePerServing: 1.98),
+          Irritant(name: 'Mannitol', concentration: 0.01, dosePerServing: 0.9),
+          Irritant(name: 'Fructan', concentration: 0.012, dosePerServing: 1.98),
+        ]);
+
+        expect(irritants, expected);
       });
 
       test('for nested ingredient list', () async {
-        final foodRef = EdamamFoodReference(id: foodId, name: 'Apple');
+        final foodRef = EdamamFoodReference(id: appleFoodId, name: 'Apple');
         final ingredients = [
           Ingredient(
             name: 'Baked Apple',
-            maxFracWeight: 1.0,
             ingredients: [
-              Ingredient(name: 'Apple', maxFracWeight: 1.0, foodReference: foodRef),
-              Ingredient(name: 'Sugar', maxFracWeight: 0.1),
+              Ingredient(name: 'Apple', foodReference: foodRef),
+              Ingredient(name: 'Sugar'),
             ].toBuiltList(),
           ),
-          Ingredient(name: 'Raw Apple', maxFracWeight: 0.5, foodReference: foodRef),
-          Ingredient(name: 'Sugar', maxFracWeight: 0.1),
+          Ingredient(name: 'Raw Apple', foodReference: foodRef),
+          Ingredient(name: 'Sugar'),
         ].toBuiltList();
         final foodIntensity = await repository.ofRef(foodRef);
-        final ingredientIntensity = await repository.ofIngredients(ingredients);
-        expect(ingredientIntensity![0].concentration, foodIntensity![0].concentration * 1.5);
+        final irritants = await repository.ofIngredients(ingredients);
+        expect(irritants![0].concentration, foodIntensity![0].concentration);
       });
     });
 
@@ -182,7 +194,7 @@ void main() {
       final foodIds = BuiltList<String>();
       const EdamamFoodReference? cannonical = null;
       test('gets list of similar foods', () async {
-        final fuji = EdamamFoodReference(id: foodId, name: 'Fuji');
+        final fuji = EdamamFoodReference(id: appleFoodId, name: 'Fuji');
         final similars = await repository.similar(fuji);
         expect(similars.length, 2);
         expect(similars.first.canonical!.name, 'Apple');

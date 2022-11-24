@@ -3,6 +3,7 @@ import test from "ava";
 import { Database, open } from "sqlite";
 import * as sqlite3 from "sqlite3";
 import * as idb from "../src/resources/irritant_db";
+import approximatelyEqual from "./test_helpers";
 
 sqlite3.verbose();
 
@@ -75,6 +76,13 @@ SELECT COUNT(*) as count
   const row2 = await db.get(sql);
   const foodCount2 = row2.count;
   t.is(foodCount, foodCount2);
+});
+
+test("foodsInGroups provides doses", async t => {
+  const foodGroups = await idb.foodsInGroups(db);
+
+  t.is(foodGroups[0].foodRef.name, "Acorn Squash");
+  t.true(approximatelyEqual(foodGroups[0].doses["Fructan"], 0.052));
 });
 
 test("selectCanonicalMap", async t => {

@@ -15,10 +15,6 @@ import '../util/math.dart';
 import 'api_service.dart';
 import 'firebase/firestore_service.dart';
 
-/// Irritant of an ingredient
-/// Concentration and dose is relative to parent ingredient or food
-typedef _IngredientIrritant = Irritant;
-
 class IrritantService {
   final ApiService apiService;
   late final Future<BuiltMap<String, BuiltList<double>>> _intensityThresholdCache;
@@ -104,15 +100,12 @@ class IrritantService {
     return Future.value();
   }
 
-  /// Irritants in ingredients, diluted by fractional consitituency
+  /// Irritants in ingredients, max of each irritant
   Future<BuiltList<Irritant>?> ofIngredients(Iterable<Ingredient> ingredients) async {
     final irritants = await Future.wait(ingredients.map(ofIngredient));
-    final irritantsMap = (Map.fromIterables(ingredients, irritants)..removeWhere((key, value) => value == null))
-        .cast<Ingredient, Iterable<Irritant>>();
-    if (irritantsMap.isEmpty) return null;
-    final dilutedIrritants =
-        irritantsMap.entries.map((entry) => entry.value.map((e) => _ingredientIrritant(e, entry.key.maxFracWeight)));
-    return _combineIrritants(dilutedIrritants).toBuiltList();
+    final irritantsDataOnly = irritants.whereType<BuiltList<Irritant>>();
+    if (irritantsDataOnly.isEmpty) return null;
+    return _combineIrritants(irritantsDataOnly).toBuiltList();
   }
 
   static Iterable<ElementaryFood?> deserialize(UntypedQuerySnapshot snapshot) {
@@ -241,20 +234,13 @@ int _diffCount(ElementaryFood a, ElementaryFood b) {
 
 bool _hasSameIrritants(ElementaryFood a, ElementaryFood b) => _diffCount(a, b) == 0;
 
-/// Reduce the dose and concentration of an irritant that only makes up a fraction of a serving
-_IngredientIrritant _ingredientIrritant(Irritant irritant, double fracWeight) {
-  return irritant.rebuild((p0) => p0
-    ..concentration = p0.concentration != null ? p0.concentration! * fracWeight : null
-    ..dosePerServing = p0.dosePerServing != null ? p0.dosePerServing! * fracWeight : null);
-}
-
 /// Combine all ingredient irritants to get the summed irritants for the parent food or ingredient
-Iterable<Irritant> _combineIrritants(Iterable<Iterable<_IngredientIrritant>> ingredientIrritants) {
-  return ingredientIrritants.fold<Iterable<Irritant>>([], _addIngredientIrritants).cast<Irritant>();
+Iterable<Irritant> _combineIrritants(Iterable<Iterable<Irritant>> ingredientIrritants) {
+  return ingredientIrritants.fold<Iterable<Irritant>>([], _worstIrritants).cast<Irritant>();
 }
 
-Iterable<_IngredientIrritant> _addIngredientIrritants(
-    Iterable<_IngredientIrritant> a, Iterable<_IngredientIrritant> b) {
+/// Return the worst concentrations of irritants
+Iterable<Irritant> _worstIrritants(Iterable<Irritant> a, Iterable<Irritant> b) {
   final aNames = a.map((e) => e.name);
   final bNames = b.map((e) => e.name);
   final aMap = Map.fromIterables(aNames, a);
@@ -266,11 +252,7 @@ Iterable<_IngredientIrritant> _addIngredientIrritants(
     if (aContainsName && bContainsName) {
       final aVal = aMap[name]!;
       final bVal = bMap[name]!;
-      return _IngredientIrritant(
-        name: aVal.name,
-        concentration: aVal.concentration + bVal.concentration,
-        dosePerServing: aVal.dosePerServing + bVal.dosePerServing,
-      );
+      return aVal.dosePerServing > bVal.dosePerServing ? aVal : bVal;
     } else if (aContainsName) {
       return aMap[name]!;
     } else if (bContainsName) {
@@ -278,7 +260,7 @@ Iterable<_IngredientIrritant> _addIngredientIrritants(
     } else {
       return null;
     }
-  }).whereType<_IngredientIrritant>();
+  }).whereType<Irritant>();
 }
 
 class IrritantServiceException implements Exception {

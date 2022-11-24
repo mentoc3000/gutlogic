@@ -22,7 +22,6 @@ class FoodGroupsRepository with FirestoreRepository {
   Future<BuiltMap<String, BuiltSet<FoodGroupEntry>>> _getCache() async {
     try {
       final res = await apiService.get(path: '/irritant/foodGroups');
-      // TODO: remove data field and use result directly
       final data = res['data'] as Map<String, dynamic>;
       return BuiltMap<String, BuiltSet<FoodGroupEntry>>(
         data.map(

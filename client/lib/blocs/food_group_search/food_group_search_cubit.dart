@@ -12,7 +12,7 @@ import 'food_group_search_state.dart';
 class FoodGroupSearchCubit extends Cubit<FoodGroupSearchState> {
   final FoodGroupsRepository foodGroupsRepository;
   final IrritantService irritantService;
-  BuiltMap<FoodGroupEntry, int?>? _maxIntensitiesMapCache;
+  BuiltMap<FoodGroupEntry, Intensity?>? _maxIntensitiesMapCache;
 
   FoodGroupSearchCubit({
     required this.foodGroupsRepository,
@@ -36,7 +36,7 @@ class FoodGroupSearchCubit extends Cubit<FoodGroupSearchState> {
         final entriesList = entries.toList();
         final maxIntensitiesList = await Future.wait(entries.map((e) => irritantService.maxIntensity(e.doses)));
         _maxIntensitiesMapCache =
-            BuiltMap<FoodGroupEntry, int>.from(Map.fromIterables(entriesList, maxIntensitiesList));
+            BuiltMap<FoodGroupEntry, Intensity>.from(Map.fromIterables(entriesList, maxIntensitiesList));
       }
 
       if (query.isNotEmpty) {

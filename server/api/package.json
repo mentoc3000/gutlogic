@@ -43,5 +43,10 @@
     "ts-sinon": "^2.0.2",
     "tslib": "^2.4.0",
     "typescript": "^4.8.2"
+  },
+  "ava": {
+    "files": [
+      "test/**/*_test.js"
+    ]
   }
 }
