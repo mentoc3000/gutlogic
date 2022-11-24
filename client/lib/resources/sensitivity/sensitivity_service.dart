@@ -36,7 +36,7 @@ class SensitivityService extends ChangeNotifier {
   }
 
   void _cacheSensitivityEntries(BuiltMap<FoodReference, Sensitivity> entries) {
-    _cache.clear(); // TODO this would be improved by the repository streaming additions and deletions
+    _cache.clear();
     _cache.addAll(entries.toMap());
 
     notifyListeners();

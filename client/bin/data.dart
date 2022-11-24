@@ -38,7 +38,6 @@ final irritants = [
   Irritant(name: 'Sorbitol', concentration: 0.003, dosePerServing: 0.03),
 ].build();
 
-// BUG: show food that has ingredients
 final food = EdamamFood(
   id: 'broccoli',
   name: 'Broccoli',

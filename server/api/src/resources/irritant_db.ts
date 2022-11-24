@@ -71,8 +71,7 @@ function multimap<T, S, R>(collection: T[], keyfunc: (arg0: T) => S, valfunc: (a
   return map;
 }
 
-const allConcentrations = `       
-  MAX(CASE WHEN ic.irritant_name = 'Excess Fructose' THEN ic.concentration ELSE NULL END) AS Fructose,
+const allConcentrations = `MAX(CASE WHEN ic.irritant_name = 'Excess Fructose' THEN ic.concentration ELSE NULL END) AS Fructose,
   MAX(CASE WHEN ic.irritant_name = 'Mannitol' THEN ic.concentration ELSE NULL END) AS Mannitol,
   MAX(CASE WHEN ic.irritant_name = 'Sorbitol' THEN ic.concentration ELSE NULL END) AS Sorbitol,
   MAX(CASE WHEN ic.irritant_name = 'Lactose' THEN ic.concentration ELSE NULL END) AS Lactose,
@@ -81,7 +80,7 @@ const allConcentrations = `
   MAX(CASE WHEN ic.irritant_name = 'Nystose' THEN ic.concentration ELSE NULL END) AS Nystose,
   MAX(CASE WHEN ic.irritant_name = 'Kestose' THEN ic.concentration ELSE NULL END) AS Kestose,
   MAX(CASE WHEN ic.irritant_name = 'Fructan' THEN ic.concentration ELSE NULL END) AS Fructan`;
-const allDosePerServings = allConcentrations.split("/n").map((s) => "weight_per_serving * " + s).join("\n");
+const allDosePerServings = allConcentrations.split("\n").map((s) => "weight_per_serving * " + s).join("\n");
 
 // Returns a new multi-map of edamam ID values keyed by food ID.
 async function selectEdamamIdMap(db: sqlite.Database): Promise<Map<string, string[]>> {
@@ -395,8 +394,8 @@ export async function showIngredients(db: sqlite.Database, foodContentsLabel: st
   SELECT show_ingredients
   FROM edamam
   WHERE edamam_id = ?;`;
-  
-  const row: {show_ingredients: number; } = await db.get(selectSql, edamamId);
+
+  const row: { show_ingredients: number; } = await db.get(selectSql, edamamId);
 
   if (row) {
     // Hide ingredients if show_ingredients column is not true for elementary food
