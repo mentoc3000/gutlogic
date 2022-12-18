@@ -11,6 +11,7 @@ import '../../widgets/gl_loading_widget.dart';
 import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
 import '../../widgets/gl_scaffold.dart';
+import '../../widgets/icon_buttons/barcode_scan_icon_button.dart';
 import '../../widgets/powered_by_edamam.dart';
 import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
@@ -29,6 +30,17 @@ class FoodSearchDelegate extends SearchableSearchDelegate<FoodReference> {
   }) : super(onSelect: onSelect, searchFieldLabel: 'Search for food') {
     foodSuggestionCubit.update();
     foodSearchBloc.add(StreamFoodQuery(query));
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    final clear = clearActionButton();
+    final scan = BarcodeScanIconButton(
+      onFood: (food) {
+        onSelect(food.toFoodReference());
+      },
+    );
+    return [clear, scan];
   }
 
   @override

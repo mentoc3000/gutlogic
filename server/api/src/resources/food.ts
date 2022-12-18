@@ -127,9 +127,26 @@ async function search(
   }
 }
 
+async function upc(
+  req: Request<{ upc: string; }, unknown, unknown, { name: string; }>,
+  res: Response,
+) {
+  const barcode = req.params.upc;
+  const result = await edamam.upc(barcode);
+
+  if (result.ok) {
+    const food = await toFood(result.value);
+    res.json({ data: food });
+  } else {
+    res.status(404).end();
+  }
+}
+
+
 const router = express.Router();
 
 router.get("/v0/search", search);
 router.get("/v0/:foodID", get);
+router.get("/v0/upc/:upc", upc);
 
 export default router;

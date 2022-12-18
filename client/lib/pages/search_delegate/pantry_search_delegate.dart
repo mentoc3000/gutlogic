@@ -11,8 +11,13 @@ import 'searchable_search_delegate.dart';
 class PantrySearchDelegate extends SearchableSearchDelegate<PantryEntry> {
   final PantryBloc pantryBloc;
 
-  PantrySearchDelegate({required this.pantryBloc, required void Function(PantryEntry) onSelect})
-      : super(onSelect: onSelect, searchFieldLabel: 'Search for food') {
+  PantrySearchDelegate({
+    required this.pantryBloc,
+    required void Function(PantryEntry) onSelect,
+  }) : super(
+          onSelect: onSelect,
+          searchFieldLabel: 'Search for food',
+        ) {
     pantryBloc.add(StreamPantryQuery(query));
   }
 
