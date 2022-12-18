@@ -9,6 +9,7 @@ class GLIcons {
   static const analysis = MdiIcons.chartBar;
   static const arrowBack = Icons.arrow_back;
   static const arrowRight = Icons.keyboard_arrow_right;
+  static const barcode = MdiIcons.barcodeScan;
   static const bowelMovement = MdiIcons.toilet;
   static const browse = Icons.manage_search;
   static const check = Icons.check;

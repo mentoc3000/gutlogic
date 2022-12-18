@@ -6,6 +6,7 @@ class GLScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
   final Color? backgroundColor;
+  final bool extendBody;
 
   const GLScaffold({
     Key? key,
@@ -14,13 +15,14 @@ class GLScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.bottomNavigationBar,
     this.backgroundColor,
+    this.extendBody = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
-      body: SafeArea(child: body),
+      body: !extendBody ? SafeArea(child: body) : body,
       floatingActionButton: floatingActionButton,
       // floatingActionButtonLocation:,
       // floatingActionButtonAnimator:,
@@ -34,8 +36,8 @@ class GLScaffold extends StatelessWidget {
       // resizeToAvoidBottomInset: ,
       // primary: true,
       // drawerDragStartBehavior: DragStartBehavior.start,
-      // extendBody: false,
-      // extendBodyBehindAppBar: false,
+      extendBody: extendBody,
+      extendBodyBehindAppBar: extendBody,
       // drawerScrimColor: ,
       // drawerEdgeDragWidth: ,
       // drawerEnableOpenDragGesture: true,

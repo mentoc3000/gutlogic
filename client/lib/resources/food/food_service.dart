@@ -30,6 +30,11 @@ class FoodService implements SearchableRepository<Food> {
     }
   }
 
+  Stream<Food?> streamUpc(String upc) {
+    if (!_isValidUpc(upc)) return Stream.value(null);
+    return edamamFoodRepository.streamUpc(upc);
+  }
+
   @override
   Stream<BuiltList<Food>> streamQuery(String query) {
     if (query.isEmpty) return Stream.value(<CustomFood>[].build());
@@ -53,4 +58,10 @@ BuiltList<Food> _combineFoodLists(Iterable<Iterable<Food>> values) {
   final customFoods = values.first;
   final edamamFoods = values.last;
   return [...customFoods, ...edamamFoods].toBuiltList();
+}
+
+final _upcMatcher = RegExp(r'^[0-9]+$');
+
+bool _isValidUpc(String upc) {
+  return _upcMatcher.hasMatch(upc);
 }

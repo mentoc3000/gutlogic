@@ -1,10 +1,12 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/pages/barcode_scan/barcode_scan_page.dart';
 
 import '../models/diary_entry/bowel_movement_entry.dart';
 import '../models/diary_entry/meal_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
+import '../models/food/food.dart';
 import '../models/food/ingredient.dart';
 import '../models/food_reference/food_reference.dart';
 import '../models/meal_element.dart';
@@ -113,6 +115,14 @@ class Routes {
     return MaterialPageRoute(
       builder: (context) => ProfilePage(),
       settings: const RouteSettings(name: 'Profile Page'),
+    );
+  }
+
+  Route<Widget> createBarcodeScanRoute({required void Function(Food) onFood}) {
+    return MaterialPageRoute(
+      builder: (context) => BarcodeScanPage.provided(onFood: onFood),
+      settings: const RouteSettings(name: 'Barcode Scan Page'),
+      fullscreenDialog: true,
     );
   }
 

@@ -13,6 +13,7 @@ void main() {
     late EdamamService edamamService;
     const riceCakeId = 'food_a7t4ob2aynrl25ayhq4n8adgykn5';
     const riceCakeResponse = {'data': brownRiceCakeResult};
+    const riceCakeUpc = '013562000043';
 
     const query = 'apple';
     const appleResponse = {'data': appleQueryResults};
@@ -53,6 +54,20 @@ void main() {
           .thenAnswer((_) => Future.value({'data': <Map<String, dynamic>>[]}));
       final results = await edamamService.searchFood(missingId);
       expect(results.length, 0);
+    });
+
+    test('gets food by upc', () async {
+      when(apiService.get(path: '/food/v0/upc/$riceCakeUpc', params: argThat(isNull, named: 'params')))
+          .thenAnswer((_) => Future.value(riceCakeResponse));
+      final edamamFood = await edamamService.getByUpc(riceCakeUpc);
+      expect(edamamFood!.name, 'brown rice cake');
+    });
+
+    test('returns null for missing upc', () async {
+      when(apiService.get(path: argThat(startsWith('/food'), named: 'path'), params: anyNamed('params')))
+          .thenAnswer((_) => Future.value({'data': null}));
+      final edamamFood = await edamamService.getByUpc('1234');
+      expect(edamamFood, null);
     });
   });
 }

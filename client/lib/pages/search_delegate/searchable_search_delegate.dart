@@ -13,15 +13,19 @@ abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDele
     required this.onSelect,
   }) : super(searchFieldLabel: searchFieldLabel);
 
+  Widget clearActionButton() {
+    return IconButton(
+      onPressed: () {
+        query = '';
+      },
+      icon: const Icon(GLIcons.clear),
+    );
+  }
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
-      IconButton(
-        icon: const Icon(GLIcons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
+      clearActionButton(),
     ];
   }
 
@@ -51,6 +55,10 @@ abstract class SearchableSearchDelegate<T extends Searchable> extends SearchDele
         },
         trailing: trailing,
       );
+
+  void setQuery(String query) {
+    this.query = query;
+  }
 
   @override
   ThemeData appBarTheme(BuildContext context) => searchDelegateTheme;

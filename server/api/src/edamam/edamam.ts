@@ -98,4 +98,18 @@ export async function get(
   }
 }
 
-export default { get, search };
+// Get an Edamam food by upc, returning the first result.
+export async function upc( barcode: string ): Promise<Result<EdamamFoodMeasures, EdamamError>> {
+  try {
+    const data = await edamam({ upc: barcode }); // edamam has no direct lookup of foods by ID, reuse search API
+    const result = data.hints[0];
+    if (result === undefined) return err(EdamamError.NotFound);
+    cleanEntry(result);
+    return ok(result);
+  } catch {
+    log.w("Edamam is unavailable");
+    return err(EdamamError.Unavailable);
+  }
+}
+
+export default { get, search, upc };

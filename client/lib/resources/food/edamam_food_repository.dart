@@ -27,4 +27,8 @@ class EdamamFoodRepository {
         // edamamEntry is null if food no longer exists in Edamam database. Use data from foodReference.
         EdamamFood(id: foodReference.id, name: foodReference.name);
   }
+
+  Stream<EdamamFood?> streamUpc(String upc) {
+    return Stream.fromFuture(edamamService.getByUpc(upc));
+  }
 }

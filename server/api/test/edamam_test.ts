@@ -70,3 +70,16 @@ test("Returns no result with mismatched label", async t => {
   const result = await edamam.get({ foodId, label });
   t.is(result.ok, false);
 });
+
+test("Returns upc result", async t => {
+  const status = 200;
+  const barcode = "013562000043";
+  const label = "Annie's Shells and White Cheddar Macaroni & Cheese Made With Organic Pasta";
+  const body = responses.upc.mac;
+  setFetchStub(status, body);
+
+  const result = await edamam.upc(barcode);
+  const edamamFoodMeasure = unwrap(result);
+  t.is(edamamFoodMeasure.food?.label, label);
+});
+

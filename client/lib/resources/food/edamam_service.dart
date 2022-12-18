@@ -59,6 +59,32 @@ class EdamamService {
       throw EdamamException(message: 'Parsing error');
     }
   }
+
+  /// Get Edamam food by UPC
+  ///
+  /// No match returns null.
+  Future<EdamamFood?> getByUpc(String upc) async {
+    if (upc.isEmpty) return null;
+
+    late final Map<String, dynamic> response;
+
+    try {
+      response = await apiService.get(path: '/food/v0/upc/$upc');
+    } catch (e) {
+      if (e is HttpException) {
+        if (e.statusCode == 404 || e.statusCode == 443) return null;
+        if (e.statusCode == 401) throw EdamamException(message: 'API authentication error');
+      }
+      throw EdamamException(message: 'Something is wrong with Edamam');
+    }
+
+    try {
+      final entry = response['data'] as Map?;
+      return entry != null ? serializers.deserializeWith(EdamamFood.serializer, entry) : null;
+    } catch (e) {
+      throw EdamamException(message: 'Parsing error');
+    }
+  }
 }
 
 class EdamamException implements Exception {
