@@ -8,7 +8,7 @@ import '../../models/irritant/intensity.dart';
 import '../../resources/irritant_service.dart';
 import '../../routes/routes.dart';
 import '../gl_icons.dart';
-import '../irritant_intensity/intensity_indicator.dart';
+import '../irritant_warning.dart';
 import 'subscribe_to_unlock_push_card.dart';
 
 class IngredientsCard extends StatelessWidget {
@@ -34,9 +34,10 @@ class IngredientsCard extends StatelessWidget {
         onTapSubscribed: onTapSubscribed,
         trailing: FutureBuilder<Intensity>(
           future: maxIntensity,
-          builder: (context, snapshot) => snapshot.hasData && snapshot.data != null
-              ? IntensityIndicator(snapshot.data!)
-              : const IntensityIndicator(Intensity.unknown),
+          builder: (context, snapshot) {
+            final showWarning = snapshot.hasData && snapshot.data != null && snapshot.data! > Intensity.none;
+            return showWarning ? IrritantWarning() : Container();
+          },
         ),
       );
     });

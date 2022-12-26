@@ -22,6 +22,7 @@ class GLIcons {
   static const expandMore = Icons.expand_more;
   static const filter = Icons.filter_list;
   static const ingredients = Icons.featured_play_list_outlined;
+  static const irritantWarning = Icons.warning;
   static const license = MdiIcons.license;
   static const meal = Icons.fastfood;
   static const pantry = MdiIcons.chartBoxOutline;
