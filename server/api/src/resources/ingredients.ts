@@ -1,3 +1,4 @@
+import * as sqlite from "sqlite";
 import { FoodReference } from "./food";
 import irritantDb, { foodRef } from "./irritant_db";
 import log from "./logger";
@@ -115,6 +116,26 @@ function maxProportion(idx: number): number {
   return 1 / (idx + 1);
 }
 
+async function selectFoodRef(db: sqlite.Database, ingredientText: string) : Promise<FoodReference | null> {
+  let name = getName(ingredientText);
+
+  // TODO: condense into a single regular expression
+  // Remove words that don't modify food irritants
+  name = name.replace(/organic/ig, name);
+  name = name.replace(/enriched/ig, name);
+  name = name.replace(/pasteurized/ig, name);
+  name = name.replace(/contains/ig, name);
+  name = name.replace(/bleached/ig, name);
+  name = name.replace(/unbleached/ig, name);
+
+  // Remove multiple spaces
+  name = name.replace(/\s{2,}/g, " ")
+
+  name = name.trim();
+
+  return foodRef(db, name)
+}
+
 async function parse(ingredientsText: string): Promise<Ingredient[] | null> {
   try {
     const db = await irritantDb.get();
@@ -130,7 +151,7 @@ async function parse(ingredientsText: string): Promise<Ingredient[] | null> {
         ingredients = await parse(subIngredients(ingredientText));
       } else {
         name = ingredientText;
-        foodReference = await foodRef(db, getName(ingredientText));
+        foodReference = await selectFoodRef(db, ingredientText);
       }
       return { name, maxFracWeight, foodReference, ingredients };
     }));

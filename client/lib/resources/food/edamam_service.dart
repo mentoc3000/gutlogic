@@ -1,5 +1,6 @@
 import '../../models/food/edamam_food.dart';
 import '../../models/serializers.dart';
+import '../../util/logger.dart';
 import '../../util/null_utils.dart';
 import '../api_service.dart';
 
@@ -26,12 +27,17 @@ class EdamamService {
       throw EdamamException(message: 'Something is wrong with Edamam');
     }
 
-    try {
-      final entries = response['data'] as List;
-      return entries.map((e) => serializers.deserializeWith(EdamamFood.serializer, e)).whereNotNull().toList();
-    } catch (e) {
-      throw EdamamException(message: 'Parsing error');
-    }
+    final entries = response['data'] as List;
+    return entries
+        .map((entry) {
+          try {
+            return serializers.deserializeWith(EdamamFood.serializer, entry);
+          } catch (e) {
+            logger.w('Error parsing entry $entry');
+          }
+        })
+        .whereNotNull()
+        .toList();
   }
 
   /// Get Edamam food by Id
