@@ -7,6 +7,7 @@ test("decompose simple list", t => {
   const list = decompose(ingredients);
 
   t.is(list.length, 9);
+  t.is(list[0], "Stew Meat");
   t.is(list[7], "Colby-Jack Cheese");
 });
 
@@ -16,6 +17,7 @@ test("decompose list with title", t => {
   const list = decompose(ingredients);
 
   t.is(list.length, 9);
+  t.is(list[0], "Stew Meat");
   t.is(list[7], "Colby-Jack Cheese");
 });
 
@@ -25,6 +27,7 @@ test("decompose list with all caps title", t => {
   const list = decompose(ingredients);
 
   t.is(list.length, 9);
+  t.is(list[0], "Stew Meat");
   t.is(list[7], "Colby-Jack Cheese");
 });
 
@@ -49,6 +52,14 @@ test("decompose list with and", t => {
 
   t.is(list.length, 3);
   t.is(list[2], "Salt");
+});
+
+test("decompose list ignores blank name", t => {
+  const ingredients = "Stew Meat; ; Potatoes and Salt";
+  const list = decompose(ingredients);
+
+  t.is(list.length, 3);
+  t.is(list[1], "Potatoes");
 });
 
 test("decompose list with nested ingredients", t => {
@@ -122,8 +133,8 @@ test("parse returns ingredient list", async t => {
   const ingredients = await parse(ingredientsText);
 
   t.is(ingredients.length, 4);
-  t.is(ingredients[1].name, "Water");
-  t.is(ingredients[1].foodReference, null);
+  t.is(ingredients[2].name, "Yeast");
+  t.is(ingredients[2].foodReference, null);
   t.is(ingredients[0].foodReference.id, "food_azuyr92bee8mu1aodnko9agg46su");
 });
 
@@ -162,4 +173,29 @@ test("parse gets known food id", async t => {
   const ingredients = await parse(ingredientsText);
 
   t.is(ingredients[0].foodReference.id, "food_b7bgzddbqq26mia27xpv7acn083m");
-})
+});
+
+test("parse ignores modifier words", async t => {
+  const ingredientsText = "organic wheat flour";
+  const ingredients = await parse(ingredientsText);
+
+  t.is(ingredients[0].foodReference.id, "food_ar3x97tbq9o9p6b6gzwj0am0c81l");
+});
+
+test("parse Cheerios", async t => {
+  const ingredientsText = "WHOLE GRAIN OATS; CORN STARCH; SUGAR; SALT; TRIPOTASSIUM PHOSPHATE. VITAMIN E (MIXED TOCOPHEROLS) ADDED TO PRESERVE FRESHNESS.VITAMINS AND MINERALS: CALCIUM CARBONATE; IRON AND ZINC (MINERAL NUTRIENTS); VITAMIN C (SODIUM ASCORBATE); A B VITAMIN (NIACINAMIDE); VITAMIN B6 (PYRIDOXINE HYDROCHLORIDE); VITAMIN A (PALMITATE); VITAMIN B1 (THIAMIN MONONITRATE); A B VITAMIN (FOLIC ACID); VITAMIN B12; VITAMIN D3.";
+  const ingredients = await parse(ingredientsText);
+
+  t.is(ingredients[2].foodReference.id, "food_axi2ijobrk819yb0adceobnhm1c2");
+  t.is(ingredients[2].foodReference.name, "SUGAR");
+});
+
+test("parse with footnotes", async t => {
+  const ingredientsText = "flour*; water; salt**; flavor+";
+  const ingredients = await parse(ingredientsText);
+
+  t.is(ingredients[0].name, "flour*");
+  t.is(ingredients[0].foodReference.name, "flour");
+  t.is(ingredients[2].foodReference.name, "salt");
+  t.is(ingredients[3].foodReference, null);
+});
