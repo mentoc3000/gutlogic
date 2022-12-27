@@ -13,7 +13,8 @@ export interface Ingredient {
 export function decompose(ingredientsText: string): string[] | null {
   const text = ingredientsText
     .trim() // Trim whitespace
-    .replace(/[.,:;]$/, ""); // Remove trailing punctuation
+    .replace(/[.,:;]$/, "") // Remove trailing punctuation
+    .replace(/^ingredients:/i, ""); // Remove leading ingredients name
 
   const ingredients: string[] = [];
   const brackets: string[] = [];
@@ -71,7 +72,8 @@ export function decompose(ingredientsText: string): string[] | null {
   }
 
   // Remove whitespace before returning
-  return ingredients.map((i) => i.trim());
+  // Remove empty names
+  return ingredients.map((i) => i.trim()).filter((i) => i.length > 0);
 }
 
 /// Name of the simple ingredient: Carrot; or
@@ -119,21 +121,20 @@ function maxProportion(idx: number): number {
 async function selectFoodRef(db: sqlite.Database, ingredientText: string) : Promise<FoodReference | null> {
   let name = getName(ingredientText);
 
-  // TODO: condense into a single regular expression
   // Remove words that don't modify food irritants
-  name = name.replace(/organic/ig, name);
-  name = name.replace(/enriched/ig, name);
-  name = name.replace(/pasteurized/ig, name);
-  name = name.replace(/contains/ig, name);
-  name = name.replace(/bleached/ig, name);
-  name = name.replace(/unbleached/ig, name);
+  name = name.replace(/organic/ig, "");
+  name = name.replace(/enriched/ig, "");
+  name = name.replace(/pasteurized/ig, "");
+  name = name.replace(/contains/ig, "");
+  name = name.replace(/bleached/ig, "");
+  name = name.replace(/unbleached/ig, "");
 
-  // Remove multiple spaces
+  // Regularize punctuation
   name = name.replace(/\s{2,}/g, " ")
-
   name = name.trim();
+  name = name.replace(/[.,+*'";:]+$/, "");
 
-  return foodRef(db, name)
+  return foodRef(db, name);
 }
 
 async function parse(ingredientsText: string): Promise<Ingredient[] | null> {
