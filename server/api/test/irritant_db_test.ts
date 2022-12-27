@@ -64,7 +64,7 @@ SELECT COUNT(*) as count
  WHERE canonical_edamam_id IS NOT NULL AND 
        f.show_irritants AND 
        f.searchable_in_edamam AND
-       f.show_in_browse;
+       f.show_in_browse
 `;
   const row = await db.get<Count>(sql);
   const foodCount = row.count;

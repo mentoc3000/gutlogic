@@ -44,6 +44,104 @@ void main() {
       expect(food.name, foodJson['name']);
     });
 
+    test('is deserializable with nested ingredients', () {
+      final foodJson = {
+        'id': 'food_borhzfibq5hk42auqefxmap5wmm1',
+        'name': 'Peanut Butter Wafers, Peanut Butter',
+        'brand': 'Kid Tested Tunes',
+        'measures': [
+          {'unit': 'Serving', 'weight': 27},
+          {'unit': 'Wafer', 'weight': 9},
+          {'unit': 'Gram', 'weight': 1},
+          {'unit': 'Ounce', 'weight': 28.349523125},
+          {'unit': 'Pound', 'weight': 453.59237},
+          {'unit': 'Kilogram', 'weight': 1000}
+        ],
+        'irritants': null,
+        'ingredients': [
+          {
+            'name': 'VEGETABLE OIL',
+            'maxFracWeight': 1,
+            'foodReference': null,
+            'ingredients': [
+              {'name': 'CANOLA', 'maxFracWeight': 1, 'foodReference': null, 'ingredients': null},
+              {
+                'name': 'SOYBEAN',
+                'maxFracWeight': 0.5,
+                'foodReference': {
+                  '\$': 'EdamamFoodReference',
+                  'name': 'SOYBEAN',
+                  'id': 'food_bx3fkcubyl2t7ha8jfdm5anoirlx'
+                },
+                'ingredients': null
+              },
+              {'name': 'PALM', 'maxFracWeight': 0.3333333333333333, 'foodReference': null, 'ingredients': null},
+              {'name': 'PALM KERNEL', 'maxFracWeight': 0.25, 'foodReference': null, 'ingredients': null}
+            ]
+          },
+          {'name': 'SORBITOL', 'maxFracWeight': 0.5, 'foodReference': null, 'ingredients': null},
+          {
+            'name': 'ENRICHED WHEAT FLOUR',
+            'maxFracWeight': 0.3333333333333333,
+            'foodReference': null,
+            'ingredients': [
+              {
+                'name': 'WHEAT FLOUR',
+                'maxFracWeight': 1,
+                'foodReference': {
+                  '\$': 'EdamamFoodReference',
+                  'name': 'WHEAT FLOUR',
+                  'id': 'food_ar3x97tbq9o9p6b6gzwj0am0c81l'
+                },
+                'ingredients': null
+              },
+              {'name': 'MALTED BARLEY FLOUR', 'maxFracWeight': 0.5, 'foodReference': null, 'ingredients': null},
+              {'name': 'NIACIN', 'maxFracWeight': 0.3333333333333333, 'foodReference': null, 'ingredients': null},
+              {'name': 'REDUCED IRON', 'maxFracWeight': 0.25, 'foodReference': null, 'ingredients': null},
+              {'name': 'THIAMINE MONONITRATE', 'maxFracWeight': 0.2, 'foodReference': null, 'ingredients': null},
+              {'name': 'RIBOFLAVIN', 'maxFracWeight': 0.16666666666666666, 'foodReference': null, 'ingredients': null},
+              {'name': 'FOLIC ACID', 'maxFracWeight': 0.14285714285714285, 'foodReference': null, 'ingredients': null}
+            ]
+          },
+          {'name': 'MALTODEXTRIN', 'maxFracWeight': 0.25, 'foodReference': null, 'ingredients': null},
+          {
+            'name': 'NATURAL PEANUT BUTTER (ROASTED PEANUTS)',
+            'maxFracWeight': 0.2,
+            'foodReference': null,
+            'ingredients': null
+          },
+          {
+            'name': 'CORN STARCH',
+            'maxFracWeight': 0.16666666666666666,
+            'foodReference': {
+              '\$': 'EdamamFoodReference',
+              'name': 'CORN STARCH',
+              'id': 'food_a6r17hrba37cqeabesko5a2gk233'
+            },
+            'ingredients': null
+          },
+          {'name': 'SALT', 'maxFracWeight': 0.14285714285714285, 'foodReference': null, 'ingredients': null},
+          {'name': 'SOY LECITHIN', 'maxFracWeight': 0.125, 'foodReference': null, 'ingredients': null},
+          {'name': 'BAKING SODA', 'maxFracWeight': 0.1111111111111111, 'foodReference': null, 'ingredients': null},
+          {
+            'name': 'ASPARTAME (PHENYLKETONURICS: CONTAINS PHENYLALANINE)',
+            'maxFracWeight': 0.1,
+            'foodReference': null,
+            'ingredients': null
+          },
+          {
+            'name': 'AMMONIUM BICARBONATE',
+            'maxFracWeight': 0.09090909090909091,
+            'foodReference': null,
+            'ingredients': null
+          },
+        ],
+      };
+
+      final food = serializers.deserializeWith(EdamamFood.serializer, foodJson)!;
+      expect(food.name, foodJson['name']);
+    });
+
     test('is serializable', () {
       final food = EdamamFood.fromBuilder((b) => b
         ..id = '1234'

@@ -306,6 +306,7 @@ SELECT food_group_name,
        f.searchable_in_edamam AND
        f.show_in_browse
  GROUP BY ic.food_id,
+          food_group_name,
           canonical_name
  ORDER BY canonical_name;
  `;
@@ -381,7 +382,7 @@ export async function foodRef(db: sqlite.Database, name: string): Promise<FoodRe
 
   const row: { canonical_edamam_id: string; } = await db.get(selectSql, name);
 
-  if (!row) return null;
+  if (!row || row.canonical_edamam_id === null) return null;
 
   return { $: "EdamamFoodReference", name, id: row.canonical_edamam_id };
 }
