@@ -139,6 +139,8 @@ async function selectFoodRef(db: sqlite.Database, ingredientText: string) : Prom
 }
 
 async function parse(ingredientsText: string): Promise<Ingredient[] | null> {
+  if(!ingredientsText) return null;
+  
   try {
     const db = await irritantDb.get();
     const ingredientTexts = decompose(ingredientsText);

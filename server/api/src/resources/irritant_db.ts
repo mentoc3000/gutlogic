@@ -389,7 +389,7 @@ export async function foodRef(db: sqlite.Database, name: string): Promise<FoodRe
 
 /// Return true if ingredients are shown for this food
 export async function showIngredients(db: sqlite.Database, foodContentsLabel: string, edamamId: string): Promise<Boolean> {
-  if (foodContentsLabel === null || foodContentsLabel === "") return false;
+  if (!foodContentsLabel) return false;
 
   const selectSql = `
   SELECT show_ingredients
