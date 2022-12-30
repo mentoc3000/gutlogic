@@ -4,6 +4,7 @@ import 'package:gutlogic/models/diary_entry/bowel_movement_entry.dart';
 import 'package:gutlogic/models/diary_entry/meal_entry.dart';
 import 'package:gutlogic/models/diary_entry/symptom_entry.dart';
 import 'package:gutlogic/models/food/edamam_food.dart';
+import 'package:gutlogic/models/food/ingredient.dart';
 import 'package:gutlogic/models/food_group_entry.dart';
 import 'package:gutlogic/models/food_reference/custom_food_reference.dart';
 import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
@@ -19,6 +20,7 @@ import 'package:gutlogic/models/sensitivity/sensitivity_source.dart';
 import 'package:gutlogic/models/severity.dart';
 import 'package:gutlogic/models/symptom.dart';
 import 'package:gutlogic/models/symptom_type.dart';
+import 'package:gutlogic/resources/irritant_service.dart';
 import 'package:gutlogic/util/date_time_ext.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:timezone/timezone.dart';
@@ -38,7 +40,7 @@ final irritants = [
   Irritant(name: 'Sorbitol', concentration: 0.003, dosePerServing: 0.03),
 ].build();
 
-final food = EdamamFood(
+final elementaryFood = EdamamFood(
   id: 'broccoli',
   name: 'Broccoli',
   brand: null,
@@ -46,9 +48,61 @@ final food = EdamamFood(
   irritants: irritants,
 );
 
+final ingredients = [
+  Ingredient(name: 'Water'),
+  Ingredient(name: 'Potatoes'),
+  Ingredient(name: 'Beef'),
+  Ingredient(name: 'Carrots'),
+  Ingredient(name: 'Tomato Puree'),
+  Ingredient(name: 'Sweet Corn'),
+  Ingredient(name: 'Diced Tomatoes'),
+  Ingredient(name: 'Onion'),
+  Ingredient(name: 'Celery'),
+  Ingredient(name: 'Salt'),
+  Ingredient(name: 'Garlic'),
+  Ingredient(name: 'Thyme'),
+].toBuiltList();
+final ingredientIrritants = [
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.1, dosePerServing: 0.1)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.2, dosePerServing: 0.2)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.3, dosePerServing: 0.3)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.4, dosePerServing: 0.4)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.5, dosePerServing: 0.5)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.6, dosePerServing: 0.6)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.7, dosePerServing: 0.7)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.8, dosePerServing: 0.8)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 0.9, dosePerServing: 0.9)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 1.0, dosePerServing: 1.0)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 1.1, dosePerServing: 1.1)].toBuiltList(),
+  [Irritant(name: 'Ingredient Irritant', concentration: 1.2, dosePerServing: 1.2)].toBuiltList(),
+];
+final ingredientIrritantMap = Map.fromIterables(ingredients, ingredientIrritants);
+final ingredientDoses = ingredientIrritants.map(IrritantService.doseMap);
+final ingredientDosesMap = Map.fromIterables(ingredients, ingredientDoses);
+final ingredientDosesMaxIntensities = Map.fromIterables(ingredientDoses, [
+  Intensity.none, // Water
+  Intensity.none, // Potatoes
+  Intensity.none, // Beef
+  Intensity.trace, // Carrots
+  Intensity.unknown, // Tomato Puree
+  Intensity.high, // Corn
+  Intensity.low, // Diced Tomatoes
+  Intensity.high, // Onion
+  Intensity.high, // Celery
+  Intensity.none, // Salt
+  Intensity.high, // Garlic
+  Intensity.unknown, // Thyme
+]);
+
+final compoundFood = EdamamFood(
+  id: 'stew',
+  name: 'Beef Stew',
+  ingredients: ingredients,
+);
+
 final mealElement = MealElement(
   id: 'mealElement4',
-  foodReference: food.toFoodReference(),
+  foodReference: elementaryFood.toFoodReference(),
   quantity: Quantity.unweighed(amount: 1, unit: 'Oz'),
 );
 
@@ -181,7 +235,7 @@ final sensitivities = {
 
 final pantryEntry = PantryEntry(
   userFoodDetailsId: '1',
-  foodReference: food.toFoodReference(),
+  foodReference: elementaryFood.toFoodReference(),
   sensitivity: Sensitivity(level: SensitivityLevel.severe, source: SensitivitySource.user),
   notes: 'Makes me feel bloated the rest of the day.',
 );
@@ -264,6 +318,12 @@ final pantryEntries = [
     userFoodDetailsId: '3',
     foodReference: CustomFoodReference(id: '3', name: 'Banana'),
     sensitivity: Sensitivity(level: SensitivityLevel.none, source: SensitivitySource.user),
+    notes: null,
+  ),
+  PantryEntry(
+    userFoodDetailsId: '3',
+    foodReference: compoundFood.toFoodReference(),
+    sensitivity: Sensitivity(level: SensitivityLevel.moderate, source: SensitivitySource.user),
     notes: null,
   ),
 ].build();
@@ -650,8 +710,8 @@ final vegetables = [
   )
 ].toBuiltSet();
 final vegetableListSorted = vegetables.toList()..sort((a, b) => a.foodRef.name.compareTo(b.foodRef.name));
-final dosesList = vegetables.map((p0) => p0.doses);
-final dosesMaxIntensities = Map.fromIterables(dosesList, [
+final vegetableDoses = vegetables.map((p0) => p0.doses);
+final vegetableDosesMaxIntensities = Map.fromIterables(vegetableDoses, [
   Intensity.low, // Acorn Squash
   Intensity.high, // Artichoke Heart
   Intensity.high, // Artichoke, Jerusalem
@@ -713,6 +773,7 @@ final dosesMaxIntensities = Map.fromIterables(dosesList, [
   Intensity.low, // Yam
   Intensity.medium, // Zucchini
 ]);
+final dosesMaxIntensities = Map.from(vegetableDosesMaxIntensities)..addAll(ingredientDosesMaxIntensities);
 final intensityThresholds = {
   'Mannitol': [0.0, 0.2, 0.35].build(),
   'GOS': [0.0, 0.15, 0.4].build(),

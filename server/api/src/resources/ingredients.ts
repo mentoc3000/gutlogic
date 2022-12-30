@@ -126,6 +126,7 @@ async function selectFoodRef(db: sqlite.Database, ingredientText: string) : Prom
   name = name.replace(/enriched/ig, "");
   name = name.replace(/pasteurized/ig, "");
   name = name.replace(/contains/ig, "");
+  name = name.replace(/bleached and enriched/ig, "");
   name = name.replace(/bleached/ig, "");
   name = name.replace(/unbleached/ig, "");
 
