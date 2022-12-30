@@ -74,8 +74,8 @@ export async function search(
     const data = await edamam({ ingr: name });
     data.hints.forEach(cleanEntry);
     return ok(data.hints); // ignore edamams suggested result and return full list (called `hints`)
-  } catch {
-    log.w("Edamam is unavailable");
+  } catch (e) {
+    log.w("Edamam is unavailable: " + JSON.stringify(e, Object.getOwnPropertyNames(e)));
     return err(EdamamError.Unavailable);
   }
 }
@@ -92,8 +92,8 @@ export async function get(
     if (resultWithMatchingID === undefined) return err(EdamamError.NotFound);
     cleanEntry(resultWithMatchingID);
     return ok(resultWithMatchingID);
-  } catch {
-    log.w("Edamam is unavailable");
+  } catch (e) {
+    log.w("Edamam is unavailable: " + JSON.stringify(e, Object.getOwnPropertyNames(e)));
     return err(EdamamError.Unavailable);
   }
 }
@@ -106,8 +106,8 @@ export async function upc( barcode: string ): Promise<Result<EdamamFoodMeasures,
     if (result === undefined) return err(EdamamError.NotFound);
     cleanEntry(result);
     return ok(result);
-  } catch {
-    log.w("Edamam is unavailable");
+  } catch (e) {
+    log.w("Edamam is unavailable: " + JSON.stringify(e, Object.getOwnPropertyNames(e)));
     return err(EdamamError.Unavailable);
   }
 }
