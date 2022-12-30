@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gutlogic/models/irritant/intensity.dart';
 import 'package:gutlogic/resources/irritant_service.dart';
+import 'package:gutlogic/widgets/irritant_warning.dart';
 
 import '../../../blocs/food_search/food_search.dart';
 import '../../../blocs/foods_suggestion/foods_suggestion.dart';
@@ -64,9 +65,23 @@ class IngredientTile extends StatelessWidget {
       leading: SensitivityIndicator(sensitivity),
       trailing: FutureBuilder<Intensity>(
         future: maxIntensity,
-        builder: (context, snapshot) => snapshot.hasData && snapshot.data != null
-            ? IntensityIndicator(snapshot.data!)
-            : const IntensityIndicator(Intensity.unknown),
+        builder: (context, snapshot) {
+          final maxIntensity = snapshot.data;
+          if (snapshot.hasData && maxIntensity != null) {
+            if (ingredient.ingredients == null) {
+              // Simple ingredient
+              return IntensityIndicator(snapshot.data!);
+            } else if (maxIntensity > Intensity.none) {
+              // Nested ingredient with some irritant intensity
+              return IrritantWarning();
+            } else {
+              // Nested ingredient with no known irritant intensity
+              return Container();
+            }
+          } else {
+            return Container();
+          }
+        },
       ),
       onTap: onTap,
     );
