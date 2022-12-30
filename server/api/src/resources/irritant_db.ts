@@ -34,10 +34,11 @@ class IrritantDb {
 
   constructor() {
     this.dbPath = path.resolve(__dirname, "../../data", "irritants.sqlite3");
+    this._db = null;
   }
 
   async get(): Promise<sqlite.Database> {
-    if (!this._db) {
+    if (this._db === null) {
       log.d(`Opening irritant database from ${this.dbPath}`);
       this._db = await sqlite.open({
         filename: this.dbPath,
