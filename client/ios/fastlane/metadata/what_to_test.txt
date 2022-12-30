@@ -1,5 +1,5 @@
 Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities.
 
-This version adds ingredient parsing to the Gut Logic Premium features. You will not be charged to subscribe to this beta version to access this feature. Some foods have ingredients that contain irritants that people are sensitive to. For foods for which we have the ingredients list, you can browse the ingredients and see the irritant contents.
+This version adds barcode scanning to the Gut Logic Premium features. Try scanning some barcodes in your pantry or even the grocery store!
 
-Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Dec 9. Thanks in advance for your time and candid feedback!
+Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Jan 6. Thanks in advance for your time and candid feedback!

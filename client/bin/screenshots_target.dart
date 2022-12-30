@@ -80,7 +80,8 @@ void main() {
 
     // Mock food service
     final foodService = MockFoodService();
-    when(foodService.streamFood(any)).thenAnswer((_) => Stream.value(food));
+    when(foodService.streamFood(any)).thenAnswer((_) => Stream.value(elementaryFood));
+    when(foodService.streamFood(compoundFood.toFoodReference())).thenAnswer((_) => Stream.value(compoundFood));
 
     // Mock irritant repository
     final irritantService = MockIrritantService();
@@ -89,6 +90,9 @@ void main() {
         .thenAnswer((invocation) => Future.value(dosesMaxIntensities[invocation.positionalArguments[0]]));
     when(irritantService.intensityThresholds(any))
         .thenAnswer((invocation) => Future.value(intensityThresholds[invocation.positionalArguments[0]]));
+    when(irritantService.ofIngredient(any))
+        .thenAnswer((invocation) => Future.value(ingredientIrritantMap[invocation.positionalArguments[0]]));
+    when(irritantService.ofIngredients(any)).thenAnswer((realInvocation) => Future.value());
 
     // Mock meal entry
     final mealEntryRepository = MockMealEntryRepository();
@@ -175,13 +179,13 @@ void main() {
     await tester.pumpAndSettle(settleDuration);
 
     // Start filename with a number to put them in the correct order on the App Store
-    await capture(binding, '4. timeline');
+    await capture(binding, '5. timeline');
 
     await tester.tap(find.text(mealEntry2.mealElements[0].foodReference.name));
     await tester.pump();
     await tester.pumpAndSettle(settleDuration);
 
-    await capture(binding, '5. meal');
+    await capture(binding, '6. meal');
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
@@ -191,7 +195,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.pumpAndSettle(settleDuration);
 
-    await capture(binding, '6. bowel_movement');
+    await capture(binding, '7. bowel_movement');
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
@@ -201,7 +205,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.pumpAndSettle(settleDuration);
 
-    await capture(binding, '7. symptom');
+    await capture(binding, '8. symptom');
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
@@ -212,12 +216,27 @@ void main() {
 
     await capture(binding, '0. pantry');
 
-    await tester.tap(find.text(food.name));
+    await tester.tap(find.text(elementaryFood.name));
     await tester.pump();
     await tester.pumpAndSettle(settleDuration);
 
     await capture(binding, '1. sensitivity');
 
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(compoundFood.name));
+    await tester.pump();
+    await tester.pumpAndSettle(settleDuration);
+    await tester.tap(find.text('Ingredients'));
+    await tester.pump();
+    await tester.pumpAndSettle(settleDuration);
+
+    await capture(binding, '2. ingredients');
+
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pump();
+    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
     await tester.pumpAndSettle();
@@ -228,7 +247,7 @@ void main() {
     await tester.pump();
     await tester.pumpAndSettle(settleDuration);
 
-    await capture(binding, '2. browse');
+    await capture(binding, '3. browse');
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pump();
@@ -239,6 +258,6 @@ void main() {
     await tester.drag(find.text('Pantry foods by irritant'), const Offset(0.0, -180.0));
     await tester.pumpAndSettle(settleDuration);
 
-    await capture(binding, '3. analysis');
+    await capture(binding, '4. analysis');
   });
 }

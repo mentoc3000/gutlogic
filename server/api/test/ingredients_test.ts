@@ -199,3 +199,12 @@ test("parse with footnotes", async t => {
   t.is(ingredients[2].foodReference.name, "salt");
   t.is(ingredients[3].foodReference, null);
 });
+
+test("parse with modifiers", async t => {
+  const ingredientsText = "ENRICHED WHEAT FLOUR; PASTEURIZED WATER; ORGANIC SALT";
+  const ingredients = await parse(ingredientsText);
+
+  t.truthy(ingredients[0].foodReference);
+  t.truthy(ingredients[1].foodReference);
+  t.truthy(ingredients[2].foodReference);
+})
