@@ -46,7 +46,7 @@ dependencies:
   logger: ^1.0.0
   material_design_icons_flutter: 5.0.6595
   # TODO: update to release version
-  mobile_scanner: ^3.0.0-beta.2
+  mobile_scanner: ^3.0.0-beta.4
   package_info_plus: ^1.0.4
   provider: ^6.0.0
   quiver: ^3.0.1

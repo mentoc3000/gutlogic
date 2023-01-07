@@ -20,6 +20,7 @@ class GLIcons {
   static const email = Icons.email;
   static const expandLess = Icons.expand_less;
   static const expandMore = Icons.expand_more;
+  static const error = Icons.error;
   static const filter = Icons.filter_list;
   static const ingredients = Icons.featured_play_list_outlined;
   static const irritantWarning = Icons.warning;

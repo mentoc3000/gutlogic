@@ -21,8 +21,7 @@ class UpcCubit extends Cubit<UpcState> {
   void findFood({required Iterable<String> upcs}) async {
     emit(UpcsFound(upcs: upcs));
 
-    // TODO: is there a prettier way to do this using stream functions?
-    // Get the food for all upcs
+    // Get the food of first matching UPC
     final food = await Stream.fromFutures(upcs.map((upc) => foodService.streamUpc(upc).first))
         // Remove cases where no matching food could be found
         .where((food) => food != null)
