@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gutlogic/models/food/food.dart';
+import 'package:gutlogic/pages/barcode_scan/widgets/scanner_error_display.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../blocs/upc/upc.dart';
@@ -24,6 +25,11 @@ class _BarcodeScanViewState extends State<BarcodeScanView> with SingleTickerProv
   bool isDetecting = true;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<UpcCubit, UpcState>(
       builder: builder,
@@ -35,6 +41,7 @@ class _BarcodeScanViewState extends State<BarcodeScanView> with SingleTickerProv
     final mobileScanner = MobileScanner(
       controller: controller,
       onDetect: onDetect,
+      errorBuilder: errorBuilder,
     );
 
     // Sometimes during testing the scanner doesn't load. The black background helps make the X visible.
@@ -46,6 +53,10 @@ class _BarcodeScanViewState extends State<BarcodeScanView> with SingleTickerProv
     final overlay = state is UpcsFound ? const BarcodeLoadingOverlay() : Container();
 
     return Stack(children: [background, mobileScanner, overlay]);
+  }
+
+  Widget errorBuilder(BuildContext context, MobileScannerException exception, Widget? child) {
+    return ScannerErrorDisplay(code: exception.errorCode);
   }
 
   void onDetect(BarcodeCapture capture) {
