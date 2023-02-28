@@ -56,7 +56,7 @@ class SymptomTypeCountCard extends StatelessWidget {
         return sizeAndCenter(Stack(
           children: [
             InsufficientData(
-              onTap: () => DefaultTabController.of(context)!.animateTo(1),
+              onTap: () => DefaultTabController.of(context).animateTo(1),
               message: 'Start tracking symptoms',
             ),
           ],

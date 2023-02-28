@@ -15,7 +15,7 @@ class GLWidgetConfig extends StatelessWidget {
 /// A simple scroll behavior without special effects.
 class SimpleScrollBehavior extends ScrollBehavior {
   @override
-  Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axis) {
+  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
     return child;
   }
 }

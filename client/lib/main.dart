@@ -80,12 +80,9 @@ void main() async {
     Provider(create: (_) => Routes()),
   ], child: GutLogicApp());
 
-  // Since flutter_bloc 8 we need to specify the default bloc observer and event transformer using their custom zone
-  // function, which we then run inside runZoneGuarded so we can forward uncaught errors to Crashlytics. This creates
-  // two zone forks when one should be sufficient...but currently there's no way to specify the bloc overrides
-  // except via their custom runZoned implementation.
-
   runZonedGuarded(() {
-    BlocOverrides.runZoned(() => runApp(app), blocObserver: blocObserver, eventTransformer: blocEventTransformer);
+    Bloc.observer = blocObserver;
+    Bloc.transformer = blocEventTransformer;
+    runApp(app);
   }, (error, trace) => unawaited(crashlytics.record(error, trace)));
 }

@@ -59,6 +59,10 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
+  # Work around MLKit version incompatibility (https://github.com/firebase/flutterfire/issues/9805#issuecomment-1311087176)
+  pod 'MLKitVision', :podspec => 'MLKitVision.podspec.json'
+  pod 'MLKitCommon', :podspec => 'MLKitCommon.podspec.json'
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   require firebase_sdk_version
