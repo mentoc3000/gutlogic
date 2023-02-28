@@ -51,7 +51,7 @@ class RecentSeverityCard extends StatelessWidget {
         _RecentSeverityChart(recentSeverities: recentSeveritiesEntries),
         if (!hasData)
           InsufficientData(
-            onTap: () => DefaultTabController.of(context)!.animateTo(1),
+            onTap: () => DefaultTabController.of(context).animateTo(1),
             message: 'Start tracking symptoms',
           ),
       ]);

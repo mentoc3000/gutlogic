@@ -3,7 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../style/gl_text_style.dart';
 
-final _arrowImage = SvgPicture.asset('assets/curved_arrow.svg', color: guideTextStyle.color);
+final _arrowImage = SvgPicture.asset(
+  'assets/curved_arrow.svg',
+  colorFilter: ColorFilter.mode(guideTextStyle.color!, BlendMode.srcIn),
+);
 
 class FabGuide extends StatelessWidget {
   final String message;

@@ -7,47 +7,46 @@ publish_to: "none"
 version: 1.6.0
 
 environment:
-  sdk: 2.18.4
-  flutter: 3.3.8
+  sdk: 2.19.2
+  flutter: 3.7.4
 
 dependencies:
-  bloc_concurrency: ^0.2.0
+  bloc_concurrency: ^0.2.1
   built_collection: ^5.1.0
   built_value: ^8.3.0
-  cloud_firestore: ^3.1.15
-  cloud_functions: ^3.2.15
+  cloud_firestore: ^4.4.3
+  cloud_functions: ^4.0.11
   collection: ^1.16.0
   crypto: ^3.0.1
   datetime_picker_formfield: ^2.0.1
-  device_info_plus: ^3.2.2
+  device_info_plus: ^8.1.0
   edit_distance: ^0.5.0-nullsafety.0
   email_validator: ^2.0.1
-  equatable: ^2.0.0
-  firebase_analytics: ^9.1.8
-  firebase_auth: ^3.3.18
-  firebase_core: ^1.17.0
-  firebase_crashlytics: ^2.8.0
-  firebase_dynamic_links: ^4.2.3
-  firebase_remote_config: ^2.0.7
-  fl_chart: ^0.55.1
+  equatable: ^2.0.5
+  firebase_analytics: ^10.1.4
+  firebase_auth: ^4.2.2
+  firebase_core: ^2.7.0
+  firebase_crashlytics: ^3.0.15
+  firebase_dynamic_links: ^5.0.15
+  firebase_remote_config: ^3.0.13
+  fl_chart: ^0.61.0
   flutter: { sdk: flutter }
-  flutter_bloc: ^8.0.1
+  flutter_bloc: ^8.1.2
   flutter_password_strength: ^0.1.6
   flutter_sfsymbols: ^2.0.0
   flutter_speed_dial: ^6.0.0
   flutter_spinkit: ^5.1.0
-  flutter_svg: ^1.0.3
+  flutter_svg: ^2.0.2
   gap: ^2.0.0
-  google_fonts: ^2.0.0
-  google_sign_in: ^5.3.1
+  google_fonts: ^4.0.3
+  google_sign_in: ^6.0.1
   http: ^0.13.4
   in_app_purchase: ^3.0.6
-  intl: 0.17.0
+  intl: ^0.18.0
   logger: ^1.0.0
-  material_design_icons_flutter: 5.0.6595
-  # TODO: update to release version
-  mobile_scanner: ^3.0.0-beta.4
-  package_info_plus: ^1.0.4
+  material_design_icons_flutter: ^6.0.7096
+  mobile_scanner: ^3.0.0
+  package_info_plus: ^3.0.3
   provider: ^6.0.0
   quiver: ^3.0.1
   rxdart: ^0.27.0
@@ -55,11 +54,11 @@ dependencies:
   url_launcher: ^6.1.2
 
 dev_dependencies:
-  bloc_test: ^9.0.3
+  bloc_test: ^9.1.1
   build_runner: ^2.1.10
   built_value_generator: ^8.2.3
-  fake_cloud_firestore: ^1.1.0
-  flutter_launcher_icons: ^0.10.0
+  fake_cloud_firestore: ^2.4.0
+  flutter_launcher_icons: ^0.12.0
   flutter_lints: ^2.0.1
   flutter_test: { sdk: flutter }
   integration_test: { sdk: flutter }
@@ -67,7 +66,7 @@ dev_dependencies:
   mocktail: ^0.3.0
   path: ^1.8.0
   test: any
-  timezone: ^0.8.0
+  timezone: ^0.9.1
   yaml: ^3.1.0
 
 # For information on the generic Dart part of this file, see the

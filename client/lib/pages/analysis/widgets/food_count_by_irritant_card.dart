@@ -54,7 +54,7 @@ class FoodCountByIrritantCard extends StatelessWidget {
         return sizeAndCenter(Stack(
           children: [
             InsufficientData(
-              onTap: () => DefaultTabController.of(context)!.animateTo(2),
+              onTap: () => DefaultTabController.of(context).animateTo(2),
               message: 'Add foods to the Pantry',
             ),
           ],

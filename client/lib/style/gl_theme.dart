@@ -16,7 +16,7 @@ final ThemeData glTheme = ThemeData(
 
 final ThemeData searchDelegateTheme = glTheme.copyWith(
   textTheme: glTheme.textTheme.copyWith(
-    headline6: glTheme.textTheme.headline6?.copyWith(color: glTheme.colorScheme.onPrimary),
+    titleLarge: glTheme.textTheme.titleLarge?.copyWith(color: glTheme.colorScheme.onPrimary),
   ),
   textSelectionTheme: TextSelectionThemeData(
     cursorColor: glColorScheme.onPrimary,

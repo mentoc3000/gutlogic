@@ -9,7 +9,6 @@ import '../models/sensitivity/sensitivity.dart';
 import '../models/sensitivity/sensitivity_level.dart';
 import '../models/sensitivity/sensitivity_source.dart';
 import '../models/user_food_details.dart';
-import '../util/null_utils.dart';
 import 'searchable_repository.dart';
 import 'sensitivity/sensitivity_repository.dart';
 import 'user_food_details_repository.dart';
