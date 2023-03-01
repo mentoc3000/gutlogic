@@ -27,7 +27,7 @@ class DiaryEntryListTile extends StatelessWidget {
   });
 
   Widget buildTime(BuildContext context) {
-    final dateFormatter = DateFormat.jm();
+    final dateFormatter = MediaQuery.of(context).alwaysUse24HourFormat ? DateFormat.Hm() : DateFormat.jm();
     final topInset = subheadings.any((s) => s.isNotEmpty) ? 1.0 : 6.0;
     final scale = MediaQuery.textScaleFactorOf(context);
     const defaultWidth = 65;
