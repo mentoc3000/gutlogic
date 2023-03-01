@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../resources/app_review.dart';
 import '../resources/firebase/analytics_service.dart';
 import '../util/keys.dart';
 import '../widgets/gl_icons.dart';
@@ -58,6 +59,12 @@ class _MainTabsState extends State<MainTabs> with SingleTickerProviderStateMixin
     const BrowsePage(),
     const AnalysisPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    activateReviewManager();
+  }
 
   @override
   void didChangeDependencies() {
