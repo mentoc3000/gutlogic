@@ -1,5 +1,5 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
 import 'gl_card.dart';
@@ -12,36 +12,29 @@ class DateTimeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dateFormatter = DateFormat("EEE, MMM d, yyy  'at' ");
+    final dateTimeFormatter =
+        MediaQuery.of(context).alwaysUse24HourFormat ? dateFormatter.add_Hm() : dateFormatter.add_jm();
+    final dateTimeDisplay = dateTimeFormatter.format(dateTime.toLocal());
+    final controller = TextEditingController(text: dateTimeDisplay);
     return GLCard(
       child: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16),
-        child: DateTimeField(
-          initialValue: dateTime.toLocal(),
-          format: DateFormat("EEE, MMM d, yyyy 'at' h:mma"),
-          onShowPicker: (BuildContext context, DateTime? currentValue) async {
-            // Show date and time in local timezone
-            currentValue = currentValue!.toLocal();
-            final date = await showDatePicker(
-              context: context,
-              firstDate: DateTime(1900),
-              initialDate: currentValue,
-              lastDate: DateTime(2100),
-            );
-            if (date != null) {
-              final time = await showTimePicker(
-                context: context,
-                initialTime: TimeOfDay.fromDateTime(currentValue),
-              );
-              return DateTimeField.combine(date, time);
-            } else {
-              return currentValue;
-            }
-          },
+        child: TextField(
           readOnly: true,
-          resetIcon: null,
-          onChanged: onChanged,
+          controller: controller,
+          onTap: () => onTap(context),
         ),
       ),
+    );
+  }
+
+  void onTap(BuildContext context) {
+    DatePicker.showDateTimePicker(
+      context,
+      showTitleActions: true,
+      onConfirm: onChanged,
+      currentTime: dateTime,
     );
   }
 }
