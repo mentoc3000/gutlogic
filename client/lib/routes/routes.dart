@@ -1,7 +1,8 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gutlogic/pages/barcode_scan/barcode_scan_page.dart';
+import '../pages/barcode_scan/barcode_scan_page.dart';
+import '../pages/foods_with_irritant/foods_with_irritant_page.dart';
 
 import '../models/diary_entry/bowel_movement_entry.dart';
 import '../models/diary_entry/meal_entry.dart';
@@ -206,5 +207,9 @@ class Routes {
 
   Route<Widget> createIngredientsPageRoute({required BuiltList<Ingredient> ingredients}) {
     return MaterialPageRoute(builder: (context) => IngredientsPage(ingredients: ingredients));
+  }
+
+  Route<Widget> createFoodsWithIrritantPageRoute({required String irritantName}) {
+    return MaterialPageRoute(builder: (context) => FoodsWithIrritantPage.provisioned(irritantName: irritantName));
   }
 }

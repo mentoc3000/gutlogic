@@ -34,6 +34,10 @@ import 'package:mockito/mockito.dart' as mockito;
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
+// Use shared preferences version from in app review package
+// ignore: depend_on_referenced_packages
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'flutter_test_config.mocks.dart';
 
 class BowelMovementEntryEventFake extends Fake implements BowelMovementEntryEvent {}
@@ -67,6 +71,9 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   crashlyticsService = MockCrashlyticsService();
 
   setUpAll(() {
+    // Initialize shared preferences to something to allow access to SharedPreferences from app review plugin
+    SharedPreferences.setMockInitialValues({});
+
     // Register fallback values for using mocktail in page tests
     final foodReference = CustomFoodReference(id: '', name: '');
     const sensitivityLevel = SensitivityLevel.none;

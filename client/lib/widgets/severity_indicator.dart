@@ -177,12 +177,13 @@ class _SeverityFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strokeWidth = circleDiameter / 12;
     return SizedBox(
       height: circleDiameter,
       width: circleDiameter,
       child: CustomPaint(
         size: const Size(300, 300),
-        painter: _FacePainter(animationValue, color: color),
+        painter: _FacePainter(animationValue, strokeWidth: strokeWidth, color: color),
       ),
     );
   }
@@ -191,6 +192,7 @@ class _SeverityFace extends StatelessWidget {
 class _FacePainter extends CustomPainter {
   _FacePainter(
     double animationValue, {
+    required this.strokeWidth,
     this.color = const Color(0xFF615f56),
   })  : activeIndex = animationValue.floor(),
         unitAnimatingValue = (animationValue * 10 % 10 / 10);
@@ -198,6 +200,7 @@ class _FacePainter extends CustomPainter {
   final int activeIndex;
   Color color;
   final double unitAnimatingValue;
+  final double strokeWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -229,13 +232,12 @@ class _FacePainter extends CustomPainter {
     final x1 = size.width / 2 * 0.65;
     final x2 = size.width - x1;
     final y = size.height * 0.41;
-    const eyeRadius = 5.0;
 
     final paint = Paint()..color = color;
     canvas.drawArc(
       Rect.fromCircle(
         center: Offset(x1, y),
-        radius: eyeRadius,
+        radius: strokeWidth,
       ),
       math.radians(degree1),
       math.radians(360 - wide),
@@ -245,7 +247,7 @@ class _FacePainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(
         center: Offset(x2, y),
-        radius: eyeRadius,
+        radius: strokeWidth,
       ),
       math.radians(degree2),
       math.radians(360 - wide),
@@ -342,7 +344,7 @@ class _FacePainter extends CustomPainter {
           ..color = color
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round
-          ..strokeWidth = 5);
+          ..strokeWidth = strokeWidth);
 
     if (path2 != null) {
       canvas.drawPath(

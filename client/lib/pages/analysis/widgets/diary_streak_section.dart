@@ -1,6 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/diary_streak/diary_streak.dart';
@@ -8,26 +8,31 @@ import '../../../style/gl_colors.dart';
 import '../../../util/date_time_ext.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
-import 'analysis_card.dart';
+import 'analysis_content_card.dart';
+import 'analysis_section.dart';
 
-class DiaryStreakCard extends StatelessWidget {
+class DiaryStreakSection extends StatelessWidget {
   static const int daysShown = 5;
 
-  const DiaryStreakCard({Key? key}) : super(key: key);
+  const DiaryStreakSection({Key? key}) : super(key: key);
 
   static Widget provisioned() {
     return BlocProvider(
       create: (context) => DiaryStreakCubit.fromContext(context, dateCount: daysShown),
-      child: const DiaryStreakCard(),
+      child: const DiaryStreakSection(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     const heading = 'Timeline use streak';
-    final subscribedContent = BlocBuilder<DiaryStreakCubit, DiaryStreakState>(builder: builder);
-    final exampleContent = _DiaryStreakChart(diaryStreak: _exampleData());
-    return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
+    final subscribedContent = AnalysisContentCard(
+      child: BlocBuilder<DiaryStreakCubit, DiaryStreakState>(builder: builder),
+    );
+    final exampleContent = AnalysisContentCard(
+      child: _DiaryStreakChart(diaryStreak: _exampleData()),
+    );
+    return AnalysisSection(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {
@@ -104,9 +109,12 @@ class _DiaryStreakChart extends StatelessWidget {
       }
     });
     widgets.add(Expanded(child: Container()));
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [Row(children: widgets)],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [Row(children: widgets)],
+      ),
     );
   }
 }

@@ -9,27 +9,32 @@ import '../../../util/date_time_ext.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
 import '../../../widgets/severity_indicator.dart';
-import 'analysis_card.dart';
+import 'analysis_content_card.dart';
+import 'analysis_section.dart';
 import 'insufficient_data.dart';
 
-class RecentSeverityCard extends StatelessWidget {
+class RecentSeveritySection extends StatelessWidget {
   static int dateCount = 7;
 
-  const RecentSeverityCard({Key? key}) : super(key: key);
+  const RecentSeveritySection({Key? key}) : super(key: key);
 
   static Widget provisioned() {
     return BlocProvider(
       create: (context) => RecentSeverityCubit.fromContext(context, dateCount: dateCount),
-      child: const RecentSeverityCard(),
+      child: const RecentSeveritySection(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     const heading = 'Recent symptom severity';
-    final subscribedContent = BlocBuilder<RecentSeverityCubit, RecentSeverityState>(builder: builder);
-    final exampleContent = _RecentSeverityChart(recentSeverities: _exampleData());
-    return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
+    final subscribedContent = AnalysisContentCard(
+      child: BlocBuilder<RecentSeverityCubit, RecentSeverityState>(builder: builder),
+    );
+    final exampleContent = AnalysisContentCard(
+      child: _RecentSeverityChart(recentSeverities: _exampleData()),
+    );
+    return AnalysisSection(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {
@@ -81,7 +86,7 @@ class RecentSeverityCard extends StatelessWidget {
 
 class _RecentSeverityChart extends StatelessWidget {
   final List<MapEntry<DateTime, Severity?>> recentSeverities;
-  static const _severityIndicatorDiameter = 48.0;
+  static const _severityIndicatorDiameter = 36.0;
 
   const _RecentSeverityChart({Key? key, required this.recentSeverities}) : super(key: key);
 
@@ -90,9 +95,9 @@ class _RecentSeverityChart extends StatelessWidget {
     final barGroups = recentSeverities.map(buildBarGroup).toList();
 
     return AspectRatio(
-      aspectRatio: 1.3,
+      aspectRatio: 1.2,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 8.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 42.0, 16.0, 16.0),
         child: BarChart(
           BarChartData(
             barGroups: barGroups,
