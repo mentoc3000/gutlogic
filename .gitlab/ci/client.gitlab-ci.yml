@@ -127,7 +127,7 @@ client:lint:
     # exclude the generated files, so we have to delete them (see https://github.com/dart-lang/dart_style/issues/864).
     - find lib test bin -name "*.g.dart" -type f -delete
     - find lib test bin -name "*.mocks.dart" -type f -delete
-    - dart format --line-length 120 --dry-run --set-exit-if-changed lib test
+    - dart format --line-length 120 -o none --set-exit-if-changed lib test
   rules:
     - !reference [.client-develop-commit-rules, rules]
     - !reference [.client-release-commit-rules, rules]
