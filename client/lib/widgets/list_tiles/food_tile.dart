@@ -1,36 +1,32 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/food_search/food_search.dart';
-import '../../models/food/custom_food.dart';
-import '../../models/food/food.dart';
+import '../../models/food_reference/food_reference.dart';
+import '../../models/irritant/intensity.dart';
 import '../../resources/sensitivity/sensitivity_service.dart';
+import '../../routes/routes.dart';
+import '../irritant_intensity/intensity_indicator.dart';
 import '../sensitivity_indicator.dart';
-import 'searchable_tile.dart';
+import 'push_list_tile.dart';
 
 class FoodTile extends StatelessWidget {
-  final Food food;
-  final VoidCallback onTap;
+  final FoodReference food;
+  final Intensity? intensity;
+  final void Function()? onTap;
 
-  const FoodTile({
-    required this.food,
-    required this.onTap,
-  });
+  const FoodTile({Key? key, required this.food, this.intensity, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final foodSensitivity = context.select((SensitivityService sensitivity) {
-      return sensitivity.of(food.toFoodReference());
+    final sensitivity = context.select((SensitivityService sensitivity) {
+      return sensitivity.of(food);
     });
 
-    return SearchableTile(
-      searchable: food,
-      leading: SensitivityIndicator(foodSensitivity),
-      onTap: onTap,
-      onDelete: (food) {
-        if (food is CustomFood) context.read<FoodSearchBloc>().add(DeleteCustomFood(food));
-      },
-      isCustom: food is CustomFood,
+    return PushListTile(
+      heading: food.searchHeading(),
+      leading: SensitivityIndicator(sensitivity),
+      trailing: IntensityIndicator(intensity),
+      onTap: onTap ?? () => Navigator.push(context, Routes.of(context).createFoodPageRoute(food)),
     );
   }
 }

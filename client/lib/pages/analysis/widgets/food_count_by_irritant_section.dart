@@ -1,26 +1,28 @@
 import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../../blocs/food_count_by_irritant/food_count_by_irritant.dart';
 import '../../../models/sensitivity/sensitivity_level.dart';
-import '../../../style/gl_colors.dart';
+import '../../../routes/routes.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
-import 'analysis_card.dart';
+import '../../../widgets/sensitivity_level_pie_chart.dart';
+import 'analysis_content_card.dart';
+import 'analysis_section.dart';
 import 'insufficient_data.dart';
 
-class FoodCountByIrritantCard extends StatelessWidget {
-  const FoodCountByIrritantCard({Key? key}) : super(key: key);
+class FoodCountByIrritantSection extends StatelessWidget {
+  const FoodCountByIrritantSection({Key? key}) : super(key: key);
 
-  /// Build a [FoodCountByIrritantCard] with its own Bloc provider
+  /// Build a [FoodCountByIrritantSection] with its own Bloc provider
   static Widget provisioned() {
     return BlocProvider(
       create: (context) => FoodCountByIrritantCubit.fromContext(context),
-      child: const FoodCountByIrritantCard(),
+      child: const FoodCountByIrritantSection(),
     );
   }
 
@@ -29,14 +31,16 @@ class FoodCountByIrritantCard extends StatelessWidget {
     const heading = 'Pantry foods by irritant';
     final subscribedContent = BlocBuilder<FoodCountByIrritantCubit, FoodCountByIrritantState>(builder: builder);
     final exampleContent = _IrritantSensitivityMatrixCardContent(matrix: _exampleData());
-    return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
+    return AnalysisSection(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {
     const minHeight = 300.0;
-    return SizedBox(
-      height: minHeight,
-      child: Center(child: child),
+    return AnalysisContentCard(
+      child: SizedBox(
+        height: minHeight,
+        child: Center(child: child),
+      ),
     );
   }
 
@@ -122,56 +126,52 @@ class _IrritantSensitivityMatrixCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radius = MediaQuery.of(context).size.shortestSide / 11;
     final entries = matrix.entries.toList()..sort((a, b) => a.key.compareTo(b.key));
-    final boxes = entries.map((e) => _IrritantPieChart(irritant: e.key, foodCount: e.value)).toList();
+    final boxes = entries
+        .map((e) => _IrritantPieChartCard(
+              pieChart: SensitivityLevelPieChart(
+                foodCount: e.value,
+                radius: radius,
+              ),
+              irritantName: e.key,
+            ))
+        .toList();
 
-    return GridView.count(
+    return AlignedGridView.count(
       crossAxisCount: min(3, matrix.length),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      childAspectRatio: 0.8,
-      children: boxes,
+      itemCount: boxes.length,
+      itemBuilder: (context, index) => boxes[index],
     );
   }
 }
 
-class _IrritantPieChart extends StatelessWidget {
-  final String irritant;
-  final BuiltMap<SensitivityLevel, int> foodCount;
+class _IrritantPieChartCard extends StatelessWidget {
+  final Widget pieChart;
+  final String irritantName;
 
-  const _IrritantPieChart({required this.irritant, required this.foodCount});
+  const _IrritantPieChartCard({
+    required this.pieChart,
+    required this.irritantName,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final label = Text(irritant);
-    late final Widget pieChart;
-    final totalCount = foodCount.values.fold<int>(0, (a, b) => a + b);
-
-    if (totalCount > 0) {
-      final entries = foodCount.entries.toList()..sort((a, b) => a.key.compareTo(b.key));
-      final sections = entries.map((entry) {
-        return PieChartSectionData(
-          value: entry.value.toDouble(),
-          title: entry.value.toString(),
-          color: GLColors.fromSensitivityLevel(entry.key),
-          borderSide: BorderSide(color: GLColors.darkGray, width: 1.5),
-        );
-      }).toList();
-
-      pieChart = PieChart(PieChartData(centerSpaceRadius: 0, sections: sections));
-    } else {
-      final sections = [
-        PieChartSectionData(
-          title: '',
-          color: GLColors.lightestGray,
-          borderSide: const BorderSide(color: GLColors.gray, width: 0.5),
-        )
-      ];
-      pieChart = PieChart(PieChartData(centerSpaceRadius: 0, sections: sections));
-    }
-
-    final content = AspectRatio(aspectRatio: 1.0, child: pieChart);
-    return Column(children: [content, label]);
+    return Card(
+      child: InkWell(
+        child: Column(children: [
+          pieChart,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Text(irritantName),
+          ),
+        ]),
+        onTap: () =>
+            Navigator.push(context, Routes.of(context).createFoodsWithIrritantPageRoute(irritantName: irritantName)),
+      ),
+    );
   }
 }

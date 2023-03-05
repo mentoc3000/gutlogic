@@ -3,6 +3,8 @@ import 'package:collection/collection.dart';
 
 import '../models/diary_entry/diary_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
+import '../models/food_reference/food_reference.dart';
+import '../models/irritant/irritant.dart';
 import '../models/sensitivity/sensitivity_level.dart';
 import '../models/severity.dart';
 import '../models/symptom_type.dart';
@@ -22,15 +24,15 @@ class AnalysisService {
     // Get all irritant names. Only needs to be done once because it will change infrequently.
     final irritantNames = await irritantService.names();
 
-    yield* pantryService.streamAll().asyncMap((event) async {
+    yield* pantryService.streamAll().asyncMap((pantryEntries) async {
       // Create an empty map which will be filled with the data
       final map = {
         for (final n in irritantNames) n: {for (final s in SensitivityLevel.values) s: 0}
       };
 
       // Get the irritants of each food in the pantry and match it to the pantry entry
-      final irritants = await Future.wait(event.map((e) => irritantService.ofRef(e.foodReference)));
-      final pantryIrritantPairs = Map.fromIterables(event, irritants).entries;
+      final irritants = await Future.wait(pantryEntries.map((e) => irritantService.ofRef(e.foodReference)));
+      final pantryIrritantPairs = Map.fromIterables(pantryEntries, irritants).entries;
 
       // For each food, add a count to the map
       for (final entry in pantryIrritantPairs) {
@@ -43,6 +45,29 @@ class AnalysisService {
           final name = irritant.name;
           map[name]![level] = (map[name]![level] ?? 0) + 1;
         }
+      }
+
+      return map.map((key, value) => MapEntry(key, value.build())).build();
+    });
+  }
+
+  Stream<BuiltMap<SensitivityLevel, BuiltList<FoodReference>>> foodsWithIrritantBySensitivityLevel(
+      {required String irritantName}) {
+    return pantryService.streamAll().asyncMap((pantryEntries) async {
+      // Create an empty map which will be filled with the data
+      final map = {for (final s in SensitivityLevel.list()) s: <FoodReference>[]};
+
+      final foodReferences = pantryEntries.map((e) => e.foodReference);
+      final irritants = await Future.wait(foodReferences.map(irritantService.ofRef));
+      final pantryIrritantPairs = Map.fromIterables(pantryEntries, irritants).entries;
+
+      for (final entry in pantryIrritantPairs) {
+        final irritant = entry.value?.where((irritant) => irritant.concentration > 0).cast<Irritant?>().firstWhere(
+              (irritant) => irritant?.name == irritantName,
+              orElse: () => null,
+            );
+        if (irritant == null) continue;
+        map[entry.key.sensitivity.level]?.add(entry.key.foodReference);
       }
 
       return map.map((key, value) => MapEntry(key, value.build())).build();

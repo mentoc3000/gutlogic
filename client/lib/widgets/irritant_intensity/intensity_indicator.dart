@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:gutlogic/models/irritant/intensity.dart';
-import 'package:gutlogic/resources/irritant_service.dart';
 
+import '../../models/irritant/intensity.dart';
 import '../../models/irritant/irritant.dart';
+import '../../resources/irritant_service.dart';
 import '../../style/gl_colors.dart';
 
 class IntensityIndicator extends StatelessWidget {
-  final Intensity intensity;
+  final Intensity? intensity;
   static const compartmentCount = 3;
   static const height = 16.0;
   static const width = 100.0;
@@ -22,7 +22,7 @@ class IntensityIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (intensity == Intensity.unknown) return Container();
+    if (intensity == null || intensity == Intensity.unknown) return Container();
 
     final intensityCells = [Intensity.low, Intensity.medium, Intensity.high];
 
@@ -36,7 +36,7 @@ class IntensityIndicator extends StatelessWidget {
     return Stack(
       alignment: AlignmentDirectional.centerStart,
       children: [
-        if (intensity >= Intensity.trace) traceBox,
+        if (intensity! >= Intensity.trace) traceBox,
         ...filledBoxes,
         _roundedBox(width: width, showBorder: true),
       ],
@@ -45,7 +45,7 @@ class IntensityIndicator extends StatelessWidget {
 
   Color? _fillColor(List<Intensity> intensityCells, int i) {
     // If value is null, use 0
-    if (intensity > intensityCells[i]) {
+    if (intensity! > intensityCells[i]) {
       switch (i) {
         case 0:
           return GLColors.lightGold;

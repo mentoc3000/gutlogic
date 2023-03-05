@@ -16,7 +16,7 @@ import '../../widgets/powered_by_edamam.dart';
 import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
 import 'widgets/food_reference_suggestion_tile.dart';
-import '../../widgets/list_tiles/food_tile.dart';
+import '../../widgets/list_tiles/food_search_result_tile.dart';
 
 class FoodSearchDelegate extends SearchableSearchDelegate<FoodReference> {
   final FoodSearchBloc foodSearchBloc;
@@ -150,7 +150,7 @@ class FoodSearchDelegate extends SearchableSearchDelegate<FoodReference> {
       itemCount: foods.length,
       itemBuilder: (BuildContext context, int index) {
         final result = foods[index];
-        return FoodTile(
+        return FoodSearchResultTile(
           food: result,
           onTap: () {
             closeSearch(context);

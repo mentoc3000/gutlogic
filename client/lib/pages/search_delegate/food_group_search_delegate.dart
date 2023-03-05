@@ -1,23 +1,23 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gutlogic/models/irritant/intensity.dart';
 
 import '../../blocs/food_group_search/food_group_search.dart';
 import '../../blocs/food_search/food_search.dart';
 import '../../models/food/food.dart';
 import '../../models/food_group_entry.dart';
 import '../../models/food_reference/food_reference.dart';
-import '../../widgets/gl_error_widget.dart';
-import '../../widgets/gl_loading_widget.dart';
+import '../../models/irritant/intensity.dart';
 import '../../style/gl_text_style.dart';
 import '../../widgets/fab_guide.dart';
 import '../../widgets/floating_action_buttons/add_floating_action_button.dart';
+import '../../widgets/gl_error_widget.dart';
+import '../../widgets/gl_loading_widget.dart';
 import '../../widgets/gl_scaffold.dart';
 import '../../widgets/icon_buttons/barcode_scan_icon_button.dart';
+import '../../widgets/list_tiles/food_search_result_tile.dart';
 import '../../widgets/list_tiles/food_tile.dart';
 import '../../widgets/powered_by_edamam.dart';
-import '../food_group/widgets/food_group_entry_tile.dart';
 import 'searchable_search_delegate.dart';
 import 'widgets/add_food_dialog.dart';
 
@@ -137,7 +137,7 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               final result = foods[index];
-              return FoodTile(
+              return FoodSearchResultTile(
                 food: result,
                 onTap: () {
                   closeSearch(context);
@@ -166,9 +166,9 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
             if (index < foodGroupEntries.length) {
               final result = foodGroupEntries[index];
               final maxIntensity = maxIntensities[result] ?? Intensity.none;
-              return FoodGroupEntryTile(
-                entry: result,
-                maxIntensity: maxIntensity,
+              return FoodTile(
+                food: result.foodRef,
+                intensity: maxIntensity,
                 onTap: () {
                   closeSearch(context);
                   onSelect(result.foodRef);

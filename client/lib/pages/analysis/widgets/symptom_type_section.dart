@@ -10,29 +10,34 @@ import '../../../models/symptom_type.dart';
 import '../../../style/gl_colors.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
-import 'analysis_card.dart';
+import 'analysis_content_card.dart';
+import 'analysis_section.dart';
 import 'insufficient_data.dart';
 
-class SymptomTypeCountCard extends StatelessWidget {
+class SymptomTypeCountSection extends StatelessWidget {
   static const Duration duration = Duration(days: 30);
   static const int maxSymptomTypes = 5;
 
-  const SymptomTypeCountCard({Key? key}) : super(key: key);
+  const SymptomTypeCountSection({Key? key}) : super(key: key);
 
   static Widget provisioned() {
     final since = DateTime.now().subtract(duration);
     return BlocProvider(
       create: (context) => SymptomTypeCountCubit.fromContext(context, countSince: since),
-      child: const SymptomTypeCountCard(),
+      child: const SymptomTypeCountSection(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     const heading = 'Most common symptom types this month';
-    final subscribedContent = BlocBuilder<SymptomTypeCountCubit, SymptomTypeCountState>(builder: builder);
-    final exampleContent = _SymptomTypeCountChart(symptomTypeCount: _exampleData());
-    return AnalysisCard(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
+    final subscribedContent = AnalysisContentCard(
+      child: BlocBuilder<SymptomTypeCountCubit, SymptomTypeCountState>(builder: builder),
+    );
+    final exampleContent = AnalysisContentCard(
+      child: _SymptomTypeCountChart(symptomTypeCount: _exampleData()),
+    );
+    return AnalysisSection(heading: heading, subscribedContent: subscribedContent, exampleContent: exampleContent);
   }
 
   Widget sizeAndCenter(Widget child) {
@@ -87,7 +92,7 @@ class _SymptomTypeCountChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sortedEntries =
-        symptomTypeCount.entries.sortedBy<num>((e) => -e.value).take(SymptomTypeCountCard.maxSymptomTypes);
+        symptomTypeCount.entries.sortedBy<num>((e) => -e.value).take(SymptomTypeCountSection.maxSymptomTypes);
     final maxCount = symptomTypeCount.values.reduce((value, element) => max(value, element));
 
     final rows = sortedEntries.map((e) {
@@ -132,7 +137,7 @@ class _SymptomTypeCountChart extends StatelessWidget {
     }).toList();
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: rows,
