@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -86,13 +88,13 @@ class RecentSeveritySection extends StatelessWidget {
 
 class _RecentSeverityChart extends StatelessWidget {
   final List<MapEntry<DateTime, Severity?>> recentSeverities;
-  static const _severityIndicatorDiameter = 36.0;
 
   const _RecentSeverityChart({Key? key, required this.recentSeverities}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final barGroups = recentSeverities.map(buildBarGroup).toList();
+    final severityIndicatorDiameter = min(MediaQuery.of(context).size.shortestSide / 12, 48.0);
 
     return AspectRatio(
       aspectRatio: 1.2,
@@ -108,10 +110,19 @@ class _RecentSeverityChart extends StatelessWidget {
               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
               rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
               bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: true, getTitlesWidget: buildBottomTitles, reservedSize: 36.0)),
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: buildBottomTitles,
+                  reservedSize: 36.0,
+                ),
+              ),
               leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                      showTitles: true, getTitlesWidget: buildLeftTitles, reservedSize: _severityIndicatorDiameter)),
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: (value, meta) => buildLeftTitles(value, meta, severityIndicatorDiameter),
+                  reservedSize: severityIndicatorDiameter,
+                ),
+              ),
             ),
             gridData: FlGridData(show: false),
             borderData: FlBorderData(
@@ -155,11 +166,10 @@ class _RecentSeverityChart extends StatelessWidget {
     );
   }
 
-  Widget buildLeftTitles(double value, TitleMeta meta) {
+  Widget buildLeftTitles(double value, TitleMeta meta, double diameter) {
     final severity = _yToSeverity(value);
     if (severity == null) return Container();
-    late final severityIndicator =
-        SeverityIndicator.fromSeverity(severity: severity, circleDiameter: _severityIndicatorDiameter);
+    late final severityIndicator = SeverityIndicator.fromSeverity(severity: severity, circleDiameter: diameter);
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 0.0,
