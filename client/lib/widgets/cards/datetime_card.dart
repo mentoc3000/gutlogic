@@ -34,7 +34,7 @@ class DateTimeCard extends StatelessWidget {
       context,
       showTitleActions: true,
       onConfirm: onChanged,
-      currentTime: dateTime,
+      currentTime: dateTime.toLocal(),
     );
   }
 }

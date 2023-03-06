@@ -1,5 +1,7 @@
 Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities.
 
-This version adds barcode scanning to the Gut Logic Premium features. Try scanning some barcodes in your pantry or even the grocery store!
+This version contains the following features and improvements:
+1. In the Analysis section, tap pie chart to view the foods in each slice
+2. Improved date selection interface in entries in the Timeline
 
-Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Jan 6. Thanks in advance for your time and candid feedback!
+Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Mar 17. Thanks in advance for your time and candid feedback!
