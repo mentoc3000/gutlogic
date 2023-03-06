@@ -96,8 +96,11 @@ class _RecentSeverityChart extends StatelessWidget {
     final barGroups = recentSeverities.map(buildBarGroup).toList();
     final severityIndicatorDiameter = min(MediaQuery.of(context).size.shortestSide / 12, 48.0);
 
+    // Aspect ratio > 1.1 causes issues with faces not appearing in iPhone 13 mini. Reason unknown.
+    const aspectRatio = 1.1;
+
     return AspectRatio(
-      aspectRatio: 1.2,
+      aspectRatio: aspectRatio,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 42.0, 16.0, 16.0),
         child: BarChart(

@@ -1,4 +1,6 @@
 PODS:
+  - advanced_in_app_review (0.0.1):
+    - Flutter
   - AppAuth (1.6.0):
     - AppAuth/Core (= 1.6.0)
     - AppAuth/ExternalUserAgent (= 1.6.0)
@@ -214,6 +216,8 @@ PODS:
   - in_app_purchase_storekit (0.0.1):
     - Flutter
     - FlutterMacOS
+  - in_app_review (0.2.0):
+    - Flutter
   - integration_test (0.0.1):
     - Flutter
   - MLImage (1.0.0-beta3)
@@ -251,10 +255,14 @@ PODS:
     - FlutterMacOS
   - PromisesObjC (2.2.0)
   - Protobuf (3.22.0)
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - url_launcher_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - advanced_in_app_review (from `.symlinks/plugins/advanced_in_app_review/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
@@ -268,12 +276,14 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/ios`)
+  - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - MLKitCommon (from `MLKitCommon.podspec.json`)
   - MLKitVision (from `MLKitVision.podspec.json`)
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -311,6 +321,8 @@ SPEC REPOS:
     - Protobuf
 
 EXTERNAL SOURCES:
+  advanced_in_app_review:
+    :path: ".symlinks/plugins/advanced_in_app_review/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   cloud_functions:
@@ -338,6 +350,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in_ios/ios"
   in_app_purchase_storekit:
     :path: ".symlinks/plugins/in_app_purchase_storekit/ios"
+  in_app_review:
+    :path: ".symlinks/plugins/in_app_review/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
   MLKitCommon:
@@ -350,6 +364,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
@@ -359,6 +375,7 @@ CHECKOUT OPTIONS:
     :tag: 10.3.0
 
 SPEC CHECKSUMS:
+  advanced_in_app_review: fe8fd50b8670cb3dbe67e4c26ca643f7aea8dbb8
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   cloud_firestore: 94326bb743acbfe43c68f933dab8a094e84d5849
   cloud_functions: c47b0379bca7f5f60884a27696248459de0a1f6b
@@ -398,6 +415,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   in_app_purchase_storekit: 4fb7ee9e824b1f09107fbfbbce8c4b276366dc43
+  in_app_review: 318597b3a06c22bb46dc454d56828c85f444f99d
   integration_test: a1e7d09bd98eca2fc37aefd79d4f41ad37bdbbe5
   MLImage: 489dfec109f21da8621b28d476401aaf7a0d4ff4
   MLKitBarcodeScanning: d92fe1911001ec36870162c5a0eb206f612b7169
@@ -409,6 +427,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   Protobuf: 5e6cbc143d02fe08585d86b0098f8b755d2caaab
+  shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
 PODFILE CHECKSUM: 32dec66f7742bce4d935ad2966c86fd10512c0f4
