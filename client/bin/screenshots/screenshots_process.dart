@@ -11,6 +11,17 @@ Future<ProcessResult> run(String command, List<String> arguments, {String? worki
   throw ProcessException(command, arguments, result.stderr, result.exitCode);
 }
 
+/// Wrap Process.start launching a detached process
+Future<Process> runDetached(String command, List<String> arguments, {String? workingDirectory}) {
+  return Process.start(
+    command,
+    arguments,
+    workingDirectory: workingDirectory,
+    mode: ProcessStartMode.detachedWithStdio,
+    runInShell: true,
+  );
+}
+
 /// Build the screenshots driver into a [package] (e.g ios/apk).
 Future<void> build(String package, String target) async {
   if (package == 'ios') {

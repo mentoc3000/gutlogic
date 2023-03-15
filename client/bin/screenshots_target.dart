@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:built_collection/built_collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -168,6 +170,14 @@ void main() {
 
   testWidgets('screenshots', (tester) async {
     runApp(app);
+
+    if (Platform.isAndroid) {
+      // Android-specific code
+      // This is required prior to taking the screenshot (Android only).
+      await binding.convertFlutterSurfaceToImage();
+    } else if (Platform.isIOS) {
+      // iOS-specific code
+    }
 
     // Give extra time to settle to avoid spurrious screenshot issues
     const settleDuration = Duration(seconds: 3);
