@@ -13,3 +13,12 @@ screenshots are automatically saved to the platform specific Fastlane directorie
 ## Required Devices
 
 The required devices for screenshots on iOS are available [here](https://help.apple.com/app-store-connect/#/devd274dd925).
+
+## Setup
+
+For Android devices the `.ini` files should include the following lines:
+
+```
+hw.gpu.enabled=yes
+hw.gpu.mode=host
+```

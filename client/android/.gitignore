@@ -14,3 +14,4 @@ key.properties
 
 fastlane/metadata/android
 fastlane/report.xml
+fastlane/**/images

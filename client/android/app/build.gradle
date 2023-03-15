@@ -87,6 +87,10 @@ android {
             resValue "string", "app_name", "Gut Logic"
         }
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
 }
 
 flutter {

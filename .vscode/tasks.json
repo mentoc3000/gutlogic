@@ -130,7 +130,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Generate iOS screenshots",
+      "label": "Generate screenshots",
       "type": "shell",
       "options": {
         "cwd": "${workspaceFolder}/client"

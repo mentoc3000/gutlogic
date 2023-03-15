@@ -3,7 +3,8 @@ locales:
 
 devices:
   android:
-  # TODO add necessary android devices
+    - Pixel 2
+    - Pixel XL
   ios:
     - iPhone 8 Plus # 5.5 inch
     - iPhone 12 Pro Max # 6.5 inch
