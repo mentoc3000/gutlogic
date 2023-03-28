@@ -34,6 +34,8 @@ Future<void> launch(AndroidDevice device) async {
   final path = await run('which', ['emulator']);
   final file = File(path.stdout as String);
   unawaited(runDetached('emulator', ['-avd', device.avdName], workingDirectory: file.parent.path));
+  // Wait for emulator to launch
+  await Future.delayed(const Duration(seconds: 30));
 }
 
 Future<void> close(AndroidEmulator handle) async {

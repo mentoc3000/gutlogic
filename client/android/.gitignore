@@ -12,6 +12,8 @@ key.properties
 
 ## Custom
 
-fastlane/metadata/android
+fastlane/metadata/android/**/images/**/*.png
 fastlane/report.xml
 fastlane/**/images
+
+google_play_console_developer_key*.json

@@ -130,12 +130,21 @@
       "problemMatcher": []
     },
     {
-      "label": "Generate screenshots",
+      "label": "Generate ios screenshots",
       "type": "shell",
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "command": "flutter pub run bin/screenshots",
+      "command": "flutter pub run bin/screenshots ios",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate android screenshots",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "command": "flutter pub run bin/screenshots android",
       "problemMatcher": []
     },
     {

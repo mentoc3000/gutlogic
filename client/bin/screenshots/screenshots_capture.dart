@@ -17,7 +17,9 @@ Future<void> capture(IntegrationTestWidgetsFlutterBinding binding, String name) 
 /// Returns the path of a screenshot for a given [platform] (e.g. ios/android) and [locale].
 String _path(String platform, String locale, String filename) {
   if (platform == 'android') {
-    return 'android/fastlane/$locale/images/phonescreenshots/$filename';
+    // This location just contains the images captured from Flutter. They must be resized and moved to their appropriate
+    // directories (phoneScreenshots, sevenInchScreenshots, and tenInchScreenshots) for upload to Google Play Store.
+    return 'android/fastlane/metadata/android/$locale/images/flutterShot/$filename';
   }
 
   if (platform == 'ios') {
@@ -33,7 +35,7 @@ Future<String?> _getDevice(DeviceInfoPlugin deviceInfo) async {
     return iosDeviceInfo.name;
   } else if (Platform.isAndroid) {
     var androidDeviceInfo = await deviceInfo.androidInfo;
-    return androidDeviceInfo.device;
+    return '${androidDeviceInfo.displayMetrics.widthPx.toInt()}x${androidDeviceInfo.displayMetrics.heightPx.toInt()}';
   } else {
     throw ArgumentError('Unknown device');
   }
