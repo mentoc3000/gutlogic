@@ -22,7 +22,7 @@ Future<Process> runDetached(String command, List<String> arguments, {String? wor
   );
 }
 
-/// Build the screenshots driver into a [package] (e.g ios/apk).
+/// Build the screenshots driver into a [package] (e.g ios/appbundle).
 Future<void> build(String package, String target) async {
   if (package == 'ios') {
     // Tweak source files as workaround to bug

@@ -11,9 +11,9 @@ class ScreenshotsConfig {
   final UnmodifiableListView<String> ios;
 
   /// A list of requested Android device names.
-  final UnmodifiableListView<String> android;
+  final UnmodifiableListView<AndroidConfig> android;
 
-  ScreenshotsConfig({required List<String> locales, required List<String> android, required List<String> ios})
+  ScreenshotsConfig({required List<String> locales, required List<AndroidConfig> android, required List<String> ios})
       : locales = UnmodifiableListView(locales),
         android = UnmodifiableListView(android),
         ios = UnmodifiableListView(ios);
@@ -24,9 +24,27 @@ class ScreenshotsConfig {
     final configYAML = yaml.loadYaml(configData);
 
     final locales = List<String>.from(configYAML['locales'] ?? ['en-US']);
-    final android = List<String>.from(configYAML['devices']['android'] ?? []);
+    final android = ((configYAML['devices']['android'] ?? []) as List)
+        .map((e) => AndroidConfig.fromMap((e as yaml.YamlMap).value))
+        .toList();
     final ios = List<String>.from(configYAML['devices']['ios'] ?? []);
 
     return ScreenshotsConfig(locales: locales, android: android, ios: ios);
+  }
+}
+
+class AndroidConfig {
+  final String device;
+  final int width;
+  final List<String> sizes;
+
+  const AndroidConfig({required this.device, required this.width, required this.sizes});
+
+  factory AndroidConfig.fromMap(Map map) {
+    return AndroidConfig(
+      device: map['device'],
+      width: map['width'],
+      sizes: List<String>.from(map['sizes']),
+    );
   }
 }

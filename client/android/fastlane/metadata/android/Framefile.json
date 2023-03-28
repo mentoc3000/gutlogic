@@ -1,0 +1,16 @@
+{
+  "device_frame_version": "latest",
+  "default": {
+    "title": {
+      "font": "./fonts/Quicksand.ttf",
+      "font_size": 72,
+      "font_weight": 400,
+      "color": "#212121"
+    },
+    "background": "./background.png",
+    "padding": 50,
+    "show_complete_frame": true,
+    "stack_title": false
+  },
+  "data": []
+}

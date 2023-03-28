@@ -32,8 +32,8 @@ flutter run --flavor=development
 flutter run --flavor=production
 
 # Build for development/production.
-flutter build [apk/ios] --flavor=development
-flutter build [apk/ios] --flavor=production
+flutter build [appbundle/ios] --flavor=development
+flutter build [appbundle/ios] --flavor=production
 ```
 
 ## Distribution

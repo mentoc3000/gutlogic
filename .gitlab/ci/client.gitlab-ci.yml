@@ -42,6 +42,8 @@
     - client/.dart_tool/package_config.json
     - client/ios/vendor/bundle
 
+
+
 .client:
   image: cirrusci/flutter:3.7.4
   tags:
@@ -156,15 +158,45 @@ client:test:
   dependencies:
     - client:prep
 
-# build:client:apk:
-#   stage: build
-#   extends:
-#     - .client
-#   script:
-#     - flutter build apk --flavor $FLUTTER_FLAVOR --release --no-codesign
-#   rules:
-#     - *client-merge-request-rule
-#     - *manual-commit-rule
+
+
+.client:build:android:
+  stage: build
+  extends:
+    - .client
+  script:
+    - cd android
+    - echo $UPLOAD_KEYSTORE_JKS_BASE64 | base64 -d > app/upload-keystore.jks
+    - cp "$ANDROID_KEY_PROPERTIES" "$(pwd)/key.properties"
+    # prep fastlane
+    - gem install --user-install bundler
+    - bundle install
+    - flutter build appbundle --flavor $FLUTTER_FLAVOR --release --build-number=$CI_PIPELINE_ID
+  artifacts:
+    paths:
+      - client/build/app/outputs/bundle/**/*
+    expire_in: 1 days
+  dependencies:
+    - client:prep
+
+client:build:dev:android:
+  extends:
+    - .client:build:android
+  variables:
+    FLUTTER_FLAVOR: development
+  rules:
+    - !reference [.client-merge-request-rules, rules]
+    - !reference [.client-develop-commit-rules, rules]
+
+client:build:prod:android:
+  extends:
+    - .client:build:android
+  variables:
+    FLUTTER_FLAVOR: production
+  rules:
+    - !reference [.client-release-commit-rules, rules]
+
+
 
 .client:build:ios:
   stage: build
@@ -204,7 +236,9 @@ client:build:prod:ios:
   rules:
     - !reference [.client-release-commit-rules, rules]
 
-client:screenshots:
+
+
+client:screenshots:ios:
   stage: predeploy
   extends:
     - .client
@@ -212,7 +246,7 @@ client:screenshots:
     - macos
   script:
     # generate screenshots
-    - flutter pub run bin/screenshots
+    - flutter pub run bin/screenshots ios
     # prep fastlane
     - cd ios/fastlane
     - gem install --user-install bundler
@@ -225,7 +259,6 @@ client:screenshots:
     - find . -type f ! -name '*_framed.*' -delete
   artifacts:
     paths:
-      - client/android/fastlane
       - client/ios/fastlane
     expire_in: 1 day
   rules:
@@ -235,6 +268,96 @@ client:screenshots:
       when: manual
   dependencies:
     - client:prep
+
+client:screenshots:android:
+  stage: predeploy
+  extends:
+    - .client
+  tags:
+    - macos # for consistent emulator configuration
+  script:
+    # generate screenshots
+    - flutter pub run bin/screenshots android
+    # prep fastlane
+    - cd android/fastlane
+    - gem install --user-install bundler
+    - bundle install
+    # place screenshots into frames
+    - bundle exec fastlane frameit download_frames
+    - bundle exec fastlane frames
+    # remove screenshots without frames so they aren't uploaded to Google Play
+    - cd screenshots
+    - find . -type f ! -name '*_framed.*' -delete
+  artifacts:
+    paths:
+      - client/android/fastlane
+    expire_in: 1 day
+  rules:
+    - !reference [.client-release-commit-rules, rules]
+    - if: $CI_MERGE_REQUEST_ID
+      allow_failure: true
+      when: manual
+  dependencies:
+    - client:prep
+
+
+
+.client:deploy:android:
+  stage: deploy
+  extends:
+    - .client
+  tags:
+    - macos
+  script:
+    - cd android
+    - cp "$GOOGLE_PLAY_CONSOLE_DEVELOPER_KEY" "$(pwd)/google_play_console_developer_key.json"
+    # prep fastlane
+    - cd fastlane
+    - gem install --user-install bundler
+    - bundle install
+    - bundle exec fastlane $FASTLANE_CHANNEL
+  dependencies:
+    - client:build:android
+
+client:deploy:develop:android:
+  extends:
+    - .client:deploy:android
+  rules:
+    - !reference [.client-develop-commit-rules, rules]
+  dependencies:
+    - client:build:dev:android
+  environment: develop
+
+client:deploy:staging:android:
+  stage: deploy
+  extends:
+    - .client:deploy:android
+  variables:
+    FLUTTER_FLAVOR: production
+    FASTLANE_CHANNEL: staging
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      when: manual
+  dependencies:
+    - client:build:prod:android
+  environment: staging
+
+client:deploy:release:android:
+  stage: deploy
+  extends:
+    - .client:deploy:android
+  variables:
+    FLUTTER_FLAVOR: production
+    FASTLANE_CHANNEL: release
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      when: manual
+  dependencies:
+    - client:build:prod:android
+    - client:screenshots:android
+  environment: release
+
+
 
 .client:deploy:ios:
   stage: deploy
@@ -289,5 +412,5 @@ client:deploy:release:ios:
       when: manual
   dependencies:
     - client:build:prod:ios
-    - client:screenshots
+    - client:screenshots:ios
   environment: release

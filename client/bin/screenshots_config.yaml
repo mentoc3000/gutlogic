@@ -3,8 +3,15 @@ locales:
 
 devices:
   android:
-    - Pixel 2
-    - Pixel XL
+    - device: Pixel 4
+      width: 1080
+      sizes:
+      - phone
+    - device: Nexus 9
+      width: 1536
+      sizes:
+      - sevenInch
+      - tenInch
   ios:
     - iPhone 8 Plus # 5.5 inch
     - iPhone 12 Pro Max # 6.5 inch

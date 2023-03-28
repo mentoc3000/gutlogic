@@ -1,0 +1,67 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+
+  desc "Frame screenshots"
+  lane :frames do
+
+    frameit(
+      path: './fastlane/metadata/android'
+    )
+  
+  end
+
+  desc "Push a new development channel build to beta"
+  lane :develop do
+
+    supply(
+      aab: "../build/app/outputs/bundle/developmentRelease/app-development-release.aab",
+      json_key: "google_play_console_developer_key.json",
+      package_name: "com.gutlogic.app.dev",
+      track: "internal",
+      release_status: 'draft',
+    )
+
+  end
+
+
+  desc "Push a new release channel build to beta"
+  lane :staging do
+
+    supply(
+      aab: "../build/app/outputs/bundle/productionRelease/app-production-release.aab",
+      json_key: "google_play_console_developer_key.json",
+      package_name: "com.gutlogic.app",
+      track: "internal"
+    )
+
+  end
+
+  desc "Push a new release channel build to test"
+  lane :release do
+
+    supply(
+      aab: "../build/app/outputs/bundle/productionRelease/app-production-release.aab",
+      json_key: "google_play_console_developer_key.json",
+      package_name: "com.gutlogic.app",
+      track: "production"
+    )
+
+  end
+
+end
