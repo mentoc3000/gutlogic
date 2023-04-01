@@ -306,8 +306,8 @@ client:screenshots:android:
     - gem install --user-install bundler
     # remove non-metadata
     - rm -rf fonts
-    - rm *.png
-    - rm *.json
+    - rm -f *.png
+    - rm -f *.json
     - bundle install
     - bundle exec fastlane $FASTLANE_CHANNEL
   dependencies:
