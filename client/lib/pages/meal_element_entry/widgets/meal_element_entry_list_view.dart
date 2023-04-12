@@ -38,6 +38,8 @@ class MealElementEntryListView extends StatelessWidget {
     final mealElementSensitivity = context.select((SensitivityService sensitivity) {
       return sensitivity.of(mealElement.foodReference);
     });
+    final hasIrritants =
+        food?.irritants != null && food!.irritants!.fold<double>(0.0, (acc, el) => acc + el.concentration) > 0;
 
     final cards = [
       QuantityCard(
@@ -53,8 +55,7 @@ class MealElementEntryListView extends StatelessWidget {
       ),
       if (food?.irritants != null) IrritantsCard(irritants: food!.irritants!),
       if (food?.ingredients != null && food!.ingredients!.isNotEmpty) IngredientsCard(ingredients: food!.ingredients!),
-      if (food?.irritants != null && food!.irritants!.isNotEmpty && food != null)
-        SimilarFoodsCard(food: food!.toFoodReference()),
+      if (hasIrritants && food != null) SimilarFoodsCard(food: food!.toFoodReference()),
       NotesCard(
         controller: notesController,
         onChanged: (notes) => context.read<MealElementBloc>().add(UpdateNotes(notes)),
