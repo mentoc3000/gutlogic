@@ -21,12 +21,14 @@ class FoodListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sensitivity = context.watch<SensitivityService>().of(food.toFoodReference());
+    final hasIrritants =
+        food.irritants != null && food.irritants!.fold<double>(0.0, (acc, el) => acc + el.concentration) > 0;
 
     final cards = [
       SensitivityCard(sensitivity: sensitivity, onTap: () => addFoodToPantry(context)),
       if (food.irritants != null) IrritantsCard(irritants: food.irritants!),
       if (food.ingredients != null && food.ingredients!.isNotEmpty) IngredientsCard(ingredients: food.ingredients!),
-      if (food.irritants != null && food.irritants!.isNotEmpty) SimilarFoodsCard(food: food.toFoodReference()),
+      if (hasIrritants) SimilarFoodsCard(food: food.toFoodReference()),
     ];
 
     return ListView.builder(
