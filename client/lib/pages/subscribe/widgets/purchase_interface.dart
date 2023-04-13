@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,10 +52,11 @@ class PurchaseInterface extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
               child: Text('${state.product.price} per month', style: style),
             ),
-            GLTertiaryButton(
-              onPressed: () => unawaited(subscriptionCubit.triggerRestore()),
-              child: const ShrinkWrappedButtonContent(label: 'Restore purchase', textStyle: style),
-            )
+            if (Platform.isIOS)
+              GLTertiaryButton(
+                onPressed: () => unawaited(subscriptionCubit.triggerRestore()),
+                child: const ShrinkWrappedButtonContent(label: 'Restore purchase', textStyle: style),
+              )
           ],
         ),
       );

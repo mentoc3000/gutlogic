@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
@@ -7,6 +8,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../util/app_config.dart';
 import 'api_service.dart';
+import 'firebase/cloud_function_service.dart';
 import 'firebase/remote_config_service.dart';
 
 final _premiumIdConfigProd = RemoteConfiguration(
@@ -22,11 +24,16 @@ class IapService {
   final InAppPurchase _inAppPurchase;
   final ApiService apiService;
   final String premiumId;
+  final CloudFunction googlePlayVerify;
 
   Stream<List<PurchaseDetails>> get purchaseStream => _inAppPurchase.purchaseStream;
 
-  IapService({InAppPurchase? inAppPurchase, required this.apiService, required this.premiumId})
-      : _inAppPurchase = inAppPurchase ?? InAppPurchase.instance;
+  IapService({
+    InAppPurchase? inAppPurchase,
+    required this.apiService,
+    required this.premiumId,
+    required this.googlePlayVerify,
+  }) : _inAppPurchase = inAppPurchase ?? InAppPurchase.instance;
 
   factory IapService.fromContext(BuildContext context) {
     final config = context.read<AppConfig>();
@@ -34,8 +41,9 @@ class IapService {
 
     final remoteConfigService = context.read<RemoteConfigService>();
     final premiumId = remoteConfigService.get(premiumIdConfig);
+    final googlePlayVerify = context.read<CloudFunctionService>().function('verifyPurchase');
 
-    return IapService(apiService: context.read<ApiService>(), premiumId: premiumId);
+    return IapService(apiService: context.read<ApiService>(), premiumId: premiumId, googlePlayVerify: googlePlayVerify);
   }
 
   Future<bool> verifyPurchase({required PurchaseDetails purchaseDetails, required String? userId}) async {
@@ -48,7 +56,13 @@ class IapService {
       'userId': userId,
     };
     try {
-      await apiService.post(path: '/iap/verify', body: body);
+      if (Platform.isIOS) {
+        await apiService.post(path: '/iap/verify', body: body);
+      } else if (Platform.isAndroid) {
+        await googlePlayVerify.call(body);
+      } else {
+        throw UnsupportedError('Unsupported platform');
+      }
     } catch (e) {
       return false;
     }
