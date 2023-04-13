@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "target": "es5"
+  },
+  "noImplicitReturns": true,
+  "strict": true,
+  "noUnusedLocals": true,
+}

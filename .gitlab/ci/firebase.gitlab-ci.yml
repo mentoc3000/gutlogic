@@ -51,6 +51,8 @@
     - npm --version
     # install the server dependencies
     - npm ci --cache .npm-cache --prefer-offline --log-level error
+    - cp "$CLOUD_FUNCTION_PARAMETERS" "$(pwd)/functions/src/config.json"
+    - cp "$GOOGLE_PLAY_CLOUD_FUNCTIONS_KEY" "$(pwd)/functions/src/iap/google_play_console_cloud_functions_key.json"
   cache:
     <<: *firebase-cache
     policy: pull
