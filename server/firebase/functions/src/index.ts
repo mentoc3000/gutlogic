@@ -1,13 +1,11 @@
 import * as admin from "firebase-admin";
 admin.initializeApp();
 
-import * as Functions from "firebase-functions";
+import * as functions from "firebase-functions";
 import * as food from "./food";
 import * as auth from "./auth";
 import * as iap from "./iap";
-import {cloudRegion, pubsubBillingTopic} from "./config.json";
-
-const functions = Functions.region(cloudRegion);
+import {pubsubBillingTopic} from "./config.json";
 
 export const onUserDeleted = functions.auth.user().onDelete(auth.onUserDeleted);
 
