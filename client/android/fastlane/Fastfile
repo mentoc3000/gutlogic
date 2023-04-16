@@ -34,7 +34,6 @@ platform :android do
       json_key: "google_play_console_developer_key.json",
       package_name: "com.gutlogic.app.dev",
       track: "internal",
-      release_status: 'draft',
     )
 
   end
