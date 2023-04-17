@@ -1,6 +1,6 @@
 import { PurchaseHandler } from "./purchase-handler";
 import { ProductData, productDataMap } from "./products";
-import {projectId,  pubsubBillingTopic } from "../config.json";
+import { packageName } from "../config.json";
 import { GoogleAuth } from "google-auth-library";
 import { androidpublisher_v3 as AndroidPublisherApi } from "googleapis";
 import credentials from "./google_play_console_cloud_functions_key.json";
@@ -33,7 +33,7 @@ export class GooglePlayPurchaseHandler extends PurchaseHandler {
       // Verify the purchase with Google
       let response = await this.androidPublisher.purchases.subscriptions.get(
         {
-          packageName: projectId,
+          packageName: packageName,
           subscriptionId: productData.productId,
           token,
         },
