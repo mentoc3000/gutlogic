@@ -309,6 +309,8 @@ client:screenshots:android:
     - rm -rf fonts
     - rm -f *.png
     - rm -f *.json
+    # Duplicate release notes from iOS
+    - cp ../../../ios/fastlane/metadata/en-US/release_notes.txt en-US/changelogs/$CI_PIPELINE_ID.txt
     - cd ../..
     - bundle install
     - bundle exec fastlane $FASTLANE_CHANNEL
