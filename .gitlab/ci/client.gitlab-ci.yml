@@ -311,7 +311,7 @@ client:screenshots:android:
     - rm -f *.json
     # Duplicate release notes from iOS
     - mkdir -p en-US/changelogs
-    - cp ../../../ios/fastlane/metadata/en-US/release_notes.txt en-US/changelogs/$CI_PIPELINE_ID.txt
+    - cp ../../../../ios/fastlane/metadata/en-US/release_notes.txt en-US/changelogs/$CI_PIPELINE_ID.txt
     - cd ../..
     - bundle install
     - bundle exec fastlane $FASTLANE_CHANNEL
