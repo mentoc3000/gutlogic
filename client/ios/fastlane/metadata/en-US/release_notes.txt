@@ -1,1 +1,1 @@
-Tap pie charts to view foods in each slice
+Minor bug fixes and improvements
