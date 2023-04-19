@@ -270,8 +270,12 @@ client:screenshots:android:
   script:
     # generate screenshots
     - flutter pub run bin/screenshots android
+    # add keys
+    - cd android
+    - echo $UPLOAD_KEYSTORE_JKS_BASE64 | base64 -d > app/upload-keystore.jks
+    - cp "$ANDROID_KEY_PROPERTIES" "$(pwd)/key.properties"
     # prep fastlane
-    - cd android/fastlane
+    - cd fastlane
     - gem install --user-install bundler
     - bundle install
     # place screenshots into frames
