@@ -103,6 +103,8 @@ firebase:test:
     - !reference [.firebase-run, before_script]
   script:
     - npm run test
+    - cd functions
+    - npm run test
   rules:
     - !reference [.firebase-develop-commit-rules, rules]
     - !reference [.firebase-release-commit-rules, rules]

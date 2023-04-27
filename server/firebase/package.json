@@ -5,8 +5,8 @@
   "scripts": {
     "lint": "eslint . --ext .ts",
     "build": "cd functions && npm run build",
-    "test": "firebase emulators:exec \"ava --timeout=2m\"",
-    "deploy": "firebase deploy --force",
+    "test": "firebase emulators:exec --only firestore ava",
+    "deploy": "firebase deploy --force --only functions,firebase",
     "postinstall": "cd functions && npm install"
   },
   "engines": {
@@ -24,5 +24,11 @@
     "eslint": "^8.11.0",
     "eslint-plugin-promise": "^6.0.0",
     "typescript": "^4.8.2"
+  },
+  "ava": {
+    "timeout": "2m",
+    "files": [
+      "firestore/test/**/*.js"
+    ]
   }
 }
