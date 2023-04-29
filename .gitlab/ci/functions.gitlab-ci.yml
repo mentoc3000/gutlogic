@@ -1,0 +1,140 @@
+.functions-merge-request-rules:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      changes:
+        - server/functions/**/*
+        - functions.gitlab-ci.yml
+        - .gitlab-ci.yml
+    - if: $CI_MERGE_REQUEST_ID
+      allow_failure: true
+      when: manual
+
+.functions-develop-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes:
+        - server/functions/**/*
+        - functions.gitlab-ci.yml
+        - .gitlab-ci.yml
+    - if: $CI_COMMIT_BRANCH == "develop"
+      allow_failure: true
+      when: manual
+
+.functions-release-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      changes:
+        - server/functions/**/*
+        - functions.gitlab-ci.yml
+        - .gitlab-ci.yml
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      allow_failure: true
+      when: manual
+
+.functions-cache: &functions-cache
+  key:
+    files:
+      - server/functions/package-lock.json
+  paths:
+    - server/functions/.npm-cache
+    - server/functions/functions/.npm-cache
+    - server/functions/**/*.js
+
+.functions:
+  image: node:16.17-alpine
+  tags:
+    - docker
+  before_script:
+    # move into the server directory
+    - cd server/functions
+    - node --version
+    - npm --version
+    # install the server dependencies
+    - npm ci --cache .npm-cache --prefer-offline --log-level error
+    - cp "$GOOGLE_APPLICATION_CREDENTIALS" "$(pwd)/src/firebase-adminsdk.json"
+    - cp "$CLOUD_FUNCTION_PARAMETERS" "$(pwd)/src/config.json"
+    - cp "$GOOGLE_PLAY_CLOUD_FUNCTIONS_KEY" "$(pwd)/src/iap/google_play_console_cloud_functions_key.json"
+  cache:
+    <<: *functions-cache
+    policy: pull
+
+.functions-run:
+  before_script:
+    # add locally installed bins to the path so we can run firebase-tools
+    - PATH="$(npm bin):$PATH"
+    # set the firebase project for the job
+    - firebase use $FIREBASE_PROJECT
+
+functions:prep:
+  stage: prep
+  extends:
+    - .functions
+  script:
+    - npm run build
+  rules:
+    - !reference [.functions-develop-commit-rules, rules]
+    - !reference [.functions-release-commit-rules, rules]
+    - !reference [.functions-merge-request-rules, rules]
+  cache:
+    <<: *functions-cache
+    policy: pull-push
+
+functions:lint:
+  stage: test
+  extends:
+    - .functions
+  script:
+    - npm run lint
+  rules:
+    - !reference [.functions-develop-commit-rules, rules]
+    - !reference [.functions-release-commit-rules, rules]
+    - !reference [.functions-merge-request-rules, rules]
+  dependencies:
+    - functions:prep
+  allow_failure: true
+
+functions:test:
+  stage: test
+  extends:
+    - .functions
+  before_script:
+    - !reference [.functions, before_script]
+    - !reference [.functions-run, before_script]
+  script:
+    - npm run test
+  rules:
+    - !reference [.functions-develop-commit-rules, rules]
+    - !reference [.functions-release-commit-rules, rules]
+    - !reference [.functions-merge-request-rules, rules]
+  dependencies:
+    - functions:prep
+
+functions:deploy:develop:
+  stage: deploy
+  extends:
+    - .functions
+  before_script:
+    - !reference [.functions, before_script]
+    - !reference [.functions-run, before_script]
+  script:
+    - npm run deploy
+  rules:
+    - !reference [.functions-develop-commit-rules, rules]
+  dependencies:
+    - functions:prep
+  environment: develop
+
+functions:deploy:release:
+  stage: deploy
+  extends:
+    - .functions
+  before_script:
+    - !reference [.functions, before_script]
+    - !reference [.functions-run, before_script]
+  script:
+    - npm run deploy
+  rules:
+    - !reference [.functions-release-commit-rules, rules]
+  dependencies:
+    - functions:prep
+  environment: release
