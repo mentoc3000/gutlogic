@@ -71,10 +71,18 @@ export class GooglePlayPurchaseHandler extends PurchaseHandler {
       };
 
       try {
-        await this.iapRepository.updatePurchase({ userId, purchaseLog });
-
+        if (userId) { 
+          // If we know the userId,
+          // update the existing purchase or create it if it does not exist.
+          await this.iapRepository.createOrUpdatePurchase({ userId, purchaseLog });
+        } else {
+          // If we do not know the user id, a previous entry must already
+          // exist, and thus we'll only update it.
+          await this.iapRepository.updatePurchase({purchaseLog});
+        }
       } catch (e) {
         console.log("Could not create or update purchase", { orderId, productId: productData.productId });
+        console.error(e);
       }
 
       return true;

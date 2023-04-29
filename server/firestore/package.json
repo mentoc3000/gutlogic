@@ -1,0 +1,26 @@
+{
+  "name": "gut-logic-server",
+  "version": "1.2.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .js",
+    "test": "firebase emulators:exec --only firestore ava",
+    "deploy": "firebase deploy --force --only firestore"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "devDependencies": {
+    "@firebase/testing": "^0.20.11",
+    "ava": "^4.1.0",
+    "eslint": "^8.11.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "firebase-tools": "^10.2.2"
+  },
+  "ava": {
+    "timeout": "2m",
+    "files": [
+      "test/**/*.js"
+    ]
+  }
+}

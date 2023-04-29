@@ -9,4 +9,7 @@
   "noImplicitReturns": true,
   "strict": true,
   "noUnusedLocals": true,
+  "include": [
+    "src"
+  ]
 }

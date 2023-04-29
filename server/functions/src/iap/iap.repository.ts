@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase-admin/firestore";
+import { DocumentReference, Timestamp } from "firebase-admin/firestore";
 
 export type NonSubscriptionStatus = "PENDING" | "COMPLETED" | "CANCELLED";
 export type SubscriptionStatus = "PENDING" | "ACTIVE" | "EXPIRED";
@@ -33,7 +33,7 @@ export class IapRepository {
   constructor(private firestore: FirebaseFirestore.Firestore) {
   }
 
-  async updatePurchase({ userId, purchaseLog }:
+  async createOrUpdatePurchase({ userId, purchaseLog }:
     { userId: string; purchaseLog: Partial<PurchaseLog>; }
   ): Promise<void> {
     await this.firestore
@@ -41,4 +41,28 @@ export class IapRepository {
       .doc(userId)
       .set(purchaseLog, { merge: true });
   }
+
+  async updatePurchase({  purchaseLog }:
+    { purchaseLog: Partial<PurchaseLog>; }
+  ): Promise<void> {
+    const querySnapshot= await this.firestore
+      .collection("users")
+      .where("premiumOrderId", "==", purchaseLog.premiumOrderId)
+      .get();
+
+    if (querySnapshot.size === 0) {
+      console.warn(`No matching documents for order id ${purchaseLog.premiumOrderId}.`);
+      return;
+    }
+
+    if (querySnapshot.size > 1) {
+      console.warn(`More than one matching documents for order id ${purchaseLog.premiumOrderId}.`);
+      console.log("Updating purchase for all matches.")
+    }
+
+    await Promise.all(querySnapshot.docs.map(async (doc) => {
+      await doc.ref.set(purchaseLog, { merge: true });
+    }));
+  }
+   
 }

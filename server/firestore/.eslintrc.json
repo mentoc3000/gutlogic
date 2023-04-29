@@ -1,13 +1,11 @@
 {
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     // Required for certain syntax usages
     "ecmaVersion": 2022,
     "sourceType": "module"
   },
   "plugins": [
-    "promise",
-    "@typescript-eslint"
+    "promise"
   ],
   "extends": [
     "eslint:recommended"

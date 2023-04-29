@@ -1,5 +1,15 @@
 import * as admin from "firebase-admin";
-admin.initializeApp();
+import * as serviceAccount from "./firebase-adminsdk.json";
+
+const serviceAccountCamel = {
+  projectId: serviceAccount.project_id,
+  clientEmail: serviceAccount.client_email,
+  privateKey: serviceAccount.private_key,
+};
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccountCamel),
+});
 
 import * as functions from "firebase-functions";
 import * as food from "./food";

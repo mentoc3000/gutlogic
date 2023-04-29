@@ -10,3 +10,4 @@ node_modules/
 
 src/config.json
 google_play_console_cloud_functions_key.json
+firebase-adminsdk*.json

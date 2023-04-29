@@ -1,0 +1,121 @@
+.firestore-merge-request-rules:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      changes:
+        - server/firestore/**/*
+        - firestore.gitlab-ci.yml
+        - .gitlab-ci.yml
+    - if: $CI_MERGE_REQUEST_ID
+      allow_failure: true
+      when: manual
+
+.firestore-develop-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes:
+        - server/firestore/**/*
+        - firestore.gitlab-ci.yml
+        - .gitlab-ci.yml
+    - if: $CI_COMMIT_BRANCH == "develop"
+      allow_failure: true
+      when: manual
+
+.firestore-release-commit-rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      changes:
+        - server/firestore/**/*
+        - firestore.gitlab-ci.yml
+        - .gitlab-ci.yml
+    - if: $CI_COMMIT_BRANCH =~ /^release/
+      allow_failure: true
+      when: manual
+
+.firestore-cache: &firestore-cache
+  key:
+    files:
+      - server/firestore/package-lock.json
+  paths:
+    - server/firestore/.npm-cache
+    - server/firestore/functions/.npm-cache
+    - server/firestore/**/*.js
+    - /root/.cache/firestore/emulators
+
+.firestore:
+  image: node:16.17-alpine
+  tags:
+    - docker
+  before_script:
+    # move into the server directory
+    - cd server/firestore
+    - node --version
+    - npm --version
+    # install the server dependencies
+    - npm ci --cache .npm-cache --prefer-offline --log-level error
+  cache:
+    <<: *firestore-cache
+    policy: pull
+
+.firestore-run:
+  before_script:
+    # install alpine deps (ideally this would happen in a custom dockerfile)
+    - apk add --quiet --no-cache openjdk8
+    # add locally installed bins to the path so we can run firebase-tools
+    - PATH="$(npm bin):$PATH"
+    # set the firebase project for the job
+    - firebase use $FIREBASE_PROJECT
+
+firestore:lint:
+  stage: test
+  extends:
+    - .firestore
+  script:
+    - npm run lint
+  rules:
+    - !reference [.firestore-develop-commit-rules, rules]
+    - !reference [.firestore-release-commit-rules, rules]
+    - !reference [.firestore-merge-request-rules, rules]
+  allow_failure: true
+  artifacts:
+    paths:
+      - server/**/*
+
+firestore:test:
+  stage: test
+  extends:
+    - .firestore
+  before_script:
+    - !reference [.firestore, before_script]
+    - !reference [.firestore-run, before_script]
+  script:
+    - npm run test
+  rules:
+    - !reference [.firestore-develop-commit-rules, rules]
+    - !reference [.firestore-release-commit-rules, rules]
+    - !reference [.firestore-merge-request-rules, rules]
+
+firestore:deploy:develop:
+  stage: deploy
+  extends:
+    - .firestore
+  before_script:
+    - !reference [.firestore, before_script]
+    - !reference [.firestore-run, before_script]
+  script:
+    - npm run deploy
+  rules:
+    - !reference [.firestore-develop-commit-rules, rules]
+  environment: develop
+
+firestore:deploy:release:
+  stage: deploy
+  extends:
+    - .firestore
+  before_script:
+    - !reference [.firestore, before_script]
+    - !reference [.firestore-run, before_script]
+  script:
+    - npm run deploy
+  rules:
+    - !reference [.firestore-release-commit-rules, rules]
+  environment: release
