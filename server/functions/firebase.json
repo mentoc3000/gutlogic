@@ -4,7 +4,7 @@
     "codebase": "default",
     "ignore": [
       "node_modules",
-      ".npm_cache",
+      ".npm-cache",
       ".git",
       "firebase-debug.log",
       "firebase-debug.*.log",
