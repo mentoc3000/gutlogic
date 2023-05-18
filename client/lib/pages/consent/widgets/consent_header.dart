@@ -21,7 +21,7 @@ class ConsentHeader extends StatelessWidget {
                   'are committed to handling your data responsibly and will never sell your personal information.\n\nYou can '
                   'delete your data at any time. Please review our ',
             ),
-            hyperlink(text: 'privacy policy', url: 'http://gutlogic.co/gut_logic_privacy_policy.pdf'),
+            hyperlink(text: 'privacy policy', url: 'http://gutlogic.co/privacy'),
             const TextSpan(text: ' and email us at '),
             hyperlink(text: 'privacy@gutlogic.co', url: 'mailto:privacy@gutlogic.co'),
             const TextSpan(text: ' with any questions.'),

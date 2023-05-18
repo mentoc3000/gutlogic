@@ -35,9 +35,10 @@ TZDateTime todayAt(int hour, int minute) {
 }
 
 final irritants = [
-  Irritant(name: 'Fructan', concentration: 0.008, dosePerServing: 0.08),
-  Irritant(name: 'GOS', concentration: 0.016, dosePerServing: 0.16),
-  Irritant(name: 'Sorbitol', concentration: 0.003, dosePerServing: 0.03),
+  Irritant(name: 'Fructan', concentration: 0.05, dosePerServing: 0.5),
+  Irritant(name: 'Fructose', concentration: 0.001, dosePerServing: 0.01),
+  Irritant(name: 'GOS', concentration: 0.008, dosePerServing: 0.08),
+  Irritant(name: 'Sorbitol', concentration: 0.025, dosePerServing: 0.25),
 ].build();
 
 final elementaryFood = EdamamFood(
