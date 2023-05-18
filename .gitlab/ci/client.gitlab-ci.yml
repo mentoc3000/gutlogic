@@ -268,12 +268,12 @@ client:screenshots:android:
   tags:
     - macos # for consistent emulator configuration
   script:
-    # generate screenshots
-    - flutter pub run bin/screenshots android
     # add keys
     - cd android
     - echo $UPLOAD_KEYSTORE_JKS_BASE64 | base64 -d > app/upload-keystore.jks
     - cp "$ANDROID_KEY_PROPERTIES" "$(pwd)/key.properties"
+    # generate screenshots
+    - flutter pub run bin/screenshots android
     # prep fastlane
     - cd fastlane
     - gem install --user-install bundler
@@ -282,7 +282,7 @@ client:screenshots:android:
     - bundle exec fastlane frameit download_frames
     - bundle exec fastlane frames
     # remove screenshots without frames so they aren't uploaded to Google Play
-    - cd screenshots
+    - cd metadata/android/en-US/images
     - find . -type f ! -name '*_framed.*' -delete
   artifacts:
     paths:

@@ -4,7 +4,7 @@ class LegalService {
   LegalService._();
 
   static void openPrivacyPolicy() async {
-    final dest = Uri.parse('http://gutlogic.co/gut_logic_privacy_policy.pdf');
+    final dest = Uri.parse('https://gutlogic.co/privacy');
     if (await url.canLaunchUrl(dest)) await url.launchUrl(dest);
   }
 

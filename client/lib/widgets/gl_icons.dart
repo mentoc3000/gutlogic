@@ -12,6 +12,7 @@ class GLIcons {
   static const barcode = MdiIcons.barcodeScan;
   static const bowelMovement = MdiIcons.toilet;
   static const browse = Icons.manage_search;
+  static const calendar = Icons.calendar_month;
   static const check = Icons.check;
   static const clear = Icons.clear;
   static const dataSources = Icons.list;
