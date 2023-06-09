@@ -6,10 +6,10 @@ import '../style/gl_colors.dart';
 class GLCalculatingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [Center(child: _CalculatingIndicator())],
+      children: [Center(child: _CalculatingIndicator())],
     );
   }
 }

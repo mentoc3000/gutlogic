@@ -43,8 +43,8 @@ class SubscribeToUnlockPushCard extends StatelessWidget {
             () => Navigator.of(context).push(Routes.of(context).createSubscribeRoute(onSubscribed: onTapSubscribed));
         children.addAll([
           const SizedBox(height: 4.0),
-          Row(
-            children: const [
+          const Row(
+            children: [
               SizedBox(width: 32),
               Text('Subscribe to unlock', style: TextStyle(color: GLColors.darkGold)),
             ],

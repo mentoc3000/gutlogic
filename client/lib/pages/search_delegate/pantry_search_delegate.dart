@@ -29,7 +29,7 @@ class PantrySearchDelegate extends SearchableSearchDelegate<PantryEntry> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Column();
+    return const Column();
   }
 
   Widget buildList(PantryBloc pantryBloc) {

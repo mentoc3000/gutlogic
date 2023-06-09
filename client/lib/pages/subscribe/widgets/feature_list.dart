@@ -10,12 +10,12 @@ class FeatureList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24.0),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           FeatureBox(text: 'Understand what triggers your symptoms'),
           FeatureBox(text: 'Find more foods to eat and to avoid'),
           FeatureBox(text: 'Spot discomforting ingredients'),

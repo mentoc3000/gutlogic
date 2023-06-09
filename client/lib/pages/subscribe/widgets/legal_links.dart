@@ -10,9 +10,9 @@ class LegalLinks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const style = TextStyle(color: GLColors.white, fontSize: 14.0);
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         GLTertiaryButton(
           onPressed: LegalService.openPrivacyPolicy,
           child: ShrinkWrappedButtonContent(label: 'Privacy Policy', textStyle: style),

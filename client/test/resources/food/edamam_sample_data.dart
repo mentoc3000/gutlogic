@@ -17,7 +17,7 @@ const brownRiceCakeResult = {
     {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_pound', 'label': 'Pound', 'weight': 453.59238},
     {'uri': 'http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram', 'label': 'Kilogram', 'weight': 1000}
   ],
-  'irritants': [],
+  'irritants': <Map<String, Object>>[],
 };
 
 final EdamamFood brownRiceCakeEntry = serializers.deserializeWith(EdamamFood.serializer, brownRiceCakeResult)!;

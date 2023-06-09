@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:ui';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,8 +58,12 @@ void main() async {
 
   // Forward flutter errors to Crashlytics.
   FlutterError.onError = (FlutterErrorDetails details) async {
-    await crashlytics.recordFlutterError(details);
+    await crashlytics.recordFlutterFatalError(details);
     FlutterError.presentError(details);
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    crashlytics.record(error, stack, fatal: true);
+    return true;
   };
 
   // Handle all bloc events sequentially to retain bloc 7.1 behavior.
@@ -80,9 +84,7 @@ void main() async {
     Provider(create: (_) => Routes()),
   ], child: GutLogicApp());
 
-  runZonedGuarded(() {
-    Bloc.observer = blocObserver;
-    Bloc.transformer = blocEventTransformer;
-    runApp(app);
-  }, (error, trace) => unawaited(crashlytics.record(error, trace)));
+  Bloc.observer = blocObserver;
+  Bloc.transformer = blocEventTransformer;
+  runApp(app);
 }
