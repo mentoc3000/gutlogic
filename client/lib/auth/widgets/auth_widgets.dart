@@ -26,7 +26,7 @@ class AuthSection extends StatelessWidget {
 class AuthSectionDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(children: const [
+    return const Row(children: [
       Expanded(child: Divider(thickness: 1, color: Colors.grey)),
       Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text('or')),
       Expanded(child: Divider(thickness: 1, color: Colors.grey)),

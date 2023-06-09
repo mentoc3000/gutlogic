@@ -37,6 +37,7 @@ class DiaryEntryListTile extends StatelessWidget {
       child: SizedBox(
         width: defaultWidth * scale,
         child: Text(
+          key: const Key('diary_entry_time'),
           dateFormatter.format(diaryEntry.datetime.toLocal()),
           textAlign: TextAlign.right,
         ),

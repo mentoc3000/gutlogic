@@ -13,7 +13,10 @@ class CrashlyticsService {
 
   CrashlyticsService._(FirebaseCrashlytics crashlytics) : _crashlytics = crashlytics;
 
-  Future<void> record(dynamic error, StackTrace trace) => _crashlytics.recordError(error, trace);
+  Future<void> record(dynamic error, StackTrace trace, {bool fatal = false}) =>
+      _crashlytics.recordError(error, trace, fatal: fatal);
 
   Future<void> recordFlutterError(FlutterErrorDetails details) => _crashlytics.recordFlutterError(details);
+
+  Future<void> recordFlutterFatalError(FlutterErrorDetails details) => _crashlytics.recordFlutterFatalError(details);
 }

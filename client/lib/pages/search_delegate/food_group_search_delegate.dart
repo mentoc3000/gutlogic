@@ -74,7 +74,7 @@ class FoodGroupSearchDelegate extends SearchableSearchDelegate<FoodReference> {
       bloc: foodSearchBloc,
       builder: (BuildContext context, FoodSearchState state) {
         if (query.isEmpty) {
-          return Column(children: const []);
+          return const Column(children: []);
         }
         if (state is FoodSearchLoaded) {
           final items = state.items;

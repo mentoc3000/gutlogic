@@ -43,7 +43,7 @@
     - client/ios/vendor/bundle
 
 .client:
-  image: ghcr.io/cirruslabs/flutter:3.7.12
+  image: ghcr.io/cirruslabs/flutter:3.10.3
   tags:
     - docker
   before_script:

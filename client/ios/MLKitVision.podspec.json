@@ -2,7 +2,7 @@
     "authors": "Google, Inc.",
     "dependencies": {
         "GTMSessionFetcher/Core": [
-            "~> 2.0"
+            "~> 2.1"
         ],
         "GoogleToolboxForMac/Logger": [
             "~> 2.1"
