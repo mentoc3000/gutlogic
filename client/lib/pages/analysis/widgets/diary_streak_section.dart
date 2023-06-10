@@ -36,16 +36,20 @@ class DiaryStreakSection extends StatelessWidget {
   }
 
   Widget sizeAndCenter(Widget child) {
-    const minHeight = 72.0;
-    return SizedBox(
-      height: minHeight,
-      child: Center(child: child),
+    // This is a hack to get the loading to be the same size as the content
+    final dummy = Opacity(
+      opacity: 0.0,
+      child: _DiaryStreakChart(diaryStreak: _exampleData()),
+    );
+    return Stack(
+      alignment: Alignment.center,
+      children: [dummy, child],
     );
   }
 
   Widget builder(BuildContext context, DiaryStreakState state) {
     if (state is DiaryStreakLoading) {
-      return sizeAndCenter(GLCalculatingWidget());
+    return sizeAndCenter(GLCalculatingWidget());
     }
     if (state is DiaryStreakLoaded) {
       return _DiaryStreakChart(diaryStreak: state.diaryStreak);

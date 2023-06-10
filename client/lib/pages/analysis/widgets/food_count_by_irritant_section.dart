@@ -11,7 +11,6 @@ import '../../../routes/routes.dart';
 import '../../../widgets/gl_calculating_widget.dart';
 import '../../../widgets/gl_error_widget.dart';
 import '../../../widgets/sensitivity_level_pie_chart.dart';
-import 'analysis_content_card.dart';
 import 'analysis_section.dart';
 import 'insufficient_data.dart';
 
@@ -35,12 +34,14 @@ class FoodCountByIrritantSection extends StatelessWidget {
   }
 
   Widget sizeAndCenter(Widget child) {
-    const minHeight = 300.0;
-    return AnalysisContentCard(
-      child: SizedBox(
-        height: minHeight,
-        child: Center(child: child),
-      ),
+    // This is a hack to get the loading to be the same size as the content
+    final dummy = Opacity(
+      opacity: 0.0,
+      child: _IrritantSensitivityMatrixCardContent(matrix: _exampleData()),
+    );
+    return Stack(
+      alignment: Alignment.center,
+      children: [dummy, child],
     );
   }
 
