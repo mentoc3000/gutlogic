@@ -49,7 +49,7 @@ class DiaryStreakSection extends StatelessWidget {
 
   Widget builder(BuildContext context, DiaryStreakState state) {
     if (state is DiaryStreakLoading) {
-    return sizeAndCenter(GLCalculatingWidget());
+      return sizeAndCenter(GLCalculatingWidget());
     }
     if (state is DiaryStreakLoaded) {
       return _DiaryStreakChart(diaryStreak: state.diaryStreak);
