@@ -18,7 +18,7 @@
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "command": "flutter pub run build_runner build",
+      "command": "dart run build_runner build",
       "problemMatcher": []
     },
     {
@@ -27,16 +27,7 @@
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "command": "flutter pub run build_runner build --delete-conflicting-outputs",
-      "problemMatcher": []
-    },
-    {
-      "label": "Code generation watch",
-      "type": "shell",
-      "options": {
-        "cwd": "${workspaceFolder}/client"
-      },
-      "command": "flutter pub run build_runner watch",
+      "command": "dart run build_runner build --delete-conflicting-outputs",
       "problemMatcher": []
     },
     {
@@ -135,7 +126,7 @@
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "command": "flutter pub run bin/screenshots ios",
+      "command": "dart run bin/screenshots.dart ios",
       "problemMatcher": []
     },
     {
@@ -144,7 +135,7 @@
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "command": "flutter pub run bin/screenshots android",
+      "command": "dart run bin/screenshots.dart android",
       "problemMatcher": []
     },
     {
@@ -153,7 +144,7 @@
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "command": "flutter pub run flutter_launcher_icons:main",
+      "command": "dart run flutter_launcher_icons:main",
       "problemMatcher": []
     },
     {

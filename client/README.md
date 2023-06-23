@@ -11,7 +11,7 @@ flutter pub get
 Build `built_values` serializers.
 
 ```
-flutter pub run build_runner build
+dart run build_runner build
 ```
 
 ### Firebase Analytics

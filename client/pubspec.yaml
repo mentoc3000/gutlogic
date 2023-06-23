@@ -66,7 +66,7 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   flutter_test: { sdk: flutter }
   integration_test: { sdk: flutter }
-  mockito: ^5.0.7
+  mockito: ^5.4.2
   mocktail: ^0.3.0
   path: ^1.8.0
   test: any
@@ -75,7 +75,7 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
-# To generate icons, run `flutter pub run flutter_launcher_icons:main`
+# To generate icons, run `dart run flutter_launcher_icons:main`
 flutter_launcher_icons:
   path: ../..
 

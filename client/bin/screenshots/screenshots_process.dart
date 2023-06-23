@@ -27,7 +27,7 @@ Future<void> build(String package, String target) async {
   if (package == 'ios') {
     // Tweak source files as workaround to bug
     // BUG: https://github.com/flutter/flutter/issues/91668
-    await run('bash', ['flutter_mod.sh'], workingDirectory: 'bin');
+    // await run('bash', ['flutter_mod.sh'], workingDirectory: 'bin');
     await run('flutter', ['clean']);
     await run('flutter', ['pub', 'get']);
 

@@ -8,7 +8,7 @@ To generate screenshots, run the command:
 
 ```bash
 cd client
-flutter pub run bin/screenshots
+dart run bin/screenshots.dart
 ```
 
 ### Continuous Integration / Continuous Deployment

@@ -48,7 +48,7 @@ Future<void> orchestrateIOSJobs(ScreenshotsConfig config) async {
   Future<void> job(ios.AppleSimulatorDevice device) async {
     try {
       await ios.launch(device);
-      await drive(target, driver, device.udid); // TODO drive each locale
+      await drive(target, driver, device.udid); // TODO: drive each locale
     } catch (ex) {
       log.e('Error running screenshots driver on $device: $ex');
       rethrow;
