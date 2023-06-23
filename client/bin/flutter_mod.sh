@@ -6,7 +6,7 @@
 
 # Check that the file is from the expected version to correctly match line numbers
 ver=$(flutter --version)
-if [[ "$ver" != "Flutter 3.7.12"* ]]; then
+if [[ "$ver" != "Flutter 3.10.3"* ]]; then
     echo "Flutter version mismatch." 1>&2
     echo "Confirm file modification is still valid and necessary" 1>&2
     exit 1

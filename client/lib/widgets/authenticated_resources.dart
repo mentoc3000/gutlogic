@@ -70,7 +70,7 @@ class AuthenticatedResources extends StatelessWidget {
           RepositoryProvider(create: ApiService.fromContext),
           RepositoryProvider(create: IapService.fromContext),
           RepositoryProvider(create: (context) {
-            // TODO move this into its most tightly nested widget tree
+            // TODO: move this into its most tightly nested widget tree
             return SensitivityRepository(
               firestoreService: context.read<FirestoreService>(),
               crashlytics: context.read<CrashlyticsService>(),

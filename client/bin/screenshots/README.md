@@ -4,7 +4,7 @@ The screenshots package drives the main app in an automated screenshot environme
 screenshot process manager with:
 
 ```bash
-flutter pub run bin/screenshots
+dart run bin/screenshots.dart
 ```
 
 This loads the `screenshots_config.yaml` file and kicks off the various screenshot processes. The
