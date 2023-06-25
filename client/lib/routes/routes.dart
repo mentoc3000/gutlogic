@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/barcode_scan/barcode_scan_page.dart';
 import '../pages/foods_with_irritant/foods_with_irritant_page.dart';
 
+import '../pages/preferences/preferences_page.dart';
 import '../models/diary_entry/bowel_movement_entry.dart';
 import '../models/diary_entry/meal_entry.dart';
 import '../models/diary_entry/symptom_entry.dart';
@@ -115,6 +116,13 @@ class Routes {
   Route<Widget> get profile {
     return MaterialPageRoute(
       builder: (context) => ProfilePage(),
+      settings: const RouteSettings(name: 'Profile Page'),
+    );
+  }
+
+  Route<Widget> get preferences {
+    return MaterialPageRoute(
+      builder: (context) => PreferencesPage(),
       settings: const RouteSettings(name: 'Profile Page'),
     );
   }

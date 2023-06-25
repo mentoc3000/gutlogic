@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/food/food.dart';
@@ -18,11 +19,12 @@ abstract class PantryEntryEvent extends Equatable {
 class Load extends PantryEntryEvent {
   final PantryEntry pantryEntry;
   final Food? food;
+  final BuiltSet<String> excludedIrritants;
 
-  const Load({required this.pantryEntry, required this.food});
+  const Load({required this.pantryEntry, required this.food, required this.excludedIrritants});
 
   @override
-  List<Object?> get props => [pantryEntry, food];
+  List<Object?> get props => [pantryEntry, food, excludedIrritants];
 }
 
 class CreateAndStreamEntry extends PantryEntryEvent implements Tracked {

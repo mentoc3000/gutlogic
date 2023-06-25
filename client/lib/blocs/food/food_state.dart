@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/food/food.dart';
@@ -27,11 +28,12 @@ class FoodLoading extends FoodState {
 
 class FoodLoaded extends FoodState {
   final Food food;
+  final BuiltSet<String> excludedIrritants;
 
-  const FoodLoaded({required this.food});
+  const FoodLoaded({required this.food, required this.excludedIrritants});
 
   @override
-  List<Object?> get props => [food];
+  List<Object?> get props => [food, excludedIrritants];
 }
 
 class FoodError extends FoodState with ErrorState, ErrorRecorder {

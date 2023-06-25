@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/food/food.dart';
@@ -16,11 +17,12 @@ class MealElementLoading extends MealElementState {}
 class MealElementLoaded extends MealElementState {
   final MealElement mealElement;
   final Food? food;
+  final BuiltSet<String> excludedIrritants;
 
-  MealElementLoaded({required this.mealElement, required this.food});
+  MealElementLoaded({required this.mealElement, required this.food, required this.excludedIrritants});
 
   @override
-  List<Object?> get props => [mealElement, food];
+  List<Object?> get props => [mealElement, food, excludedIrritants];
 }
 
 class MealElementError extends MealElementState with ErrorState, ErrorRecorder {

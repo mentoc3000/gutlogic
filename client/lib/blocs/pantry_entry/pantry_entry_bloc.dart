@@ -1,28 +1,39 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../models/food/food.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
 import '../../models/pantry/pantry_entry.dart';
+import '../../models/preferences/preferences.dart';
 import '../../resources/food/food_service.dart';
 import '../../resources/pantry_service.dart';
+import '../../resources/preferences_service.dart';
 import '../bloc_helpers.dart';
 import 'pantry_entry.dart';
 
-class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState>
-    with StreamSubscriber<PantryEntry?, PantryEntryState> {
+class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with StreamSubscriber<_Data?, PantryEntryState> {
   final PantryService repository;
   final FoodService foodService;
+  final PreferencesService preferencesService;
 
   PantryEntryBloc({
     required this.repository,
     required this.foodService,
+    required this.preferencesService,
   }) : super(PantryEntryLoading()) {
     on<CreateAndStreamEntry>(_onCreateAndStreamEntry);
     on<StreamEntry>(_onStreamEntry);
-    on<Load>((event, emit) => emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: event.food)));
+    on<Load>((event, emit) {
+      emit(PantryEntryLoaded(
+        pantryEntry: event.pantryEntry,
+        food: event.food,
+        excludedIrritants: preferencesService.value.irritantsExcluded ?? BuiltSet(),
+      ));
+    });
     on<Delete>(_onDelete);
     on<UpdateNotes>(_onUpdateNotes, transformer: debounceTransformer);
     on<UpdateSensitivityLevel>(_onUpdateSensitivityLevel, transformer: debounceTransformer);
@@ -33,6 +44,7 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState>
     return PantryEntryBloc(
       repository: context.read<PantryService>(),
       foodService: context.read<FoodService>(),
+      preferencesService: context.read<PreferencesService>(),
     );
   }
 
@@ -55,11 +67,22 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState>
 
       final food = await _pantryEntryFood(event.pantryEntry);
 
-      emit(PantryEntryLoaded(pantryEntry: event.pantryEntry, food: food));
+      emit(PantryEntryLoaded(
+        pantryEntry: event.pantryEntry,
+        food: food,
+        excludedIrritants: preferencesService.value.irritantsExcluded ?? BuiltSet(),
+      ));
 
-      streamSubscription = repository.stream(event.pantryEntry).listen(
-        (pantryEntry) {
-          add(Load(pantryEntry: pantryEntry!, food: food));
+      final pantryEntryStream = repository.stream(event.pantryEntry);
+      final preferencesStream = preferencesService.stream;
+      final dataStream = CombineLatestStream.combine2(pantryEntryStream, preferencesStream, _Data.combine);
+      streamSubscription = dataStream.listen(
+        (data) {
+          add(Load(
+            pantryEntry: data.pantryEntry!,
+            food: food,
+            excludedIrritants: data.preferences.irritantsExcluded ?? BuiltSet(),
+          ));
         },
         onError: (dynamic error, StackTrace trace) {
           add(ThrowPantryEntryError.fromError(error: error, trace: trace));
@@ -105,4 +128,17 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState>
       return null;
     }
   }
+}
+
+class _Data {
+  final PantryEntry? pantryEntry;
+  final Preferences preferences;
+
+  _Data({
+    required this.pantryEntry,
+    required this.preferences,
+  });
+
+  factory _Data.combine(PantryEntry? pantryEntry, Preferences preferences) =>
+      _Data(pantryEntry: pantryEntry, preferences: preferences);
 }

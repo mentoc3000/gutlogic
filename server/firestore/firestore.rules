@@ -8,6 +8,9 @@ service cloud.firestore {
     match /user_data/{userID}/{document=**} {
       allow read, write: if request.auth.uid == userID;
     }
+    match /user_preferences/{userID}/{document=**} {
+      allow read, write: if request.auth.uid == userID;
+    }
     match /food_irritants/{document=**} {
       allow read: if request.auth.uid != null;
     }

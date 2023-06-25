@@ -45,8 +45,8 @@ class IngredientTile extends StatelessWidget {
     });
 
     final maxIntensity = context.select((IrritantService irritantService) {
-      return irritantService.ofIngredient(ingredient).then((value) => value != null
-          ? irritantService.maxIntensity(IrritantService.doseMap(value))
+      return irritantService.ofIngredient(ingredient, usePreferences: true).then((value) => value != null
+          ? irritantService.maxIntensity(IrritantService.doseMap(value), usePreferences: true)
           : Future.value(Intensity.unknown));
     });
 

@@ -42,7 +42,7 @@ class PurchaseInterface extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             DefaultTextStyle(
-              style: TextStyle(color: GLColors.onCta, fontSize: 18.0),
+              style: TextStyle(color: GLColors.darkestGray, fontSize: 18.0),
               child: GLCtaButton(
                 onPressed: () => subscriptionCubit.subscribe(state.product),
                 child: const StretchedButtonContent(label: 'Subscribe', textStyle: TextStyle(fontSize: 18.0)),

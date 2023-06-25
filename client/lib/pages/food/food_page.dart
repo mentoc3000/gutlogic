@@ -49,7 +49,7 @@ class FoodPage extends StatelessWidget {
       return GLLoadingWidget();
     }
     if (state is FoodLoaded) {
-      return FoodListView(food: state.food);
+      return FoodListView(food: state.food, excludedIrritants: state.excludedIrritants);
     }
     if (state is FoodError) {
       return GLErrorWidget(message: state.message);
