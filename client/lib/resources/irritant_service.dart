@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gutlogic/resources/preferences_service.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../models/food/ingredient.dart';
 import '../models/food_reference/food_reference.dart';
@@ -19,14 +21,23 @@ class IrritantService {
   final ApiService apiService;
   late final Future<BuiltMap<String, BuiltList<double>>> _intensityThresholdCache;
   late final Future<BuiltList<ElementaryFood>> _elementaryFoodCache;
+  final BehaviorSubject<BuiltSet<String>> _excludedIrritantsStream = BehaviorSubject();
 
-  IrritantService({required this.apiService}) {
+  BuiltSet<String> get _excludedIrritants => _excludedIrritantsStream.valueOrNull ?? BuiltSet<String>();
+
+  IrritantService({required this.apiService, required PreferencesService preferencesService}) {
     _elementaryFoodCache = _getElementaryFoods();
     _intensityThresholdCache = _getIntensityThresholds();
+    preferencesService.stream
+        .map((event) => event.irritantsExcluded?.toBuiltSet() ?? BuiltSet<String>())
+        .pipe(_excludedIrritantsStream);
   }
 
   static IrritantService fromContext(BuildContext context) {
-    return IrritantService(apiService: context.read<ApiService>());
+    return IrritantService(
+      apiService: context.read<ApiService>(),
+      preferencesService: context.read<PreferencesService>(),
+    );
   }
 
   Future<BuiltMap<String, BuiltList<double>>> _getIntensityThresholds() async {
@@ -88,21 +99,28 @@ class IrritantService {
     return null;
   }
 
-  Future<BuiltList<Irritant>?> ofRef(FoodReference food) async {
+  Future<BuiltList<Irritant>?> ofRef(FoodReference food, {bool usePreferences = false}) async {
     final foodIrritantsApi = await _getFoodIrritantsOf(food);
-    return foodIrritantsApi?.irritants;
+    return foodIrritantsApi?.irritants
+        .where((p0) => !usePreferences || !_excludedIrritants.contains(p0.name))
+        .toBuiltList();
   }
 
   /// Irritants in one serving of ingredient
-  Future<BuiltList<Irritant>?> ofIngredient(Ingredient ingredient) {
-    if (ingredient.foodReference != null) return ofRef(ingredient.foodReference!);
-    if (ingredient.ingredients != null) return ofIngredients(ingredient.ingredients!);
+  Future<BuiltList<Irritant>?> ofIngredient(Ingredient ingredient, {bool usePreferences = false}) {
+    if (ingredient.foodReference != null) return ofRef(ingredient.foodReference!, usePreferences: usePreferences);
+    if (ingredient.ingredients != null) {
+      return ofIngredients(ingredient.ingredients!, usePreferences: usePreferences);
+    }
     return Future.value();
   }
 
   /// Irritants in ingredients, max of each irritant
-  Future<BuiltList<Irritant>?> ofIngredients(Iterable<Ingredient> ingredients) async {
-    final irritants = await Future.wait(ingredients.map(ofIngredient));
+  Future<BuiltList<Irritant>?> ofIngredients(
+    Iterable<Ingredient> ingredients, {
+    bool usePreferences = false,
+  }) async {
+    final irritants = await Future.wait(ingredients.map((i) => ofIngredient(i, usePreferences: usePreferences)));
     final irritantsDataOnly = irritants.whereType<BuiltList<Irritant>>();
     if (irritantsDataOnly.isEmpty) return null;
     return _combineIrritants(irritantsDataOnly).toBuiltList();
@@ -143,9 +161,10 @@ class IrritantService {
     }
   }
 
-  Future<Intensity> maxIntensity(BuiltMap<String, double> doses) async {
+  Future<Intensity> maxIntensity(BuiltMap<String, double> doses, {bool usePreferences = false}) async {
     var maxIntensity = Intensity.none;
-    for (var doseEntry in doses.entries) {
+    for (var doseEntry
+        in doses.entries.where((element) => !usePreferences || !_excludedIrritants.contains(element.key))) {
       final irritantName = doseEntry.key;
       final dose = doseEntry.value;
       final thresholds = await intensityThresholds(irritantName);
@@ -158,10 +177,11 @@ class IrritantService {
     return maxIntensity;
   }
 
-  Future<BuiltList<ElementaryFood>> similar(FoodReference food) async {
+  Future<BuiltList<ElementaryFood>> similar(FoodReference food, {bool usePreferences = false}) async {
     final ref = await _getFoodIrritantsOf(food);
     if (ref == null) return BuiltList<ElementaryFood>();
-    final irritantNames = ref.irritants.map((i) => i.name).toSet();
+    final irritantNames =
+        ref.irritants.where((irritant) => !_excludedIrritants.contains(irritant.name)).map((i) => i.name).toSet();
 
     // Get foods that contain at least one irritant that food has
     final elementaryFoods = await _elementaryFoodCache;
@@ -181,6 +201,7 @@ class IrritantService {
   }
 
   /// Compare both a and b to a reference. Negative if a has a more similar irritant profile.
+  @visibleForTesting
   static int irritantSimilarityCompare(ElementaryFood ref, ElementaryFood a, ElementaryFood b) {
     // Zero concentration is the same as no data on irritant, so remove those irritants
     ref = _removeZeroConcentration(ref);

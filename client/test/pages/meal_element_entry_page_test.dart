@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -58,7 +59,7 @@ void main() {
     testWidgets('loads entry', (WidgetTester tester) async {
       whenListen(
         mealElementBloc,
-        Stream.value(MealElementLoaded(mealElement: mealElement, food: null)),
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, excludedIrritants: BuiltSet())),
         initialState: MealElementLoading(),
       );
 
@@ -98,7 +99,7 @@ void main() {
     testWidgets('updates quantity', (WidgetTester tester) async {
       whenListen(
         mealElementBloc,
-        Stream.value(MealElementLoaded(mealElement: mealElement, food: null)),
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, excludedIrritants: BuiltSet())),
         initialState: MealElementLoading(),
       );
 
@@ -116,7 +117,7 @@ void main() {
     testWidgets('updates notes', (WidgetTester tester) async {
       whenListen(
         mealElementBloc,
-        Stream.value(MealElementLoaded(mealElement: mealElement, food: null)),
+        Stream.value(MealElementLoaded(mealElement: mealElement, food: null, excludedIrritants: BuiltSet())),
         initialState: MealElementLoading(),
       );
 

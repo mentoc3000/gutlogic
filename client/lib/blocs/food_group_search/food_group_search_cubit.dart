@@ -34,7 +34,8 @@ class FoodGroupSearchCubit extends Cubit<FoodGroupSearchState> {
       if (_maxIntensitiesMapCache == null) {
         final entries = await foodGroupsRepository.foods();
         final entriesList = entries.toList();
-        final maxIntensitiesList = await Future.wait(entries.map((e) => irritantService.maxIntensity(e.doses)));
+        final maxIntensitiesList =
+            await Future.wait(entries.map((e) => irritantService.maxIntensity(e.doses, usePreferences: true)));
         _maxIntensitiesMapCache =
             BuiltMap<FoodGroupEntry, Intensity>.from(Map.fromIterables(entriesList, maxIntensitiesList));
       }

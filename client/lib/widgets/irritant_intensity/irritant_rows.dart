@@ -8,8 +8,9 @@ import '../irritant_intensity/intensity_indicator.dart';
 
 class IrritantRows extends StatelessWidget {
   final BuiltList<Irritant>? irritants;
+  final BuiltSet<String>? excludedIrritants;
 
-  const IrritantRows({required this.irritants});
+  const IrritantRows({required this.irritants, required this.excludedIrritants});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,9 @@ class IrritantRows extends StatelessWidget {
       child = const Text('no known irritants');
     } else {
       final irritantsSorted = irritantsPresent..sort((a, b) => a.name.compareTo(b.name));
-      final rows = irritantsSorted.map((i) => _IrritantRow(irritant: i)).toList();
+      final rows = irritantsSorted
+          .map((i) => _IrritantRow(irritant: i, exclude: excludedIrritants?.contains(i.name) ?? false))
+          .toList();
       child = Column(children: rows);
     }
     return Padding(
@@ -31,8 +34,9 @@ class IrritantRows extends StatelessWidget {
 
 class _IrritantRow extends StatelessWidget {
   final Irritant irritant;
+  final bool exclude;
 
-  const _IrritantRow({Key? key, required this.irritant}) : super(key: key);
+  const _IrritantRow({Key? key, required this.irritant, required this.exclude}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +50,15 @@ class _IrritantRow extends StatelessWidget {
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(irritant.name),
-              IntensityIndicator.fromIrritant(irritant: irritant, intensityThresholds: thresholds),
-            ],
+          child: Opacity(
+            opacity: exclude ? 0.5 : 1.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(irritant.name),
+                IntensityIndicator.fromIrritant(irritant: irritant, intensityThresholds: thresholds),
+              ],
+            ),
           ),
         );
       },

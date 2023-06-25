@@ -15,6 +15,7 @@ class GLColors {
   static Color lightestGray = Colors.grey.shade50;
   static Color lighterGray = Colors.grey.shade300;
   static Color darkGray = Colors.grey.shade800;
+  static Color darkestGray = Colors.grey.shade900;
   static const red = Color(0xFFA30000);
   static const purple = Color(0xFF4C1E4F);
   static const blue = Color(0xFF004777);
@@ -25,7 +26,6 @@ class GLColors {
   static const edamamGreen = Color(0xFF79CA38);
 
   static const cta = gold; // Call to action
-  static Color onCta = Colors.grey.shade900;
   static const info = Colors.blue;
   static const cancel = Colors.redAccent;
 

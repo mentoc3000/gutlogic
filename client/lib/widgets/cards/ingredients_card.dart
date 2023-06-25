@@ -19,8 +19,8 @@ class IngredientsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxIntensity = context.select((IrritantService irritantService) {
-      return irritantService.ofIngredients(ingredients).then((value) => value != null
-          ? irritantService.maxIntensity(IrritantService.doseMap(value))
+      return irritantService.ofIngredients(ingredients, usePreferences: true).then((value) => value != null
+          ? irritantService.maxIntensity(IrritantService.doseMap(value), usePreferences: true)
           : Future.value(Intensity.unknown));
     });
 

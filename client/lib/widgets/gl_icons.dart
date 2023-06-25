@@ -22,7 +22,7 @@ class GLIcons {
   static const expandLess = Icons.expand_less;
   static const expandMore = Icons.expand_more;
   static const error = Icons.error;
-  static const filter = Icons.filter_list;
+  static const filter = MdiIcons.filterOutline;
   static const ingredients = Icons.featured_play_list_outlined;
   static const irritantWarning = Icons.warning;
   static const license = MdiIcons.license;
@@ -30,6 +30,7 @@ class GLIcons {
   static const pantry = MdiIcons.chartBoxOutline;
   static const password = Icons.lock;
   static const predictedSensitivity = Icons.circle;
+  static const preferences = MdiIcons.tune;
   static const priorFoods = Icons.history;
   static const privacy = Icons.security;
   static const profile = Icons.face;

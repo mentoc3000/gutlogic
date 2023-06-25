@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gutlogic/resources/preferences_service.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/auth_service.dart';
@@ -69,6 +70,7 @@ class AuthenticatedResources extends StatelessWidget {
           RepositoryProvider(create: (context) => CloudFunctionService()),
           RepositoryProvider(create: ApiService.fromContext),
           RepositoryProvider(create: IapService.fromContext),
+          RepositoryProvider(create: PreferencesService.fromContext),
           RepositoryProvider(create: (context) {
             // TODO: move this into its most tightly nested widget tree
             return SensitivityRepository(

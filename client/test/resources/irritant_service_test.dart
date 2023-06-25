@@ -7,10 +7,13 @@ import 'package:gutlogic/models/food_reference/edamam_food_reference.dart';
 import 'package:gutlogic/models/irritant/elementary_food.dart';
 import 'package:gutlogic/models/irritant/intensity.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
+import 'package:gutlogic/models/preferences/preferences.dart';
 import 'package:gutlogic/resources/api_service.dart';
 import 'package:gutlogic/resources/irritant_service.dart';
+import 'package:gutlogic/resources/preferences_service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'irritant_service_test.mocks.dart';
 
@@ -52,21 +55,30 @@ const sorbitol = {
   'intensitySteps': [0.1, 0.2, 0.3],
 };
 
-@GenerateMocks([ApiService])
+@GenerateMocks([ApiService, PreferencesService])
 void main() {
   group('IrritantService', () {
     late IrritantService repository;
     late MockApiService apiService;
+    late MockPreferencesService preferencesService;
 
     setUp(() async {
       apiService = MockApiService();
-      when(apiService.get(path: '/irritant/elementaryFoods')).thenAnswer((_) => Future.value({
-            'data': [apple, grape, bread]
-          }));
-      when(apiService.get(path: '/irritant/intensityThresholds')).thenAnswer((_) => Future.value({
-            'data': [mannitol, sorbitol]
-          }));
-      repository = IrritantService(apiService: apiService);
+      preferencesService = MockPreferencesService();
+      when(preferencesService.stream).thenAnswer((_) {
+        return BehaviorSubject<Preferences>()..add(Preferences(irritantsExcluded: BuiltSet({'Mannitol'})));
+      });
+      when(apiService.get(path: '/irritant/elementaryFoods')).thenAnswer((_) {
+        return Future.value({
+          'data': [apple, grape, bread]
+        });
+      });
+      when(apiService.get(path: '/irritant/intensityThresholds')).thenAnswer((_) {
+        return Future.value({
+          'data': [mannitol, sorbitol]
+        });
+      });
+      repository = IrritantService(apiService: apiService, preferencesService: preferencesService);
     });
 
     group('get irritant', () {
@@ -81,6 +93,13 @@ void main() {
         final food = EdamamFoodReference(id: 'no-info', name: 'banana');
         final irritants = await repository.ofRef(food);
         expect(irritants, null);
+      });
+
+      test('excludes irritant', () async {
+        final food = EdamamFoodReference(id: appleFoodId, name: 'apple');
+        final irritants = await repository.ofRef(food, usePreferences: true);
+        expect(irritants!.length, 1);
+        expect(irritants.first.name, 'Sorbitol');
       });
     });
 
@@ -113,15 +132,33 @@ void main() {
       });
     });
 
-    test('gets maximum intensity', () async {
-      expect(await repository.maxIntensity({'Mannitol': 0.0}.build()), Intensity.none);
-      expect(await repository.maxIntensity({'Mannitol': 0.001}.build()), Intensity.trace);
-      expect(await repository.maxIntensity({'Mannitol': 2.0}.build()), Intensity.high);
-      expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.0}.build()), Intensity.none);
-      expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.0}.build()), Intensity.medium);
-      expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.15}.build()), Intensity.low);
-      expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.15}.build()), Intensity.medium);
-      expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 1.0}.build()), Intensity.high);
+    group('gets maximum intensity', () {
+      test('with no preferences', () async {
+        expect(await repository.maxIntensity({'Mannitol': 0.0}.build()), Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.001}.build()), Intensity.trace);
+        expect(await repository.maxIntensity({'Mannitol': 2.0}.build()), Intensity.high);
+        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.0}.build()), Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.0}.build()), Intensity.medium);
+        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.15}.build()), Intensity.low);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.15}.build()), Intensity.medium);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 1.0}.build()), Intensity.high);
+      });
+
+      test('with preferences', () async {
+        expect(await repository.maxIntensity({'Mannitol': 0.0}.build(), usePreferences: true), Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.001}.build(), usePreferences: true), Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 2.0}.build(), usePreferences: true), Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.0}.build(), usePreferences: true),
+            Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.0}.build(), usePreferences: true),
+            Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.15}.build(), usePreferences: true),
+            Intensity.low);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.15}.build(), usePreferences: true),
+            Intensity.low);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 1.0}.build(), usePreferences: true),
+            Intensity.high);
+      });
     });
 
     group('get irritants of ingredients', () {
@@ -164,6 +201,26 @@ void main() {
         final expected = BuiltList<Irritant>([
           Irritant(name: 'Sorbitol', concentration: 0.012, dosePerServing: 1.98),
           Irritant(name: 'Mannitol', concentration: 0.01, dosePerServing: 0.9),
+          Irritant(name: 'Fructan', concentration: 0.012, dosePerServing: 1.98),
+        ]);
+
+        expect(irritants, expected);
+      });
+
+      test('with preferences', () async {
+        final appleRef = EdamamFoodReference(id: appleFoodId, name: 'Apple');
+        final grapeRef = EdamamFoodReference(id: grapeFoodId, name: 'Grape');
+        final breadRef = EdamamFoodReference(id: breadFoodId, name: 'Bread');
+
+        final ingredients = [
+          Ingredient(name: 'Apple', foodReference: appleRef),
+          Ingredient(name: 'Grape', foodReference: grapeRef),
+          Ingredient(name: 'Bread', foodReference: breadRef),
+        ].toBuiltList();
+
+        final irritants = await repository.ofIngredients(ingredients, usePreferences: true);
+        final expected = BuiltList<Irritant>([
+          Irritant(name: 'Sorbitol', concentration: 0.012, dosePerServing: 1.98),
           Irritant(name: 'Fructan', concentration: 0.012, dosePerServing: 1.98),
         ]);
 

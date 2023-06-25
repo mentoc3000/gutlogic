@@ -37,7 +37,8 @@ class SimilarFoodsCubit extends Cubit<SimilarFoodsState>
     final doses = irritantsList.map(IrritantService.doseMap);
 
     // Get the maximum intensity for each food
-    final maxIntensities = await Future.wait(doses.map((d) async => await irritantService.maxIntensity(d)));
+    final maxIntensities =
+        await Future.wait(doses.map((d) async => await irritantService.maxIntensity(d, usePreferences: true)));
     final maxIntensitiesMap = BuiltMap<FoodReference, Intensity>(Map.fromIterables(foodReferences, maxIntensities));
 
     emit(SimilarFoodsLoaded(foods: foodReferences, maxIntensities: maxIntensitiesMap));

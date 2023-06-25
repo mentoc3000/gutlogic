@@ -75,6 +75,7 @@ class PantryEntryPage extends StatelessWidget {
         pantryEntry: state.pantryEntry,
         food: state.food,
         notesController: _notesController,
+        excludedIrritants: state.excludedIrritants,
       );
     }
     if (state is PantryEntryError) {

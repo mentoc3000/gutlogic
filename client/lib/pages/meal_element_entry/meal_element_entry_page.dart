@@ -63,6 +63,7 @@ class MealElementEntryPage extends StatelessWidget {
       return MealElementEntryListView(
         mealElement: state.mealElement,
         food: state.food,
+        excludedIrritants: state.excludedIrritants,
         notesController: _notesController,
         amountController: _amountController,
         unitController: _unitController,

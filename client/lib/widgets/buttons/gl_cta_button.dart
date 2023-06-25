@@ -21,7 +21,7 @@ class GLCtaButton extends StatelessWidget {
 
     return GLRaisedButton(
       onPressed: onPressed,
-      textColor: GLColors.onCta,
+      textColor: GLColors.darkestGray,
       color: GLColors.cta,
       disabledTextColor: colorScheme.onBackground,
       disabledColor: theme.disabledColor,

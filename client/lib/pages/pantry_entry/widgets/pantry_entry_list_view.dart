@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,12 +15,14 @@ class PantryEntryListView extends StatelessWidget {
   final PantryEntry pantryEntry;
   final Food? food;
   final TextEditingController notesController;
+  final BuiltSet<String> excludedIrritants;
 
   const PantryEntryListView({
     Key? key,
     required this.pantryEntry,
     required this.food,
     required this.notesController,
+    required this.excludedIrritants,
   }) : super(key: key);
 
   @override
@@ -33,7 +36,7 @@ class PantryEntryListView extends StatelessWidget {
         sensitivityLevel: pantryEntry.sensitivity.level,
         onChanged: (sensitivityLevel) => pantryBloc.add(UpdateSensitivityLevel(sensitivityLevel)),
       ),
-      if (food?.irritants != null) IrritantsCard(irritants: food!.irritants!),
+      if (food?.irritants != null) IrritantsCard(irritants: food!.irritants!, excludedIrritants: excludedIrritants),
       if (food?.ingredients != null && food!.ingredients!.isNotEmpty) IngredientsCard(ingredients: food!.ingredients!),
       if (hasIrritants && food != null) SimilarFoodsCard(food: food!.toFoodReference()),
       NotesCard(

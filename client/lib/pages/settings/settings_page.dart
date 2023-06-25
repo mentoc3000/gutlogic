@@ -16,7 +16,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GLScaffold(
       appBar: GLAppBar(title: 'Settings'),
-      body: SingleChildScrollView(child: SettingsPageBody()),
+      body: SettingsPageBody(),
     );
   }
 }
@@ -31,14 +31,17 @@ class SettingsPageBody extends StatelessWidget {
     final tiles = WidgetUtils.separate([
       SettingsAccountTile(),
       if (user.anonymous == false) SettingsProfileTile(),
+      SettingsPreferencesTile(),
       SettingsPrivacyTile(),
       SettingsTermsOfUseTile(),
     ], separator: const Divider(color: Colors.grey));
 
-    return Column(children: [
-      if (user.anonymous) SettingsAnonymousAlert(),
-      ...tiles,
-    ]);
+    return SingleChildScrollView(
+      child: Column(children: [
+        if (user.anonymous) SettingsAnonymousAlert(),
+        ...tiles,
+      ]),
+    );
   }
 }
 
@@ -82,6 +85,17 @@ class SettingsTermsOfUseTile extends StatelessWidget {
       heading: 'Terms of Use',
       leading: Icon(GLIcons.license),
       onTap: LegalService.openTermsOfUse,
+    );
+  }
+}
+
+class SettingsPreferencesTile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return PushListTile(
+      heading: 'Preferences',
+      leading: const Icon(GLIcons.preferences),
+      onTap: () => Navigator.push(context, Routes.of(context).preferences),
     );
   }
 }
