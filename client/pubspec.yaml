@@ -15,20 +15,20 @@ dependencies:
   bloc_concurrency: ^0.2.1
   built_collection: ^5.1.0
   built_value: ^8.3.0
-  cloud_firestore: ^4.4.3
-  cloud_functions: ^4.0.11
+  cloud_firestore: ^4.8.2
+  cloud_functions: ^4.3.3
   collection: ^1.17.1
   crypto: ^3.0.1
   device_info_plus: ^9.0.2
   edit_distance: ^0.5.0-nullsafety.0
   email_validator: ^2.0.1
   equatable: ^2.0.5
-  firebase_analytics: ^10.1.4
-  firebase_auth: ^4.2.2
-  firebase_core: ^2.7.0
-  firebase_crashlytics: ^3.3.2
-  firebase_dynamic_links: ^5.0.15
-  firebase_remote_config: ^4.2.2
+  firebase_analytics: ^10.4.3
+  firebase_auth: ^4.6.3
+  firebase_core: ^2.14.0
+  firebase_crashlytics: ^3.3.3
+  firebase_dynamic_links: ^5.3.3
+  firebase_remote_config: ^4.2.3
   fl_chart: ^0.62.0
   flutter: { sdk: flutter }
   flutter_bloc: ^8.1.2
