@@ -48,7 +48,7 @@ Future<void> orchestrateIOSJobs(ScreenshotsConfig config) async {
   Future<void> job(ios.AppleSimulatorDevice device) async {
     try {
       await ios.launch(device);
-      await drive(target, driver, device.udid); // TODO: drive each locale
+      await drive(target, driver, device.udid);
     } catch (ex) {
       log.e('Error running screenshots driver on $device: $ex');
       rethrow;
@@ -86,7 +86,7 @@ Future<void> orchestrateAndroidJobs(ScreenshotsConfig config) async {
     try {
       await android.launch(device);
       emulator = (await android.emulators()).firstWhere((element) => element.device.avdName == device.avdName);
-      await drive(target, driver, emulator.id); // TODO drive each locale
+      await drive(target, driver, emulator.id);
     } catch (ex) {
       log.e('Error running screenshots driver on $device: $ex');
       rethrow;

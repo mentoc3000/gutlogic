@@ -25,8 +25,7 @@ class PreferencesListView extends StatelessWidget {
   Widget build(BuildContext context) {
     const irritantFilterTitle = SectionTile(
       title: 'Irritant Visibility',
-      // TODO: improve wording
-      subtitle: 'Include or exclude irritants from foods\' FODMAP intensity indicators. '
+      subtitle: 'Show or hide irritants from foods\' FODMAP indicators. '
           'All irritants will still be visible on the food page.',
     );
     final irritantToggles = Paywall(

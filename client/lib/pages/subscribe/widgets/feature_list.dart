@@ -17,9 +17,9 @@ class FeatureList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FeatureBox(text: 'Understand what triggers your symptoms'),
+          FeatureBox(text: 'Hide FODMAPs you aren\'t sensitive to'),
           FeatureBox(text: 'Find more foods to eat and to avoid'),
           FeatureBox(text: 'Spot discomforting ingredients'),
-          FeatureBox(text: 'Watch your improvement over time'),
         ],
       ),
     );
