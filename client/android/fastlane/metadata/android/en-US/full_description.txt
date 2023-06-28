@@ -1,11 +1,11 @@
-Gut Logic™ provides the tools you need to take control of your food sensitivities and improve your digestive health, energy, and overall wellness.
+Gut Logic® provides the tools you need to take control of your food sensitivities and improve your digestive health, energy, and overall wellness.
 
-Do you have unexplained digestive issues? Low energy? Feeling foggy? It might be what you’re eating! Take back control of your life with Gut Logic™. Gut Logic will help you discover how foods affect the way you feel. Search for or scan the barcode of thousands of built-in foods or create your own custom foods and meals to track what you eat in a way that works best for you.
+Do you have unexplained digestive issues? Low energy? Feeling foggy? It might be what you’re eating! Take back control of your life with Gut Logic®. Gut Logic will help you discover how foods affect the way you feel. Search for or scan the barcode of thousands of built-in foods or create your own custom foods and meals to track what you eat in a way that works best for you.
 
 Browse hundreds of high-FODMAP foods
 • Simple, easy to understand indicators of high- and low-FODMAP foods
-• Explore details of each food’s FODMAP irritants
 • Scan barcodes to quickly look up foods
+• Explore details of each food’s FODMAP irritants
 • Updated with the latest research
 
 The Pantry tracks the foods you should avoid
@@ -19,6 +19,7 @@ The Timeline logs your food, poop, and symptoms
 • Discover links between what you eat and how you feel
 
 Subscribe to Premium to help you interpret your results
+• Customize FODMAP indicators by hiding FODMAPs you aren't sensitive to
 • Identify the irritants that trigger your symptoms
 • Find foods with similar sets of irritants
 • Easily monitor discomforting ingredients of a food

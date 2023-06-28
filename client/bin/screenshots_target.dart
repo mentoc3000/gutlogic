@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gutlogic/blocs/subscription/subscription.dart';
+import 'package:gutlogic/models/preferences/preferences.dart';
 import 'package:gutlogic/resources/analysis_service.dart';
+import 'package:gutlogic/resources/preferences_service.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gutlogic/blocs/diary/diary.dart';
@@ -58,6 +60,7 @@ class MainTabsPageWrapper extends StatelessWidget {
   MealElementRepository,
   MealEntryRepository,
   PantryService,
+  PreferencesService,
   SensitivityRepository,
   SubscriptionCubit,
   SymptomEntryRepository,
@@ -66,6 +69,8 @@ class MainTabsPageWrapper extends StatelessWidget {
 ])
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  late final preferencesService;
+  final preferences = Preferences(irritantsExcluded: BuiltSet({'Sorbitol'}));
 
   late Widget app;
 
@@ -88,13 +93,30 @@ void main() {
     // Mock irritant repository
     final irritantService = MockIrritantService();
     when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(irritants));
-    when(irritantService.maxIntensity(any))
-        .thenAnswer((invocation) => Future.value(dosesMaxIntensities[invocation.positionalArguments[0]]));
-    when(irritantService.intensityThresholds(any))
-        .thenAnswer((invocation) => Future.value(intensityThresholds[invocation.positionalArguments[0]]));
-    when(irritantService.ofIngredient(any))
-        .thenAnswer((invocation) => Future.value(ingredientIrritantMap[invocation.positionalArguments[0]]));
-    when(irritantService.ofIngredients(any)).thenAnswer((realInvocation) => Future.value());
+    when(irritantService.ofRef(any, usePreferences: anyNamed('usePreferences'))).thenAnswer((_) {
+      return Future.value(irritants);
+    });
+    when(irritantService.maxIntensity(any)).thenAnswer((invocation) {
+      return Future.value(dosesMaxIntensities[invocation.positionalArguments[0]]);
+    });
+    when(irritantService.maxIntensity(any, usePreferences: anyNamed('usePreferences'))).thenAnswer((invocation) {
+      return Future.value(dosesMaxIntensities[invocation.positionalArguments[0]]);
+    });
+    when(irritantService.intensityThresholds(any)).thenAnswer((invocation) {
+      return Future.value(intensityThresholds[invocation.positionalArguments[0]]);
+    });
+    when(irritantService.ofIngredient(any)).thenAnswer((invocation) {
+      return Future.value(ingredientIrritantMap[invocation.positionalArguments[0]]);
+    });
+    when(irritantService.ofIngredient(any, usePreferences: anyNamed('usePreferences'))).thenAnswer((invocation) {
+      return Future.value(ingredientIrritantMap[invocation.positionalArguments[0]]);
+    });
+    when(irritantService.ofIngredients(any)).thenAnswer((_) {
+      return Future.value();
+    });
+    when(irritantService.ofIngredients(any, usePreferences: anyNamed('usePreferences'))).thenAnswer((_) {
+      return Future.value();
+    });
 
     // Mock meal entry
     final mealEntryRepository = MockMealEntryRepository();
@@ -133,6 +155,11 @@ void main() {
     when(analysisService.symptomTypeCount(since: anyNamed('since'))).thenAnswer((_) => Stream.value(symptomTypeCount));
     when(analysisService.diaryStreak(count: anyNamed('count'))).thenAnswer((_) => Stream.value(diaryStreak));
 
+    // Mock preferences
+    preferencesService = MockPreferencesService();
+    when(preferencesService.stream).thenAnswer((_) => BehaviorSubject<Preferences>()..add(Preferences()));
+    when(preferencesService.value).thenReturn(Preferences());
+
     // remove debug banner for screenshots
     WidgetsApp.debugAllowBannerOverride = false;
 
@@ -148,6 +175,7 @@ void main() {
         RepositoryProvider<MealElementRepository>(create: (context) => mealElementRepository),
         RepositoryProvider<MealEntryRepository>(create: (context) => mealEntryRepository),
         RepositoryProvider<PantryService>(create: (context) => pantryRepository),
+        RepositoryProvider<PreferencesService>(create: (context) => preferencesService),
         RepositoryProvider<SensitivityRepository>(create: (context) => sensitivityRepository),
         RepositoryProvider<SymptomEntryRepository>(create: (context) => symptomEntryRepository),
         RepositoryProvider<UserRepository>(create: (context) => userRepository),
@@ -226,9 +254,14 @@ void main() {
 
     await capture(binding, '0. pantry');
 
+    // Only use preferences for food page
+    when(preferencesService.stream).thenAnswer((_) => BehaviorSubject<Preferences>()..add(preferences));
+    when(preferencesService.value).thenReturn(preferences);
     await tester.tap(find.text(elementaryFood.name));
     await tester.pump();
     await tester.pumpAndSettle(settleDuration);
+    when(preferencesService.stream).thenAnswer((_) => BehaviorSubject<Preferences>()..add(Preferences()));
+    when(preferencesService.value).thenReturn(Preferences());
 
     await capture(binding, '1. sensitivity');
 
