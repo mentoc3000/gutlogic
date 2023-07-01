@@ -34,10 +34,14 @@ class FoodGroupCubit extends Cubit<FoodGroupState> {
         await Future.wait(entriesList.map((e) => irritantService.maxIntensity(e.doses, usePreferences: true)));
     final maxIntensitiesMap =
         BuiltMap<FoodGroupEntry, Intensity>.from(Map.fromIterables(entriesList, maxIntensitiesList));
-    emit(FoodGroupLoaded(foods: entries, maxIntensities: maxIntensitiesMap));
+    if (!isClosed) {
+      emit(FoodGroupLoaded(foods: entries, maxIntensities: maxIntensitiesMap));
+    }
   }
 
   void _onError(Object error, StackTrace trace) {
-    emit(FoodGroupError.fromError(error: error, trace: trace));
+    if (!isClosed) {
+      emit(FoodGroupError.fromError(error: error, trace: trace));
+    }
   }
 }

@@ -11,7 +11,10 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit({required this.users}) : super(const LoginInitial());
 
   static BlocProvider<LoginCubit> provider({required Widget child}) {
-    return BlocProvider<LoginCubit>(create: (c) => LoginCubit(users: c.read<UserRepository>()), child: child);
+    return BlocProvider<LoginCubit>(
+      create: (c) => LoginCubit(users: c.read<UserRepository>()),
+      child: child,
+    );
   }
 
   Future<void> login(Authentication auth) async {

@@ -197,6 +197,7 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				6FF0FAC3D198206B325E4DA5 /* [CP] Embed Pods Frameworks */,
 				11CD5A119759C27B773AB5AC /* [CP] Copy Pods Resources */,
+				E8BDD3B62A509391001B95E9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -360,6 +361,25 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		E8BDD3B62A509391001B95E9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Upload dSYMs to both projects to ensure complete coverage\n\n# gutlogic-dev\n$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase --validate -ai 1:573853302109:ios:1b98e21a5a8e11f38a3cb4\n$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase -ai 1:573853302109:ios:1b98e21a5a8e11f38a3cb4\n\n# gutlogic\n$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase --validate -ai 1:763316144034:ios:ab31246d8615c3cae6d4fb\n$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase -ai 1:763316144034:ios:ab31246d8615c3cae6d4fb\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

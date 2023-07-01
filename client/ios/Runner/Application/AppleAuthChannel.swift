@@ -117,7 +117,7 @@ private class AppleAuthAvailableDelegate {
     
     /// Handle a "deauthentcate" method call.
     func handleDeauthenticate(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        result(true) // TODO is there anything special we need to do to deauthenticate?
+        result(true) // TODO : is there anything special we need to do to deauthenticate?
     }
 }
 
