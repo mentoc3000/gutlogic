@@ -18,10 +18,14 @@ abstract class FoodSuggestionCubit extends Cubit<FoodsSuggestionState> {
   }
 
   void onRepoValue(BuiltList<FoodReference> recentFoods) {
-    emit(FoodsSuggestionLoaded(recentFoods));
+    if (!isClosed) {
+      emit(FoodsSuggestionLoaded(recentFoods));
+    }
   }
 
   void onRepoError(Object error, StackTrace trace) {
-    emit(FoodsSuggestionError.fromError(error: error, trace: trace));
+    if (!isClosed) {
+      emit(FoodsSuggestionError.fromError(error: error, trace: trace));
+    }
   }
 }

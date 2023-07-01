@@ -41,10 +41,14 @@ class SimilarFoodsCubit extends Cubit<SimilarFoodsState>
         await Future.wait(doses.map((d) async => await irritantService.maxIntensity(d, usePreferences: true)));
     final maxIntensitiesMap = BuiltMap<FoodReference, Intensity>(Map.fromIterables(foodReferences, maxIntensities));
 
-    emit(SimilarFoodsLoaded(foods: foodReferences, maxIntensities: maxIntensitiesMap));
+    if (!isClosed) {
+      emit(SimilarFoodsLoaded(foods: foodReferences, maxIntensities: maxIntensitiesMap));
+    }
   }
 
   void _onError(Object error, StackTrace trace) {
-    emit(SimilarFoodsError.fromError(error: error, trace: trace));
+    if (!isClosed) {
+      emit(SimilarFoodsError.fromError(error: error, trace: trace));
+    }
   }
 }

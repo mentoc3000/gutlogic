@@ -15,14 +15,18 @@ class FoodGroupsCubit extends Cubit<FoodGroupsState> {
   }
 
   void _onData(BuiltSet<String>? groups) {
-    if (groups != null) {
-      emit(FoodGroupsLoaded(groups: groups));
-    } else {
-      emit(FoodGroupsError(message: 'Food groups not found'));
+    if (!isClosed) {
+      if (groups != null) {
+        emit(FoodGroupsLoaded(groups: groups));
+      } else {
+        emit(FoodGroupsError(message: 'Food groups not found'));
+      }
     }
   }
 
   void _onError(Object error, StackTrace trace) {
-    emit(FoodGroupsError.fromError(error: error, trace: trace));
+    if (!isClosed) {
+      emit(FoodGroupsError.fromError(error: error, trace: trace));
+    }
   }
 }

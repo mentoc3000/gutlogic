@@ -24,10 +24,14 @@ class RecentFoodsCubit extends Cubit<RecentFoodsState> {
   }
 
   void onRepoValue(BuiltList<FoodReference> recentFoods) {
-    emit(RecentFoodsLoaded(recentFoods));
+    if (!isClosed) {
+      emit(RecentFoodsLoaded(recentFoods));
+    }
   }
 
   void onRepoError(Object error, StackTrace trace) {
-    emit(RecentFoodsError.fromError(error: error, trace: trace));
+    if (!isClosed) {
+      emit(RecentFoodsError.fromError(error: error, trace: trace));
+    }
   }
 }
