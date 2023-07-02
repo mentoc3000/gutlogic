@@ -15,29 +15,23 @@ class EdamamService {
   Future<List<EdamamFood>> searchFood(String query) async {
     if (query.isEmpty) return [];
 
-    late final Map<String, dynamic> response;
+    final response = await apiService.get(path: '/food/v0/search', params: {'name': query});
 
     try {
-      response = await apiService.get(path: '/food/v0/search', params: {'name': query});
+      final entries = response['data'] as List;
+      return entries
+          .map((entry) {
+            try {
+              return serializers.deserializeWith(EdamamFood.serializer, entry);
+            } catch (e) {
+              logger.w('Error parsing entry $entry');
+            }
+          })
+          .whereNotNull()
+          .toList();
     } catch (e) {
-      if (e is HttpException) {
-        if (e.statusCode == 404 || e.statusCode == 443) return [];
-        if (e.statusCode == 401) throw EdamamException(message: 'API authentication error');
-      }
-      throw EdamamException(message: 'Something is wrong with Edamam');
+      throw EdamamException(message: 'Parsing error');
     }
-
-    final entries = response['data'] as List;
-    return entries
-        .map((entry) {
-          try {
-            return serializers.deserializeWith(EdamamFood.serializer, entry);
-          } catch (e) {
-            logger.w('Error parsing entry $entry');
-          }
-        })
-        .whereNotNull()
-        .toList();
   }
 
   /// Get Edamam food by Id
@@ -46,17 +40,7 @@ class EdamamService {
   Future<EdamamFood?> getById(String id) async {
     if (id.isEmpty) return null;
 
-    late final Map<String, dynamic> response;
-
-    try {
-      response = await apiService.get(path: '/food/v0/$id');
-    } catch (e) {
-      if (e is HttpException) {
-        if (e.statusCode == 404 || e.statusCode == 443) return null;
-        if (e.statusCode == 401) throw EdamamException(message: 'API authentication error');
-      }
-      throw EdamamException(message: 'Something is wrong with Edamam');
-    }
+    final response = await apiService.get(path: '/food/v0/$id');
 
     try {
       final entry = response['data'] as Map?;
@@ -72,17 +56,7 @@ class EdamamService {
   Future<EdamamFood?> getByUpc(String upc) async {
     if (upc.isEmpty) return null;
 
-    late final Map<String, dynamic> response;
-
-    try {
-      response = await apiService.get(path: '/food/v0/upc/$upc');
-    } catch (e) {
-      if (e is HttpException) {
-        if (e.statusCode == 404 || e.statusCode == 443) return null;
-        if (e.statusCode == 401) throw EdamamException(message: 'API authentication error');
-      }
-      throw EdamamException(message: 'Something is wrong with Edamam');
-    }
+    final response = await apiService.get(path: '/food/v0/upc/$upc');
 
     try {
       final entry = response['data'] as Map?;

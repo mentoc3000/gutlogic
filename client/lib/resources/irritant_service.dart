@@ -41,47 +41,23 @@ class IrritantService {
   }
 
   Future<BuiltMap<String, BuiltList<double>>> _getIntensityThresholds() async {
-    try {
-      final res = await apiService.get(path: '/irritant/intensityThresholds');
-      final data = res['data'] as List;
-      final intensityThresholdsList = data
-          .map((e) => serializers.deserializeWith(IntensityThresholds.serializer, e))
-          .whereType<IntensityThresholds>();
-      final names = intensityThresholdsList.map((e) => e.name);
-      final thresholds = intensityThresholdsList.map((e) => e.intensitySteps);
-      return BuiltMap(Map.fromIterables(names, thresholds));
-    } catch (error) {
-      if (error is HttpException) {
-        if (error.statusCode == 401) {
-          throw IrritantServiceException(message: 'API authentication error');
-        } else {
-          throw IrritantServiceException(message: 'API unavailable');
-        }
-      } else {
-        throw IrritantServiceException(message: 'Unknown error');
-      }
-    }
+    final res = await apiService.get(path: '/irritant/intensityThresholds');
+    final data = res['data'] as List;
+    final intensityThresholdsList = data
+        .map((e) => serializers.deserializeWith(IntensityThresholds.serializer, e))
+        .whereType<IntensityThresholds>();
+    final names = intensityThresholdsList.map((e) => e.name);
+    final thresholds = intensityThresholdsList.map((e) => e.intensitySteps);
+    return BuiltMap(Map.fromIterables(names, thresholds));
   }
 
   Future<BuiltList<ElementaryFood>> _getElementaryFoods() async {
-    try {
-      final res = await apiService.get(path: '/irritant/elementaryFoods');
-      final data = res['data'] as List;
-      return data
-          .map((e) => serializers.deserializeWith(ElementaryFood.serializer, e))
-          .whereType<ElementaryFood>()
-          .toBuiltList();
-    } catch (error) {
-      if (error is HttpException) {
-        if (error.statusCode == 401) {
-          throw IrritantServiceException(message: 'API authentication error');
-        } else {
-          throw IrritantServiceException(message: 'API unavailable');
-        }
-      } else {
-        throw IrritantServiceException(message: 'Unknown error');
-      }
-    }
+    final res = await apiService.get(path: '/irritant/elementaryFoods');
+    final data = res['data'] as List;
+    return data
+        .map((e) => serializers.deserializeWith(ElementaryFood.serializer, e))
+        .whereType<ElementaryFood>()
+        .toBuiltList();
   }
 
   Future<ElementaryFood?> _getFoodIrritantsOf(FoodReference food) async {
@@ -282,10 +258,4 @@ Iterable<Irritant> _worstIrritants(Iterable<Irritant> a, Iterable<Irritant> b) {
       return null;
     }
   }).whereType<Irritant>();
-}
-
-class IrritantServiceException implements Exception {
-  final String message;
-
-  IrritantServiceException({required this.message});
 }

@@ -20,31 +20,19 @@ class FoodGroupsRepository with FirestoreRepository {
   }
 
   Future<BuiltMap<String, BuiltSet<FoodGroupEntry>>> _getCache() async {
-    try {
-      final res = await apiService.get(path: '/irritant/foodGroups');
-      final data = res['data'] as Map<String, dynamic>;
-      return BuiltMap<String, BuiltSet<FoodGroupEntry>>(
-        data.map(
-          (k, v) => MapEntry(
-            k,
-            (v as List)
-                .map((e) => serializers.deserializeWith(FoodGroupEntry.serializer, e))
-                .whereType<FoodGroupEntry>()
-                .toBuiltSet(),
-          ),
+    final res = await apiService.get(path: '/irritant/foodGroups');
+    final data = res['data'] as Map<String, dynamic>;
+    return BuiltMap<String, BuiltSet<FoodGroupEntry>>(
+      data.map(
+        (k, v) => MapEntry(
+          k,
+          (v as List)
+              .map((e) => serializers.deserializeWith(FoodGroupEntry.serializer, e))
+              .whereType<FoodGroupEntry>()
+              .toBuiltSet(),
         ),
-      );
-    } catch (error) {
-      if (error is HttpException) {
-        if (error.statusCode == 401) {
-          throw FoodGroupRepositoryException(message: 'API authentication error');
-        } else {
-          throw FoodGroupRepositoryException(message: 'API unavailable');
-        }
-      } else {
-        throw FoodGroupRepositoryException(message: 'Unknown error');
-      }
-    }
+      ),
+    );
   }
 
   Future<BuiltSet<String>> groups() async {
@@ -61,10 +49,4 @@ class FoodGroupsRepository with FirestoreRepository {
       return _cache!.values.expand((element) => element).toBuiltSet();
     }
   }
-}
-
-class FoodGroupRepositoryException implements Exception {
-  final String message;
-
-  FoodGroupRepositoryException({required this.message});
 }

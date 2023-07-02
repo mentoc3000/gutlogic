@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:gutlogic/resources/api_service.dart';
 
 class _ExceptionMessages {
   // Connection exceptions
@@ -18,6 +19,7 @@ class _ExceptionMessages {
 
 String? connectionExceptionMessage(dynamic error) {
   if (error is SocketException) return _ExceptionMessages.noInternet;
+  if (error is NoConnectionException) return _ExceptionMessages.noInternet;
   if (error is HttpException) return _ExceptionMessages.serverConnection;
   return null;
 }
