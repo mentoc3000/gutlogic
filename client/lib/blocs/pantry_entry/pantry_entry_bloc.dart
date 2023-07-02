@@ -24,7 +24,8 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
     required this.repository,
     required this.foodService,
     required this.preferencesService,
-  }) : super(PantryEntryLoading()) {
+    required String foodName,
+  }) : super(PantryEntryLoading(foodName: foodName)) {
     on<CreateAndStreamEntry>(_onCreateAndStreamEntry);
     on<StreamEntry>(_onStreamEntry);
     on<Load>((event, emit) {
@@ -40,11 +41,12 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
     on<ThrowPantryEntryError>((event, emit) => emit(PantryEntryError.fromReport(event.report)));
   }
 
-  static PantryEntryBloc fromContext(BuildContext context) {
+  static PantryEntryBloc fromContext(BuildContext context, {required String foodName}) {
     return PantryEntryBloc(
       repository: context.read<PantryService>(),
       foodService: context.read<FoodService>(),
       preferencesService: context.read<PreferencesService>(),
+      foodName: foodName,
     );
   }
 
@@ -63,7 +65,7 @@ class PantryEntryBloc extends Bloc<PantryEntryEvent, PantryEntryState> with Stre
 
   Future<void> _onStreamEntry(StreamEntry event, Emitter<PantryEntryState> emit) async {
     try {
-      emit(PantryEntryLoading());
+      emit(PantryEntryLoading(foodName: event.pantryEntry.foodReference.name));
 
       final food = await _pantryEntryFood(event.pantryEntry);
 

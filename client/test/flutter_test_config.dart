@@ -112,7 +112,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     registerFallbackValue(PantryLoading());
 
     registerFallbackValue(PantryEntryEventFake());
-    registerFallbackValue(PantryEntryLoading());
+    registerFallbackValue(PantryEntryLoading(foodName: ''));
 
     registerFallbackValue(PantrySortLoading(sort: PantrySort.alphabeticalAscending));
 

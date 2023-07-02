@@ -55,8 +55,9 @@ void main() {
         repository: repository,
         foodService: foodService,
         preferencesService: preferencesService,
+        foodName: food.name,
       );
-      expect(bloc.state, PantryEntryLoading());
+      expect(bloc.state, PantryEntryLoading(foodName: food.name));
     });
 
     blocTest<PantryEntryBloc, PantryEntryState>(
@@ -67,11 +68,12 @@ void main() {
           repository: repository,
           foodService: foodService,
           preferencesService: preferencesService,
+          foodName: food.name,
         );
       },
       act: (bloc) => bloc.add(StreamEntry(pantryEntry)),
       expect: () => [
-        PantryEntryLoading(),
+        PantryEntryLoading(foodName: food.name),
         PantryEntryLoaded(pantryEntry: pantryEntry, food: food, excludedIrritants: BuiltSet()),
       ],
       verify: (bloc) {
@@ -85,6 +87,7 @@ void main() {
         repository: repository,
         foodService: foodService,
         preferencesService: preferencesService,
+        foodName: food.name,
       ),
       act: (bloc) async {
         bloc.add(StreamEntry(pantryEntry));
@@ -92,9 +95,9 @@ void main() {
         bloc.add(StreamEntry(pantryEntry));
       },
       expect: () => [
-        PantryEntryLoading(),
+        PantryEntryLoading(foodName: food.name),
         PantryEntryLoaded(pantryEntry: pantryEntry, food: food, excludedIrritants: BuiltSet()),
-        PantryEntryLoading(),
+        PantryEntryLoading(foodName: food.name),
         PantryEntryLoaded(pantryEntry: pantryEntry, food: food, excludedIrritants: BuiltSet()),
       ],
       verify: (bloc) {
@@ -110,12 +113,13 @@ void main() {
           repository: repository,
           foodService: foodService,
           preferencesService: preferencesService,
+          foodName: food.name,
         );
       },
       act: (bloc) => bloc.add(CreateAndStreamEntry(food.toFoodReference())),
       wait: const Duration(milliseconds: 100),
       expect: () => [
-        PantryEntryLoading(),
+        PantryEntryLoading(foodName: food.name),
         PantryEntryLoaded(pantryEntry: pantryEntry, food: food, excludedIrritants: BuiltSet()),
       ],
       verify: (bloc) {
@@ -131,6 +135,7 @@ void main() {
         repository: repository,
         foodService: foodService,
         preferencesService: preferencesService,
+        foodName: food.name,
       ),
       act: (bloc) => bloc.add(Load(pantryEntry: pantryEntry, food: null, excludedIrritants: BuiltSet())),
       expect: () => [PantryEntryLoaded(pantryEntry: pantryEntry, food: null, excludedIrritants: BuiltSet())],
@@ -145,6 +150,7 @@ void main() {
         repository: repository,
         foodService: foodService,
         preferencesService: preferencesService,
+        foodName: food.name,
       ),
       act: (bloc) {
         bloc
@@ -175,6 +181,7 @@ void main() {
           repository: repository,
           foodService: foodService,
           preferencesService: preferencesService,
+          foodName: food.name,
         );
       },
       act: (bloc) {
@@ -195,6 +202,7 @@ void main() {
         repository: repository,
         foodService: foodService,
         preferencesService: preferencesService,
+        foodName: food.name,
       ),
       act: (bloc) {
         bloc
@@ -215,6 +223,7 @@ void main() {
           repository: repository,
           foodService: foodService,
           preferencesService: preferencesService,
+          foodName: food.name,
         );
       },
       act: (bloc) {
@@ -236,6 +245,7 @@ void main() {
         repository: repository,
         foodService: foodService,
         preferencesService: preferencesService,
+        foodName: food.name,
       ),
       act: (bloc) {
         bloc
@@ -259,6 +269,7 @@ void main() {
           repository: repository,
           foodService: foodService,
           preferencesService: preferencesService,
+          foodName: food.name,
         );
       },
       act: (bloc) {
@@ -280,6 +291,7 @@ void main() {
         repository: repository,
         foodService: foodService,
         preferencesService: preferencesService,
+        foodName: food.name,
       ),
       act: (bloc) {
         bloc
@@ -302,6 +314,7 @@ void main() {
         repository: repository,
         foodService: foodService,
         preferencesService: preferencesService,
+        foodName: food.name,
       ),
       act: (bloc) {
         bloc

@@ -12,7 +12,14 @@ abstract class PantryEntryState extends Equatable {
   List<Object?> get props => [];
 }
 
-class PantryEntryLoading extends PantryEntryState {}
+class PantryEntryLoading extends PantryEntryState {
+  final String foodName;
+
+  PantryEntryLoading({required this.foodName});
+
+  @override
+  List<Object?> get props => [foodName];
+}
 
 class PantryEntryLoaded extends PantryEntryState {
   final PantryEntry pantryEntry;
