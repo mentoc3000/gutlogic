@@ -18,7 +18,8 @@ class PantryEntryPage extends StatelessWidget {
   static Widget forPantryEntry(PantryEntry pantryEntry) {
     return BlocProvider(
       create: (context) {
-        return PantryEntryBloc.fromContext(context)..add(StreamEntry(pantryEntry));
+        return PantryEntryBloc.fromContext(context, foodName: pantryEntry.foodReference.name)
+          ..add(StreamEntry(pantryEntry));
       },
       child: PantryEntryPage(),
     );
@@ -27,7 +28,10 @@ class PantryEntryPage extends StatelessWidget {
   /// Wrap an pantryentry page with the necessary bloc providers, given the meal entry.
   static Widget forFood(FoodReference foodReference) {
     return BlocProvider(
-      create: (context) => PantryEntryBloc.fromContext(context)..add(CreateAndStreamEntry(foodReference)),
+      create: (context) {
+        return PantryEntryBloc.fromContext(context, foodName: foodReference.name)
+          ..add(CreateAndStreamEntry(foodReference));
+      },
       child: PantryEntryPage(),
     );
   }
@@ -61,9 +65,11 @@ class PantryEntryPage extends StatelessWidget {
   AppBar appBarBuilder(BuildContext context, PantryEntryState state) {
     if (state is PantryEntryLoaded) {
       return GLAppBar(title: state.pantryEntry.foodReference.name);
-    } else {
-      return GLAppBar(title: 'Food');
     }
+    if (state is PantryEntryLoading) {
+      return GLAppBar(title: state.foodName);
+    }
+    return GLAppBar(title: 'Food');
   }
 
   Widget bodyBuilder(BuildContext context, PantryEntryState state) {

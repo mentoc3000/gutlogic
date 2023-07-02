@@ -4,6 +4,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../models/food/custom_food.dart';
+import '../../models/food/edamam_food.dart';
 import '../../models/food/food.dart';
 import '../../models/food_reference/custom_food_reference.dart';
 import '../../models/food_reference/edamam_food_reference.dart';
@@ -22,9 +23,11 @@ class FoodService implements SearchableRepository<Food> {
     if (foodReference == null) return Stream.value(null);
 
     if (foodReference is EdamamFoodReference) {
-      return edamamFoodRepository.streamFood(foodReference);
+      final fallbackFood = EdamamFood(id: foodReference.id, name: foodReference.name);
+      return edamamFoodRepository.streamFood(foodReference).onErrorReturn(fallbackFood);
     } else if (foodReference is CustomFoodReference) {
-      return customFoodRepository.streamFood(foodReference);
+      final fallbackFood = CustomFood(id: foodReference.id, name: foodReference.name);
+      return customFoodRepository.streamFood(foodReference).onErrorReturn(fallbackFood);
     } else {
       throw TypeError();
     }
