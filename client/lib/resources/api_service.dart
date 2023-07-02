@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../util/app_config.dart';
@@ -34,26 +38,59 @@ class ApiService {
     if (!userRepository.authenticated) throw AuthException();
 
     final url = Uri.https(baseUrl, path, params);
-    final userIdToken = await userRepository.user!.getToken();
+    final userIdToken = await _getToken();
     final headers = {'Authorization': 'Bearer $userIdToken'};
-    final response = await http.get(url, headers: headers);
 
+    late final Response response;
+    try {
+      response = await http.get(url, headers: headers);
+    } catch (error) {
+      if (error is TimeoutException || error is SocketException) {
+        throw NoConnectionException();
+      } else {
+        throw AuthException();
+      }
+    }
     if (response.statusCode != 200) throw HttpException(response.statusCode);
 
     return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
   }
 
   Future<Map<String, dynamic>> post({required String path, Object? body, Map<String, dynamic>? params}) async {
-    if (!userRepository.authenticated) throw AuthException();
-
     final url = Uri.https(baseUrl, path, params);
-    final userIdToken = await userRepository.user!.getToken();
+
+    final userIdToken = await _getToken();
     final headers = {'Authorization': 'Bearer $userIdToken'};
-    final response = await http.post(url, body: body, headers: headers);
+
+    late final Response response;
+    try {
+      response = await http.post(url, body: body, headers: headers);
+    } catch (error) {
+      if (error is TimeoutException || error is SocketException) {
+        throw NoConnectionException();
+      } else {
+        throw AuthException();
+      }
+    }
 
     if (response.statusCode != 200) throw HttpException(response.statusCode);
 
     return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+  }
+
+  Future<String> _getToken() async {
+    if (!userRepository.authenticated) throw AuthException();
+
+    try {
+      final token = await userRepository.user!.getToken();
+      return token;
+    } catch (error) {
+      if (error is FirebaseAuthException && error.code == 'network-request-failed') {
+        throw NoConnectionException();
+      } else {
+        throw AuthException();
+      }
+    }
   }
 }
 
@@ -71,4 +108,8 @@ class HttpException extends ApiException {
 
 class AuthException extends ApiException {
   AuthException() : super('Unathenticated');
+}
+
+class NoConnectionException extends ApiException {
+  NoConnectionException() : super('No connection');
 }

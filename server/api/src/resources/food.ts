@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express";
-import edamam, { EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
+import edamam, { EdamamError, EdamamFoodMeasures, EdamamMeasure } from "../edamam/edamam";
 import parseIngredients, { Ingredient } from "./ingredients";
 import irritantDb, { irritantsInFoodId, Irritant, showIngredients } from "./irritant_db";
 import log from "./logger";
+import { ErrorResult } from "../result";
 
 export type Measure = {
   unit: string;
@@ -101,6 +102,8 @@ async function get(
   if (result.ok) {
     const food = await toFood(result.value);
     res.json({ data: food });
+  } else if (result.ok === false && result.error === EdamamError.NotFound) {
+    res.json({ data: null });
   } else {
     res.status(404).end();
   }
@@ -137,6 +140,8 @@ async function upc(
   if (result.ok) {
     const food = await toFood(result.value);
     res.json({ data: food });
+  } else if (result.ok === false && result.error === EdamamError.NotFound) {
+    res.json({ data: null });
   } else {
     res.status(404).end();
   }
