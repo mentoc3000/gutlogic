@@ -1,27 +1,30 @@
+import 'dart:async';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gutlogic/resources/api_service.dart';
 import 'package:provider/provider.dart';
 
 import '../models/food_group_entry.dart';
 import '../models/serializers.dart';
+import 'cached_api_service.dart';
 import 'firebase/firestore_repository.dart';
 
 typedef FoodGroups = BuiltMap<String, BuiltList<FoodGroupEntry>>;
 
 class FoodGroupsRepository with FirestoreRepository {
-  final ApiService apiService;
+  final CachedApiService cachedApiService;
   BuiltMap<String, BuiltSet<FoodGroupEntry>>? _cache;
 
-  FoodGroupsRepository({required this.apiService});
+  FoodGroupsRepository({required this.cachedApiService});
 
   static FoodGroupsRepository fromContext(BuildContext context) {
-    return FoodGroupsRepository(apiService: context.read<ApiService>());
+    return FoodGroupsRepository(cachedApiService: context.read<CachedApiService>());
   }
 
   Future<BuiltMap<String, BuiltSet<FoodGroupEntry>>> _getCache() async {
-    final res = await apiService.get(path: '/irritant/foodGroups');
+    final res = await cachedApiService.get(path: '/irritant/foodGroups');
     final data = res['data'] as Map<String, dynamic>;
+
     return BuiltMap<String, BuiltSet<FoodGroupEntry>>(
       data.map(
         (k, v) => MapEntry(
