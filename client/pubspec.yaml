@@ -42,6 +42,8 @@ dependencies:
   gap: ^3.0.0
   google_fonts: ^4.0.0
   google_sign_in: ^6.0.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   http: ^0.13.4
   in_app_purchase: ^3.0.6
   intl: ^0.18.0

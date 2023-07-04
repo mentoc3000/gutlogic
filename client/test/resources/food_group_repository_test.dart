@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gutlogic/resources/api_service.dart';
+import 'package:gutlogic/resources/cached_api_service.dart';
 import 'package:gutlogic/resources/food_group_repository.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 
 import 'food_group_repository_test.mocks.dart';
 
-@GenerateMocks([ApiService])
+@GenerateMocks([CachedApiService])
 void main() {
   group('FoodGroupsRepository', () {
-    final apiService = MockApiService();
+    final apiService = MockCachedApiService();
     late FoodGroupsRepository repository;
     final foodGroups = {
       'Vegetables': [
@@ -27,7 +27,7 @@ void main() {
     };
 
     setUp(() async {
-      repository = FoodGroupsRepository(apiService: apiService);
+      repository = FoodGroupsRepository(cachedApiService: apiService);
       when(apiService.get(path: '/irritant/foodGroups')).thenAnswer((_) => Future.value({'data': foodGroups}));
     });
 

@@ -2,9 +2,11 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
+import '../../resources/firebase/untyped_data.dart';
 import '../food_reference/edamam_food_reference.dart';
 import '../irritant/irritant.dart';
 import '../measure.dart';
+import '../serializers.dart';
 import 'food.dart';
 import 'ingredient.dart';
 
@@ -42,4 +44,12 @@ abstract class EdamamFood implements Food, Built<EdamamFood, EdamamFoodBuilder> 
 
   @override
   EdamamFoodReference toFoodReference() => EdamamFoodReference(id: id, name: name);
+
+  static EdamamFood? deserialize(UntypedData? value) {
+    return serializers.deserializeWith(EdamamFood.serializer, value);
+  }
+
+  static UntypedData? serialize(EdamamFood value) {
+    return serializers.serializeWith(EdamamFood.serializer, value) as UntypedData;
+  }
 }

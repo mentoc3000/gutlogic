@@ -15,6 +15,7 @@ import 'blocs/gut_logic_bloc_observer.dart';
 import 'resources/firebase/analytics_service.dart';
 import 'resources/firebase/crashlytics_service.dart';
 import 'resources/firebase/remote_config_service.dart';
+import 'resources/local_storage.dart';
 import 'resources/user_repository.dart';
 import 'routes/routes.dart';
 import 'util/app_config.dart';
@@ -39,6 +40,10 @@ void main() async {
   FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: true);
 
   logger.i('Initialized Firebase project ${firebase.options.projectId}');
+
+  // Initialize local storage
+  final localStorage = LocalStorage();
+  await localStorage.initialize();
 
   // TODO: prompt users to opt in, save to user profile
   // check with analytics database:
@@ -79,6 +84,7 @@ void main() async {
     Provider.value(value: analytics),
     Provider.value(value: crashlytics),
     Provider.value(value: remoteConfigService),
+    Provider.value(value: localStorage),
     Provider.value(value: users),
     ...(await AuthService.providers(config: config)),
     Provider(create: (_) => Routes()),

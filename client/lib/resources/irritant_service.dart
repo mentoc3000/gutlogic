@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gutlogic/resources/preferences_service.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -14,18 +13,19 @@ import '../models/irritant/intensity_thresholds.dart';
 import '../models/irritant/irritant.dart';
 import '../models/serializers.dart';
 import '../util/math.dart';
-import 'api_service.dart';
+import 'cached_api_service.dart';
 import 'firebase/firestore_service.dart';
+import 'preferences_service.dart';
 
 class IrritantService {
-  final ApiService apiService;
+  final CachedApiService cachedApiService;
   late final Future<BuiltMap<String, BuiltList<double>>> _intensityThresholdCache;
   late final Future<BuiltList<ElementaryFood>> _elementaryFoodCache;
   final BehaviorSubject<BuiltSet<String>> _excludedIrritantsStream = BehaviorSubject();
 
   BuiltSet<String> get _excludedIrritants => _excludedIrritantsStream.valueOrNull ?? BuiltSet<String>();
 
-  IrritantService({required this.apiService, required PreferencesService preferencesService}) {
+  IrritantService({required this.cachedApiService, required PreferencesService preferencesService}) {
     _elementaryFoodCache = _getElementaryFoods();
     _intensityThresholdCache = _getIntensityThresholds();
     preferencesService.stream
@@ -35,14 +35,15 @@ class IrritantService {
 
   static IrritantService fromContext(BuildContext context) {
     return IrritantService(
-      apiService: context.read<ApiService>(),
+      cachedApiService: context.read<CachedApiService>(),
       preferencesService: context.read<PreferencesService>(),
     );
   }
 
   Future<BuiltMap<String, BuiltList<double>>> _getIntensityThresholds() async {
-    final res = await apiService.get(path: '/irritant/intensityThresholds');
+    final res = await cachedApiService.get(path: '/irritant/intensityThresholds');
     final data = res['data'] as List;
+
     final intensityThresholdsList = data
         .map((e) => serializers.deserializeWith(IntensityThresholds.serializer, e))
         .whereType<IntensityThresholds>();
@@ -52,12 +53,18 @@ class IrritantService {
   }
 
   Future<BuiltList<ElementaryFood>> _getElementaryFoods() async {
-    final res = await apiService.get(path: '/irritant/elementaryFoods');
+    final res = await cachedApiService.get(path: '/irritant/elementaryFoods');
     final data = res['data'] as List;
+
     return data
         .map((e) => serializers.deserializeWith(ElementaryFood.serializer, e))
         .whereType<ElementaryFood>()
         .toBuiltList();
+  }
+
+  Future<ElementaryFood?> getElementaryFood(String id) async {
+    final elementaryFoods = await _elementaryFoodCache;
+    return elementaryFoods.cast<ElementaryFood?>().firstWhere((p0) => p0!.foodIds.contains(id), orElse: () => null);
   }
 
   Future<ElementaryFood?> _getFoodIrritantsOf(FoodReference food) async {

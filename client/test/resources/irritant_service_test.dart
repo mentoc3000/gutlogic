@@ -8,7 +8,7 @@ import 'package:gutlogic/models/irritant/elementary_food.dart';
 import 'package:gutlogic/models/irritant/intensity.dart';
 import 'package:gutlogic/models/irritant/irritant.dart';
 import 'package:gutlogic/models/preferences/preferences.dart';
-import 'package:gutlogic/resources/api_service.dart';
+import 'package:gutlogic/resources/cached_api_service.dart';
 import 'package:gutlogic/resources/irritant_service.dart';
 import 'package:gutlogic/resources/preferences_service.dart';
 import 'package:mockito/mockito.dart';
@@ -55,15 +55,15 @@ const sorbitol = {
   'intensitySteps': [0.1, 0.2, 0.3],
 };
 
-@GenerateMocks([ApiService, PreferencesService])
+@GenerateMocks([CachedApiService, PreferencesService])
 void main() {
   group('IrritantService', () {
     late IrritantService repository;
-    late MockApiService apiService;
+    late MockCachedApiService apiService;
     late MockPreferencesService preferencesService;
 
     setUp(() async {
-      apiService = MockApiService();
+      apiService = MockCachedApiService();
       preferencesService = MockPreferencesService();
       when(preferencesService.stream).thenAnswer((_) {
         return BehaviorSubject<Preferences>()..add(Preferences(irritantsExcluded: BuiltSet({'Mannitol'})));
@@ -78,7 +78,7 @@ void main() {
           'data': [mannitol, sorbitol]
         });
       });
-      repository = IrritantService(apiService: apiService, preferencesService: preferencesService);
+      repository = IrritantService(cachedApiService: apiService, preferencesService: preferencesService);
     });
 
     group('get irritant', () {
@@ -438,6 +438,18 @@ void main() {
         final b = ref.rebuild((b) => b.irritants[1] = b.irritants[1].rebuild((p0) => p0.dosePerServing = exp(-1.1)));
 
         expect(IrritantService.irritantSimilarityCompare(ref, a, b), lessThan(0));
+      });
+    });
+
+    group('elementary foods', () {
+      test('gets elementary food', () async {
+        final food = await repository.getElementaryFood(appleFoodId);
+        expect(food!.names.first, 'apple');
+      });
+
+      test('returns null for not found', () async {
+        final food = await repository.getElementaryFood('not-found');
+        expect(food, null);
       });
     });
   });

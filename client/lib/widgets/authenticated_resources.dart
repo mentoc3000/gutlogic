@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gutlogic/resources/preferences_service.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/auth_service.dart';
@@ -10,8 +9,9 @@ import '../blocs/subscription/subscription.dart';
 import '../blocs/symptom_type/symptom_type_bloc.dart';
 import '../blocs/user_cubit.dart';
 import '../models/user/application_user.dart';
-import '../resources/api_service.dart';
 import '../resources/analysis_service.dart';
+import '../resources/api_service.dart';
+import '../resources/cached_api_service.dart';
 import '../resources/diary_repositories/bowel_movement_entry_repository.dart';
 import '../resources/diary_repositories/diary_repository.dart';
 import '../resources/diary_repositories/meal_element_repository.dart';
@@ -27,7 +27,9 @@ import '../resources/food/food_service.dart';
 import '../resources/food_group_repository.dart';
 import '../resources/iap_service.dart';
 import '../resources/irritant_service.dart';
+import '../resources/local_storage.dart';
 import '../resources/pantry_service.dart';
+import '../resources/preferences_service.dart';
 import '../resources/profile_repository.dart';
 import '../resources/sensitivity/sensitivity_repository.dart';
 import '../resources/sensitivity/sensitivity_service.dart';
@@ -69,6 +71,7 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) => CloudFunctionService()),
           RepositoryProvider(create: ApiService.fromContext),
+          RepositoryProvider(create: CachedApiService.fromContext),
           RepositoryProvider(create: IapService.fromContext),
           RepositoryProvider(create: PreferencesService.fromContext),
           RepositoryProvider(create: (context) {
@@ -129,8 +132,11 @@ class AuthenticatedResources extends StatelessWidget {
           }),
           RepositoryProvider(create: (context) {
             // TODO move this into its most tightly nested widget tree
-            final edamamService = EdamamService(apiService: context.read<ApiService>());
-            final edamamFoodRepository = EdamamFoodRepository(edamamService: edamamService);
+            final edamamFoodRepository = EdamamFoodRepository(
+              edamamService: EdamamService(apiService: context.read<ApiService>()),
+              localStorage: context.read<LocalStorage>(),
+              irritantService: context.read<IrritantService>(),
+            );
             final customFoodRepository = CustomFoodRepository(firestoreService: context.read<FirestoreService>());
             return FoodService(edamamFoodRepository: edamamFoodRepository, customFoodRepository: customFoodRepository);
           }),
