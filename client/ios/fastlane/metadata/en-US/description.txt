@@ -7,6 +7,7 @@ Browse hundreds of high-FODMAP foods
 • Scan barcodes to quickly look up foods
 • Explore details of each food’s FODMAP irritants
 • Updated with the latest research
+• Offline access to all FODMAP data
 
 The Pantry tracks the foods you should avoid
 • Mark which foods to avoid and which are okay so you never forget

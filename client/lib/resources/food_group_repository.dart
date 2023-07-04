@@ -15,7 +15,10 @@ class FoodGroupsRepository with FirestoreRepository {
   final CachedApiService cachedApiService;
   BuiltMap<String, BuiltSet<FoodGroupEntry>>? _cache;
 
-  FoodGroupsRepository({required this.cachedApiService});
+  FoodGroupsRepository({required this.cachedApiService}) {
+    // Try to pre-fetch the cache in the background, ignoring errors
+    unawaited(_getCache().catchError((_) => BuiltMap<String, BuiltSet<FoodGroupEntry>>()));
+  }
 
   static FoodGroupsRepository fromContext(BuildContext context) {
     return FoodGroupsRepository(cachedApiService: context.read<CachedApiService>());

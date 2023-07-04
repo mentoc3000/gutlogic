@@ -31,6 +31,10 @@ class IrritantService {
     preferencesService.stream
         .map((event) => event.irritantsExcluded?.toBuiltSet() ?? BuiltSet<String>())
         .pipe(_excludedIrritantsStream);
+
+    // Pre-fetch cache
+    unawaited(_elementaryFoodCache.catchError((_) => BuiltList<ElementaryFood>()));
+    unawaited(_intensityThresholdCache.catchError((_) => BuiltMap<String, BuiltList<double>>()));
   }
 
   static IrritantService fromContext(BuildContext context) {

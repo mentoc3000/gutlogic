@@ -1,6 +1,6 @@
 Thank you for volunteering to beta test Gut Logic, an app to help people identify and manage their food sensitivities.
 
 This version contains the following features and improvements:
-1. Show or hide FODMAPs in preferences to personalize the FODMAP indicators
+1. Offline access to irritant data in the Foods tab
 
 Spend a few days with the app and send any feedback to dev@gutlogic.co. We will accept feedback on this beta version until Mar 17. Thanks in advance for your time and candid feedback!
