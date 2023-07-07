@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gutlogic/models/irritant/intensity.dart';
 import 'package:gutlogic/resources/irritant_service.dart';
 import 'package:gutlogic/widgets/irritant_warning.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../blocs/food_search/food_search.dart';
 import '../../../blocs/foods_suggestion/foods_suggestion.dart';
@@ -45,9 +46,9 @@ class IngredientTile extends StatelessWidget {
     });
 
     final maxIntensity = context.select((IrritantService irritantService) {
-      return irritantService.ofIngredient(ingredient, usePreferences: true).then((value) => value != null
+      return irritantService.ofIngredient(ingredient, usePreferences: true).switchMap((value) => value != null
           ? irritantService.maxIntensity(IrritantService.doseMap(value), usePreferences: true)
-          : Future.value(Intensity.unknown));
+          : Stream.value(Intensity.unknown));
     });
 
     late final VoidCallback? onTap;
@@ -63,8 +64,8 @@ class IngredientTile extends StatelessWidget {
     return PushListTile(
       heading: ingredient.name,
       leading: SensitivityIndicator(sensitivity),
-      trailing: FutureBuilder<Intensity>(
-        future: maxIntensity,
+      trailing: StreamBuilder<Intensity>(
+        stream: maxIntensity,
         builder: (context, snapshot) {
           final maxIntensity = snapshot.data;
           if (snapshot.hasData && maxIntensity != null) {

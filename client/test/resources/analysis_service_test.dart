@@ -98,7 +98,7 @@ void main() {
         when(irritantService.names()).thenAnswer((_) => Future.value(emptyIrritantNames));
         when(pantryService.streamAll()).thenAnswer((realInvocation) => Stream.value(pantry));
         for (final element in irritants.entries) {
-          when(irritantService.ofRef(element.key)).thenAnswer((realInvocation) => Future.value(element.value));
+          when(irritantService.ofRef(element.key)).thenAnswer((realInvocation) => Stream.value(element.value));
         }
 
         final foodCount = analysisService.foodCountByIrritantAndLevel();
@@ -141,7 +141,7 @@ void main() {
         when(irritantService.names()).thenAnswer((_) => Future.value(irritantNames));
         when(pantryService.streamAll()).thenAnswer((realInvocation) => Stream.value(pantry));
         for (final element in irritants.entries) {
-          when(irritantService.ofRef(element.key)).thenAnswer((realInvocation) => Future.value(element.value));
+          when(irritantService.ofRef(element.key)).thenAnswer((realInvocation) => Stream.value(element.value));
         }
 
         final foodCount = analysisService.foodCountByIrritantAndLevel();

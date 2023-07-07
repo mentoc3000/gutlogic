@@ -23,8 +23,6 @@ class IrritantService {
   late final Future<BuiltList<ElementaryFood>> _elementaryFoodCache;
   final BehaviorSubject<BuiltSet<String>> _excludedIrritantsStream = BehaviorSubject();
 
-  BuiltSet<String> get _excludedIrritants => _excludedIrritantsStream.valueOrNull ?? BuiltSet<String>();
-
   IrritantService({required this.cachedApiService, required PreferencesService preferencesService}) {
     _elementaryFoodCache = _getElementaryFoods();
     _intensityThresholdCache = _getIntensityThresholds();
@@ -86,31 +84,41 @@ class IrritantService {
     return null;
   }
 
-  Future<BuiltList<Irritant>?> ofRef(FoodReference food, {bool usePreferences = false}) async {
-    final foodIrritantsApi = await _getFoodIrritantsOf(food);
-    return foodIrritantsApi?.irritants
-        .where((p0) => !usePreferences || !_excludedIrritants.contains(p0.name))
-        .toBuiltList();
+  // TODO: stream list when there are preferences involved
+  Stream<BuiltList<Irritant>?> ofRef(FoodReference food, {bool usePreferences = false}) {
+    final elemenatryFoodStream = _getFoodIrritantsOf(food).asStream();
+    return CombineLatestStream.combine2<BuiltSet<String>, ElementaryFood?, BuiltList<Irritant>?>(
+      _excludedIrritantsStream,
+      elemenatryFoodStream,
+      (excludedIrritants, foodIrritantsApi) {
+        if (foodIrritantsApi == null) return null;
+        return foodIrritantsApi.irritants
+            .where((p0) => !usePreferences || !excludedIrritants.contains(p0.name))
+            .toBuiltList();
+      },
+    );
   }
 
   /// Irritants in one serving of ingredient
-  Future<BuiltList<Irritant>?> ofIngredient(Ingredient ingredient, {bool usePreferences = false}) {
-    if (ingredient.foodReference != null) return ofRef(ingredient.foodReference!, usePreferences: usePreferences);
+  Stream<BuiltList<Irritant>?> ofIngredient(Ingredient ingredient, {bool usePreferences = false}) {
+    if (ingredient.foodReference != null) {
+      return ofRef(ingredient.foodReference!, usePreferences: usePreferences);
+    }
     if (ingredient.ingredients != null) {
       return ofIngredients(ingredient.ingredients!, usePreferences: usePreferences);
     }
-    return Future.value();
+    return Stream.value(null);
   }
 
   /// Irritants in ingredients, max of each irritant
-  Future<BuiltList<Irritant>?> ofIngredients(
+  Stream<BuiltList<Irritant>?> ofIngredients(
     Iterable<Ingredient> ingredients, {
     bool usePreferences = false,
-  }) async {
-    final irritants = await Future.wait(ingredients.map((i) => ofIngredient(i, usePreferences: usePreferences)));
-    final irritantsDataOnly = irritants.whereType<BuiltList<Irritant>>();
-    if (irritantsDataOnly.isEmpty) return null;
-    return _combineIrritants(irritantsDataOnly).toBuiltList();
+  }) {
+    return CombineLatestStream(
+      ingredients.map((i) => ofIngredient(i, usePreferences: usePreferences)),
+      (values) => values.whereType<BuiltList<Irritant>>(),
+    ).map((event) => event.isNotEmpty ? _combineIrritants(event).toBuiltList() : null);
   }
 
   static Iterable<ElementaryFood?> deserialize(UntypedQuerySnapshot snapshot) {
@@ -148,43 +156,46 @@ class IrritantService {
     }
   }
 
-  Future<Intensity> maxIntensity(BuiltMap<String, double> doses, {bool usePreferences = false}) async {
-    var maxIntensity = Intensity.none;
-    for (var doseEntry
-        in doses.entries.where((element) => !usePreferences || !_excludedIrritants.contains(element.key))) {
-      final irritantName = doseEntry.key;
-      final dose = doseEntry.value;
-      final thresholds = await intensityThresholds(irritantName);
-      if (thresholds == null) continue;
-      final intensity = IrritantService.intensity(dose: dose, intensityThresholds: thresholds);
-      if (intensity > maxIntensity) {
-        maxIntensity = intensity;
+  Stream<Intensity> maxIntensity(BuiltMap<String, double> doses, {bool usePreferences = false}) {
+    return _excludedIrritantsStream.asyncMap((event) async {
+      var maxIntensity = Intensity.none;
+      for (var doseEntry in doses.entries.where((element) => !usePreferences || !event.contains(element.key))) {
+        final irritantName = doseEntry.key;
+        final dose = doseEntry.value;
+        final thresholds = await intensityThresholds(irritantName);
+        if (thresholds == null) continue;
+        final intensity = IrritantService.intensity(dose: dose, intensityThresholds: thresholds);
+        if (intensity > maxIntensity) {
+          maxIntensity = intensity;
+        }
       }
-    }
-    return maxIntensity;
+      return maxIntensity;
+    });
   }
 
-  Future<BuiltList<ElementaryFood>> similar(FoodReference food, {bool usePreferences = false}) async {
-    final ref = await _getFoodIrritantsOf(food);
-    if (ref == null) return BuiltList<ElementaryFood>();
-    final irritantNames =
-        ref.irritants.where((irritant) => !_excludedIrritants.contains(irritant.name)).map((i) => i.name).toSet();
+  Stream<BuiltList<ElementaryFood>> similar(FoodReference food, {bool usePreferences = false}) {
+    return _excludedIrritantsStream.asyncMap((event) async {
+      final ref = await _getFoodIrritantsOf(food);
+      if (ref == null) return BuiltList<ElementaryFood>();
+      final irritantNames =
+          ref.irritants.where((irritant) => !event.contains(irritant.name)).map((i) => i.name).toSet();
 
-    // Get foods that contain at least one irritant that food has
-    final elementaryFoods = await _elementaryFoodCache;
+      // Get foods that contain at least one irritant that food has
+      final elementaryFoods = await _elementaryFoodCache;
 
-    final foodIrritantsApi = elementaryFoods
-        // Only foods that have at least one non-zero concentration of irritants
-        .where((f) => f.irritants.toList().fold(false, (acc, el) => acc || el.concentration > 0))
-        // Use foods that contain at least one irritant shared by the food of interest
-        .where((f) => f.irritants.map((p0) => p0.name).toSet().intersection(irritantNames).isNotEmpty)
-        // Only use foods with a cannonical food with irritants
-        .where((f) => f.canonical != null)
-        .where((f) => f.irritants.isNotEmpty)
-        .toList();
-    // Sort foods by similarity to the reference food
-    foodIrritantsApi.sort((a, b) => irritantSimilarityCompare(ref, a, b));
-    return foodIrritantsApi.toBuiltList();
+      final foodIrritantsApi = elementaryFoods
+          // Only foods that have at least one non-zero concentration of irritants
+          .where((f) => f.irritants.toList().fold(false, (acc, el) => acc || el.concentration > 0))
+          // Use foods that contain at least one irritant shared by the food of interest
+          .where((f) => f.irritants.map((p0) => p0.name).toSet().intersection(irritantNames).isNotEmpty)
+          // Only use foods with a cannonical food with irritants
+          .where((f) => f.canonical != null)
+          .where((f) => f.irritants.isNotEmpty)
+          .toList();
+      // Sort foods by similarity to the reference food
+      foodIrritantsApi.sort((a, b) => irritantSimilarityCompare(ref, a, b));
+      return foodIrritantsApi.toBuiltList();
+    });
   }
 
   /// Compare both a and b to a reference. Negative if a has a more similar irritant profile.

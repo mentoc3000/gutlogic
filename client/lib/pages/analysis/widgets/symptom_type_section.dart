@@ -41,15 +41,7 @@ class SymptomTypeCountSection extends StatelessWidget {
   }
 
   Widget sizeAndCenter(Widget child) {
-    // This is a hack to get the loading to be the same size as the content
-    final dummy = Opacity(
-      opacity: 0.0,
-      child: _SymptomTypeCountChart(symptomTypeCount: _exampleData()),
-    );
-    return Stack(
-      alignment: Alignment.center,
-      children: [dummy, child],
-    );
+    return SizedBox(height: 200.0, child: child);
   }
 
   Widget builder(BuildContext context, SymptomTypeCountState state) {

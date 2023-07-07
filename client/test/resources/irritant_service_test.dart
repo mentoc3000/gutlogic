@@ -84,20 +84,20 @@ void main() {
     group('get irritant', () {
       test('fetches irritants by food reference', () async {
         final food = EdamamFoodReference(id: appleFoodId, name: 'apple');
-        final irritants = await repository.ofRef(food);
+        final irritants = await repository.ofRef(food).first;
         expect(irritants!.length, 2);
         expect(irritants.first.concentration, 0.012);
       });
 
       test('handles food without irritant data', () async {
         final food = EdamamFoodReference(id: 'no-info', name: 'banana');
-        final irritants = await repository.ofRef(food);
-        expect(irritants, null);
+        final irritants = repository.ofRef(food);
+        await expectLater(irritants, emits(null));
       });
 
       test('excludes irritant', () async {
         final food = EdamamFoodReference(id: appleFoodId, name: 'apple');
-        final irritants = await repository.ofRef(food, usePreferences: true);
+        final irritants = await repository.ofRef(food, usePreferences: true).first;
         expect(irritants!.length, 1);
         expect(irritants.first.name, 'Sorbitol');
       });
@@ -134,29 +134,29 @@ void main() {
 
     group('gets maximum intensity', () {
       test('with no preferences', () async {
-        expect(await repository.maxIntensity({'Mannitol': 0.0}.build()), Intensity.none);
-        expect(await repository.maxIntensity({'Mannitol': 0.001}.build()), Intensity.trace);
-        expect(await repository.maxIntensity({'Mannitol': 2.0}.build()), Intensity.high);
-        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.0}.build()), Intensity.none);
-        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.0}.build()), Intensity.medium);
-        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.15}.build()), Intensity.low);
-        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.15}.build()), Intensity.medium);
-        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 1.0}.build()), Intensity.high);
+        expect(await repository.maxIntensity({'Mannitol': 0.0}.build()).first, Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.001}.build()).first, Intensity.trace);
+        expect(await repository.maxIntensity({'Mannitol': 2.0}.build()).first, Intensity.high);
+        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.0}.build()).first, Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.0}.build()).first, Intensity.medium);
+        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.15}.build()).first, Intensity.low);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.15}.build()).first, Intensity.medium);
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 1.0}.build()).first, Intensity.high);
       });
 
       test('with preferences', () async {
-        expect(await repository.maxIntensity({'Mannitol': 0.0}.build(), usePreferences: true), Intensity.none);
-        expect(await repository.maxIntensity({'Mannitol': 0.001}.build(), usePreferences: true), Intensity.none);
-        expect(await repository.maxIntensity({'Mannitol': 2.0}.build(), usePreferences: true), Intensity.none);
-        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.0}.build(), usePreferences: true),
+        expect(await repository.maxIntensity({'Mannitol': 0.0}.build(), usePreferences: true).first, Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.001}.build(), usePreferences: true).first, Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 2.0}.build(), usePreferences: true).first, Intensity.none);
+        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.0}.build(), usePreferences: true).first,
             Intensity.none);
-        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.0}.build(), usePreferences: true),
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.0}.build(), usePreferences: true).first,
             Intensity.none);
-        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.15}.build(), usePreferences: true),
+        expect(await repository.maxIntensity({'Mannitol': 0.0, 'Sorbitol': 0.15}.build(), usePreferences: true).first,
             Intensity.low);
-        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.15}.build(), usePreferences: true),
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 0.15}.build(), usePreferences: true).first,
             Intensity.low);
-        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 1.0}.build(), usePreferences: true),
+        expect(await repository.maxIntensity({'Mannitol': 0.7, 'Sorbitol': 1.0}.build(), usePreferences: true).first,
             Intensity.high);
       });
     });
@@ -168,9 +168,9 @@ void main() {
           name: 'Apple',
           foodReference: foodRef,
         );
-        final foodIntensity = await repository.ofRef(foodRef);
-        final irritants = await repository.ofIngredients([ingredient]);
-        expect(irritants, foodIntensity);
+        final foodIntensity = await repository.ofRef(foodRef).first;
+        final irritants = repository.ofIngredients([ingredient]);
+        await expectLater(irritants, emits(foodIntensity));
       });
 
       test('for ingredient that has ingredients', () async {
@@ -181,9 +181,9 @@ void main() {
               Ingredient(name: 'Apple', foodReference: foodRef),
               Ingredient(name: 'Sugar'),
             ].toBuiltList());
-        final foodIntensity = await repository.ofRef(foodRef);
-        final irritants = await repository.ofIngredients([ingredient]);
-        expect(irritants, foodIntensity);
+        final foodIntensity = await repository.ofRef(foodRef).first;
+        final irritants = repository.ofIngredients([ingredient]);
+        await expectLater(irritants, emits(foodIntensity));
       });
 
       test('for simple ingredient list', () async {
@@ -197,7 +197,7 @@ void main() {
           Ingredient(name: 'Bread', foodReference: breadRef),
         ].toBuiltList();
 
-        final irritants = await repository.ofIngredients(ingredients);
+        final irritants = await repository.ofIngredients(ingredients).first;
         final expected = BuiltList<Irritant>([
           Irritant(name: 'Sorbitol', concentration: 0.012, dosePerServing: 1.98),
           Irritant(name: 'Mannitol', concentration: 0.01, dosePerServing: 0.9),
@@ -218,7 +218,7 @@ void main() {
           Ingredient(name: 'Bread', foodReference: breadRef),
         ].toBuiltList();
 
-        final irritants = await repository.ofIngredients(ingredients, usePreferences: true);
+        final irritants = await repository.ofIngredients(ingredients, usePreferences: true).first;
         final expected = BuiltList<Irritant>([
           Irritant(name: 'Sorbitol', concentration: 0.012, dosePerServing: 1.98),
           Irritant(name: 'Fructan', concentration: 0.012, dosePerServing: 1.98),
@@ -240,8 +240,8 @@ void main() {
           Ingredient(name: 'Raw Apple', foodReference: foodRef),
           Ingredient(name: 'Sugar'),
         ].toBuiltList();
-        final foodIntensity = await repository.ofRef(foodRef);
-        final irritants = await repository.ofIngredients(ingredients);
+        final foodIntensity = await repository.ofRef(foodRef).first;
+        final irritants = await repository.ofIngredients(ingredients).first;
         expect(irritants![0].concentration, foodIntensity![0].concentration);
       });
     });
@@ -252,7 +252,7 @@ void main() {
       const EdamamFoodReference? cannonical = null;
       test('gets list of similar foods', () async {
         final fuji = EdamamFoodReference(id: appleFoodId, name: 'Fuji');
-        final similars = await repository.similar(fuji);
+        final similars = await repository.similar(fuji).first;
         expect(similars.length, 2);
         expect(similars.first.canonical!.name, 'Apple');
         expect(similars.last.canonical!.name, 'Grape');
