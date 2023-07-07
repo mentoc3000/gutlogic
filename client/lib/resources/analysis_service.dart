@@ -31,7 +31,8 @@ class AnalysisService {
       };
 
       // Get the irritants of each food in the pantry and match it to the pantry entry
-      final irritants = await Future.wait(pantryEntries.map((e) => irritantService.ofRef(e.foodReference)));
+      // Streaming ofRef is not required because preferences are not taken into account
+      final irritants = await Future.wait(pantryEntries.map((e) => irritantService.ofRef(e.foodReference).first));
       final pantryIrritantPairs = Map.fromIterables(pantryEntries, irritants).entries;
 
       // For each food, add a count to the map
@@ -58,7 +59,8 @@ class AnalysisService {
       final map = {for (final s in SensitivityLevel.list()) s: <FoodReference>[]};
 
       final foodReferences = pantryEntries.map((e) => e.foodReference);
-      final irritants = await Future.wait(foodReferences.map(irritantService.ofRef));
+      // Streaming ofRef is not required because preferences are not taken into account
+      final irritants = await Future.wait(foodReferences.map((f) => irritantService.ofRef(f).first));
       final pantryIrritantPairs = Map.fromIterables(pantryEntries, irritants).entries;
 
       for (final entry in pantryIrritantPairs) {

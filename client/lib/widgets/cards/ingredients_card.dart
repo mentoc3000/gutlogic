@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../blocs/subscription/subscription.dart';
 import '../../models/food/ingredient.dart';
@@ -19,9 +20,9 @@ class IngredientsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxIntensity = context.select((IrritantService irritantService) {
-      return irritantService.ofIngredients(ingredients, usePreferences: true).then((value) => value != null
+      return irritantService.ofIngredients(ingredients, usePreferences: true).switchMap((value) => value != null
           ? irritantService.maxIntensity(IrritantService.doseMap(value), usePreferences: true)
-          : Future.value(Intensity.unknown));
+          : Stream.value(Intensity.unknown));
     });
 
     void onTapSubscribed() =>
@@ -32,8 +33,8 @@ class IngredientsCard extends StatelessWidget {
         icon: GLIcons.ingredients,
         text: 'Ingredients',
         onTapSubscribed: onTapSubscribed,
-        trailing: FutureBuilder<Intensity>(
-          future: maxIntensity,
+        trailing: StreamBuilder<Intensity>(
+          stream: maxIntensity,
           builder: (context, snapshot) {
             final showWarning = snapshot.hasData && snapshot.data != null && snapshot.data! > Intensity.none;
             return showWarning ? IrritantWarning() : Container();

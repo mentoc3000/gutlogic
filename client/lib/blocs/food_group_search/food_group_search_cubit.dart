@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gutlogic/models/irritant/intensity.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../models/food_group_entry.dart';
 import '../../resources/food_group_repository.dart';
@@ -12,7 +15,7 @@ import 'food_group_search_state.dart';
 class FoodGroupSearchCubit extends Cubit<FoodGroupSearchState> {
   final FoodGroupsRepository foodGroupsRepository;
   final IrritantService irritantService;
-  BuiltMap<FoodGroupEntry, Intensity?>? _maxIntensitiesMapCache;
+  StreamSubscription<BuiltMap<FoodGroupEntry, Intensity>>? maxIntensitySubscription;
 
   FoodGroupSearchCubit({
     required this.foodGroupsRepository,
@@ -31,26 +34,37 @@ class FoodGroupSearchCubit extends Cubit<FoodGroupSearchState> {
       if (query.isEmpty) emit(FoodGroupSearchLoaded.empty());
 
       // Load cache
-      if (_maxIntensitiesMapCache == null) {
-        final entries = await foodGroupsRepository.foods();
-        final entriesList = entries.toList();
-        final maxIntensitiesList =
-            await Future.wait(entries.map((e) => irritantService.maxIntensity(e.doses, usePreferences: true)));
-        _maxIntensitiesMapCache =
-            BuiltMap<FoodGroupEntry, Intensity>.from(Map.fromIterables(entriesList, maxIntensitiesList));
-      }
+      final entries = await foodGroupsRepository.foods();
+      final entriesList = entries.toList();
 
-      if (query.isNotEmpty) {
-        final entries = stringMatchSort(
-          list: _maxIntensitiesMapCache!.keys.toList(),
-          match: query,
-          keyOf: (FoodGroupEntry e) => e.foodRef.name,
-        );
-        final maxIntensities =
-            BuiltMap<FoodGroupEntry, Intensity>({for (var e in entries) e: _maxIntensitiesMapCache![e]});
-        emit(FoodGroupSearchLoaded(foods: BuiltList(entries), maxIntensities: maxIntensities));
-      }
+      await maxIntensitySubscription?.cancel();
+      maxIntensitySubscription = CombineLatestStream(
+        entriesList.map((e) => irritantService.maxIntensity(e.doses, usePreferences: true)),
+        (maxIntensities) => BuiltMap<FoodGroupEntry, Intensity>(Map.fromIterables(entriesList, maxIntensities)),
+      ).listen(
+        (maxIntensitiesMap) {
+          if (!isClosed) {
+            if (query.isNotEmpty) {
+              final entries = stringMatchSort(
+                list: maxIntensitiesMap.keys.toList(),
+                match: query,
+                keyOf: (FoodGroupEntry e) => e.foodRef.name,
+              );
+              final maxIntensities =
+                  BuiltMap<FoodGroupEntry, Intensity>({for (var e in entries) e: maxIntensitiesMap[e]});
+              emit(FoodGroupSearchLoaded(foods: BuiltList(entries), maxIntensities: maxIntensities));
+            }
+          }
+        },
+        onError: _onError,
+      );
     } catch (error, trace) {
+      _onError(error, trace);
+    }
+  }
+
+  void _onError(Object error, StackTrace trace) {
+    if (!isClosed) {
       emit(FoodGroupSearchError.fromError(error: error, trace: trace));
     }
   }

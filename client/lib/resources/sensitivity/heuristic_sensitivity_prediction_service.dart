@@ -43,7 +43,8 @@ class HeuristicSensitivityPredictionService {
     // Add new or updated food references
     final upsertedFoodRefs =
         latestSensitivityEntries.entries.where((e) => _sensitivityEntries[e.key] != e.value).map((e) => e.key);
-    final irritants = await Future.wait(upsertedFoodRefs.map(irritantService.ofRef));
+    // TODO: replace with stream
+    final irritants = await Future.wait(upsertedFoodRefs.map((f) => irritantService.ofRef(f).first));
     final irritantsMap = Map.fromIterables(upsertedFoodRefs, irritants);
     final reactionMaps = irritantsMap.entries.map(
         (entry) => getReactions(irritants: entry.value, sensitivityLevel: latestSensitivityEntries[entry.key]!.level));
@@ -65,7 +66,8 @@ class HeuristicSensitivityPredictionService {
   }
 
   Future<Sensitivity> predict(FoodReference foodReference) async {
-    final irritants = await irritantService.ofRef(foodReference);
+    // TODO: replace with stream
+    final irritants = await irritantService.ofRef(foodReference).first;
     final sensitivityLevel =
         irritants == null ? SensitivityLevel.unknown : sensitivityProfile.evaluateIrritants(irritants);
     return Sensitivity(level: sensitivityLevel, source: SensitivitySource.prediction);

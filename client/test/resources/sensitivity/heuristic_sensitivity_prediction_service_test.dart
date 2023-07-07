@@ -44,13 +44,13 @@ void main() {
       required List<List<double?>> concentrations,
     }) async {
       irritantService = MockIrritantService();
-      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(null));
+      when(irritantService.ofRef(any)).thenAnswer((_) => Stream.value(null));
 
       final sensitivityLevels = sensitivities.map((s) => s?.level);
       final mockData = MockData.from(sensitivityLevels: sensitivityLevels, concentrations: concentrations);
       for (final foodAndIrritants in mockData.foodsAndIrritants.entries) {
         when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
-            .thenAnswer((_) => Future.value(foodAndIrritants.value));
+            .thenAnswer((_) => Stream.value(foodAndIrritants.value));
       }
       final sensitivityMapStream = Stream.value(mockData.sensitivityMap);
 
@@ -67,7 +67,7 @@ void main() {
           Irritant(name: irritantName(i), concentration: concentrations[i], dosePerServing: concentrations[i])
       ].build();
       final edamamFood = EdamamFood(id: uniqueStr, name: uniqueStr);
-      when(irritantService.ofRef(edamamFood.toFoodReference())).thenAnswer((_) => Future.value(irritants));
+      when(irritantService.ofRef(edamamFood.toFoodReference())).thenAnswer((_) => Stream.value(irritants));
       return edamamFood.toFoodReference();
     }
 
@@ -153,7 +153,7 @@ void main() {
 
     test('added sensitivities update prediction', () async {
       irritantService = MockIrritantService();
-      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(null));
+      when(irritantService.ofRef(any)).thenAnswer((_) => Stream.value(null));
 
       final streamController = StreamController<BuiltMap<FoodReference, Sensitivity>>();
 
@@ -170,7 +170,7 @@ void main() {
       final mockData = MockData.from(sensitivityLevels: sensitivityLevels, concentrations: concentrations);
       for (final foodAndIrritants in mockData.foodsAndIrritants.entries) {
         when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
-            .thenAnswer((_) => Future.value(foodAndIrritants.value));
+            .thenAnswer((_) => Stream.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);
       await Future<void>.delayed(predictionDelay);
@@ -185,7 +185,7 @@ void main() {
           MockData.from(sensitivityLevels: updatedSensitivityLevels, concentrations: updatedConcentrations);
       for (final foodAndIrritants in updatedMockData.foodsAndIrritants.entries) {
         when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
-            .thenAnswer((_) => Future.value(foodAndIrritants.value));
+            .thenAnswer((_) => Stream.value(foodAndIrritants.value));
       }
       streamController.add(updatedMockData.sensitivityMap);
       await Future<void>.delayed(predictionDelay);
@@ -194,7 +194,7 @@ void main() {
 
     test('removed sensitivities update prediction', () async {
       irritantService = MockIrritantService();
-      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(null));
+      when(irritantService.ofRef(any)).thenAnswer((_) => Stream.value(null));
 
       final streamController = StreamController<BuiltMap<FoodReference, Sensitivity>>();
 
@@ -211,7 +211,7 @@ void main() {
       final mockData = MockData.from(sensitivityLevels: sensitivityLevels, concentrations: concentrations);
       for (final foodAndIrritants in mockData.foodsAndIrritants.entries) {
         when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
-            .thenAnswer((_) => Future.value(foodAndIrritants.value));
+            .thenAnswer((_) => Stream.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);
       await Future<void>.delayed(predictionDelay);
@@ -231,7 +231,7 @@ void main() {
 
     test('updated sensitivities update prediction', () async {
       irritantService = MockIrritantService();
-      when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(null));
+      when(irritantService.ofRef(any)).thenAnswer((_) => Stream.value(null));
 
       final streamController = StreamController<BuiltMap<FoodReference, Sensitivity>>();
 
@@ -248,7 +248,7 @@ void main() {
       final mockData = MockData.from(sensitivityLevels: sensitivityLevels, concentrations: concentrations);
       for (final foodAndIrritants in mockData.foodsAndIrritants.entries) {
         when(irritantService.ofRef(foodAndIrritants.key.toFoodReference()))
-            .thenAnswer((_) => Future.value(foodAndIrritants.value));
+            .thenAnswer((_) => Stream.value(foodAndIrritants.value));
       }
       streamController.add(mockData.sensitivityMap);
       await Future<void>.delayed(predictionDelay);

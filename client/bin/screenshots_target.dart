@@ -92,30 +92,30 @@ void main() {
 
     // Mock irritant repository
     final irritantService = MockIrritantService();
-    when(irritantService.ofRef(any)).thenAnswer((_) => Future.value(irritants));
+    when(irritantService.ofRef(any)).thenAnswer((_) => Stream.value(irritants));
     when(irritantService.ofRef(any, usePreferences: anyNamed('usePreferences'))).thenAnswer((_) {
-      return Future.value(irritants);
+      return Stream.value(irritants);
     });
     when(irritantService.maxIntensity(any)).thenAnswer((invocation) {
-      return Future.value(dosesMaxIntensities[invocation.positionalArguments[0]]);
+      return Stream.value(dosesMaxIntensities[invocation.positionalArguments[0]]);
     });
     when(irritantService.maxIntensity(any, usePreferences: anyNamed('usePreferences'))).thenAnswer((invocation) {
-      return Future.value(dosesMaxIntensities[invocation.positionalArguments[0]]);
+      return Stream.value(dosesMaxIntensities[invocation.positionalArguments[0]]);
     });
     when(irritantService.intensityThresholds(any)).thenAnswer((invocation) {
       return Future.value(intensityThresholds[invocation.positionalArguments[0]]);
     });
     when(irritantService.ofIngredient(any)).thenAnswer((invocation) {
-      return Future.value(ingredientIrritantMap[invocation.positionalArguments[0]]);
+      return Stream.value(ingredientIrritantMap[invocation.positionalArguments[0]]);
     });
     when(irritantService.ofIngredient(any, usePreferences: anyNamed('usePreferences'))).thenAnswer((invocation) {
-      return Future.value(ingredientIrritantMap[invocation.positionalArguments[0]]);
+      return Stream.value(ingredientIrritantMap[invocation.positionalArguments[0]]);
     });
     when(irritantService.ofIngredients(any)).thenAnswer((_) {
-      return Future.value();
+      return Stream.value(null);
     });
     when(irritantService.ofIngredients(any, usePreferences: anyNamed('usePreferences'))).thenAnswer((_) {
-      return Future.value();
+      return Stream.value(null);
     });
 
     // Mock meal entry
