@@ -1,1 +1,1 @@
-Offline access to FODMAP data
+Minor bugfixes
