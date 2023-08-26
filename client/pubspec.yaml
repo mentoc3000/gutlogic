@@ -4,7 +4,7 @@ description: Gut Logic app
 # Prevent accidentally publishing the package to pub.dev
 publish_to: "none"
 
-version: 1.9.1
+version: 1.9.2
 
 environment:
   sdk: ">=2.19.0 <4.0.0"
