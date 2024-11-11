@@ -9,9 +9,9 @@ Gut Logic was a mobile applications to help people identify and manage their foo
 The timeline allows users to track their symptoms, food, and other factors that may be related to their food sensitivities. Users can add entries to the timeline, view their history, and see trends over time.
 
 <p float="left">
-  <img src="img/timeline.png" width="300" />
-  <img src="img/meal.png" width="300" /> 
-  <img src="img/symptom.png" width="300" /> 
+  <img src="img/timeline.png" width="200" />
+  <img src="img/meal.png" width="200" /> 
+  <img src="img/symptom.png" width="200" /> 
 </p>
 
 ### Food Library
@@ -19,8 +19,8 @@ The timeline allows users to track their symptoms, food, and other factors that 
 The food library allows users to search for foods and view their nutritional information. Foods with FODMAP data have a severity indicator. Foods with ingredients have a severity that is computed from its ingredients. Users can also add foods to their personal library for easy access.
 
 <p float="left">
-  <img src="img/browse.png" width="300" />
-  <img src="img/ingredients.png" width="300" /> 
+  <img src="img/browse.png" width="200" />
+  <img src="img/ingredients.png" width="200" /> 
 
 
 ### Analysis
@@ -28,14 +28,14 @@ The food library allows users to search for foods and view their nutritional inf
 The analysis page shows users their symptom history and how it correlates with their food and other factors. Users can view their history, see trends over time, and identify potential triggers.
 
 <p float="left">
-  <img src="img/sensitivity.png" width="300" />
-  <img src="img/analysis.png" width="300" />
+  <img src="img/sensitivity.png" width="200" />
+  <img src="img/analysis.png" width="200" />
 
 ## Architecture Overview
 
 ### Frontend
 
-The frontend is a Flutter application that runs on iOS and Android. It is written in Dart and uses the Flutter framework. The app uses the BLoC pattern for state management and communicates with the server using REST APIs. The application is built using GitLab CI/CD and deployed to the App Store and Google Play Store.
+The frontend is a Flutter application that runs on iOS and Android. It is written in Dart and uses the Flutter framework. The app uses the BLoC pattern for state management and communicates with the server using REST APIs. The application is built using GitLab CI/CD and deployed to the App Store and Google Play Store. (Note: CI/CD does not work since the project was open sourced because the secrets have been deleted.)
 
 ### Backend
 
